@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Entraînement illimité aux équations du 1er degré avec corrections détaillées">
     <title>MathsFacile - Équations du 1er degré</title>
     <style>
         * {
@@ -79,37 +80,21 @@
             color: white;
         }
 
-        .mode-toggle {
-            display: flex;
-            gap: 10px;
+        .coefficients-section {
             margin-bottom: 25px;
-        }
-
-        .mode-btn {
-            flex: 1;
-            padding: 12px;
-            border: 2px solid #764ba2;
-            background: white;
-            color: #764ba2;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-weight: 500;
-        }
-
-        .mode-btn.active {
-            background: #764ba2;
-            color: white;
         }
 
         .coefficients {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            display: flex;
+            flex-wrap: wrap;
             gap: 15px;
-            margin-bottom: 25px;
+            margin-top: 15px;
         }
 
         .coef-group {
+            flex: 1 1 140px; /* Grandit/Rétrécit, base 140px */
+            min-width: 140px;
+            max-width: 200px;
             display: flex;
             flex-direction: column;
         }
@@ -117,8 +102,8 @@
         label {
             font-weight: 600;
             margin-bottom: 5px;
-            color: #333;
-            font-size: 0.95em;
+            color: #555;
+            font-size: 0.9em;
         }
 
         input[type="number"] {
@@ -126,17 +111,22 @@
             border: 2px solid #ddd;
             border-radius: 8px;
             font-size: 1.1em;
-            transition: border-color 0.3s;
+            transition: all 0.3s;
         }
 
         input[type="number"]:focus {
             outline: none;
             border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        input[type="number"]:hover {
+            border-color: #999;
         }
 
         .equation-display {
             background: #f8f9fa;
-            padding: 25px;
+            padding: 30px;
             border-radius: 10px;
             text-align: center;
             margin-bottom: 25px;
@@ -144,7 +134,7 @@
         }
 
         .equation {
-            font-size: 1.8em;
+            font-size: 2em;
             font-weight: 600;
             color: #333;
             font-family: 'Courier New', monospace;
@@ -266,17 +256,6 @@
             margin-top: 5px;
         }
 
-        .final-answer {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            margin-top: 20px;
-            font-size: 1.3em;
-            font-weight: 600;
-        }
-
         .verification {
             background: #fff3cd;
             border-left: 4px solid #ffc107;
@@ -291,22 +270,114 @@
             margin-bottom: 10px;
         }
 
-        @media (max-width: 600px) {
+        .alert-warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            color: #856404;
+        }
+
+        .alert-info {
+            background: #d1ecf1;
+            border-left: 4px solid #17a2b8;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            color: #0c5460;
+        }
+
+        /* Très petit mobile (< 350px) - Forcer 1 colonne */
+        @media (max-width: 350px) {
+            body {
+                padding: 10px;
+            }
+
             h1 {
-                font-size: 2em;
+                font-size: 1.6em;
+            }
+
+            .subtitle {
+                font-size: 0.9em;
+            }
+
+            .card {
+                padding: 15px;
             }
             
             .type-btn, button {
                 min-width: 100%;
+                padding: 12px 15px;
+                font-size: 0.95em;
+            }
+            
+            .equation {
+                font-size: 1.2em;
+                word-break: break-word;
+                padding: 20px 15px;
+            }
+
+            /* Forcer 1 colonne complète sur très petit écran */
+            .coef-group {
+                flex: 1 1 100%;
+                min-width: 100%;
+                max-width: 100%;
+            }
+
+            .coef-group label {
+                font-size: 0.85em;
+            }
+
+            input[type="number"] {
+                padding: 12px;
+                font-size: 1em;
+            }
+
+            .step-equation {
+                font-size: 1em;
+                padding: 8px;
+            }
+
+            .step-content {
+                width: 100%;
+            }
+
+            .step-number {
+                display: block;
+                margin-bottom: 10px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+
+        /* Mobile - Réduire les tailles */
+        @media (max-width: 600px) {
+            body {
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .card {
+                padding: 20px;
             }
             
             .equation {
                 font-size: 1.4em;
             }
-        }
 
-        .hidden {
-            display: none;
+            input[type="number"] {
+                padding: 12px;
+            }
         }
 
         .info-box {
@@ -320,6 +391,18 @@
         .info-box p {
             color: #1565c0;
             margin: 0;
+            line-height: 1.5;
+        }
+
+        .section-title {
+            color: #333;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .hidden {
+            display: none;
         }
     </style>
 </head>
@@ -332,7 +415,7 @@
 
         <div class="card">
             <div class="info-box">
-                <p><strong>💡 Astuce :</strong> Choisissez un type d'équation, puis générez autant d'exercices que vous le souhaitez. Cliquez sur "Résoudre" pour voir la correction détaillée !</p>
+                <p>💡 <strong>Comment ça marche :</strong> Choisissez un type d'équation. Vous pouvez soit modifier les coefficients manuellement, soit cliquer sur "Nouvelle équation" pour en générer aléatoirement. Puis cliquez sur "Résoudre" pour voir la correction détaillée !</p>
             </div>
 
             <h2 style="margin-bottom: 20px; color: #333;">Type d'équation</h2>
@@ -345,48 +428,39 @@
                 </button>
             </div>
 
-            <h2 style="margin-bottom: 15px; color: #333;">Mode de génération</h2>
-            <div class="mode-toggle">
-                <button class="mode-btn active" data-mode="manual">
-                    ✏️ Choisir les coefficients
-                </button>
-                <button class="mode-btn" data-mode="random">
-                    🎲 Génération aléatoire
-                </button>
-            </div>
-
-            <div id="manualMode">
-                <h3 style="margin-bottom: 15px; color: #333;">Coefficients</h3>
+            <div class="coefficients-section">
+                <div class="section-title">Coefficients (modifiables)</div>
+                
                 <div class="coefficients" id="coefficientsType1">
                     <div class="coef-group">
-                        <label for="a1">a</label>
+                        <label for="a1">a (devant x)</label>
                         <input type="number" id="a1" value="2">
                     </div>
                     <div class="coef-group">
-                        <label for="b1">b</label>
+                        <label for="b1">b (constante)</label>
                         <input type="number" id="b1" value="3">
                     </div>
                     <div class="coef-group">
-                        <label for="c1">c</label>
+                        <label for="c1">c (résultat)</label>
                         <input type="number" id="c1" value="7">
                     </div>
                 </div>
 
                 <div class="coefficients hidden" id="coefficientsType2">
                     <div class="coef-group">
-                        <label for="a2">a</label>
+                        <label for="a2">a (devant x)</label>
                         <input type="number" id="a2" value="3">
                     </div>
                     <div class="coef-group">
-                        <label for="b2">b</label>
+                        <label for="b2">b (constante)</label>
                         <input type="number" id="b2" value="5">
                     </div>
                     <div class="coef-group">
-                        <label for="c2">c</label>
+                        <label for="c2">c (devant x)</label>
                         <input type="number" id="c2" value="2">
                     </div>
                     <div class="coef-group">
-                        <label for="d2">d</label>
+                        <label for="d2">d (constante)</label>
                         <input type="number" id="d2" value="11">
                     </div>
                 </div>
@@ -409,129 +483,132 @@
     </div>
 
     <script>
-        // État de l'application
-        let currentType = 'type1';
-        let currentMode = 'manual';
-        let currentEquation = null;
+        // ========== CONFIGURATION ==========
+        const CONFIG = {
+            MAX_COEF: 10,
+            MIN_COEF: -10
+        };
 
-        // Éléments DOM
-        const typeButtons = document.querySelectorAll('.type-btn');
-        const modeButtons = document.querySelectorAll('.mode-btn');
-        const coeffType1 = document.getElementById('coefficientsType1');
-        const coeffType2 = document.getElementById('coefficientsType2');
-        const equationDisplay = document.getElementById('equationDisplay');
-        const solutionDiv = document.getElementById('solutionDiv');
-        const stepsContainer = document.getElementById('stepsContainer');
-        const generateBtn = document.getElementById('generateBtn');
-        const solveBtn = document.getElementById('solveBtn');
-        const manualMode = document.getElementById('manualMode');
+        // ========== ÉTAT ==========
+        let state = {
+            currentType: 'type1'
+        };
 
-        // Gestion du type d'équation
-        typeButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                typeButtons.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                currentType = btn.dataset.type;
-                
-                if (currentType === 'type1') {
-                    coeffType1.classList.remove('hidden');
-                    coeffType2.classList.add('hidden');
-                } else {
-                    coeffType1.classList.add('hidden');
-                    coeffType2.classList.remove('hidden');
-                }
-                
-                generateEquation();
-            });
-        });
+        // ========== ÉLÉMENTS DOM ==========
+        const DOM = {
+            typeButtons: document.querySelectorAll('.type-btn'),
+            coeffType1: document.getElementById('coefficientsType1'),
+            coeffType2: document.getElementById('coefficientsType2'),
+            equationDisplay: document.getElementById('equationDisplay'),
+            solutionDiv: document.getElementById('solutionDiv'),
+            stepsContainer: document.getElementById('stepsContainer'),
+            generateBtn: document.getElementById('generateBtn'),
+            solveBtn: document.getElementById('solveBtn'),
+            inputs: {
+                a1: document.getElementById('a1'),
+                b1: document.getElementById('b1'),
+                c1: document.getElementById('c1'),
+                a2: document.getElementById('a2'),
+                b2: document.getElementById('b2'),
+                c2: document.getElementById('c2'),
+                d2: document.getElementById('d2')
+            }
+        };
 
-        // Gestion du mode
-        modeButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                modeButtons.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                currentMode = btn.dataset.mode;
-                
-                if (currentMode === 'random') {
-                    manualMode.classList.add('hidden');
-                    generateEquation();
-                } else {
-                    manualMode.classList.remove('hidden');
-                    generateEquation();
-                }
-            });
-        });
-
-        // Génération d'un nombre aléatoire (évite 0 pour les coefficients a et c)
+        // ========== GÉNÉRATEURS ==========
+        
+        /**
+         * Génère un coefficient aléatoire
+         * @param {boolean} avoidZero - Éviter zéro (pour coefficients de x)
+         * @returns {number} Coefficient généré
+         */
         function randomCoef(avoidZero = false) {
             let num;
             do {
-                num = Math.floor(Math.random() * 21) - 10; // Entre -10 et 10
+                num = Math.floor(Math.random() * (CONFIG.MAX_COEF - CONFIG.MIN_COEF + 1)) + CONFIG.MIN_COEF;
             } while (avoidZero && num === 0);
             return num;
         }
 
-        // Génération d'équation
-        function generateEquation() {
-            solutionDiv.classList.remove('show');
-            
-            if (currentMode === 'random') {
-                if (currentType === 'type1') {
-                    currentEquation = {
-                        type: 'type1',
-                        a: randomCoef(true),
-                        b: randomCoef(),
-                        c: randomCoef()
-                    };
-                } else {
-                    currentEquation = {
-                        type: 'type2',
-                        a: randomCoef(true),
-                        b: randomCoef(),
-                        c: randomCoef(true),
-                        d: randomCoef()
-                    };
-                }
+        /**
+         * Génère une équation aléatoire et remplit les champs
+         */
+        function generateRandomEquation() {
+            if (state.currentType === 'type1') {
+                DOM.inputs.a1.value = randomCoef(true);
+                DOM.inputs.b1.value = randomCoef();
+                DOM.inputs.c1.value = randomCoef();
             } else {
-                if (currentType === 'type1') {
-                    currentEquation = {
-                        type: 'type1',
-                        a: parseFloat(document.getElementById('a1').value) || 1,
-                        b: parseFloat(document.getElementById('b1').value) || 0,
-                        c: parseFloat(document.getElementById('c1').value) || 0
-                    };
+                // Type 2 avec possibilité de cas particuliers
+                const random = Math.random();
+                
+                if (random < 0.85) {
+                    // Cas normal : a ≠ c (85% du temps)
+                    const a = randomCoef(true);
+                    let c;
+                    do {
+                        c = randomCoef(true);
+                    } while (a === c);
+                    
+                    DOM.inputs.a2.value = a;
+                    DOM.inputs.b2.value = randomCoef();
+                    DOM.inputs.c2.value = c;
+                    DOM.inputs.d2.value = randomCoef();
+                } else if (random < 0.92) {
+                    // Infinité de solutions : a = c et b = d (7% du temps)
+                    const a = randomCoef(true);
+                    const b = randomCoef();
+                    
+                    DOM.inputs.a2.value = a;
+                    DOM.inputs.b2.value = b;
+                    DOM.inputs.c2.value = a;
+                    DOM.inputs.d2.value = b;
                 } else {
-                    currentEquation = {
-                        type: 'type2',
-                        a: parseFloat(document.getElementById('a2').value) || 1,
-                        b: parseFloat(document.getElementById('b2').value) || 0,
-                        c: parseFloat(document.getElementById('c2').value) || 1,
-                        d: parseFloat(document.getElementById('d2').value) || 0
-                    };
+                    // Aucune solution : a = c et b ≠ d (8% du temps)
+                    const a = randomCoef(true);
+                    const b = randomCoef();
+                    let d;
+                    do {
+                        d = randomCoef();
+                    } while (b === d);
+                    
+                    DOM.inputs.a2.value = a;
+                    DOM.inputs.b2.value = b;
+                    DOM.inputs.c2.value = a;
+                    DOM.inputs.d2.value = d;
                 }
             }
             
-            displayEquation();
+            updateEquationDisplay();
         }
 
-        // Affichage de l'équation
-        function displayEquation() {
-            let eq = '';
-            const {a, b, c, d, type} = currentEquation;
-            
-            if (type === 'type1') {
-                // ax + b = c
-                eq = formatTerm(a, 'x', true) + formatTerm(b, '', false) + ' = ' + c;
+        /**
+         * Récupère l'équation actuelle depuis les champs
+         */
+        function getCurrentEquation() {
+            if (state.currentType === 'type1') {
+                return {
+                    type: 'type1',
+                    a: parseFloat(DOM.inputs.a1.value) || 0,
+                    b: parseFloat(DOM.inputs.b1.value) || 0,
+                    c: parseFloat(DOM.inputs.c1.value) || 0
+                };
             } else {
-                // ax + b = cx + d
-                eq = formatTerm(a, 'x', true) + formatTerm(b, '', false) + 
-                     ' = ' + formatTerm(c, 'x', true) + formatTerm(d, '', false);
+                return {
+                    type: 'type2',
+                    a: parseFloat(DOM.inputs.a2.value) || 0,
+                    b: parseFloat(DOM.inputs.b2.value) || 0,
+                    c: parseFloat(DOM.inputs.c2.value) || 0,
+                    d: parseFloat(DOM.inputs.d2.value) || 0
+                };
             }
-            
-            equationDisplay.textContent = eq;
         }
 
-        // Formatage d'un terme
+        // ========== FORMATAGE ==========
+        
+        /**
+         * Formate un terme algébrique
+         */
         function formatTerm(coef, variable, isFirst) {
             if (coef === 0 && variable) return '';
             
@@ -555,167 +632,289 @@
             }
         }
 
-        // Résolution de l'équation
+        /**
+         * Formate un nombre (arrondit si décimal)
+         */
+        function formatNumber(num) {
+            if (Number.isInteger(num)) return num;
+            const rounded = Math.round(num * 1000) / 1000;
+            return rounded;
+        }
+
+        /**
+         * Formate une fraction simplifiée
+         */
+        function formatFraction(numerator, denominator) {
+            if (denominator === 1) return numerator.toString();
+            if (denominator === -1) return (-numerator).toString();
+            
+            const gcd = (a, b) => b === 0 ? Math.abs(a) : gcd(b, a % b);
+            const divisor = gcd(numerator, denominator);
+            
+            let num = numerator / divisor;
+            let den = denominator / divisor;
+            
+            if (den < 0) {
+                num = -num;
+                den = -den;
+            }
+            
+            if (den === 1) return num.toString();
+            return `${num}/${den}`;
+        }
+
+        /**
+         * Met à jour l'affichage de l'équation
+         */
+        function updateEquationDisplay() {
+            const eq = getCurrentEquation();
+            const {a, b, c, d, type} = eq;
+            let display = '';
+            
+            if (type === 'type1') {
+                display = formatTerm(a, 'x', true) + formatTerm(b, '', false) + ' = ' + c;
+            } else {
+                display = formatTerm(a, 'x', true) + formatTerm(b, '', false) + 
+                         ' = ' + formatTerm(c, 'x', true) + formatTerm(d, '', false);
+            }
+            
+            DOM.equationDisplay.textContent = display;
+            DOM.solutionDiv.classList.remove('show');
+        }
+
+        // ========== RÉSOLUTION ==========
+        
+        /**
+         * Résout l'équation actuelle
+         */
         function solveEquation() {
-            const {a, b, c, d, type} = currentEquation;
+            const eq = getCurrentEquation();
+            const {a, b, c, d, type} = eq;
+            
             let steps = [];
             let stepNum = 1;
             
             if (type === 'type1') {
-                // Type 1: ax + b = c
-                steps.push({
-                    number: stepNum++,
-                    equation: formatEquation(a, b, c, null, 'type1'),
-                    explanation: "Équation de départ"
-                });
-                
-                // Étape 1: Soustraire b des deux côtés
-                if (b !== 0) {
-                    const sign = b > 0 ? 'soustraire' : 'ajouter';
-                    const value = Math.abs(b);
-                    steps.push({
-                        number: stepNum++,
-                        equation: `${formatTerm(a, 'x', true)} = ${c - b}`,
-                        explanation: `On ${sign} ${value} de chaque côté de l'équation pour isoler le terme en x`
-                    });
-                }
-                
-                // Étape 2: Diviser par a
-                const result = (c - b) / a;
-                if (a !== 1) {
-                    steps.push({
-                        number: stepNum++,
-                        equation: `x = ${formatNumber((c - b) / a)}`,
-                        explanation: `On divise les deux côtés par ${a} pour isoler x`
-                    });
-                } else {
-                    steps.push({
-                        number: stepNum++,
-                        equation: `x = ${formatNumber(result)}`,
-                        explanation: `Solution trouvée !`
-                    });
-                }
-                
-                // Vérification
-                const verification = `${a} × ${formatNumber(result)} + ${b} = ${formatNumber(a * result + b)} = ${c}`;
-                steps.push({
-                    verification: true,
-                    left: formatNumber(a * result + b),
-                    right: c,
-                    calculation: verification
-                });
-                
+                steps = solveType1(a, b, c, stepNum);
             } else {
-                // Type 2: ax + b = cx + d
-                steps.push({
-                    number: stepNum++,
-                    equation: formatEquation(a, b, c, d, 'type2'),
-                    explanation: "Équation de départ"
-                });
-                
-                // Étape 1: Regrouper les termes en x
-                const newA = a - c;
-                if (c !== 0) {
-                    const sign = c > 0 ? 'soustraire' : 'ajouter';
-                    const value = Math.abs(c);
-                    steps.push({
-                        number: stepNum++,
-                        equation: `${formatTerm(newA, 'x', true)} + ${b} = ${d}`,
-                        explanation: `On ${sign} ${value}x de chaque côté pour regrouper tous les termes en x à gauche`
-                    });
-                }
-                
-                // Étape 2: Regrouper les constantes
-                const newC = d - b;
-                if (b !== 0) {
-                    const sign = b > 0 ? 'soustraire' : 'ajouter';
-                    const value = Math.abs(b);
-                    steps.push({
-                        number: stepNum++,
-                        equation: `${formatTerm(newA, 'x', true)} = ${newC}`,
-                        explanation: `On ${sign} ${value} de chaque côté pour regrouper toutes les constantes à droite`
-                    });
-                }
-                
-                // Étape 3: Résolution finale
-                if (newA === 0) {
-                    if (newC === 0) {
-                        steps.push({
-                            number: stepNum++,
-                            equation: `0 = 0`,
-                            explanation: `Cette équation est toujours vraie. Elle admet une infinité de solutions : tous les nombres réels sont solutions.`
-                        });
-                    } else {
-                        steps.push({
-                            number: stepNum++,
-                            equation: `0 = ${newC}`,
-                            explanation: `Cette équation est impossible. Il n'y a aucune solution.`
-                        });
-                    }
-                } else {
-                    const result = newC / newA;
-                    if (newA !== 1) {
-                        steps.push({
-                            number: stepNum++,
-                            equation: `x = ${formatNumber(result)}`,
-                            explanation: `On divise les deux côtés par ${newA} pour isoler x`
-                        });
-                    } else {
-                        steps.push({
-                            number: stepNum++,
-                            equation: `x = ${formatNumber(result)}`,
-                            explanation: `Solution trouvée !`
-                        });
-                    }
-                    
-                    // Vérification
-                    const leftSide = a * result + b;
-                    const rightSide = c * result + d;
-                    const verification = `${a} × ${formatNumber(result)} + ${b} = ${formatNumber(leftSide)} et ${c} × ${formatNumber(result)} + ${d} = ${formatNumber(rightSide)}`;
-                    steps.push({
-                        verification: true,
-                        left: formatNumber(leftSide),
-                        right: formatNumber(rightSide),
-                        calculation: verification
-                    });
-                }
+                steps = solveType2(a, b, c, d, stepNum);
             }
             
             displaySolution(steps);
         }
 
-        // Formatage de l'équation complète
-        function formatEquation(a, b, c, d, type) {
-            if (type === 'type1') {
-                return formatTerm(a, 'x', true) + formatTerm(b, '', false) + ' = ' + c;
-            } else {
-                return formatTerm(a, 'x', true) + formatTerm(b, '', false) + 
-                       ' = ' + formatTerm(c, 'x', true) + formatTerm(d, '', false);
+        /**
+         * Résout une équation de type ax + b = c
+         */
+        function solveType1(a, b, c, stepNum) {
+            const steps = [];
+            
+            steps.push({
+                number: stepNum++,
+                equation: formatTerm(a, 'x', true) + formatTerm(b, '', false) + ' = ' + c,
+                explanation: "Équation de départ"
+            });
+            
+            // Cas a = 0
+            if (a === 0) {
+                if (b === c) {
+                    steps.push({
+                        alert: 'info',
+                        title: '♾️ Infinité de solutions',
+                        message: `L'équation se réduit à ${b} = ${c}, ce qui est toujours vrai. Tous les nombres réels sont solutions.`
+                    });
+                } else {
+                    steps.push({
+                        alert: 'warning',
+                        title: '∅ Aucune solution',
+                        message: `L'équation se réduit à ${b} = ${c}, ce qui est impossible.`
+                    });
+                }
+                return steps;
             }
+            
+            // Isoler x
+            if (b !== 0) {
+                const sign = b > 0 ? 'soustraire' : 'ajouter';
+                const value = Math.abs(b);
+                steps.push({
+                    number: stepNum++,
+                    equation: formatTerm(a, 'x', true) + ' = ' + (c - b),
+                    explanation: `On ${sign} ${value} de chaque côté pour isoler le terme en x`
+                });
+            }
+            
+            // Diviser par a
+            const numerator = c - b;
+            const result = numerator / a;
+            
+            if (a === 1) {
+                steps.push({
+                    number: stepNum++,
+                    equation: 'x = ' + formatNumber(result),
+                    explanation: 'Solution trouvée !'
+                });
+            } else {
+                steps.push({
+                    number: stepNum++,
+                    equation: 'x = ' + formatFraction(numerator, a),
+                    explanation: `On divise les deux côtés par ${a}`
+                });
+                
+                if (!Number.isInteger(result) && Math.abs(a) > 1) {
+                    steps.push({
+                        number: stepNum++,
+                        equation: 'x = ' + formatNumber(result),
+                        explanation: 'En notation décimale'
+                    });
+                }
+            }
+            
+            // Vérification
+            const leftSide = a * result + b;
+            steps.push({
+                verification: true,
+                left: formatNumber(leftSide),
+                right: c,
+                calculation: `Vérification : ${a} × ${formatNumber(result)} + ${b} = ${formatNumber(leftSide)}`
+            });
+            
+            return steps;
         }
 
-        // Formatage des nombres (arrondi si décimal)
-        function formatNumber(num) {
-            if (Number.isInteger(num)) return num;
-            return Math.round(num * 1000) / 1000;
+        /**
+         * Résout une équation de type ax + b = cx + d
+         */
+        function solveType2(a, b, c, d, stepNum) {
+            const steps = [];
+            
+            steps.push({
+                number: stepNum++,
+                equation: formatTerm(a, 'x', true) + formatTerm(b, '', false) + 
+                         ' = ' + formatTerm(c, 'x', true) + formatTerm(d, '', false),
+                explanation: "Équation de départ"
+            });
+            
+            const newA = a - c;
+            
+            if (c !== 0) {
+                const sign = c > 0 ? 'soustraire' : 'ajouter';
+                const value = Math.abs(c);
+                steps.push({
+                    number: stepNum++,
+                    equation: formatTerm(newA, 'x', true) + formatTerm(b, '', false) + ' = ' + d,
+                    explanation: `On ${sign} ${value}x de chaque côté`
+                });
+            }
+            
+            // Cas particulier : newA = 0
+            if (newA === 0) {
+                if (b === d) {
+                    steps.push({
+                        number: stepNum++,
+                        equation: `${b} = ${d}`,
+                        explanation: "Les termes en x s'annulent"
+                    });
+                    steps.push({
+                        alert: 'info',
+                        title: '♾️ Infinité de solutions',
+                        message: `L'équation est toujours vraie (${b} = ${d}). Tous les nombres réels sont solutions.`
+                    });
+                } else {
+                    steps.push({
+                        number: stepNum++,
+                        equation: `${b} = ${d}`,
+                        explanation: "Les termes en x s'annulent"
+                    });
+                    steps.push({
+                        alert: 'warning',
+                        title: '∅ Aucune solution',
+                        message: `L'équation est impossible (${b} ≠ ${d}).`
+                    });
+                }
+                return steps;
+            }
+            
+            const newC = d - b;
+            
+            if (b !== 0) {
+                const sign = b > 0 ? 'soustraire' : 'ajouter';
+                const value = Math.abs(b);
+                steps.push({
+                    number: stepNum++,
+                    equation: formatTerm(newA, 'x', true) + ' = ' + newC,
+                    explanation: `On ${sign} ${value} de chaque côté`
+                });
+            }
+            
+            const result = newC / newA;
+            
+            if (newA === 1) {
+                steps.push({
+                    number: stepNum++,
+                    equation: 'x = ' + formatNumber(result),
+                    explanation: 'Solution trouvée !'
+                });
+            } else {
+                steps.push({
+                    number: stepNum++,
+                    equation: 'x = ' + formatFraction(newC, newA),
+                    explanation: `On divise les deux côtés par ${newA}`
+                });
+                
+                if (!Number.isInteger(result) && Math.abs(newA) > 1) {
+                    steps.push({
+                        number: stepNum++,
+                        equation: 'x = ' + formatNumber(result),
+                        explanation: 'En notation décimale'
+                    });
+                }
+            }
+            
+            // Vérification
+            const leftSide = a * result + b;
+            const rightSide = c * result + d;
+            steps.push({
+                verification: true,
+                left: formatNumber(leftSide),
+                right: formatNumber(rightSide),
+                calculation: `Vérification : ${a} × ${formatNumber(result)} + ${b} = ${formatNumber(leftSide)}, ` +
+                           `${c} × ${formatNumber(result)} + ${d} = ${formatNumber(rightSide)}`
+            });
+            
+            return steps;
         }
 
-        // Affichage de la solution
+        // ========== AFFICHAGE ==========
+        
+        /**
+         * Affiche la solution
+         */
         function displaySolution(steps) {
-            stepsContainer.innerHTML = '';
+            DOM.stepsContainer.innerHTML = '';
             
             steps.forEach(step => {
                 if (step.verification) {
                     const verif = document.createElement('div');
                     verif.className = 'verification';
                     verif.innerHTML = `
-                        <div class="verification-title">✓ Vérification :</div>
+                        <div class="verification-title">✓ Vérification</div>
                         <div>${step.calculation}</div>
                         <div style="margin-top: 10px; font-weight: 600;">
                             Les deux côtés sont égaux : ${step.left} = ${step.right} ✓
                         </div>
                     `;
-                    stepsContainer.appendChild(verif);
+                    DOM.stepsContainer.appendChild(verif);
+                } else if (step.alert) {
+                    const alert = document.createElement('div');
+                    alert.className = `alert-${step.alert}`;
+                    alert.innerHTML = `
+                        <div style="font-weight: 600; margin-bottom: 8px; font-size: 1.1em;">
+                            ${step.title}
+                        </div>
+                        <div>${step.message}</div>
+                    `;
+                    DOM.stepsContainer.appendChild(alert);
                 } else {
                     const stepDiv = document.createElement('div');
                     stepDiv.className = 'step';
@@ -726,28 +925,47 @@
                             <div class="step-explanation">${step.explanation}</div>
                         </div>
                     `;
-                    stepsContainer.appendChild(stepDiv);
+                    DOM.stepsContainer.appendChild(stepDiv);
                 }
             });
             
-            solutionDiv.classList.add('show');
+            DOM.solutionDiv.classList.add('show');
         }
 
-        // Événements
-        generateBtn.addEventListener('click', generateEquation);
-        solveBtn.addEventListener('click', solveEquation);
-
-        // Mise à jour de l'équation quand on change les coefficients en mode manuel
-        document.querySelectorAll('input[type="number"]').forEach(input => {
-            input.addEventListener('input', () => {
-                if (currentMode === 'manual') {
-                    generateEquation();
+        // ========== ÉVÉNEMENTS ==========
+        
+        // Changement de type
+        DOM.typeButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                DOM.typeButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                state.currentType = btn.dataset.type;
+                
+                if (state.currentType === 'type1') {
+                    DOM.coeffType1.classList.remove('hidden');
+                    DOM.coeffType2.classList.add('hidden');
+                } else {
+                    DOM.coeffType1.classList.add('hidden');
+                    DOM.coeffType2.classList.remove('hidden');
                 }
+                
+                updateEquationDisplay();
             });
         });
 
-        // Initialisation
-        generateEquation();
+        // Génération aléatoire
+        DOM.generateBtn.addEventListener('click', generateRandomEquation);
+
+        // Résolution
+        DOM.solveBtn.addEventListener('click', solveEquation);
+
+        // Mise à jour en temps réel quand on modifie les coefficients
+        Object.values(DOM.inputs).forEach(input => {
+            input.addEventListener('input', updateEquationDisplay);
+        });
+
+        // ========== INITIALISATION ==========
+        updateEquationDisplay();
     </script>
 </body>
 </html>
