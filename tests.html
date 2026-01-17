@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tests - MathsFacile</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            padding: 20px;
+            background: #1e1e1e;
+            color: #d4d4d4;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #4ec9b0;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #a0a0a0;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            color: #dcdcaa;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #3e3e3e;
+            padding-bottom: 10px;
+        }
+
+        .controls {
+            margin: 20px 0;
+        }
+
+        button {
+            background: #0e639c;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-right: 10px;
+        }
+
+        button:hover {
+            background: #1177bb;
+        }
+
+        .test-suite {
+            margin-bottom: 30px;
+        }
+
+        .test-case {
+            background: #252526;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-left: 4px solid #3e3e3e;
+            border-radius: 4px;
+        }
+
+        .test-case.pass {
+            border-left-color: #4ec9b0;
+            background: #1a2e27;
+        }
+
+        .test-case.fail {
+            border-left-color: #f48771;
+            background: #2e1a1a;
+        }
+
+        .test-name {
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .test-name.pass::before {
+            content: "✓ ";
+            color: #4ec9b0;
+        }
+
+        .test-name.fail::before {
+            content: "✗ ";
+            color: #f48771;
+        }
+
+        .test-error {
+            color: #f48771;
+            margin-top: 5px;
+            font-style: italic;
+            font-size: 0.9em;
+        }
+
+        .summary {
+            background: #252526;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+            border: 2px solid #3e3e3e;
+            position: sticky;
+            top: 20px;
+        }
+
+        .summary.all-pass {
+            border-color: #4ec9b0;
+            background: #1a2e27;
+        }
+
+        .summary.has-fail {
+            border-color: #f48771;
+            background: #2e1a1a;
+        }
+
+        .summary h3 {
+            margin-bottom: 15px;
+        }
+
+        .stat {
+            display: inline-block;
+            margin-right: 30px;
+            font-size: 1.1em;
+        }
+
+        .stat.pass {
+            color: #4ec9b0;
+        }
+
+        .stat.fail {
+            color: #f48771;
+        }
+
+        #loading {
+            color: #dcdcaa;
+            font-size: 1.2em;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .spinner {
+            border: 3px solid #3e3e3e;
+            border-top: 3px solid #4ec9b0;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Tests Unitaires - MathsFacile</h1>
+        <p class="subtitle">Suite de tests pour vérifier la résolution d'équations du 1er degré</p>
+
+        <div class="controls">
+            <button onclick="runAllTests()">▶ Lancer les tests</button>
+            <button onclick="location.reload()">🔄 Recharger la page</button>
+        </div>
+
+        <div id="loading">
+            <div class="spinner"></div>
+            <p>Chargement des tests...</p>
+        </div>
+
+        <div id="summary"></div>
+        <div id="testResults"></div>
+    </div>
+
+    <script>
+        console.log('Script chargé !');
+
+        // ========== CODE À TESTER ==========
+        
+        function formatNumber(num) {
+            if (Number.isInteger(num)) return num;
+            return Math.round(num * 1000) / 1000;
+        }
+
+        function formatFraction(numerator, denominator) {
+            if (denominator === 1) return numerator.toString();
+            if (denominator === -1) return (-numerator).toString();
+            
+            const gcd = (a, b) => b === 0 ? Math.abs(a) : gcd(b, a % b);
+            const divisor = gcd(numerator, denominator);
+            
+            let num = numerator / divisor;
+            let den = denominator / divisor;
+            
+            if (den < 0) {
+                num = -num;
+                den = -den;
+            }
+            
+            if (den === 1) return num.toString();
+            return `${num}/${den}`;
+        }
+
+        function solveType1(a, b, c) {
+            if (a === 0) {
+                return b === c 
+                    ? { type: 'infinite', message: 'Infinité de solutions' }
+                    : { type: 'none', message: 'Aucune solution' };
+            }
+            
+            const result = (c - b) / a;
+            return { 
+                type: 'unique', 
+                value: result, 
+                fraction: formatFraction(c - b, a) 
+            };
+        }
+
+        function solveType2(a, b, c, d) {
+            const newA = a - c;
+            
+            if (newA === 0) {
+                return b === d
+                    ? { type: 'infinite', message: 'Infinité de solutions' }
+                    : { type: 'none', message: 'Aucune solution' };
+            }
+            
+            const newC = d - b;
+            const result = newC / newA;
+            return { 
+                type: 'unique', 
+                value: result, 
+                fraction: formatFraction(newC, newA) 
+            };
+        }
+
+        // ========== FRAMEWORK DE TESTS ==========
+        
+        let testResults = [];
+        let currentSuite = '';
+
+        function suite(name) {
+            currentSuite = name;
+        }
+
+        function test(name, fn) {
+            try {
+                fn();
+                testResults.push({ 
+                    suite: currentSuite,
+                    name, 
+                    pass: true 
+                });
+                console.log('✓', name);
+            } catch (error) {
+                testResults.push({ 
+                    suite: currentSuite,
+                    name, 
+                    pass: false, 
+                    error: error.message 
+                });
+                console.error('✗', name, error.message);
+            }
+        }
+
+        function assertEqual(actual, expected, message) {
+            if (actual !== expected) {
+                throw new Error(message || `Attendu ${expected}, obtenu ${actual}`);
+            }
+        }
+
+        function assertClose(actual, expected, tolerance = 0.001) {
+            if (Math.abs(actual - expected) > tolerance) {
+                throw new Error(`Attendu ~${expected}, obtenu ${actual}`);
+            }
+        }
+
+        // ========== TESTS ==========
+        
+        function runAllTests() {
+            console.log('🧪 Démarrage des tests...');
+            testResults = [];
+            
+            // Masquer le loading
+            document.getElementById('loading').style.display = 'none';
+
+            // TYPE 1 - BASIQUE
+            suite('Type 1 - Cas basiques');
+            
+            test('2x + 3 = 7 → x = 2', () => {
+                const result = solveType1(2, 3, 7);
+                assertEqual(result.type, 'unique');
+                assertClose(result.value, 2);
+            });
+
+            test('x + 5 = 8 → x = 3', () => {
+                const result = solveType1(1, 5, 8);
+                assertEqual(result.type, 'unique');
+                assertClose(result.value, 3);
+            });
+
+            test('-3x + 6 = 0 → x = 2', () => {
+                const result = solveType1(-3, 6, 0);
+                assertEqual(result.type, 'unique');
+                assertClose(result.value, 2);
+            });
+
+            test('5x - 10 = 15 → x = 5', () => {
+                const result = solveType1(5, -10, 15);
+                assertEqual(result.type, 'unique');
+                assertClose(result.value, 5);
+            });
+
+            // TYPE 1 - FRACTIONS
+            suite('Type 1 - Fractions');
+
+            test('3x = 2 → x = 2/3', () => {
+                const result = solveType1(3, 0, 2);
+                assertEqual(result.type, 'unique');
+                assertEqual(result.fraction, '2/3');
+                assertClose(result.value, 2/3);
+            });
+
+            test('2x + 1 = 0 → x = -1/2', () => {
+                const result = solveType1(2, 1, 0);
+                assertEqual(result.type, 'unique');
+                assertEqual(result.fraction, '-1/2');
+                assertClose(result.value, -0.5);
+            });
+
+            test('4x + 2 = 10 → x = 2 (simplification)', () => {
+                const result = solveType1(4, 2, 10);
+                assertEqual(result.type, 'unique');
+                assertEqual(result.fraction, '2');
+                assertClose(result.value, 2);
+            });
+
+            test('6x = 9 → x = 3/2 (simplification)', () => {
+                const result = solveType1(6, 0, 9);
+                assertEqual(result.type, 'unique');
+                assertEqual(result.fraction, '3/2');
+                assertClose(result.value, 1.5);
+            });
+
+            // TYPE 1 - CAS LIMITES
+            suite('Type 1 - Cas limites');
+
+            test('0x + 5 = 5 → Infinité de solutions', () => {
+                const result = solveType1(0, 5, 5);
+                assertEqual(result.type, 'infinite');
+            });
+
+            test('0x + 3 = 7 → Aucune solution', () => {
+                const result = solveType1(0, 3, 7);
+                assertEqual(result.type, 'none');
+            });
+
+            test('0x + 0 = 0 → Infinité de solutions', () => {
+                const result = solveType1(0, 0, 0);
+                assertEqual(result.type, 'infinite');
+            });
+
+            // TYPE 1 - NÉGATIFS
+            suite('Type 1 - Coefficients négatifs');
+
+            test('-x + 3 = 1 → x = 2', () => {
+                const result = solveType1(-1, 3, 1);
+                assertEqual(result.type, 'unique');
+                assertClose(result.value, 2);
+            });
+
+            test('-2x - 4 = -10 → x = 3', () => {
+                const result = solveType1(-2, -4, -10);
+                assertEqual(result.type, 'unique');
+                assertClose(result.value, 3);
+            });
+
+            // TYPE 2 - BASIQUE
+            suite('Type 2 - Cas basiques');
+
+            test('3x + 5 = 2x + 11 → x = 6', () => {
+                const result = solveType2(3, 5, 2, 11);
+                assertEqual(result.type, 'unique');
+                assertClose(result.value, 6);
+            });
+
+            test('2x + 3 = x + 5 → x = 2', () => {
+                const result = solveType2(2, 3, 1, 5);
+                assertEqual(result.type, 'unique');
+                assertClose(result.value, 2);
+            });
+
+            test('5x - 2 = 3x + 4 → x = 3', () => {
+                const result = solveType2(5, -2, 3, 4);
+                assertEqual(result.type, 'unique');
+                assertClose(result.value, 3);
+            });
+
+            // TYPE 2 - CAS LIMITES
+            suite('Type 2 - Cas limites');
+
+            test('2x + 3 = 2x + 3 → Infinité de solutions', () => {
+                const result = solveType2(2, 3, 2, 3);
+                assertEqual(result.type, 'infinite');
+            });
+
+            test('2x + 3 = 2x + 5 → Aucune solution', () => {
+                const result = solveType2(2, 3, 2, 5);
+                assertEqual(result.type, 'none');
+            });
+
+            test('x + 1 = x - 1 → Aucune solution', () => {
+                const result = solveType2(1, 1, 1, -1);
+                assertEqual(result.type, 'none');
+            });
+
+            test('-3x + 7 = -3x + 7 → Infinité de solutions', () => {
+                const result = solveType2(-3, 7, -3, 7);
+                assertEqual(result.type, 'infinite');
+            });
+
+            // FORMATAGE
+            suite('Formatage de fractions');
+
+            test('8/4 → 2 (simplification)', () => {
+                assertEqual(formatFraction(8, 4), '2');
+            });
+
+            test('6/9 → 2/3 (simplification)', () => {
+                assertEqual(formatFraction(6, 9), '2/3');
+            });
+
+            test('-4/2 → -2', () => {
+                assertEqual(formatFraction(-4, 2), '-2');
+            });
+
+            test('3/-6 → -1/2 (négatif au numérateur)', () => {
+                assertEqual(formatFraction(3, -6), '-1/2');
+            });
+
+            test('7/1 → 7', () => {
+                assertEqual(formatFraction(7, 1), '7');
+            });
+
+            test('15/25 → 3/5 (PGCD=5)', () => {
+                assertEqual(formatFraction(15, 25), '3/5');
+            });
+
+            // Afficher les résultats
+            displayResults();
+        }
+
+        function displayResults() {
+            console.log('📊 Affichage des résultats...');
+            
+            const container = document.getElementById('testResults');
+            const summaryContainer = document.getElementById('summary');
+
+            // Grouper par suite
+            const suites = {};
+            testResults.forEach(test => {
+                if (!suites[test.suite]) {
+                    suites[test.suite] = [];
+                }
+                suites[test.suite].push(test);
+            });
+
+            // Afficher les tests
+            let html = '';
+            for (const [suiteName, tests] of Object.entries(suites)) {
+                html += `<div class="test-suite"><h2>${suiteName}</h2>`;
+                
+                tests.forEach(test => {
+                    html += `
+                        <div class="test-case ${test.pass ? 'pass' : 'fail'}">
+                            <div class="test-name ${test.pass ? 'pass' : 'fail'}">${test.name}</div>
+                            ${test.error ? `<div class="test-error">Erreur: ${test.error}</div>` : ''}
+                        </div>
+                    `;
+                });
+
+                html += '</div>';
+            }
+
+            container.innerHTML = html;
+
+            // Résumé
+            const passed = testResults.filter(t => t.pass).length;
+            const failed = testResults.filter(t => !t.pass).length;
+            const total = testResults.length;
+            const allPass = failed === 0;
+
+            summaryContainer.innerHTML = `
+                <div class="summary ${allPass ? 'all-pass' : 'has-fail'}">
+                    <h3>${allPass ? '✅ Tous les tests sont passés !' : '⚠️ Certains tests ont échoué'}</h3>
+                    <div class="stat pass">✓ ${passed} réussis</div>
+                    <div class="stat fail">✗ ${failed} échoués</div>
+                    <div class="stat">Total: ${total}</div>
+                </div>
+            `;
+
+            console.log(`✅ ${passed}/${total} tests réussis`);
+        }
+
+        // Auto-run au chargement
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                console.log('DOM chargé, lancement des tests...');
+                setTimeout(runAllTests, 100);
+            });
+        } else {
+            console.log('DOM déjà chargé, lancement immédiat...');
+            setTimeout(runAllTests, 100);
+        }
+    </script>
+</body>
+</html>
