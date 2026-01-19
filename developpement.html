@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MathsFacile - Développement</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 12px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 16px;
+        }
+
+        h1 {
+            font-size: 2em;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+            margin-bottom: 4px;
+        }
+        
+        .subtitle {
+            font-size: 1.1em;
+            font-weight: 600;
+            opacity: 0.95;
+            margin-bottom: 12px;
+        }
+        
+        .intro {
+            font-size: 1em;
+            opacity: 0.9;
+            line-height: 1.5;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+        }
+
+        /* Type selector - visual cards */
+        .type-selector {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .type-btn {
+            padding: 12px 8px;
+            border: 2px solid #e0e0e0;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+        
+        .type-btn:last-child {
+            grid-column: span 2;
+        }
+
+        .type-btn .example {
+            font-family: 'Courier New', monospace;
+            font-size: 1em;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .type-btn .label {
+            font-size: 0.75em;
+            color: #888;
+            margin-top: 4px;
+        }
+
+        .type-btn.active {
+            border-color: #667eea;
+            background: #f0f3ff;
+        }
+        
+        .type-btn.active .example {
+            color: #667eea;
+        }
+
+        /* Coefficients */
+        .coefficients {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .coef-group {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .coef-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: #555;
+            font-size: 0.85em;
+        }
+
+        .coef-group input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 1em;
+            text-align: center;
+        }
+
+        .coef-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        /* Expression display */
+        .expression-display {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .expression {
+            font-size: 1.5em;
+            font-weight: 600;
+            color: #333;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-buttons button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-generate {
+            background: #e8e8e8;
+            color: #333;
+        }
+
+        .btn-develop {
+            background: #667eea;
+            color: white;
+        }
+
+        /* Solution */
+        .solution {
+            margin-top: 16px;
+            display: none;
+        }
+
+        .solution.show {
+            display: block;
+        }
+
+        .solution h3 {
+            color: #28a745;
+            margin-bottom: 12px;
+            font-size: 1.1em;
+        }
+
+        .step {
+            background: #f9f9f9;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border-left: 3px solid #667eea;
+        }
+
+        .step-expression {
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 6px;
+        }
+
+        .step-explanation {
+            color: #666;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+
+        /* Visual distributivity */
+        .distribution-visual {
+            position: relative;
+            padding: 50px 8px 20px;
+            background: white;
+            border-radius: 8px;
+            margin: 12px 0;
+        }
+
+        .expression-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 4px;
+            font-size: 1.2em;
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            flex-wrap: nowrap;
+        }
+
+        .term {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .term-red { background: #ffebee; color: #c62828; }
+        .term-blue { background: #e3f2fd; color: #1565c0; }
+        .term-green { background: #e8f5e9; color: #2e7d32; }
+        .term-orange { background: #fff3e0; color: #e65100; }
+
+        .arrow-svg-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        /* Results grid */
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        .result-item {
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+        }
+        
+        .result-item.result-red {
+            background: #ffebee;
+            border-left: 3px solid #ef5350;
+        }
+        
+        .result-item.result-green {
+            background: #e8f5e9;
+            border-left: 3px solid #66bb6a;
+        }
+        
+        .result-item.result-blue {
+            background: #e3f2fd;
+            border-left: 3px solid #42a5f5;
+        }
+
+        .result-item .calculation {
+            font-size: 0.85em;
+            color: #666;
+            margin-bottom: 4px;
+        }
+
+        .result-item .result {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #333;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* Final result */
+        .result-highlight {
+            background: #e8f5e9;
+            padding: 16px;
+            border-radius: 8px;
+            margin-top: 12px;
+            text-align: center;
+        }
+
+        .result-highlight .final {
+            font-size: 1.4em;
+            font-weight: 600;
+            font-family: 'Courier New', monospace;
+            color: #2e7d32;
+        }
+        
+        /* Identity colors for a and b */
+        .id-a {
+            color: #d32f2f;
+            font-weight: 600;
+        }
+        
+        .id-b {
+            color: #1976d2;
+            font-weight: 600;
+        }
+        
+        /* Identity boxes */
+        .identity-boxes {
+            display: flex;
+            gap: 12px;
+            margin-top: 8px;
+        }
+        
+        .id-box {
+            flex: 1;
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+        }
+        
+        .id-box-a {
+            background: #ffebee;
+            border: 2px solid #ef5350;
+        }
+        
+        .id-box-b {
+            background: #e3f2fd;
+            border: 2px solid #42a5f5;
+        }
+        
+        .id-box .id-label {
+            display: block;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .id-box-a .id-label { color: #c62828; }
+        .id-box-b .id-label { color: #1565c0; }
+        
+        .id-box .id-value {
+            font-family: 'Courier New', monospace;
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .hidden { display: none; }
+
+        /* Mobile optimizations */
+        @media (max-width: 400px) {
+            body { padding: 8px; }
+            .card { padding: 12px; }
+            h1 { font-size: 1.4em; }
+            
+            .expression { font-size: 1.3em; }
+            .expression-row { font-size: 1em; }
+            .term { padding: 3px 6px; }
+            
+            .results-grid { grid-template-columns: 1fr; }
+            
+            .coef-group input { padding: 8px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎓 Développement</h1>
+            <p class="subtitle">Exercices interactifs</p>
+            <p class="intro">Entraîne-toi à développer des expressions algébriques.<br>Choisis un type, modifie les valeurs si tu veux, puis clique sur <strong>Correction</strong> pour voir les étapes détaillées.</p>
+        </header>
+
+        <div class="card">
+            <div class="type-selector">
+                <button class="type-btn active" data-type="simple">
+                    <div class="example">2x(3x + 5)</div>
+                    <div class="label">Simple</div>
+                </button>
+                <button class="type-btn" data-type="double">
+                    <div class="example">(2x + 3)(4x + 5)</div>
+                    <div class="label">Double</div>
+                </button>
+                <button class="type-btn" data-type="carre-somme">
+                    <div class="example">(3x + 2)²</div>
+                    <div class="label">Carré somme</div>
+                </button>
+                <button class="type-btn" data-type="carre-diff">
+                    <div class="example">(3x − 2)²</div>
+                    <div class="label">Carré différence</div>
+                </button>
+                <button class="type-btn" data-type="diff-carres">
+                    <div class="example">(a + b)(a − b)</div>
+                    <div class="label">Différence de carrés</div>
+                </button>
+            </div>
+
+            <!-- Coefficients Simple -->
+            <div class="coefficients" id="coeffSimple">
+                <div class="coef-group">
+                    <label>a</label>
+                    <input type="number" id="a_simple" value="2">
+                </div>
+                <div class="coef-group">
+                    <label>b</label>
+                    <input type="number" id="b_simple" value="3">
+                </div>
+                <div class="coef-group">
+                    <label>c</label>
+                    <input type="number" id="c_simple" value="5">
+                </div>
+            </div>
+
+            <!-- Coefficients Double -->
+            <div class="coefficients hidden" id="coeffDouble">
+                <div class="coef-group">
+                    <label>a</label>
+                    <input type="number" id="a_double" value="2">
+                </div>
+                <div class="coef-group">
+                    <label>b</label>
+                    <input type="number" id="b_double" value="3">
+                </div>
+                <div class="coef-group">
+                    <label>c</label>
+                    <input type="number" id="c_double" value="4">
+                </div>
+                <div class="coef-group">
+                    <label>d</label>
+                    <input type="number" id="d_double" value="5">
+                </div>
+            </div>
+
+            <!-- Coefficients Carré -->
+            <div class="coefficients hidden" id="coeffCarre">
+                <div class="coef-group">
+                    <label>a</label>
+                    <input type="number" id="a_carre" value="3">
+                </div>
+                <div class="coef-group">
+                    <label>b</label>
+                    <input type="number" id="b_carre" value="2">
+                </div>
+            </div>
+
+            <div class="expression-display">
+                <div class="expression" id="expressionDisplay">2x(3x + 5)</div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn-generate" id="generateBtn">🎲 Nouveau</button>
+                <button class="btn-develop" id="developBtn">✓ Correction</button>
+            </div>
+
+            <div class="solution" id="solutionDiv">
+                <h3>📝 Solution</h3>
+                <div id="stepsContainer"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // État
+        let currentType = 'simple';
+
+        // Éléments
+        const $ = id => document.getElementById(id);
+        const typeButtons = document.querySelectorAll('.type-btn');
+
+        // Formatage
+        function formatTerm(coef, power, isFirst) {
+            if (coef === 0) return isFirst ? '0' : '';
+            
+            const sign = isFirst ? (coef < 0 ? '-' : '') : (coef > 0 ? ' + ' : ' - ');
+            const abs = Math.abs(coef);
+            
+            if (power === 0) return sign + abs;
+            if (power === 1) return sign + (abs === 1 ? '' : abs) + 'x';
+            return sign + (abs === 1 ? '' : abs) + 'x²';
+        }
+
+        function formatExpr(a, b, op = '+') {
+            let r = a === 0 ? '0' : a === 1 ? 'x' : a === -1 ? '-x' : a + 'x';
+            if (b !== 0) {
+                r += op === '+' ? (b > 0 ? ' + ' : ' - ') : (b > 0 ? ' - ' : ' + ');
+                r += Math.abs(b);
+            }
+            return r || '0';
+        }
+
+        // Obtenir l'expression courante
+        function getExpr() {
+            const v = id => parseFloat($(id).value) || 0;
+            switch(currentType) {
+                case 'simple': return { a: v('a_simple'), b: v('b_simple'), c: v('c_simple') };
+                case 'double': return { a: v('a_double'), b: v('b_double'), c: v('c_double'), d: v('d_double') };
+                case 'carre-somme':
+                case 'carre-diff': return { a: v('a_carre'), b: v('b_carre') };
+                case 'diff-carres': return { a: v('a_double'), b: v('b_double') };
+            }
+        }
+
+        // Mise à jour affichage
+        function updateDisplay() {
+            const e = getExpr();
+            let txt = '';
+            const fv = a => a === 1 ? 'x' : a === -1 ? '-x' : a + 'x';
+            
+            switch(currentType) {
+                case 'simple': txt = `${fv(e.a)}(${formatExpr(e.b, e.c)})`; break;
+                case 'double': txt = `(${formatExpr(e.a, e.b)})(${formatExpr(e.c, e.d)})`; break;
+                case 'carre-somme': txt = `(${formatExpr(e.a, Math.abs(e.b))})²`; break;
+                case 'carre-diff': txt = `(${formatExpr(e.a, Math.abs(e.b), '-')})²`; break;
+                case 'diff-carres': txt = `(${formatExpr(e.a, Math.abs(e.b))})(${formatExpr(e.a, -Math.abs(e.b))})`; break;
+            }
+            
+            $('expressionDisplay').textContent = txt;
+            $('solutionDiv').classList.remove('show');
+        }
+
+        // Générer aléatoire
+        function generate() {
+            const rand = () => Math.floor(Math.random() * 19) - 9 || 1;
+            switch(currentType) {
+                case 'simple':
+                    $('a_simple').value = rand();
+                    $('b_simple').value = rand();
+                    $('c_simple').value = rand();
+                    break;
+                case 'double':
+                case 'diff-carres':
+                    $('a_double').value = rand();
+                    $('b_double').value = rand();
+                    $('c_double').value = rand();
+                    $('d_double').value = rand();
+                    break;
+                case 'carre-somme':
+                case 'carre-diff':
+                    $('a_carre').value = rand();
+                    $('b_carre').value = rand();
+                    break;
+            }
+            updateDisplay();
+        }
+
+        // Développer
+        function develop() {
+            const e = getExpr();
+            let html = '';
+            
+            switch(currentType) {
+                case 'simple': html = developSimple(e); break;
+                case 'double': html = developDouble(e); break;
+                case 'carre-somme': html = developCarreSomme(e); break;
+                case 'carre-diff': html = developCarreDiff(e); break;
+                case 'diff-carres': html = developDiffCarres(e); break;
+            }
+            
+            $('stepsContainer').innerHTML = html;
+            $('solutionDiv').classList.add('show');
+            
+            // Dessiner les flèches après rendu
+            setTimeout(() => {
+                const container = document.querySelector('.distribution-visual');
+                if (container) drawArrows(container);
+            }, 50);
+        }
+
+        function developSimple(e) {
+            const {a, b, c} = e;
+            const fv = a === 1 ? 'x' : a === -1 ? '-x' : a + 'x';
+            const t1 = a * b, t2 = a * c;
+            const sign = c >= 0 ? '+' : '−';
+            const id = 'vis_' + Date.now();
+            
+            return `
+                <div class="step">
+                    <div class="step-expression">Règle : k(a + b) = ka + kb</div>
+                    <div class="step-explanation">On multiplie le terme devant la parenthèse par chaque terme à l'intérieur</div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-expression">Distribution de ${fv}</div>
+                    
+                    <div class="distribution-visual" id="${id}" data-type="simple">
+                        <div class="expression-row">
+                            <span class="term term-red" data-term="1">${fv}</span>
+                            <span>(</span>
+                            <span class="term term-blue" data-term="2">${b}x</span>
+                            <span>${sign}</span>
+                            <span class="term term-green" data-term="3">${Math.abs(c)}</span>
+                            <span>)</span>
+                        </div>
+                        <svg class="arrow-svg-container"></svg>
+                        
+                        <div class="results-grid">
+                            <div class="result-item result-red">
+                                <div class="calculation">${fv} × ${b}x</div>
+                                <div class="result">= ${formatTerm(t1, 2, true)}</div>
+                            </div>
+                            <div class="result-item result-green">
+                                <div class="calculation">${fv} × (${c})</div>
+                                <div class="result">= ${formatTerm(t2, 1, true)}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-expression">On additionne les résultats</div>
+                    <div class="step-explanation">${formatTerm(t1, 2, true)} ${t2 >= 0 ? '+' : '−'} ${Math.abs(t2)}x</div>
+                </div>
+                
+                <div class="result-highlight">
+                    <div class="final">${formatTerm(t1, 2, true)}${formatTerm(t2, 1, false)}</div>
+                </div>
+            `;
+        }
+
+        function developDouble(e) {
+            const {a, b, c, d} = e;
+            const t1 = a*c, t2 = a*d, t3 = b*c, t4 = b*d;
+            const total = t2 + t3;
+            const sB = b >= 0 ? '+' : '−';
+            const sD = d >= 0 ? '+' : '−';
+            const id = 'vis_' + Date.now();
+            
+            return `
+                <div class="step">
+                    <div class="step-expression">Règle : (a + b)(c + d) = ac + ad + bc + bd</div>
+                    <div class="step-explanation">Chaque terme de la 1ère parenthèse multiplie chaque terme de la 2ème</div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-expression">Les 4 multiplications</div>
+                    
+                    <div class="distribution-visual" id="${id}" data-type="double">
+                        <div class="expression-row">
+                            <span>(</span>
+                            <span class="term term-red" data-term="1">${a}x</span>
+                            <span>${sB}</span>
+                            <span class="term term-blue" data-term="2">${Math.abs(b)}</span>
+                            <span>)(</span>
+                            <span class="term term-green" data-term="3">${c}x</span>
+                            <span>${sD}</span>
+                            <span class="term term-orange" data-term="4">${Math.abs(d)}</span>
+                            <span>)</span>
+                        </div>
+                        <svg class="arrow-svg-container"></svg>
+                        
+                        <div class="results-grid">
+                            <div class="result-item result-red">
+                                <div class="calculation">${a}x × ${c}x</div>
+                                <div class="result">= ${formatTerm(t1, 2, true)}</div>
+                            </div>
+                            <div class="result-item result-red">
+                                <div class="calculation">${a}x × (${d})</div>
+                                <div class="result">= ${formatTerm(t2, 1, true)}</div>
+                            </div>
+                            <div class="result-item result-blue">
+                                <div class="calculation">${b} × ${c}x</div>
+                                <div class="result">= ${formatTerm(t3, 1, true)}</div>
+                            </div>
+                            <div class="result-item result-blue">
+                                <div class="calculation">${b} × (${d})</div>
+                                <div class="result">= ${formatTerm(t4, 0, true)}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-expression">On écrit tous les termes</div>
+                    <div class="step-explanation">${formatTerm(t1, 2, true)}${formatTerm(t2, 1, false)}${formatTerm(t3, 1, false)}${formatTerm(t4, 0, false)}</div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-expression">On regroupe les termes en x</div>
+                    <div class="step-explanation">${formatTerm(t2, 1, true)}${formatTerm(t3, 1, false)} = ${formatTerm(total, 1, true)}</div>
+                </div>
+                
+                <div class="result-highlight">
+                    <div class="final">${formatTerm(t1, 2, true)}${formatTerm(total, 1, false)}${formatTerm(t4, 0, false)}</div>
+                </div>
+            `;
+        }
+
+        function developCarreSomme(e) {
+            const {a, b} = e;
+            const t1 = a*a, t2 = 2*a*b, t3 = b*b;
+            
+            return `
+                <div class="step">
+                    <div class="step-expression">Identité remarquable</div>
+                    <div class="step-explanation">(<span class="id-a">a</span> + <span class="id-b">b</span>)² = <span class="id-a">a</span>² + 2<span class="id-a">a</span><span class="id-b">b</span> + <span class="id-b">b</span>²</div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-expression">On identifie</div>
+                    <div class="identity-boxes">
+                        <div class="id-box id-box-a">
+                            <span class="id-label">a</span>
+                            <span class="id-value">${a}x</span>
+                        </div>
+                        <div class="id-box id-box-b">
+                            <span class="id-label">b</span>
+                            <span class="id-value">${b}</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-expression">On applique</div>
+                    <div class="step-explanation">(<span class="id-a">${a}x</span>)² + 2 × <span class="id-a">${a}x</span> × <span class="id-b">${b}</span> + (<span class="id-b">${b}</span>)²</div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-expression">On calcule</div>
+                    <div class="step-explanation">
+                        • (<span class="id-a">${a}x</span>)² = ${t1}x²<br>
+                        • 2 × <span class="id-a">${a}x</span> × <span class="id-b">${b}</span> = ${t2}x<br>
+                        • (<span class="id-b">${b}</span>)² = ${t3}
+                    </div>
+                </div>
+                
+                <div class="result-highlight">
+                    <div class="final">${formatTerm(t1, 2, true)}${formatTerm(t2, 1, false)}${formatTerm(t3, 0, false)}</div>
+                </div>
+            `;
+        }
+
+        function developCarreDiff(e) {
+            const {a, b} = e;
+            const t1 = a*a, t2 = -2*a*b, t3 = b*b;
+            
+            return `
+                <div class="step">
+                    <div class="step-expression">Identité remarquable</div>
+                    <div class="step-explanation">(<span class="id-a">a</span> − <span class="id-b">b</span>)² = <span class="id-a">a</span>² − 2<span class="id-a">a</span><span class="id-b">b</span> + <span class="id-b">b</span>²</div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-expression">On identifie</div>
+                    <div class="identity-boxes">
+                        <div class="id-box id-box-a">
+                            <span class="id-label">a</span>
+                            <span class="id-value">${a}x</span>
+                        </div>
+                        <div class="id-box id-box-b">
+                            <span class="id-label">b</span>
+                            <span class="id-value">${b}</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-expression">On applique</div>
+                    <div class="step-explanation">(<span class="id-a">${a}x</span>)² − 2 × <span class="id-a">${a}x</span> × <span class="id-b">${b}</span> + (<span class="id-b">${b}</span>)²</div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-expression">On calcule</div>
+                    <div class="step-explanation">
+                        • (<span class="id-a">${a}x</span>)² = ${t1}x²<br>
+                        • −2 × <span class="id-a">${a}x</span> × <span class="id-b">${b}</span> = ${t2}x<br>
+                        • (<span class="id-b">${b}</span>)² = ${t3}
+                    </div>
+                </div>
+                
+                <div class="result-highlight">
+                    <div class="final">${formatTerm(t1, 2, true)}${formatTerm(t2, 1, false)}${formatTerm(t3, 0, false)}</div>
+                </div>
+            `;
+        }
+
+        function developDiffCarres(e) {
+            const {a, b} = e;
+            const t1 = a*a, t2 = b*b;
+            
+            return `
+                <div class="step">
+                    <div class="step-expression">Identité remarquable</div>
+                    <div class="step-explanation">(<span class="id-a">a</span> + <span class="id-b">b</span>)(<span class="id-a">a</span> − <span class="id-b">b</span>) = <span class="id-a">a</span>² − <span class="id-b">b</span>²</div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-expression">On identifie</div>
+                    <div class="identity-boxes">
+                        <div class="id-box id-box-a">
+                            <span class="id-label">a</span>
+                            <span class="id-value">${a}x</span>
+                        </div>
+                        <div class="id-box id-box-b">
+                            <span class="id-label">b</span>
+                            <span class="id-value">${b}</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-expression">On applique</div>
+                    <div class="step-explanation">(<span class="id-a">${a}x</span>)² − (<span class="id-b">${b}</span>)²</div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-expression">On calcule</div>
+                    <div class="step-explanation">
+                        • (<span class="id-a">${a}x</span>)² = ${t1}x²<br>
+                        • (<span class="id-b">${b}</span>)² = ${t2}
+                    </div>
+                </div>
+                
+                <div class="result-highlight">
+                    <div class="final">${formatTerm(t1, 2, true)}${formatTerm(-t2, 0, false)}</div>
+                </div>
+            `;
+        }
+
+        // Dessiner les flèches
+        function drawArrows(container) {
+            const svg = container.querySelector('svg');
+            const terms = container.querySelectorAll('[data-term]');
+            if (!svg || terms.length < 3) return;
+            
+            const rect = container.getBoundingClientRect();
+            const pos = {};
+            
+            terms.forEach(t => {
+                const r = t.getBoundingClientRect();
+                pos[t.dataset.term] = {
+                    x: r.left + r.width/2 - rect.left,
+                    top: r.top - rect.top,
+                    bottom: r.bottom - rect.top
+                };
+            });
+            
+            svg.setAttribute('viewBox', `0 0 ${rect.width} ${rect.height}`);
+            
+            const type = container.dataset.type;
+            const mkId = c => `arr_${c}_${Date.now()}`;
+            
+            let defs = '<defs>';
+            let paths = '';
+            
+            if (type === 'simple') {
+                const id1 = mkId('r'), id2 = mkId('g');
+                defs += marker(id1, '#ef5350') + marker(id2, '#66bb6a');
+                paths += arrow(pos['1'].x, pos['1'].top-5, pos['2'].x, pos['2'].top-5, -30, '#ef5350', id1);
+                paths += arrow(pos['1'].x, pos['1'].top-5, pos['3'].x, pos['3'].top-5, -45, '#66bb6a', id2);
+            } else if (type === 'double') {
+                const id1 = mkId('r'), id2 = mkId('b');
+                defs += marker(id1, '#ef5350') + marker(id2, '#42a5f5');
+                // Rouge par le haut
+                paths += arrow(pos['1'].x, pos['1'].top-5, pos['3'].x, pos['3'].top-5, -35, '#ef5350', id1);
+                paths += arrow(pos['1'].x, pos['1'].top-5, pos['4'].x, pos['4'].top-5, -50, '#ef5350', id1);
+                // Bleu par le bas
+                paths += arrow(pos['2'].x, pos['2'].bottom+5, pos['3'].x, pos['3'].bottom+5, 35, '#42a5f5', id2);
+                paths += arrow(pos['2'].x, pos['2'].bottom+5, pos['4'].x, pos['4'].bottom+5, 50, '#42a5f5', id2);
+            }
+            
+            defs += '</defs>';
+            svg.innerHTML = defs + paths;
+        }
+        
+        function marker(id, color) {
+            return `<marker id="${id}" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+                <polygon points="0 0, 8 3, 0 6" fill="${color}"/>
+            </marker>`;
+        }
+        
+        function arrow(x1, y1, x2, y2, curve, color, markerId) {
+            const mx = (x1+x2)/2, my = (y1+y2)/2 + curve;
+            return `<path d="M${x1} ${y1} Q${mx} ${my}, ${x2} ${y2}" 
+                stroke="${color}" stroke-width="2" fill="none" marker-end="url(#${markerId})"/>`;
+        }
+
+        // Events
+        typeButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                typeButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentType = btn.dataset.type;
+                
+                $('coeffSimple').classList.add('hidden');
+                $('coeffDouble').classList.add('hidden');
+                $('coeffCarre').classList.add('hidden');
+                
+                if (currentType === 'simple') $('coeffSimple').classList.remove('hidden');
+                else if (['double','diff-carres'].includes(currentType)) $('coeffDouble').classList.remove('hidden');
+                else $('coeffCarre').classList.remove('hidden');
+                
+                updateDisplay();
+            });
+        });
+
+        $('generateBtn').addEventListener('click', generate);
+        $('developBtn').addEventListener('click', develop);
+        
+        document.querySelectorAll('input').forEach(inp => {
+            inp.addEventListener('input', updateDisplay);
+        });
+        
+        window.addEventListener('resize', () => {
+            const v = document.querySelector('.distribution-visual');
+            if (v) drawArrows(v);
+        });
+
+        // Init
+        updateDisplay();
+    </script>
+</body>
+</html>

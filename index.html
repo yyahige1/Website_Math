@@ -41,6 +41,31 @@
             opacity: 0.9;
         }
 
+        .nav-links {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .nav-links a.active {
+            background: rgba(255, 255, 255, 0.4);
+        }
+
         .card {
             background: white;
             border-radius: 15px;
@@ -412,6 +437,11 @@
             <h1>🎓 MathsFacile</h1>
             <p class="subtitle">Équations du 1er degré - Entraînement illimité</p>
         </header>
+
+        <div class="nav-links">
+            <a href="index.html" class="active">Équations</a>
+            <a href="developpement.html">Développement →</a>
+        </div>
 
         <div class="card">
             <div class="info-box">
