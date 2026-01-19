@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MathsFacile - Réduction</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 12px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Navigation */
+        .nav {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .nav a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 14px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .nav a:hover {
+            background: rgba(255,255,255,0.25);
+        }
+
+        .nav a.active {
+            background: rgba(255,255,255,0.35);
+            font-weight: 600;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 16px;
+        }
+
+        h1 {
+            font-size: 2em;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+            margin-bottom: 4px;
+        }
+        
+        .subtitle {
+            font-size: 1.1em;
+            font-weight: 600;
+            opacity: 0.95;
+            margin-bottom: 12px;
+        }
+        
+        .intro {
+            font-size: 1em;
+            opacity: 0.9;
+            line-height: 1.5;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+        }
+
+        /* Type selector */
+        .type-selector {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .type-btn {
+            padding: 12px 8px;
+            border: 2px solid #e0e0e0;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .type-btn .example {
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .type-btn .label {
+            font-size: 0.75em;
+            color: #888;
+            margin-top: 4px;
+        }
+
+        .type-btn.active {
+            border-color: #667eea;
+            background: #f0f3ff;
+        }
+        
+        .type-btn.active .example {
+            color: #667eea;
+        }
+
+        /* Settings */
+        .settings {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .setting-group {
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .setting-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: #555;
+            font-size: 0.85em;
+        }
+
+        .setting-group select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 1em;
+            cursor: pointer;
+        }
+
+        .setting-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        /* Expression display */
+        .expression-display {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .expression {
+            font-size: 1.4em;
+            font-weight: 600;
+            color: #333;
+            font-family: 'Courier New', monospace;
+            word-break: break-word;
+        }
+
+        /* Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-buttons button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-generate {
+            background: #e8e8e8;
+            color: #333;
+        }
+
+        .btn-solve {
+            background: #667eea;
+            color: white;
+        }
+
+        /* Solution */
+        .solution {
+            margin-top: 16px;
+            display: none;
+        }
+
+        .solution.show {
+            display: block;
+        }
+
+        .solution h3 {
+            color: #28a745;
+            margin-bottom: 12px;
+            font-size: 1.1em;
+        }
+
+        .step {
+            background: #f9f9f9;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border-left: 3px solid #667eea;
+        }
+
+        .step-expression {
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 6px;
+        }
+
+        .step-explanation {
+            color: #666;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+
+        /* Term highlighting */
+        .term-group {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin: 1px;
+        }
+
+        .term-x2 { background: #ffebee; color: #c62828; }
+        .term-x { background: #e3f2fd; color: #1565c0; }
+        .term-const { background: #e8f5e9; color: #2e7d32; }
+
+        /* Regroupement visual */
+        .regroup-visual {
+            background: white;
+            padding: 12px;
+            border-radius: 6px;
+            margin: 10px 0;
+        }
+
+        .regroup-line {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin: 8px 0;
+            flex-wrap: wrap;
+        }
+
+        .regroup-box {
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+        }
+
+        .regroup-box.x2-terms {
+            background: #ffebee;
+            border: 2px dashed #ef5350;
+        }
+
+        .regroup-box.x-terms {
+            background: #e3f2fd;
+            border: 2px dashed #42a5f5;
+        }
+
+        .regroup-box.const-terms {
+            background: #e8f5e9;
+            border: 2px dashed #66bb6a;
+        }
+
+        .arrow-down {
+            text-align: center;
+            font-size: 1.2em;
+            color: #667eea;
+            margin: 8px 0;
+        }
+
+        /* Final result */
+        .result-highlight {
+            background: #e8f5e9;
+            padding: 16px;
+            border-radius: 8px;
+            margin-top: 12px;
+            text-align: center;
+        }
+
+        .result-highlight .final {
+            font-size: 1.4em;
+            font-weight: 600;
+            font-family: 'Courier New', monospace;
+            color: #2e7d32;
+        }
+
+        /* Legend */
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+            font-size: 0.85em;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .legend-color {
+            width: 14px;
+            height: 14px;
+            border-radius: 3px;
+        }
+
+        .hidden { display: none; }
+
+        /* Mobile */
+        @media (max-width: 400px) {
+            body { padding: 8px; }
+            .card { padding: 12px; }
+            h1 { font-size: 1.7em; }
+            
+            .expression { font-size: 1.1em; }
+            
+            .type-selector { grid-template-columns: 1fr; }
+            
+            .settings { flex-direction: column; }
+            .setting-group { min-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="nav">
+            <a href="index.html">Équations</a>
+            <a href="developpement.html">Développement</a>
+            <a href="reduction.html" class="active">Réduction</a>
+            <a href="factorisation.html">Factorisation</a>
+        </nav>
+
+        <header>
+            <h1>🎓 Réduction</h1>
+            <p class="subtitle">Exercices interactifs</p>
+            <p class="intro">Entraîne-toi à réduire des expressions algébriques.<br>Choisis un type et un niveau, puis clique sur <strong>Correction</strong> pour voir les étapes.</p>
+        </header>
+
+        <div class="card">
+            <div class="type-selector">
+                <button class="type-btn active" data-type="avec-constantes">
+                    <div class="example">4x + 7 − 2x + 3</div>
+                    <div class="label">Termes en x et nombres</div>
+                </button>
+                <button class="type-btn" data-type="avec-x2">
+                    <div class="example">2x² + 3x − x² + 5</div>
+                    <div class="label">Avec x²</div>
+                </button>
+                <button class="type-btn" data-type="avec-parentheses">
+                    <div class="example">2(x + 3) + 5x − 4</div>
+                    <div class="label">Avec parenthèses</div>
+                </button>
+            </div>
+
+            <div class="settings">
+                <div class="setting-group">
+                    <label>Nombre de termes</label>
+                    <select id="nbTerms">
+                        <option value="3">3 termes</option>
+                        <option value="4" selected>4 termes</option>
+                        <option value="5">5 termes</option>
+                        <option value="6">6 termes</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="expression-display">
+                <div class="expression" id="expressionDisplay">3x + 5x − 2x</div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn-generate" id="generateBtn">🎲 Nouveau</button>
+                <button class="btn-solve" id="solveBtn">✓ Correction</button>
+            </div>
+
+            <div class="solution" id="solutionDiv">
+                <h3>📝 Réduction</h3>
+                <div id="stepsContainer"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // État
+        let currentType = 'avec-constantes';
+        let currentExpression = null;
+
+        // Éléments
+        const $ = id => document.getElementById(id);
+        const typeButtons = document.querySelectorAll('.type-btn');
+
+        // Génération de coefficients (entre -10 et 10, évite 0 si demandé)
+        function randCoef(avoidZero = false) {
+            let n;
+            do {
+                n = Math.floor(Math.random() * 21) - 10;
+            } while (avoidZero && n === 0);
+            return n;
+        }
+
+        // Formatage d'un terme
+        function formatTerm(coef, variable, isFirst) {
+            if (coef === 0) return '';
+            
+            const sign = isFirst ? (coef < 0 ? '−' : '') : (coef > 0 ? ' + ' : ' − ');
+            const abs = Math.abs(coef);
+            
+            if (!variable) return sign + abs;
+            if (abs === 1) return sign + variable;
+            return sign + abs + variable;
+        }
+
+        // Génération d'expression
+        function generateExpression() {
+            const nbTerms = parseInt($('nbTerms').value);
+            
+            let expr = { x2Terms: [], xTerms: [], constTerms: [], parentheses: [] };
+            
+            switch(currentType) {
+                case 'avec-constantes':
+                    // Termes en x et constantes
+                    const nbX = Math.ceil(nbTerms / 2);
+                    const nbC = nbTerms - nbX;
+                    for (let i = 0; i < nbX; i++) {
+                        expr.xTerms.push(randCoef(true));
+                    }
+                    for (let i = 0; i < nbC; i++) {
+                        expr.constTerms.push(randCoef(true));
+                    }
+                    break;
+                    
+                case 'avec-x2':
+                    // Termes en x², x et constantes
+                    const distribution = distributeTerms(nbTerms, 3);
+                    for (let i = 0; i < distribution[0]; i++) {
+                        expr.x2Terms.push(randCoef(true));
+                    }
+                    for (let i = 0; i < distribution[1]; i++) {
+                        expr.xTerms.push(randCoef(true));
+                    }
+                    for (let i = 0; i < distribution[2]; i++) {
+                        expr.constTerms.push(randCoef(true));
+                    }
+                    break;
+                    
+                case 'avec-parentheses':
+                    // Expressions avec parenthèses à développer
+                    const nbPar = Math.min(2, Math.floor(nbTerms / 2));
+                    for (let i = 0; i < nbPar; i++) {
+                        expr.parentheses.push({
+                            coef: randCoef(true),
+                            xCoef: randCoef(true),
+                            constCoef: randCoef(true)
+                        });
+                    }
+                    // Ajouter quelques termes simples
+                    const remaining = nbTerms - nbPar * 2;
+                    for (let i = 0; i < Math.max(1, remaining); i++) {
+                        if (Math.random() < 0.5) {
+                            expr.xTerms.push(randCoef(true));
+                        } else {
+                            expr.constTerms.push(randCoef(true));
+                        }
+                    }
+                    break;
+            }
+            
+            currentExpression = expr;
+            displayExpression();
+        }
+
+        // Répartir les termes équitablement
+        function distributeTerms(total, categories) {
+            const base = Math.floor(total / categories);
+            const remainder = total % categories;
+            const result = [];
+            for (let i = 0; i < categories; i++) {
+                result.push(base + (i < remainder ? 1 : 0));
+            }
+            // S'assurer qu'il y a au moins 1 de chaque
+            return result.map(n => Math.max(1, n));
+        }
+
+        // Afficher l'expression
+        function displayExpression() {
+            if (!currentExpression) {
+                generateExpression();
+                return;
+            }
+            
+            const expr = currentExpression;
+            let terms = [];
+            
+            // Mélanger tous les termes pour un affichage naturel
+            if (currentType === 'avec-parentheses') {
+                // Affichage spécial pour les parenthèses
+                expr.parentheses.forEach(p => {
+                    const inner = formatTerm(p.xCoef, 'x', true) + formatTerm(p.constCoef, '', false);
+                    if (p.coef === 1) {
+                        terms.push({ display: `(${inner})`, type: 'par' });
+                    } else if (p.coef === -1) {
+                        terms.push({ display: `−(${inner})`, type: 'par' });
+                    } else {
+                        terms.push({ display: `${p.coef}(${inner})`, type: 'par' });
+                    }
+                });
+            }
+            
+            expr.x2Terms.forEach(c => terms.push({ coef: c, var: 'x²', type: 'x2' }));
+            expr.xTerms.forEach(c => terms.push({ coef: c, var: 'x', type: 'x' }));
+            expr.constTerms.forEach(c => terms.push({ coef: c, var: '', type: 'const' }));
+            
+            // Mélanger (sauf parenthèses au début)
+            const parTerms = terms.filter(t => t.type === 'par');
+            const otherTerms = terms.filter(t => t.type !== 'par');
+            shuffleArray(otherTerms);
+            terms = [...parTerms, ...otherTerms];
+            
+            // Construire l'affichage
+            let display = '';
+            terms.forEach((t, i) => {
+                if (t.display) {
+                    display += (i === 0 ? '' : ' + ') + t.display;
+                } else {
+                    display += formatTerm(t.coef, t.var, i === 0);
+                }
+            });
+            
+            // Nettoyer les "+ −" en "−"
+            display = display.replace(/\+ −/g, '− ');
+            
+            $('expressionDisplay').textContent = display;
+            $('solutionDiv').classList.remove('show');
+        }
+
+        // Mélanger un tableau
+        function shuffleArray(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+        }
+
+        // Résoudre
+        function solve() {
+            if (!currentExpression) return;
+            
+            const expr = currentExpression;
+            let html = '';
+            
+            if (currentType === 'avec-parentheses') {
+                html = solveWithParentheses(expr);
+            } else {
+                html = solveSimple(expr);
+            }
+            
+            $('stepsContainer').innerHTML = html;
+            $('solutionDiv').classList.add('show');
+        }
+
+        // Résolution simple (sans parenthèses)
+        function solveSimple(expr) {
+            const sumX2 = expr.x2Terms.reduce((a, b) => a + b, 0);
+            const sumX = expr.xTerms.reduce((a, b) => a + b, 0);
+            const sumConst = expr.constTerms.reduce((a, b) => a + b, 0);
+            
+            let html = '';
+            
+            // Étape 1: Identifier les termes
+            html += `
+                <div class="step">
+                    <div class="step-expression">Identifier les termes semblables</div>
+                    <div class="step-explanation">On regroupe les termes qui ont la même partie littérale</div>
+                    <div class="legend">
+                        ${expr.x2Terms.length > 0 ? '<div class="legend-item"><div class="legend-color" style="background:#ffebee;border:1px solid #ef5350;"></div> x²</div>' : ''}
+                        ${expr.xTerms.length > 0 ? '<div class="legend-item"><div class="legend-color" style="background:#e3f2fd;border:1px solid #42a5f5;"></div> x</div>' : ''}
+                        ${expr.constTerms.length > 0 ? '<div class="legend-item"><div class="legend-color" style="background:#e8f5e9;border:1px solid #66bb6a;"></div> nombres</div>' : ''}
+                    </div>
+                </div>
+            `;
+            
+            // Étape 2: Regroupement visuel
+            html += `<div class="step">
+                <div class="step-expression">Regrouper</div>
+                <div class="regroup-visual">
+                    <div class="regroup-line">`;
+            
+            if (expr.x2Terms.length > 0) {
+                const x2Display = expr.x2Terms.map((c, i) => formatTerm(c, 'x²', i === 0)).join('');
+                html += `<div class="regroup-box x2-terms">${x2Display}</div>`;
+            }
+            if (expr.xTerms.length > 0) {
+                const xDisplay = expr.xTerms.map((c, i) => formatTerm(c, 'x', i === 0)).join('');
+                html += `<div class="regroup-box x-terms">${xDisplay}</div>`;
+            }
+            if (expr.constTerms.length > 0) {
+                const constDisplay = expr.constTerms.map((c, i) => formatTerm(c, '', i === 0)).join('');
+                html += `<div class="regroup-box const-terms">${constDisplay}</div>`;
+            }
+            
+            html += `</div>
+                    <div class="arrow-down">↓</div>
+                    <div class="regroup-line">`;
+            
+            if (expr.x2Terms.length > 0) {
+                html += `<div class="regroup-box x2-terms">(${expr.x2Terms.join(' + ').replace(/\+ -/g, '− ')})x² = ${sumX2}x²</div>`;
+            }
+            if (expr.xTerms.length > 0) {
+                html += `<div class="regroup-box x-terms">(${expr.xTerms.join(' + ').replace(/\+ -/g, '− ')})x = ${sumX}x</div>`;
+            }
+            if (expr.constTerms.length > 0) {
+                html += `<div class="regroup-box const-terms">${expr.constTerms.join(' + ').replace(/\+ -/g, '− ')} = ${sumConst}</div>`;
+            }
+            
+            html += `</div></div></div>`;
+            
+            // Résultat final
+            let final = '';
+            if (sumX2 !== 0) final += formatTerm(sumX2, 'x²', final === '');
+            if (sumX !== 0) final += formatTerm(sumX, 'x', final === '');
+            if (sumConst !== 0) final += formatTerm(sumConst, '', final === '');
+            if (final === '') final = '0';
+            
+            html += `
+                <div class="result-highlight">
+                    <div class="final">${final}</div>
+                </div>
+            `;
+            
+            return html;
+        }
+
+        // Résolution avec parenthèses
+        function solveWithParentheses(expr) {
+            let html = '';
+            
+            // Étape 1: Développer les parenthèses
+            html += `
+                <div class="step">
+                    <div class="step-expression">Développer les parenthèses</div>
+                    <div class="step-explanation">On distribue le coefficient devant chaque parenthèse</div>
+                </div>
+            `;
+            
+            // Collecter tous les termes après développement
+            let allX = [...expr.xTerms];
+            let allConst = [...expr.constTerms];
+            
+            expr.parentheses.forEach((p, i) => {
+                const devX = p.coef * p.xCoef;
+                const devConst = p.coef * p.constCoef;
+                
+                allX.push(devX);
+                allConst.push(devConst);
+                
+                const inner = formatTerm(p.xCoef, 'x', true) + formatTerm(p.constCoef, '', false);
+                const coefDisplay = p.coef === 1 ? '' : p.coef === -1 ? '−' : p.coef;
+                
+                html += `
+                    <div class="step">
+                        <div class="step-expression">${coefDisplay}(${inner}) = ${formatTerm(devX, 'x', true)}${formatTerm(devConst, '', false)}</div>
+                        <div class="step-explanation">${p.coef} × ${p.xCoef}x = ${devX}x et ${p.coef} × ${p.constCoef} = ${devConst}</div>
+                    </div>
+                `;
+            });
+            
+            // Étape 2: Regrouper
+            const sumX = allX.reduce((a, b) => a + b, 0);
+            const sumConst = allConst.reduce((a, b) => a + b, 0);
+            
+            html += `
+                <div class="step">
+                    <div class="step-expression">Regrouper les termes semblables</div>
+                    <div class="regroup-visual">
+                        <div class="regroup-line">
+                            <div class="regroup-box x-terms">Termes en x : ${allX.map((c, i) => formatTerm(c, '', i === 0)).join('')}</div>
+                            <div class="regroup-box const-terms">Constantes : ${allConst.map((c, i) => formatTerm(c, '', i === 0)).join('')}</div>
+                        </div>
+                        <div class="arrow-down">↓</div>
+                        <div class="regroup-line">
+                            <div class="regroup-box x-terms">${sumX}x</div>
+                            <div class="regroup-box const-terms">${sumConst}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Résultat final
+            let final = '';
+            if (sumX !== 0) final += formatTerm(sumX, 'x', true);
+            if (sumConst !== 0) final += formatTerm(sumConst, '', final === '');
+            if (final === '') final = '0';
+            
+            html += `
+                <div class="result-highlight">
+                    <div class="final">${final}</div>
+                </div>
+            `;
+            
+            return html;
+        }
+
+        // Events
+        typeButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                typeButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentType = btn.dataset.type;
+                currentExpression = null;
+                generateExpression();
+            });
+        });
+
+        $('generateBtn').addEventListener('click', () => {
+            currentExpression = null;
+            generateExpression();
+        });
+        
+        $('solveBtn').addEventListener('click', solve);
+        
+        $('nbTerms').addEventListener('change', () => {
+            currentExpression = null;
+            generateExpression();
+        });
+
+        // Init
+        generateExpression();
+    </script>
+</body>
+</html>

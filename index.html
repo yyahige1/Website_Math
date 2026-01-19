@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Entraînement illimité aux équations du 1er degré avec corrections détaillées">
-    <title>MathsFacile - Équations du 1er degré</title>
+    <title>MathsFacile - Équations</title>
     <style>
         * {
             margin: 0;
@@ -16,182 +15,187 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            padding: 20px;
+            padding: 12px;
         }
 
         .container {
-            max-width: 900px;
+            max-width: 600px;
             margin: 0 auto;
+        }
+
+        /* Navigation */
+        .nav {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .nav a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 14px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .nav a:hover {
+            background: rgba(255,255,255,0.25);
+        }
+
+        .nav a.active {
+            background: rgba(255,255,255,0.35);
+            font-weight: 600;
         }
 
         header {
             text-align: center;
             color: white;
-            margin-bottom: 30px;
+            margin-bottom: 16px;
         }
 
         h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            font-size: 2em;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+            margin-bottom: 4px;
         }
 
         .subtitle {
             font-size: 1.1em;
+            font-weight: 600;
+            opacity: 0.95;
+            margin-bottom: 12px;
+        }
+
+        .intro {
+            font-size: 1em;
             opacity: 0.9;
-        }
-
-        .nav-links {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .nav-links a {
-            color: white;
-            text-decoration: none;
-            margin: 0 15px;
-            padding: 8px 16px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
-            transition: all 0.3s;
-            display: inline-block;
-        }
-
-        .nav-links a:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: translateY(-2px);
-        }
-
-        .nav-links a.active {
-            background: rgba(255, 255, 255, 0.4);
+            line-height: 1.5;
+            max-width: 400px;
+            margin: 0 auto;
         }
 
         .card {
             background: white;
-            border-radius: 15px;
-            padding: 30px;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
         }
 
+        /* Type selector */
         .type-selector {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 25px;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 8px;
+            margin-bottom: 16px;
         }
 
         .type-btn {
-            flex: 1;
-            min-width: 200px;
-            padding: 15px 25px;
-            border: 2px solid #667eea;
+            padding: 12px 8px;
+            border: 2px solid #e0e0e0;
             background: white;
-            color: #667eea;
-            border-radius: 10px;
-            font-size: 1.1em;
+            border-radius: 8px;
             cursor: pointer;
-            transition: all 0.3s;
-            font-weight: 600;
+            transition: all 0.2s;
+            text-align: center;
         }
 
-        .type-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        .type-btn .example {
+            font-family: 'Courier New', monospace;
+            font-size: 1em;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .type-btn .label {
+            font-size: 0.75em;
+            color: #888;
+            margin-top: 4px;
         }
 
         .type-btn.active {
-            background: #667eea;
-            color: white;
+            border-color: #667eea;
+            background: #f0f3ff;
         }
 
-        .coefficients-section {
-            margin-bottom: 25px;
+        .type-btn.active .example {
+            color: #667eea;
         }
 
+        /* Coefficients */
         .coefficients {
             display: flex;
+            gap: 10px;
+            margin-bottom: 16px;
             flex-wrap: wrap;
-            gap: 15px;
-            margin-top: 15px;
         }
 
         .coef-group {
-            flex: 1 1 140px; /* Grandit/Rétrécit, base 140px */
-            min-width: 140px;
-            max-width: 200px;
-            display: flex;
-            flex-direction: column;
+            flex: 1;
+            min-width: 60px;
         }
 
-        label {
+        .coef-group label {
+            display: block;
             font-weight: 600;
-            margin-bottom: 5px;
+            margin-bottom: 4px;
             color: #555;
-            font-size: 0.9em;
+            font-size: 0.85em;
         }
 
-        input[type="number"] {
-            padding: 12px;
+        .coef-group input {
+            width: 100%;
+            padding: 10px;
             border: 2px solid #ddd;
-            border-radius: 8px;
-            font-size: 1.1em;
-            transition: all 0.3s;
+            border-radius: 6px;
+            font-size: 1em;
+            text-align: center;
         }
 
-        input[type="number"]:focus {
+        .coef-group input:focus {
             outline: none;
             border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
 
-        input[type="number"]:hover {
-            border-color: #999;
-        }
-
-        .equation-display {
-            background: #f8f9fa;
-            padding: 30px;
-            border-radius: 10px;
+        /* Equation display */
+        .expression-display {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
             text-align: center;
-            margin-bottom: 25px;
-            border-left: 4px solid #667eea;
+            margin-bottom: 16px;
         }
 
-        .equation {
-            font-size: 2em;
+        .expression {
+            font-size: 1.5em;
             font-weight: 600;
             color: #333;
             font-family: 'Courier New', monospace;
         }
 
+        /* Buttons */
         .action-buttons {
             display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
+            gap: 10px;
         }
 
-        button {
+        .action-buttons button {
             flex: 1;
-            min-width: 150px;
-            padding: 15px 30px;
+            padding: 12px;
             border: none;
-            border-radius: 10px;
-            font-size: 1.1em;
+            border-radius: 8px;
+            font-size: 1em;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
         }
 
         .btn-generate {
-            background: #28a745;
-            color: white;
-        }
-
-        .btn-generate:hover {
-            background: #218838;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+            background: #e8e8e8;
+            color: #333;
         }
 
         .btn-solve {
@@ -199,803 +203,424 @@
             color: white;
         }
 
-        .btn-solve:hover {
-            background: #5568d3;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-        }
-
+        /* Solution */
         .solution {
-            background: #e8f5e9;
-            border-left: 4px solid #28a745;
-            padding: 25px;
-            border-radius: 10px;
-            margin-top: 25px;
+            margin-top: 16px;
             display: none;
         }
 
         .solution.show {
             display: block;
-            animation: slideIn 0.5s ease-out;
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
         }
 
         .solution h3 {
             color: #28a745;
-            margin-bottom: 20px;
-            font-size: 1.5em;
+            margin-bottom: 12px;
+            font-size: 1.1em;
         }
 
         .step {
-            background: white;
-            padding: 15px;
-            margin-bottom: 15px;
+            background: #f9f9f9;
+            padding: 12px;
+            margin-bottom: 10px;
             border-radius: 8px;
             border-left: 3px solid #667eea;
         }
 
-        .step-number {
-            display: inline-block;
-            background: #667eea;
-            color: white;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            text-align: center;
-            line-height: 30px;
-            margin-right: 10px;
-            font-weight: 600;
-        }
-
-        .step-content {
-            display: inline-block;
-            vertical-align: middle;
-            width: calc(100% - 45px);
-        }
-
         .step-equation {
             font-family: 'Courier New', monospace;
-            font-size: 1.2em;
+            font-size: 1.1em;
             font-weight: 600;
             color: #333;
-            margin: 10px 0;
-            padding: 10px;
-            background: #f8f9fa;
-            border-radius: 5px;
+            margin-bottom: 6px;
         }
 
         .step-explanation {
-            color: #555;
-            font-size: 0.95em;
-            line-height: 1.6;
-            margin-top: 5px;
+            color: #666;
+            font-size: 0.9em;
+            line-height: 1.4;
         }
 
         .verification {
-            background: #fff3cd;
-            border-left: 4px solid #ffc107;
-            padding: 15px;
+            background: #fff8e1;
+            border-left: 3px solid #ffc107;
+            padding: 12px;
             border-radius: 8px;
-            margin-top: 15px;
+            margin-top: 10px;
         }
 
         .verification-title {
-            color: #856404;
+            color: #f57c00;
             font-weight: 600;
-            margin-bottom: 10px;
+            margin-bottom: 6px;
+            font-size: 0.95em;
         }
 
         .alert-warning {
             background: #fff3cd;
-            border-left: 4px solid #ffc107;
-            padding: 15px;
+            border-left: 3px solid #ffc107;
+            padding: 12px;
             border-radius: 8px;
-            margin-top: 15px;
             color: #856404;
         }
 
         .alert-info {
             background: #d1ecf1;
-            border-left: 4px solid #17a2b8;
-            padding: 15px;
+            border-left: 3px solid #17a2b8;
+            padding: 12px;
             border-radius: 8px;
-            margin-top: 15px;
             color: #0c5460;
         }
 
-        /* Très petit mobile (< 350px) - Forcer 1 colonne */
-        @media (max-width: 350px) {
-            body {
-                padding: 10px;
-            }
+        .hidden { display: none; }
 
-            h1 {
-                font-size: 1.6em;
-            }
-
-            .subtitle {
-                font-size: 0.9em;
-            }
-
-            .card {
-                padding: 15px;
-            }
-            
-            .type-btn, button {
-                min-width: 100%;
-                padding: 12px 15px;
-                font-size: 0.95em;
-            }
-            
-            .equation {
-                font-size: 1.2em;
-                word-break: break-word;
-                padding: 20px 15px;
-            }
-
-            /* Forcer 1 colonne complète sur très petit écran */
-            .coef-group {
-                flex: 1 1 100%;
-                min-width: 100%;
-                max-width: 100%;
-            }
-
-            .coef-group label {
-                font-size: 0.85em;
-            }
-
-            input[type="number"] {
-                padding: 12px;
-                font-size: 1em;
-            }
-
-            .step-equation {
-                font-size: 1em;
-                padding: 8px;
-            }
-
-            .step-content {
-                width: 100%;
-            }
-
-            .step-number {
-                display: block;
-                margin-bottom: 10px;
-            }
-
-            .action-buttons {
-                flex-direction: column;
-            }
-
-            button {
-                width: 100%;
-            }
-        }
-
-        /* Mobile - Réduire les tailles */
-        @media (max-width: 600px) {
-            body {
-                padding: 15px;
-            }
-
-            h1 {
-                font-size: 2em;
-            }
-
-            .card {
-                padding: 20px;
-            }
-            
-            .equation {
-                font-size: 1.4em;
-            }
-
-            input[type="number"] {
-                padding: 12px;
-            }
-        }
-
-        .info-box {
-            background: #e3f2fd;
-            border-left: 4px solid #2196f3;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-
-        .info-box p {
-            color: #1565c0;
-            margin: 0;
-            line-height: 1.5;
-        }
-
-        .section-title {
-            color: #333;
-            font-size: 1.1em;
-            margin-bottom: 10px;
-            font-weight: 600;
-        }
-
-        .hidden {
-            display: none;
+        /* Mobile */
+        @media (max-width: 400px) {
+            body { padding: 8px; }
+            .card { padding: 12px; }
+            h1 { font-size: 1.7em; }
+            .expression { font-size: 1.2em; }
+            .coef-group { min-width: 50px; }
+            .coef-group input { padding: 8px; font-size: 0.95em; }
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <nav class="nav">
+            <a href="index.html" class="active">Équations</a>
+            <a href="developpement.html">Développement</a>
+            <a href="reduction.html">Réduction</a>
+            <a href="factorisation.html">Factorisation</a>
+        </nav>
+
         <header>
-            <h1>🎓 MathsFacile</h1>
-            <p class="subtitle">Équations du 1er degré - Entraînement illimité</p>
+            <h1>🎓 Équations</h1>
+            <p class="subtitle">Exercices interactifs</p>
+            <p class="intro">Entraîne-toi à résoudre des équations du 1er degré.<br>Choisis un type, modifie les valeurs si tu veux, puis clique sur <strong>Correction</strong> pour voir les étapes.</p>
         </header>
 
-        <div class="nav-links">
-            <a href="index.html" class="active">Équations</a>
-            <a href="developpement.html">Développement →</a>
-        </div>
-
         <div class="card">
-            <div class="info-box">
-                <p>💡 <strong>Comment ça marche :</strong> Choisissez un type d'équation. Vous pouvez soit modifier les coefficients manuellement, soit cliquer sur "Nouvelle équation" pour en générer aléatoirement. Puis cliquez sur "Résoudre" pour voir la correction détaillée !</p>
-            </div>
-
-            <h2 style="margin-bottom: 20px; color: #333;">Type d'équation</h2>
             <div class="type-selector">
                 <button class="type-btn active" data-type="type1">
-                    Type 1 : ax + b = c
+                    <div class="example">ax + b = c</div>
+                    <div class="label">Équation simple</div>
                 </button>
                 <button class="type-btn" data-type="type2">
-                    Type 2 : ax + b = cx + d
+                    <div class="example">ax + b = cx + d</div>
+                    <div class="label">Équation avec x des deux côtés</div>
                 </button>
             </div>
 
-            <div class="coefficients-section">
-                <div class="section-title">Coefficients (modifiables)</div>
-                
-                <div class="coefficients" id="coefficientsType1">
-                    <div class="coef-group">
-                        <label for="a1">a (devant x)</label>
-                        <input type="number" id="a1" value="2">
-                    </div>
-                    <div class="coef-group">
-                        <label for="b1">b (constante)</label>
-                        <input type="number" id="b1" value="3">
-                    </div>
-                    <div class="coef-group">
-                        <label for="c1">c (résultat)</label>
-                        <input type="number" id="c1" value="7">
-                    </div>
+            <!-- Coefficients Type 1 -->
+            <div class="coefficients" id="coeffType1">
+                <div class="coef-group">
+                    <label>a</label>
+                    <input type="number" id="a1" value="2">
                 </div>
-
-                <div class="coefficients hidden" id="coefficientsType2">
-                    <div class="coef-group">
-                        <label for="a2">a (devant x)</label>
-                        <input type="number" id="a2" value="3">
-                    </div>
-                    <div class="coef-group">
-                        <label for="b2">b (constante)</label>
-                        <input type="number" id="b2" value="5">
-                    </div>
-                    <div class="coef-group">
-                        <label for="c2">c (devant x)</label>
-                        <input type="number" id="c2" value="2">
-                    </div>
-                    <div class="coef-group">
-                        <label for="d2">d (constante)</label>
-                        <input type="number" id="d2" value="11">
-                    </div>
+                <div class="coef-group">
+                    <label>b</label>
+                    <input type="number" id="b1" value="3">
+                </div>
+                <div class="coef-group">
+                    <label>c</label>
+                    <input type="number" id="c1" value="7">
                 </div>
             </div>
 
-            <div class="equation-display">
-                <div class="equation" id="equationDisplay">2x + 3 = 7</div>
+            <!-- Coefficients Type 2 -->
+            <div class="coefficients hidden" id="coeffType2">
+                <div class="coef-group">
+                    <label>a</label>
+                    <input type="number" id="a2" value="3">
+                </div>
+                <div class="coef-group">
+                    <label>b</label>
+                    <input type="number" id="b2" value="5">
+                </div>
+                <div class="coef-group">
+                    <label>c</label>
+                    <input type="number" id="c2" value="2">
+                </div>
+                <div class="coef-group">
+                    <label>d</label>
+                    <input type="number" id="d2" value="11">
+                </div>
+            </div>
+
+            <div class="expression-display">
+                <div class="expression" id="expressionDisplay">2x + 3 = 7</div>
             </div>
 
             <div class="action-buttons">
-                <button class="btn-generate" id="generateBtn">🎲 Nouvelle équation</button>
-                <button class="btn-solve" id="solveBtn">✅ Résoudre</button>
+                <button class="btn-generate" id="generateBtn">🎲 Nouveau</button>
+                <button class="btn-solve" id="solveBtn">✓ Correction</button>
             </div>
 
             <div class="solution" id="solutionDiv">
-                <h3>📝 Résolution détaillée</h3>
+                <h3>📝 Résolution</h3>
                 <div id="stepsContainer"></div>
             </div>
         </div>
     </div>
 
     <script>
-        // ========== CONFIGURATION ==========
-        const CONFIG = {
-            MAX_COEF: 10,
-            MIN_COEF: -10
-        };
+        // État
+        let currentType = 'type1';
 
-        // ========== ÉTAT ==========
-        let state = {
-            currentType: 'type1'
-        };
+        // Éléments
+        const $ = id => document.getElementById(id);
+        const typeButtons = document.querySelectorAll('.type-btn');
 
-        // ========== ÉLÉMENTS DOM ==========
-        const DOM = {
-            typeButtons: document.querySelectorAll('.type-btn'),
-            coeffType1: document.getElementById('coefficientsType1'),
-            coeffType2: document.getElementById('coefficientsType2'),
-            equationDisplay: document.getElementById('equationDisplay'),
-            solutionDiv: document.getElementById('solutionDiv'),
-            stepsContainer: document.getElementById('stepsContainer'),
-            generateBtn: document.getElementById('generateBtn'),
-            solveBtn: document.getElementById('solveBtn'),
-            inputs: {
-                a1: document.getElementById('a1'),
-                b1: document.getElementById('b1'),
-                c1: document.getElementById('c1'),
-                a2: document.getElementById('a2'),
-                b2: document.getElementById('b2'),
-                c2: document.getElementById('c2'),
-                d2: document.getElementById('d2')
-            }
-        };
-
-        // ========== GÉNÉRATEURS ==========
-        
-        /**
-         * Génère un coefficient aléatoire
-         * @param {boolean} avoidZero - Éviter zéro (pour coefficients de x)
-         * @returns {number} Coefficient généré
-         */
-        function randomCoef(avoidZero = false) {
-            let num;
+        // Génération de coefficients
+        function randCoef(avoidZero = false) {
+            let n;
             do {
-                num = Math.floor(Math.random() * (CONFIG.MAX_COEF - CONFIG.MIN_COEF + 1)) + CONFIG.MIN_COEF;
-            } while (avoidZero && num === 0);
-            return num;
+                n = Math.floor(Math.random() * 21) - 10;
+            } while (avoidZero && n === 0);
+            return n;
         }
 
-        /**
-         * Génère une équation aléatoire et remplit les champs
-         */
-        function generateRandomEquation() {
-            if (state.currentType === 'type1') {
-                DOM.inputs.a1.value = randomCoef(true);
-                DOM.inputs.b1.value = randomCoef();
-                DOM.inputs.c1.value = randomCoef();
-            } else {
-                // Type 2 avec possibilité de cas particuliers
-                const random = Math.random();
-                
-                if (random < 0.85) {
-                    // Cas normal : a ≠ c (85% du temps)
-                    const a = randomCoef(true);
-                    let c;
-                    do {
-                        c = randomCoef(true);
-                    } while (a === c);
-                    
-                    DOM.inputs.a2.value = a;
-                    DOM.inputs.b2.value = randomCoef();
-                    DOM.inputs.c2.value = c;
-                    DOM.inputs.d2.value = randomCoef();
-                } else if (random < 0.92) {
-                    // Infinité de solutions : a = c et b = d (7% du temps)
-                    const a = randomCoef(true);
-                    const b = randomCoef();
-                    
-                    DOM.inputs.a2.value = a;
-                    DOM.inputs.b2.value = b;
-                    DOM.inputs.c2.value = a;
-                    DOM.inputs.d2.value = b;
-                } else {
-                    // Aucune solution : a = c et b ≠ d (8% du temps)
-                    const a = randomCoef(true);
-                    const b = randomCoef();
-                    let d;
-                    do {
-                        d = randomCoef();
-                    } while (b === d);
-                    
-                    DOM.inputs.a2.value = a;
-                    DOM.inputs.b2.value = b;
-                    DOM.inputs.c2.value = a;
-                    DOM.inputs.d2.value = d;
-                }
-            }
+        // Formatage
+        function formatTerm(coef, variable, isFirst) {
+            if (coef === 0 && variable) return '';
             
-            updateEquationDisplay();
+            const sign = isFirst ? (coef < 0 ? '−' : '') : (coef > 0 ? ' + ' : ' − ');
+            const abs = Math.abs(coef);
+            
+            if (variable) {
+                if (abs === 1) return sign + variable;
+                return sign + abs + variable;
+            }
+            return sign + abs;
         }
 
-        /**
-         * Récupère l'équation actuelle depuis les champs
-         */
-        function getCurrentEquation() {
-            if (state.currentType === 'type1') {
+        function formatNumber(num) {
+            if (Number.isInteger(num)) return num;
+            return Math.round(num * 1000) / 1000;
+        }
+
+        function formatFraction(num, den) {
+            if (den === 1) return num.toString();
+            if (den === -1) return (-num).toString();
+            
+            const gcd = (a, b) => b === 0 ? Math.abs(a) : gcd(b, a % b);
+            const d = gcd(num, den);
+            let n = num / d, de = den / d;
+            
+            if (de < 0) { n = -n; de = -de; }
+            if (de === 1) return n.toString();
+            return `${n}/${de}`;
+        }
+
+        // Obtenir l'équation
+        function getEquation() {
+            if (currentType === 'type1') {
                 return {
                     type: 'type1',
-                    a: parseFloat(DOM.inputs.a1.value) || 0,
-                    b: parseFloat(DOM.inputs.b1.value) || 0,
-                    c: parseFloat(DOM.inputs.c1.value) || 0
+                    a: parseFloat($('a1').value) || 0,
+                    b: parseFloat($('b1').value) || 0,
+                    c: parseFloat($('c1').value) || 0
                 };
             } else {
                 return {
                     type: 'type2',
-                    a: parseFloat(DOM.inputs.a2.value) || 0,
-                    b: parseFloat(DOM.inputs.b2.value) || 0,
-                    c: parseFloat(DOM.inputs.c2.value) || 0,
-                    d: parseFloat(DOM.inputs.d2.value) || 0
+                    a: parseFloat($('a2').value) || 0,
+                    b: parseFloat($('b2').value) || 0,
+                    c: parseFloat($('c2').value) || 0,
+                    d: parseFloat($('d2').value) || 0
                 };
             }
         }
 
-        // ========== FORMATAGE ==========
-        
-        /**
-         * Formate un terme algébrique
-         */
-        function formatTerm(coef, variable, isFirst) {
-            if (coef === 0 && variable) return '';
-            
-            let sign = '';
-            let absCoef = Math.abs(coef);
-            
-            if (isFirst) {
-                sign = coef < 0 ? '-' : '';
-            } else {
-                if (coef === 0) return '';
-                sign = coef > 0 ? ' + ' : ' - ';
-            }
-            
-            if (variable) {
-                if (absCoef === 1) {
-                    return sign + variable;
-                }
-                return sign + absCoef + variable;
-            } else {
-                return sign + absCoef;
-            }
-        }
-
-        /**
-         * Formate un nombre (arrondit si décimal)
-         */
-        function formatNumber(num) {
-            if (Number.isInteger(num)) return num;
-            const rounded = Math.round(num * 1000) / 1000;
-            return rounded;
-        }
-
-        /**
-         * Formate une fraction simplifiée
-         */
-        function formatFraction(numerator, denominator) {
-            if (denominator === 1) return numerator.toString();
-            if (denominator === -1) return (-numerator).toString();
-            
-            const gcd = (a, b) => b === 0 ? Math.abs(a) : gcd(b, a % b);
-            const divisor = gcd(numerator, denominator);
-            
-            let num = numerator / divisor;
-            let den = denominator / divisor;
-            
-            if (den < 0) {
-                num = -num;
-                den = -den;
-            }
-            
-            if (den === 1) return num.toString();
-            return `${num}/${den}`;
-        }
-
-        /**
-         * Met à jour l'affichage de l'équation
-         */
-        function updateEquationDisplay() {
-            const eq = getCurrentEquation();
-            const {a, b, c, d, type} = eq;
+        // Afficher l'équation
+        function updateDisplay() {
+            const eq = getEquation();
             let display = '';
             
-            if (type === 'type1') {
-                display = formatTerm(a, 'x', true) + formatTerm(b, '', false) + ' = ' + c;
+            if (eq.type === 'type1') {
+                display = formatTerm(eq.a, 'x', true) + formatTerm(eq.b, '', false) + ' = ' + eq.c;
             } else {
-                display = formatTerm(a, 'x', true) + formatTerm(b, '', false) + 
-                         ' = ' + formatTerm(c, 'x', true) + formatTerm(d, '', false);
+                display = formatTerm(eq.a, 'x', true) + formatTerm(eq.b, '', false) + 
+                         ' = ' + formatTerm(eq.c, 'x', true) + formatTerm(eq.d, '', false);
             }
             
-            DOM.equationDisplay.textContent = display;
-            DOM.solutionDiv.classList.remove('show');
+            $('expressionDisplay').textContent = display;
+            $('solutionDiv').classList.remove('show');
         }
 
-        // ========== RÉSOLUTION ==========
-        
-        /**
-         * Résout l'équation actuelle
-         */
-        function solveEquation() {
-            const eq = getCurrentEquation();
-            const {a, b, c, d, type} = eq;
-            
-            let steps = [];
-            let stepNum = 1;
-            
-            if (type === 'type1') {
-                steps = solveType1(a, b, c, stepNum);
+        // Générer aléatoire
+        function generate() {
+            if (currentType === 'type1') {
+                $('a1').value = randCoef(true);
+                $('b1').value = randCoef();
+                $('c1').value = randCoef();
             } else {
-                steps = solveType2(a, b, c, d, stepNum);
+                const a = randCoef(true);
+                let c;
+                do { c = randCoef(true); } while (a === c && Math.random() > 0.15);
+                
+                $('a2').value = a;
+                $('b2').value = randCoef();
+                $('c2').value = c;
+                $('d2').value = randCoef();
+            }
+            updateDisplay();
+        }
+
+        // Résoudre
+        function solve() {
+            const eq = getEquation();
+            let html = '';
+            
+            if (eq.type === 'type1') {
+                html = solveType1(eq.a, eq.b, eq.c);
+            } else {
+                html = solveType2(eq.a, eq.b, eq.c, eq.d);
             }
             
-            displaySolution(steps);
+            $('stepsContainer').innerHTML = html;
+            $('solutionDiv').classList.add('show');
         }
 
-        /**
-         * Résout une équation de type ax + b = c
-         */
-        function solveType1(a, b, c, stepNum) {
-            const steps = [];
+        function solveType1(a, b, c) {
+            let html = '';
             
-            steps.push({
-                number: stepNum++,
-                equation: formatTerm(a, 'x', true) + formatTerm(b, '', false) + ' = ' + c,
-                explanation: "Équation de départ"
-            });
+            html += `<div class="step">
+                <div class="step-equation">${formatTerm(a, 'x', true)}${formatTerm(b, '', false)} = ${c}</div>
+                <div class="step-explanation">Équation de départ</div>
+            </div>`;
             
-            // Cas a = 0
             if (a === 0) {
                 if (b === c) {
-                    steps.push({
-                        alert: 'info',
-                        title: '♾️ Infinité de solutions',
-                        message: `L'équation se réduit à ${b} = ${c}, ce qui est toujours vrai. Tous les nombres réels sont solutions.`
-                    });
+                    html += `<div class="alert-info"><strong>♾️ Infinité de solutions</strong><br>L'équation ${b} = ${c} est toujours vraie.</div>`;
                 } else {
-                    steps.push({
-                        alert: 'warning',
-                        title: '∅ Aucune solution',
-                        message: `L'équation se réduit à ${b} = ${c}, ce qui est impossible.`
-                    });
+                    html += `<div class="alert-warning"><strong>∅ Aucune solution</strong><br>L'équation ${b} = ${c} est impossible.</div>`;
                 }
-                return steps;
+                return html;
             }
             
-            // Isoler x
             if (b !== 0) {
-                const sign = b > 0 ? 'soustraire' : 'ajouter';
-                const value = Math.abs(b);
-                steps.push({
-                    number: stepNum++,
-                    equation: formatTerm(a, 'x', true) + ' = ' + (c - b),
-                    explanation: `On ${sign} ${value} de chaque côté pour isoler le terme en x`
-                });
+                const sign = b > 0 ? 'soustrait' : 'ajoute';
+                html += `<div class="step">
+                    <div class="step-equation">${formatTerm(a, 'x', true)} = ${c - b}</div>
+                    <div class="step-explanation">On ${sign} ${Math.abs(b)} des deux côtés</div>
+                </div>`;
             }
             
-            // Diviser par a
-            const numerator = c - b;
-            const result = numerator / a;
+            const num = c - b;
+            const result = num / a;
             
-            if (a === 1) {
-                steps.push({
-                    number: stepNum++,
-                    equation: 'x = ' + formatNumber(result),
-                    explanation: 'Solution trouvée !'
-                });
-            } else {
-                steps.push({
-                    number: stepNum++,
-                    equation: 'x = ' + formatFraction(numerator, a),
-                    explanation: `On divise les deux côtés par ${a}`
-                });
-                
-                if (!Number.isInteger(result) && Math.abs(a) > 1) {
-                    steps.push({
-                        number: stepNum++,
-                        equation: 'x = ' + formatNumber(result),
-                        explanation: 'En notation décimale'
-                    });
-                }
+            if (a !== 1) {
+                html += `<div class="step">
+                    <div class="step-equation">x = ${formatFraction(num, a)}</div>
+                    <div class="step-explanation">On divise par ${a}</div>
+                </div>`;
             }
             
-            // Vérification
-            const leftSide = a * result + b;
-            steps.push({
-                verification: true,
-                left: formatNumber(leftSide),
-                right: c,
-                calculation: `Vérification : ${a} × ${formatNumber(result)} + ${b} = ${formatNumber(leftSide)}`
-            });
+            if (!Number.isInteger(result) && Math.abs(a) > 1) {
+                html += `<div class="step">
+                    <div class="step-equation">x = ${formatNumber(result)}</div>
+                    <div class="step-explanation">En décimal</div>
+                </div>`;
+            }
             
-            return steps;
+            const verif = a * result + b;
+            html += `<div class="verification">
+                <div class="verification-title">✓ Vérification</div>
+                <div>${a} × ${formatNumber(result)} + ${b} = ${formatNumber(verif)}</div>
+            </div>`;
+            
+            return html;
         }
 
-        /**
-         * Résout une équation de type ax + b = cx + d
-         */
-        function solveType2(a, b, c, d, stepNum) {
-            const steps = [];
+        function solveType2(a, b, c, d) {
+            let html = '';
             
-            steps.push({
-                number: stepNum++,
-                equation: formatTerm(a, 'x', true) + formatTerm(b, '', false) + 
-                         ' = ' + formatTerm(c, 'x', true) + formatTerm(d, '', false),
-                explanation: "Équation de départ"
-            });
+            html += `<div class="step">
+                <div class="step-equation">${formatTerm(a, 'x', true)}${formatTerm(b, '', false)} = ${formatTerm(c, 'x', true)}${formatTerm(d, '', false)}</div>
+                <div class="step-explanation">Équation de départ</div>
+            </div>`;
             
             const newA = a - c;
             
             if (c !== 0) {
-                const sign = c > 0 ? 'soustraire' : 'ajouter';
-                const value = Math.abs(c);
-                steps.push({
-                    number: stepNum++,
-                    equation: formatTerm(newA, 'x', true) + formatTerm(b, '', false) + ' = ' + d,
-                    explanation: `On ${sign} ${value}x de chaque côté`
-                });
+                const sign = c > 0 ? 'soustrait' : 'ajoute';
+                html += `<div class="step">
+                    <div class="step-equation">${formatTerm(newA, 'x', true)}${formatTerm(b, '', false)} = ${d}</div>
+                    <div class="step-explanation">On ${sign} ${Math.abs(c)}x des deux côtés</div>
+                </div>`;
             }
             
-            // Cas particulier : newA = 0
             if (newA === 0) {
                 if (b === d) {
-                    steps.push({
-                        number: stepNum++,
-                        equation: `${b} = ${d}`,
-                        explanation: "Les termes en x s'annulent"
-                    });
-                    steps.push({
-                        alert: 'info',
-                        title: '♾️ Infinité de solutions',
-                        message: `L'équation est toujours vraie (${b} = ${d}). Tous les nombres réels sont solutions.`
-                    });
+                    html += `<div class="alert-info"><strong>♾️ Infinité de solutions</strong><br>L'équation ${b} = ${d} est toujours vraie.</div>`;
                 } else {
-                    steps.push({
-                        number: stepNum++,
-                        equation: `${b} = ${d}`,
-                        explanation: "Les termes en x s'annulent"
-                    });
-                    steps.push({
-                        alert: 'warning',
-                        title: '∅ Aucune solution',
-                        message: `L'équation est impossible (${b} ≠ ${d}).`
-                    });
+                    html += `<div class="alert-warning"><strong>∅ Aucune solution</strong><br>L'équation ${b} = ${d} est impossible.</div>`;
                 }
-                return steps;
+                return html;
             }
             
             const newC = d - b;
             
             if (b !== 0) {
-                const sign = b > 0 ? 'soustraire' : 'ajouter';
-                const value = Math.abs(b);
-                steps.push({
-                    number: stepNum++,
-                    equation: formatTerm(newA, 'x', true) + ' = ' + newC,
-                    explanation: `On ${sign} ${value} de chaque côté`
-                });
+                const sign = b > 0 ? 'soustrait' : 'ajoute';
+                html += `<div class="step">
+                    <div class="step-equation">${formatTerm(newA, 'x', true)} = ${newC}</div>
+                    <div class="step-explanation">On ${sign} ${Math.abs(b)} des deux côtés</div>
+                </div>`;
             }
             
             const result = newC / newA;
             
-            if (newA === 1) {
-                steps.push({
-                    number: stepNum++,
-                    equation: 'x = ' + formatNumber(result),
-                    explanation: 'Solution trouvée !'
-                });
-            } else {
-                steps.push({
-                    number: stepNum++,
-                    equation: 'x = ' + formatFraction(newC, newA),
-                    explanation: `On divise les deux côtés par ${newA}`
-                });
-                
-                if (!Number.isInteger(result) && Math.abs(newA) > 1) {
-                    steps.push({
-                        number: stepNum++,
-                        equation: 'x = ' + formatNumber(result),
-                        explanation: 'En notation décimale'
-                    });
-                }
+            if (newA !== 1) {
+                html += `<div class="step">
+                    <div class="step-equation">x = ${formatFraction(newC, newA)}</div>
+                    <div class="step-explanation">On divise par ${newA}</div>
+                </div>`;
             }
             
-            // Vérification
-            const leftSide = a * result + b;
-            const rightSide = c * result + d;
-            steps.push({
-                verification: true,
-                left: formatNumber(leftSide),
-                right: formatNumber(rightSide),
-                calculation: `Vérification : ${a} × ${formatNumber(result)} + ${b} = ${formatNumber(leftSide)}, ` +
-                           `${c} × ${formatNumber(result)} + ${d} = ${formatNumber(rightSide)}`
-            });
+            if (!Number.isInteger(result) && Math.abs(newA) > 1) {
+                html += `<div class="step">
+                    <div class="step-equation">x = ${formatNumber(result)}</div>
+                    <div class="step-explanation">En décimal</div>
+                </div>`;
+            }
             
-            return steps;
+            const verifL = a * result + b;
+            const verifR = c * result + d;
+            html += `<div class="verification">
+                <div class="verification-title">✓ Vérification</div>
+                <div>Gauche: ${a} × ${formatNumber(result)} + ${b} = ${formatNumber(verifL)}</div>
+                <div>Droite: ${c} × ${formatNumber(result)} + ${d} = ${formatNumber(verifR)}</div>
+            </div>`;
+            
+            return html;
         }
 
-        // ========== AFFICHAGE ==========
-        
-        /**
-         * Affiche la solution
-         */
-        function displaySolution(steps) {
-            DOM.stepsContainer.innerHTML = '';
-            
-            steps.forEach(step => {
-                if (step.verification) {
-                    const verif = document.createElement('div');
-                    verif.className = 'verification';
-                    verif.innerHTML = `
-                        <div class="verification-title">✓ Vérification</div>
-                        <div>${step.calculation}</div>
-                        <div style="margin-top: 10px; font-weight: 600;">
-                            Les deux côtés sont égaux : ${step.left} = ${step.right} ✓
-                        </div>
-                    `;
-                    DOM.stepsContainer.appendChild(verif);
-                } else if (step.alert) {
-                    const alert = document.createElement('div');
-                    alert.className = `alert-${step.alert}`;
-                    alert.innerHTML = `
-                        <div style="font-weight: 600; margin-bottom: 8px; font-size: 1.1em;">
-                            ${step.title}
-                        </div>
-                        <div>${step.message}</div>
-                    `;
-                    DOM.stepsContainer.appendChild(alert);
-                } else {
-                    const stepDiv = document.createElement('div');
-                    stepDiv.className = 'step';
-                    stepDiv.innerHTML = `
-                        <span class="step-number">${step.number}</span>
-                        <div class="step-content">
-                            <div class="step-equation">${step.equation}</div>
-                            <div class="step-explanation">${step.explanation}</div>
-                        </div>
-                    `;
-                    DOM.stepsContainer.appendChild(stepDiv);
-                }
-            });
-            
-            DOM.solutionDiv.classList.add('show');
-        }
-
-        // ========== ÉVÉNEMENTS ==========
-        
-        // Changement de type
-        DOM.typeButtons.forEach(btn => {
+        // Events
+        typeButtons.forEach(btn => {
             btn.addEventListener('click', () => {
-                DOM.typeButtons.forEach(b => b.classList.remove('active'));
+                typeButtons.forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
-                state.currentType = btn.dataset.type;
+                currentType = btn.dataset.type;
                 
-                if (state.currentType === 'type1') {
-                    DOM.coeffType1.classList.remove('hidden');
-                    DOM.coeffType2.classList.add('hidden');
-                } else {
-                    DOM.coeffType1.classList.add('hidden');
-                    DOM.coeffType2.classList.remove('hidden');
-                }
+                $('coeffType1').classList.toggle('hidden', currentType !== 'type1');
+                $('coeffType2').classList.toggle('hidden', currentType !== 'type2');
                 
-                updateEquationDisplay();
+                updateDisplay();
             });
         });
 
-        // Génération aléatoire
-        DOM.generateBtn.addEventListener('click', generateRandomEquation);
-
-        // Résolution
-        DOM.solveBtn.addEventListener('click', solveEquation);
-
-        // Mise à jour en temps réel quand on modifie les coefficients
-        Object.values(DOM.inputs).forEach(input => {
-            input.addEventListener('input', updateEquationDisplay);
+        $('generateBtn').addEventListener('click', generate);
+        $('solveBtn').addEventListener('click', solve);
+        
+        document.querySelectorAll('input').forEach(inp => {
+            inp.addEventListener('input', updateDisplay);
         });
 
-        // ========== INITIALISATION ==========
-        updateEquationDisplay();
+        // Init
+        updateDisplay();
     </script>
 </body>
 </html>

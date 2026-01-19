@@ -23,6 +23,35 @@
             margin: 0 auto;
         }
 
+        /* Navigation */
+        .nav {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .nav a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 14px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .nav a:hover {
+            background: rgba(255,255,255,0.25);
+        }
+
+        .nav a.active {
+            background: rgba(255,255,255,0.35);
+            font-weight: 600;
+        }
+
         header {
             text-align: center;
             color: white;
@@ -386,6 +415,13 @@
 </head>
 <body>
     <div class="container">
+        <nav class="nav">
+            <a href="index.html">Équations</a>
+            <a href="developpement.html" class="active">Développement</a>
+            <a href="reduction.html">Réduction</a>
+            <a href="factorisation.html">Factorisation</a>
+        </nav>
+
         <header>
             <h1>🎓 Développement</h1>
             <p class="subtitle">Exercices interactifs</p>
