@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MathsFacile - Équations</title>
+    <title>MathsFacile - Inéquations</title>
     
     <!-- CSS -->
     <link rel="stylesheet" href="css/theme.css">
@@ -22,19 +22,19 @@
         </nav>
 
         <header>
-            <h1>🎓 Équations</h1>
+            <h1>🎓 Inéquations</h1>
             <p class="subtitle">Exercices interactifs</p>
-            <p class="intro">Entraîne-toi à résoudre des équations du 1er degré.<br>Choisis un type, modifie les valeurs, puis clique sur <strong>Correction</strong>.</p>
+            <p class="intro">Entraîne-toi à résoudre des inéquations du 1er degré.<br>Clique sur <strong>Correction</strong> pour voir les étapes et la représentation graphique.</p>
         </header>
 
         <div class="card">
             <div class="type-selector">
                 <button class="type-btn active" data-type="type1">
-                    <div class="example">ax + b = c</div>
-                    <div class="label">Équation simple</div>
+                    <div class="example">ax + b > c</div>
+                    <div class="label">Inéquation simple</div>
                 </button>
                 <button class="type-btn" data-type="type2">
-                    <div class="example">ax + b = cx + d</div>
+                    <div class="example">ax + b ≤ cx + d</div>
                     <div class="label">Avec x des deux côtés</div>
                 </button>
             </div>
@@ -50,6 +50,15 @@
                     <input type="number" id="b1" value="3">
                 </div>
                 <div class="coef-group">
+                    <label>signe</label>
+                    <select id="sign1">
+                        <option value="<">&lt;</option>
+                        <option value=">" selected>&gt;</option>
+                        <option value="<=">≤</option>
+                        <option value=">=">≥</option>
+                    </select>
+                </div>
+                <div class="coef-group">
                     <label>c</label>
                     <input type="number" id="c1" value="7">
                 </div>
@@ -59,24 +68,33 @@
             <div class="coefficients hidden" id="coeffType2">
                 <div class="coef-group">
                     <label>a</label>
-                    <input type="number" id="a2" value="3">
+                    <input type="number" id="a2" value="5">
                 </div>
                 <div class="coef-group">
                     <label>b</label>
-                    <input type="number" id="b2" value="5">
+                    <input type="number" id="b2" value="-2">
+                </div>
+                <div class="coef-group">
+                    <label>signe</label>
+                    <select id="sign2">
+                        <option value="<">&lt;</option>
+                        <option value=">">&gt;</option>
+                        <option value="<=" selected>≤</option>
+                        <option value=">=">≥</option>
+                    </select>
                 </div>
                 <div class="coef-group">
                     <label>c</label>
-                    <input type="number" id="c2" value="2">
+                    <input type="number" id="c2" value="3">
                 </div>
                 <div class="coef-group">
                     <label>d</label>
-                    <input type="number" id="d2" value="11">
+                    <input type="number" id="d2" value="4">
                 </div>
             </div>
 
             <div class="expression-display">
-                <div class="expression" id="expressionDisplay">2x + 3 = 7</div>
+                <div class="expression" id="expressionDisplay">2x + 3 > 7</div>
             </div>
 
             <div class="action-buttons">
@@ -95,10 +113,9 @@
     <script src="js/utils.js"></script>
     <script src="js/ui.js"></script>
     <script src="js/main.js"></script>
-    <script src="js/equations.js"></script>
+    <script src="js/inequations.js"></script>
     <script>
-        // Initialiser la page
-        document.addEventListener('DOMContentLoaded', initEquationsPage);
+        document.addEventListener('DOMContentLoaded', initInequationsPage);
     </script>
 </body>
 </html>

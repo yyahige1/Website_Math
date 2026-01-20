@@ -1,0 +1,178 @@
+/* ========================================
+   LAYOUT.CSS - Structure générale
+   ======================================== */
+
+/* Container principal */
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* ========== NAVIGATION ========== */
+.nav {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-lg);
+    flex-wrap: wrap;
+}
+
+.nav a {
+    color: var(--white);
+    text-decoration: none;
+    padding: var(--spacing-sm) 14px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: var(--radius-xl);
+    font-size: 0.9em;
+    font-weight: 500;
+    transition: background var(--transition-fast);
+}
+
+.nav a:hover {
+    background: rgba(255, 255, 255, 0.25);
+    color: var(--white);
+}
+
+.nav a.active {
+    background: rgba(255, 255, 255, 0.35);
+    font-weight: 600;
+}
+
+/* ========== HEADER ========== */
+header {
+    text-align: center;
+    color: var(--white);
+    margin-bottom: var(--spacing-lg);
+}
+
+header h1 {
+    margin-bottom: var(--spacing-xs);
+}
+
+.subtitle {
+    font-size: 1.1em;
+    font-weight: 600;
+    opacity: 0.95;
+    margin-bottom: var(--spacing-md);
+}
+
+.intro {
+    font-size: 1em;
+    opacity: 0.9;
+    line-height: 1.5;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+/* ========== CARD ========== */
+.card {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow-md);
+}
+
+/* ========== GRILLES ========== */
+.grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-sm);
+}
+
+.grid-1 {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-sm);
+}
+
+/* ========== FLEXBOX HELPERS ========== */
+.flex-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ========== COEFFICIENTS ========== */
+.coefficients {
+    display: flex;
+    gap: 10px;
+    margin-bottom: var(--spacing-lg);
+    flex-wrap: wrap;
+}
+
+.coef-group {
+    flex: 1;
+    min-width: 60px;
+}
+
+.coef-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: var(--spacing-xs);
+    color: var(--gray-700);
+    font-size: 0.85em;
+}
+
+.coef-info {
+    width: 100%;
+    text-align: center;
+    color: var(--gray-500);
+    font-size: 0.9em;
+    font-style: italic;
+    padding: 10px;
+}
+
+/* ========== BOUTONS D'ACTION ========== */
+.action-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.action-buttons button {
+    flex: 1;
+    padding: var(--spacing-md);
+    font-size: 1em;
+}
+
+.btn-generate {
+    background: var(--gray-200);
+    color: var(--gray-800);
+}
+
+.btn-generate:hover {
+    background: var(--gray-300);
+}
+
+.btn-solve {
+    background: var(--primary);
+    color: var(--white);
+}
+
+.btn-solve:hover {
+    background: var(--primary-dark);
+}
+
+/* ========== MOBILE ========== */
+@media (max-width: 400px) {
+    .card {
+        padding: var(--spacing-md);
+    }
+    
+    .coef-group {
+        min-width: 50px;
+    }
+    
+    .grid-2 {
+        grid-template-columns: 1fr;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+    }
+}

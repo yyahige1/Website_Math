@@ -4,342 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MathsFacile - Factorisation</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 12px;
-        }
-
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        /* Navigation */
-        .nav {
-            display: flex;
-            justify-content: center;
-            gap: 6px;
-            margin-bottom: 16px;
-            flex-wrap: wrap;
-        }
-
-        .nav a {
-            color: white;
-            text-decoration: none;
-            padding: 8px 14px;
-            background: rgba(255,255,255,0.15);
-            border-radius: 20px;
-            font-size: 0.9em;
-            font-weight: 500;
-            transition: all 0.2s;
-        }
-
-        .nav a:hover {
-            background: rgba(255,255,255,0.25);
-        }
-
-        .nav a.active {
-            background: rgba(255,255,255,0.35);
-            font-weight: 600;
-        }
-
-        header {
-            text-align: center;
-            color: white;
-            margin-bottom: 16px;
-        }
-
-        h1 {
-            font-size: 2em;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
-            margin-bottom: 4px;
-        }
-
-        .subtitle {
-            font-size: 1.1em;
-            font-weight: 600;
-            opacity: 0.95;
-            margin-bottom: 12px;
-        }
-
-        .intro {
-            font-size: 1em;
-            opacity: 0.9;
-            line-height: 1.5;
-            max-width: 400px;
-            margin: 0 auto;
-        }
-
-        .card {
-            background: white;
-            border-radius: 12px;
-            padding: 16px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-        }
-
-        /* Type selector */
-        .type-selector {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 8px;
-            margin-bottom: 16px;
-        }
-
-        .type-btn {
-            padding: 12px 8px;
-            border: 2px solid #e0e0e0;
-            background: white;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
-            text-align: center;
-        }
-
-        .type-btn .example {
-            font-family: 'Courier New', monospace;
-            font-size: 0.95em;
-            font-weight: 600;
-            color: #333;
-        }
-
-        .type-btn .label {
-            font-size: 0.75em;
-            color: #888;
-            margin-top: 4px;
-        }
-
-        .type-btn.active {
-            border-color: #667eea;
-            background: #f0f3ff;
-        }
-
-        .type-btn.active .example {
-            color: #667eea;
-        }
-
-        /* Expression display */
-        .expression-display {
-            background: #f5f5f5;
-            padding: 20px;
-            border-radius: 8px;
-            text-align: center;
-            margin-bottom: 16px;
-        }
-
-        .expression {
-            font-size: 1.4em;
-            font-weight: 600;
-            color: #333;
-            font-family: 'Courier New', monospace;
-        }
-
-        /* Buttons */
-        .action-buttons {
-            display: flex;
-            gap: 10px;
-        }
-
-        .action-buttons button {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            font-size: 1em;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        .btn-generate {
-            background: #e8e8e8;
-            color: #333;
-        }
-
-        .btn-solve {
-            background: #667eea;
-            color: white;
-        }
-
-        /* Solution */
-        .solution {
-            margin-top: 16px;
-            display: none;
-        }
-
-        .solution.show {
-            display: block;
-        }
-
-        .solution h3 {
-            color: #28a745;
-            margin-bottom: 12px;
-            font-size: 1.1em;
-        }
-
-        .step {
-            background: #f9f9f9;
-            padding: 12px;
-            margin-bottom: 10px;
-            border-radius: 8px;
-            border-left: 3px solid #667eea;
-        }
-
-        .step-expression {
-            font-family: 'Courier New', monospace;
-            font-size: 1.1em;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 6px;
-        }
-
-        .step-explanation {
-            color: #666;
-            font-size: 0.9em;
-            line-height: 1.4;
-        }
-
-        /* Identification visuelle */
-        .factor-visual {
-            background: white;
-            padding: 12px;
-            border-radius: 6px;
-            margin: 10px 0;
-        }
-
-        .factor-line {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            margin: 8px 0;
-            flex-wrap: wrap;
-            font-family: 'Courier New', monospace;
-            font-size: 1.1em;
-        }
-
-        .factor-box {
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-weight: 600;
-        }
-
-        .factor-common {
-            background: #fff3e0;
-            border: 2px solid #ff9800;
-            color: #e65100;
-        }
-
-        .factor-remaining {
-            background: #e3f2fd;
-            border: 2px solid #2196f3;
-            color: #1565c0;
-        }
-
-        .arrow-down {
-            text-align: center;
-            font-size: 1.2em;
-            color: #667eea;
-            margin: 8px 0;
-        }
-
-        /* Identity colors */
-        .id-a {
-            color: #d32f2f;
-            font-weight: 600;
-        }
-
-        .id-b {
-            color: #1976d2;
-            font-weight: 600;
-        }
-
-        .identity-boxes {
-            display: flex;
-            gap: 12px;
-            margin-top: 8px;
-        }
-
-        .id-box {
-            flex: 1;
-            padding: 10px;
-            border-radius: 6px;
-            text-align: center;
-        }
-
-        .id-box-a {
-            background: #ffebee;
-            border: 2px solid #ef5350;
-        }
-
-        .id-box-b {
-            background: #e3f2fd;
-            border: 2px solid #42a5f5;
-        }
-
-        .id-box .id-label {
-            display: block;
-            font-size: 0.8em;
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-
-        .id-box-a .id-label { color: #c62828; }
-        .id-box-b .id-label { color: #1565c0; }
-
-        .id-box .id-value {
-            font-family: 'Courier New', monospace;
-            font-size: 1.2em;
-            font-weight: 600;
-            color: #333;
-        }
-
-        /* Final result */
-        .result-highlight {
-            background: #e8f5e9;
-            padding: 16px;
-            border-radius: 8px;
-            margin-top: 12px;
-            text-align: center;
-        }
-
-        .result-highlight .final {
-            font-size: 1.4em;
-            font-weight: 600;
-            font-family: 'Courier New', monospace;
-            color: #2e7d32;
-        }
-
-        /* Method badge */
-        .method-badge {
-            display: inline-block;
-            padding: 4px 10px;
-            background: #667eea;
-            color: white;
-            border-radius: 12px;
-            font-size: 0.85em;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-
-        .hidden { display: none; }
-
-        /* Mobile */
-        @media (max-width: 400px) {
-            body { padding: 8px; }
-            .card { padding: 12px; }
-            h1 { font-size: 1.7em; }
-            .expression { font-size: 1.1em; }
-            .factor-line { font-size: 0.95em; }
-        }
-    </style>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/exercices.css">
 </head>
 <body>
     <div class="container">
@@ -347,13 +17,14 @@
             <a href="index.html">Équations</a>
             <a href="developpement.html">Développement</a>
             <a href="reduction.html">Réduction</a>
-            <a href="factorisation.html" class="active">Factorisation</a>
+            <a href="factorisation.html">Factorisation</a>
+            <a href="inequations.html">Inéquations</a>
         </nav>
 
         <header>
             <h1>🎓 Factorisation</h1>
             <p class="subtitle">Exercices interactifs</p>
-            <p class="intro">Entraîne-toi à factoriser des expressions.<br>Choisis un type, puis clique sur <strong>Correction</strong> pour voir la méthode.</p>
+            <p class="intro">Entraîne-toi à factoriser des expressions.<br>Choisis un type, puis clique sur <strong>Correction</strong>.</p>
         </header>
 
         <div class="card">
@@ -372,6 +43,42 @@
                 </button>
             </div>
 
+            <!-- Coefficients Facteur Commun -->
+            <div class="coefficients" id="coeffFacteur">
+                <div class="coef-info">Expression générée aléatoirement avec un facteur commun</div>
+            </div>
+
+            <!-- Coefficients Diff Carrés -->
+            <div class="coefficients hidden" id="coeffDiff">
+                <div class="coef-group">
+                    <label>a (dans ax)</label>
+                    <input type="number" id="dc_a" value="1" min="1">
+                </div>
+                <div class="coef-group">
+                    <label>b</label>
+                    <input type="number" id="dc_b" value="3" min="1">
+                </div>
+            </div>
+
+            <!-- Coefficients Carré Parfait -->
+            <div class="coefficients hidden" id="coeffCarre">
+                <div class="coef-group">
+                    <label>a (dans ax)</label>
+                    <input type="number" id="cp_a" value="1" min="1">
+                </div>
+                <div class="coef-group">
+                    <label>b</label>
+                    <input type="number" id="cp_b" value="3" min="1">
+                </div>
+                <div class="coef-group">
+                    <label>Signe</label>
+                    <select id="cp_sign">
+                        <option value="+">+</option>
+                        <option value="-">−</option>
+                    </select>
+                </div>
+            </div>
+
             <div class="expression-display">
                 <div class="expression" id="expressionDisplay">6x + 9</div>
             </div>
@@ -388,308 +95,13 @@
         </div>
     </div>
 
+    <!-- JavaScript -->
+    <script src="js/utils.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/factorisation.js"></script>
     <script>
-        // État
-        let currentType = 'facteur-commun';
-        let currentExpression = null;
-
-        // Éléments
-        const $ = id => document.getElementById(id);
-        const typeButtons = document.querySelectorAll('.type-btn');
-
-        // PGCD
-        function gcd(a, b) {
-            a = Math.abs(a);
-            b = Math.abs(b);
-            while (b) {
-                [a, b] = [b, a % b];
-            }
-            return a;
-        }
-
-        // Coefficient aléatoire
-        function randCoef(min = 1, max = 10, avoidZero = true) {
-            let n;
-            do {
-                n = Math.floor(Math.random() * (max - min + 1)) + min;
-                if (Math.random() < 0.3) n = -n;
-            } while (avoidZero && n === 0);
-            return n;
-        }
-
-        // Carré parfait ?
-        function isSquare(n) {
-            if (n < 0) return false;
-            const sqrt = Math.sqrt(n);
-            return sqrt === Math.floor(sqrt);
-        }
-
-        // Formatage terme
-        function formatTerm(coef, variable, isFirst) {
-            if (coef === 0) return '';
-            
-            const sign = isFirst ? (coef < 0 ? '−' : '') : (coef > 0 ? ' + ' : ' − ');
-            const abs = Math.abs(coef);
-            
-            if (!variable) return sign + abs;
-            if (abs === 1) return sign + variable;
-            return sign + abs + variable;
-        }
-
-        // Génération d'expression
-        function generateExpression() {
-            switch(currentType) {
-                case 'facteur-commun':
-                    // ax + b où a et b ont un PGCD > 1
-                    const factor = randCoef(2, 6, true);
-                    const innerA = randCoef(1, 5, true);
-                    const innerB = randCoef(1, 5, true);
-                    currentExpression = {
-                        type: 'facteur-commun',
-                        a: factor * innerA,  // coefficient de x
-                        b: factor * innerB,  // constante
-                        factor: factor,
-                        innerA: innerA,
-                        innerB: innerB
-                    };
-                    break;
-                    
-                case 'diff-carres':
-                    // a²x² - b² = (ax-b)(ax+b)
-                    const a = randCoef(1, 4, true);
-                    const b = randCoef(1, 6, true);
-                    currentExpression = {
-                        type: 'diff-carres',
-                        a: a,
-                        b: b,
-                        a2: a * a,
-                        b2: b * b
-                    };
-                    break;
-                    
-                case 'carre-parfait':
-                    // a²x² ± 2abx + b² = (ax ± b)²
-                    const cp_a = randCoef(1, 4, true);
-                    const cp_b = randCoef(1, 5, true);
-                    const isPlus = Math.random() < 0.5;
-                    currentExpression = {
-                        type: 'carre-parfait',
-                        a: cp_a,
-                        b: cp_b,
-                        a2: cp_a * cp_a,
-                        b2: cp_b * cp_b,
-                        middle: 2 * cp_a * cp_b * (isPlus ? 1 : -1),
-                        isPlus: isPlus
-                    };
-                    break;
-            }
-            
-            displayExpression();
-        }
-
-        // Afficher l'expression
-        function displayExpression() {
-            if (!currentExpression) {
-                generateExpression();
-                return;
-            }
-            
-            const e = currentExpression;
-            let display = '';
-            
-            switch(e.type) {
-                case 'facteur-commun':
-                    display = formatTerm(e.a, 'x', true) + formatTerm(e.b, '', false);
-                    break;
-                    
-                case 'diff-carres':
-                    display = formatTerm(e.a2, 'x²', true) + ' − ' + e.b2;
-                    break;
-                    
-                case 'carre-parfait':
-                    display = formatTerm(e.a2, 'x²', true) + formatTerm(e.middle, 'x', false) + formatTerm(e.b2, '', false);
-                    break;
-            }
-            
-            $('expressionDisplay').textContent = display;
-            $('solutionDiv').classList.remove('show');
-        }
-
-        // Résoudre
-        function solve() {
-            if (!currentExpression) return;
-            
-            const e = currentExpression;
-            let html = '';
-            
-            switch(e.type) {
-                case 'facteur-commun':
-                    html = solveFacteurCommun(e);
-                    break;
-                case 'diff-carres':
-                    html = solveDiffCarres(e);
-                    break;
-                case 'carre-parfait':
-                    html = solveCarreParfait(e);
-                    break;
-            }
-            
-            $('stepsContainer').innerHTML = html;
-            $('solutionDiv').classList.add('show');
-        }
-
-        // Résolution facteur commun
-        function solveFacteurCommun(e) {
-            const pgcd = gcd(e.a, e.b);
-            const signB = e.innerB > 0 ? '+' : '−';
-            
-            return `
-                <div class="step">
-                    <span class="method-badge">Facteur commun</span>
-                    <div class="step-expression">Trouver le PGCD des coefficients</div>
-                    <div class="step-explanation">PGCD(${Math.abs(e.a)}, ${Math.abs(e.b)}) = ${pgcd}</div>
-                </div>
-                
-                <div class="step">
-                    <div class="step-expression">Mettre en évidence le facteur commun</div>
-                    <div class="factor-visual">
-                        <div class="factor-line">
-                            <span class="factor-box factor-common">${pgcd}</span> × ${Math.abs(e.innerA)}x = ${Math.abs(e.a)}x
-                        </div>
-                        <div class="factor-line">
-                            <span class="factor-box factor-common">${pgcd}</span> × ${Math.abs(e.innerB)} = ${Math.abs(e.b)}
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="step">
-                    <div class="step-expression">Factoriser</div>
-                    <div class="step-explanation">On met ${pgcd} en facteur :</div>
-                    <div class="factor-visual">
-                        <div class="factor-line">
-                            ${formatTerm(e.a, 'x', true)}${formatTerm(e.b, '', false)} = 
-                            <span class="factor-box factor-common">${pgcd}</span>(<span class="factor-box factor-remaining">${formatTerm(e.innerA, 'x', true)} ${signB} ${Math.abs(e.innerB)}</span>)
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="result-highlight">
-                    <div class="final">${pgcd}(${formatTerm(e.innerA, 'x', true)} ${signB} ${Math.abs(e.innerB)})</div>
-                </div>
-            `;
-        }
-
-        // Résolution différence de carrés
-        function solveDiffCarres(e) {
-            const aStr = e.a === 1 ? 'x' : e.a + 'x';
-            
-            return `
-                <div class="step">
-                    <span class="method-badge">Identité remarquable</span>
-                    <div class="step-expression">Reconnaître a² − b²</div>
-                    <div class="step-explanation">Formule : <span class="id-a">a</span>² − <span class="id-b">b</span>² = (<span class="id-a">a</span> − <span class="id-b">b</span>)(<span class="id-a">a</span> + <span class="id-b">b</span>)</div>
-                </div>
-                
-                <div class="step">
-                    <div class="step-expression">Identifier a et b</div>
-                    <div class="step-explanation">
-                        • ${e.a2}x² = (<span class="id-a">${aStr}</span>)² donc <span class="id-a">a = ${aStr}</span><br>
-                        • ${e.b2} = (<span class="id-b">${e.b}</span>)² donc <span class="id-b">b = ${e.b}</span>
-                    </div>
-                    <div class="identity-boxes">
-                        <div class="id-box id-box-a">
-                            <span class="id-label">a</span>
-                            <span class="id-value">${aStr}</span>
-                        </div>
-                        <div class="id-box id-box-b">
-                            <span class="id-label">b</span>
-                            <span class="id-value">${e.b}</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="step">
-                    <div class="step-expression">Appliquer la formule</div>
-                    <div class="step-explanation">(<span class="id-a">${aStr}</span> − <span class="id-b">${e.b}</span>)(<span class="id-a">${aStr}</span> + <span class="id-b">${e.b}</span>)</div>
-                </div>
-                
-                <div class="result-highlight">
-                    <div class="final">(${aStr} − ${e.b})(${aStr} + ${e.b})</div>
-                </div>
-            `;
-        }
-
-        // Résolution carré parfait
-        function solveCarreParfait(e) {
-            const aStr = e.a === 1 ? 'x' : e.a + 'x';
-            const sign = e.isPlus ? '+' : '−';
-            const formula = e.isPlus 
-                ? '(<span class="id-a">a</span> + <span class="id-b">b</span>)² = <span class="id-a">a</span>² + 2<span class="id-a">a</span><span class="id-b">b</span> + <span class="id-b">b</span>²'
-                : '(<span class="id-a">a</span> − <span class="id-b">b</span>)² = <span class="id-a">a</span>² − 2<span class="id-a">a</span><span class="id-b">b</span> + <span class="id-b">b</span>²';
-            
-            return `
-                <div class="step">
-                    <span class="method-badge">Identité remarquable</span>
-                    <div class="step-expression">Reconnaître un carré parfait</div>
-                    <div class="step-explanation">Formule : ${formula}</div>
-                </div>
-                
-                <div class="step">
-                    <div class="step-expression">Identifier a et b</div>
-                    <div class="step-explanation">
-                        • ${e.a2}x² = (<span class="id-a">${aStr}</span>)² donc <span class="id-a">a = ${aStr}</span><br>
-                        • ${e.b2} = (<span class="id-b">${e.b}</span>)² donc <span class="id-b">b = ${e.b}</span>
-                    </div>
-                    <div class="identity-boxes">
-                        <div class="id-box id-box-a">
-                            <span class="id-label">a</span>
-                            <span class="id-value">${aStr}</span>
-                        </div>
-                        <div class="id-box id-box-b">
-                            <span class="id-label">b</span>
-                            <span class="id-value">${e.b}</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="step">
-                    <div class="step-expression">Vérifier le terme du milieu</div>
-                    <div class="step-explanation">
-                        2 × <span class="id-a">${aStr}</span> × <span class="id-b">${e.b}</span> = ${Math.abs(e.middle)}x ✓
-                    </div>
-                </div>
-                
-                <div class="step">
-                    <div class="step-expression">Appliquer la formule</div>
-                    <div class="step-explanation">(<span class="id-a">${aStr}</span> ${sign} <span class="id-b">${e.b}</span>)²</div>
-                </div>
-                
-                <div class="result-highlight">
-                    <div class="final">(${aStr} ${sign} ${e.b})²</div>
-                </div>
-            `;
-        }
-
-        // Events
-        typeButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                typeButtons.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                currentType = btn.dataset.type;
-                currentExpression = null;
-                generateExpression();
-            });
-        });
-
-        $('generateBtn').addEventListener('click', () => {
-            currentExpression = null;
-            generateExpression();
-        });
-
-        $('solveBtn').addEventListener('click', solve);
-
-        // Init
-        generateExpression();
+        document.addEventListener('DOMContentLoaded', initFactorisationPage);
     </script>
 </body>
 </html>
