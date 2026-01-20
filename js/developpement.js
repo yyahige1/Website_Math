@@ -332,6 +332,9 @@ function solveDiffCarresDev(expr) {
 /**
  * Dessine les flèches SVG pour la distributivité
  */
+/**
+ * Dessine les flèches SVG pour la distributivité
+ */
 function drawArrows() {
     const svg = document.getElementById('arrowsSvg');
     const container = document.getElementById('arrowsContainer');
@@ -350,8 +353,8 @@ function drawArrows() {
         
         if (!k || !a || !b) return;
         
-        drawArrow(svg, containerRect, k, a, '#ef5350');
-        drawArrow(svg, containerRect, k, b, '#66bb6a');
+        drawArrowAbove(svg, containerRect, k, a, '#ef5350', 0);
+        drawArrowAbove(svg, containerRect, k, b, '#66bb6a', 1);
     } else if (type === 'double') {
         const termA = document.getElementById('termA');
         const termB = document.getElementById('termB');
@@ -360,28 +363,31 @@ function drawArrows() {
         
         if (!termA || !termB || !termC || !termD) return;
         
-        // Premier terme vers les deux autres
-        drawArrow(svg, containerRect, termA, termC, '#ef5350');
-        drawArrow(svg, containerRect, termA, termD, '#ef5350');
-        // Deuxième terme vers les deux autres
-        drawArrow(svg, containerRect, termB, termC, '#42a5f5');
-        drawArrow(svg, containerRect, termB, termD, '#42a5f5');
+        // Premier terme (ax) vers les deux termes de droite - flèches rouges au-dessus
+        drawArrowAbove(svg, containerRect, termA, termC, '#ef5350', 0);
+        drawArrowAbove(svg, containerRect, termA, termD, '#ef5350', 1);
+        // Deuxième terme (b) vers les deux termes de droite - flèches bleues en-dessous
+        drawArrowBelow(svg, containerRect, termB, termC, '#42a5f5', 0);
+        drawArrowBelow(svg, containerRect, termB, termD, '#42a5f5', 1);
     }
 }
 
 /**
- * Dessine une flèche courbe entre deux éléments
+ * Dessine une flèche courbe au-dessus des éléments
  */
-function drawArrow(svg, containerRect, from, to, color) {
+function drawArrowAbove(svg, containerRect, from, to, color, level) {
     const fromRect = from.getBoundingClientRect();
     const toRect = to.getBoundingClientRect();
     
-    const x1 = fromRect.left + fromRect.width / 2 - containerRect.left;
-    const y1 = fromRect.bottom - containerRect.top + 5;
-    const x2 = toRect.left + toRect.width / 2 - containerRect.left;
-    const y2 = toRect.bottom - containerRect.top + 5;
+    const x1 = fromRect.left + fromRect.width / 2 - containerRect.left +4;
+    const y1 = fromRect.top - containerRect.top - 5;
+    const x2 = toRect.left + toRect.width / 2 - containerRect.left+4;
+    const y2 = toRect.top - containerRect.top - 5;
     
-    const midY = Math.max(y1, y2) + 20 + Math.abs(x2 - x1) * 0.15;
+    // Plus la flèche est longue, plus elle monte haut
+    const distance = Math.abs(x2 - x1);
+    const curveHeight = 15 + level * 10 + distance * 0.1;
+    const midY = Math.min(y1, y2) - curveHeight;
     
     const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     path.setAttribute('d', `M ${x1} ${y1} Q ${x1} ${midY}, ${(x1 + x2) / 2} ${midY} Q ${x2} ${midY}, ${x2} ${y2}`);
@@ -390,18 +396,51 @@ function drawArrow(svg, containerRect, from, to, color) {
     path.setAttribute('stroke-width', '2');
     path.setAttribute('marker-end', `url(#arrow-${color.replace('#', '')})`);
     
-    // Ajouter le marqueur s'il n'existe pas
-    if (!svg.querySelector(`#arrow-${color.replace('#', '')}`)) {
+    addArrowMarker(svg, color);
+    svg.appendChild(path);
+}
+
+/**
+ * Dessine une flèche courbe en-dessous des éléments
+ */
+function drawArrowBelow(svg, containerRect, from, to, color, level) {
+    const fromRect = from.getBoundingClientRect();
+    const toRect = to.getBoundingClientRect();
+    
+    const x1 = fromRect.left + fromRect.width / 2 - containerRect.left;
+    const y1 = fromRect.bottom - containerRect.top + 5;
+    const x2 = toRect.left + toRect.width / 2 - containerRect.left;
+    const y2 = toRect.bottom - containerRect.top + 5;
+    
+    const distance = Math.abs(x2 - x1);
+    const curveHeight = 25 + level * 10 + distance * 0.18;
+    const midY = Math.max(y1, y2) + curveHeight;
+    
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute('d', `M ${x1} ${y1} Q ${x1} ${midY}, ${(x1 + x2) / 2} ${midY} Q ${x2} ${midY}, ${x2} ${y2}`);
+    path.setAttribute('fill', 'none');
+    path.setAttribute('stroke', color);
+    path.setAttribute('stroke-width', '2');
+    path.setAttribute('marker-end', `url(#arrow-${color.replace('#', '')})`);
+    
+    addArrowMarker(svg, color);
+    svg.appendChild(path);
+}
+
+/**
+ * Ajoute le marqueur de flèche si nécessaire
+ */
+function addArrowMarker(svg, color) {
+    const markerId = `arrow-${color.replace('#', '')}`;
+    if (!svg.querySelector(`#${markerId}`)) {
         const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
         defs.innerHTML = `
-            <marker id="arrow-${color.replace('#', '')}" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <marker id="${markerId}" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
                 <polygon points="0 0, 10 3.5, 0 7" fill="${color}"/>
             </marker>
         `;
         svg.appendChild(defs);
     }
-    
-    svg.appendChild(path);
 }
 
 /**
