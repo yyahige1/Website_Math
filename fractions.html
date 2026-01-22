@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MathsFacile - Fractions</title>
+    <meta name="description" content="Entraîne-toi aux opérations sur les fractions : addition, soustraction, multiplication, division et simplification. Exercices illimités avec corrections détaillées.">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/exercices.css">
+    
+    <style>
+        /* Styles spécifiques pour les fractions */
+        .fraction-display {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .frac {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: var(--font-mono);
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+        
+        .frac .num {
+            border-bottom: 2px solid var(--gray-800);
+            padding: 2px 8px;
+            min-width: 30px;
+            text-align: center;
+        }
+        
+        .frac .den {
+            padding: 2px 8px;
+            min-width: 30px;
+            text-align: center;
+        }
+        
+        .frac-highlight {
+            background: var(--success-light);
+            padding: 8px 12px;
+            border-radius: var(--radius-md);
+        }
+        
+        .frac-highlight .num {
+            border-bottom-color: var(--success);
+            color: var(--success);
+        }
+        
+        .frac-highlight .den {
+            color: var(--success);
+        }
+        
+        .op {
+            font-size: 1.4em;
+            font-weight: 600;
+            color: var(--gray-600);
+        }
+        
+        .result-placeholder {
+            font-size: 1.4em;
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        .final-number {
+            font-family: var(--font-mono);
+            font-size: 1.4em;
+            font-weight: 600;
+            color: var(--success);
+        }
+        
+        /* Inputs fractions */
+        .fraction-inputs {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .fraction-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .fraction-group label {
+            font-weight: 600;
+            color: var(--gray-700);
+            font-size: 0.9em;
+        }
+        
+        .fraction-input-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: var(--gray-100);
+            padding: 10px;
+            border-radius: var(--radius-md);
+        }
+        
+        .fraction-input-box input {
+            width: 60px;
+            text-align: center;
+            padding: 8px;
+            font-size: 1.1em;
+        }
+        
+        .fraction-input-box .fraction-bar {
+            width: 50px;
+            height: 2px;
+            background: var(--gray-800);
+            margin: 4px 0;
+        }
+        
+        /* Steps avec fractions */
+        .step .frac {
+            font-size: 1em;
+        }
+        
+        .step-expression {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="nav">
+            <a href="index.html">Équations</a>
+            <a href="developpement.html">Développement</a>
+            <a href="reduction.html">Réduction</a>
+            <a href="factorisation.html">Factorisation</a>
+            <a href="inequations.html">Inéquations</a>
+            <a href="fractions.html">Fractions</a>
+        </nav>
+
+        <header>
+            <h1>🎓 Fractions</h1>
+            <p class="subtitle">Exercices interactifs</p>
+            <p class="intro">Entraîne-toi aux opérations sur les fractions.<br>Choisis une opération, puis clique sur <strong>Correction</strong>.</p>
+        </header>
+
+        <div class="card">
+            <div class="type-selector grid-2">
+                <button class="type-btn active" data-type="addition">
+                    <div class="example">a/b + c/d</div>
+                    <div class="label">Addition</div>
+                </button>
+                <button class="type-btn" data-type="soustraction">
+                    <div class="example">a/b − c/d</div>
+                    <div class="label">Soustraction</div>
+                </button>
+                <button class="type-btn" data-type="multiplication">
+                    <div class="example">a/b × c/d</div>
+                    <div class="label">Multiplication</div>
+                </button>
+                <button class="type-btn" data-type="division">
+                    <div class="example">a/b ÷ c/d</div>
+                    <div class="label">Division</div>
+                </button>
+                <button class="type-btn" data-type="simplification">
+                    <div class="example">12/18 = ?</div>
+                    <div class="label">Simplification</div>
+                </button>
+            </div>
+
+            <!-- Inputs fractions -->
+            <div class="fraction-inputs">
+                <div class="fraction-group">
+                    <label id="fraction1Label">Fraction 1</label>
+                    <div class="fraction-input-box">
+                        <input type="number" id="num1" value="2" placeholder="num">
+                        <div class="fraction-bar"></div>
+                        <input type="number" id="den1" value="3" placeholder="den" min="1">
+                    </div>
+                </div>
+                
+                <div class="fraction-group" id="fraction2Group">
+                    <label>Fraction 2</label>
+                    <div class="fraction-input-box">
+                        <input type="number" id="num2" value="1" placeholder="num">
+                        <div class="fraction-bar"></div>
+                        <input type="number" id="den2" value="4" placeholder="den" min="1">
+                    </div>
+                </div>
+            </div>
+
+            <div class="expression-display">
+                <div class="expression" id="expressionDisplay"></div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn-generate" id="generateBtn">🎲 Nouveau</button>
+                <button class="btn-solve" id="solveBtn">✓ Correction</button>
+            </div>
+
+            <div class="solution" id="solutionDiv">
+                <h3>📝 Résolution</h3>
+                <div id="stepsContainer"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="js/utils.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/fractions.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', initFractionsPage);
+    </script>
+</body>
+</html>

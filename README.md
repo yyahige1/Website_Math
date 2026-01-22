@@ -1,268 +1,219 @@
 # 🎓 MathsFacile
 
-Une plateforme d'entraînement en mathématiques interactive conçue pour l'enseignement secondaire français (collège et lycée). MathsFacile génère des exercices illimités avec des solutions détaillées, étape par étape, pour aider les élèves à maîtriser les concepts mathématiques clés.
+Une plateforme d'entraînement en mathématiques interactive pour l'enseignement secondaire français (collège et lycée). Génère des exercices illimités avec des solutions détaillées étape par étape.
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Made with JavaScript](https://img.shields.io/badge/Made%20with-JavaScript-yellow.svg)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+[![No Dependencies](https://img.shields.io/badge/Dependencies-0-green.svg)](package.json)
 
 ---
 
-## ✨ Fonctionnalités Actuelles (v1.0)
+## ✨ Fonctionnalités
 
-### Équations du 1er Degré
-- **Type 1** : `ax + b = c`
-- **Type 2** : `ax + b = cx + d`
+### Modules Disponibles (v1.0)
 
-### Modes de Génération
-- 🎯 **Mode Manuel** : Choisissez vos propres coefficients
-- 🎲 **Mode Aléatoire** : Génération automatique d'équations
+| Module | Description | Types d'exercices |
+|--------|-------------|-------------------|
+| **Équations** | Équations du 1er degré | `ax + b = c`, `ax + b = cx + d` |
+| **Développement** | Distributivité et identités | Simple, double, (a+b)², (a-b)², (a+b)(a-b) |
+| **Réduction** | Simplification d'expressions | Termes en x, x², avec parenthèses |
+| **Factorisation** | Mise en facteur | Facteur commun, identités remarquables |
+| **Inéquations** | Inéquations du 1er degré | Avec représentation graphique |
 
-### Caractéristiques
-- ♾️ **Pratique Illimitée** : Générez autant d'exercices que nécessaire
-- 📝 **Solutions Détaillées** : Explications étape par étape en français
-- 🔍 **Cas Particuliers** : Gestion des équations sans solution et à solutions infinies
-- 📱 **Design Responsive** : Fonctionne sur mobile, tablette et ordinateur
-- ✅ **Vérification Automatique** : Validation des résultats
+### Points Forts
+
+- ♾️ **Exercices illimités** - Génération aléatoire infinie
+- 📝 **Corrections détaillées** - Chaque étape expliquée
+- 🎨 **Visualisation** - Flèches SVG, couleurs par terme, droite numérique
+- 📱 **Responsive** - Fonctionne sur mobile, tablette, desktop
+- 🔌 **Hors-ligne** - Aucune connexion requise après téléchargement
+- 🚀 **Léger** - Aucune dépendance, chargement instantané
 
 ---
 
 ## 🚀 Démarrage Rapide
 
-Pas besoin d'installation ! Il suffit d'ouvrir `mathsfacile-v1.html` dans votre navigateur web.
+### Option 1 : Téléchargement direct
+1. [Télécharger le ZIP](../../archive/main.zip)
+2. Extraire
+3. Ouvrir `index.html` dans un navigateur
 
+### Option 2 : Git clone
 ```bash
-# Cloner le dépôt
 git clone https://github.com/VOTRE-USERNAME/mathsfacile.git
-
-# Ouvrir le fichier
 cd mathsfacile
-# Double-cliquez sur mathsfacile-v1.html
+# Ouvrir index.html dans un navigateur
 ```
 
----
+### Option 3 : Serveur local (pour développement)
+```bash
+# Python
+python -m http.server 8000
 
-## 🗺️ Roadmap du Projet
+# Node.js
+npx serve .
 
-Ce projet vise à couvrir l'ensemble du programme de mathématiques français du collège à la terminale.
-
-### 📍 Phase 1 - Algèbre de Base (En cours)
-- ✅ **Équations du 1er degré** (v1.0)
-- 🔄 Développement d'expressions
-- 🔄 Factorisation
-- 🔄 Inéquations du 1er degré
-
-### 📍 Phase 2 - Calculs Numériques
-- Proportionnalité & pourcentages
-- Fractions
-- Racines carrées
-- Puissances
-
-### 📍 Phase 3 - Second Degré
-- Équations du 2nd degré
-- Forme canonique
-- Systèmes d'équations 2×2
-
-### 📍 Phase 4 - Fonctions
-- Fonctions affines
-- Fonctions du 2nd degré
-- Tableaux de signes et variations
-
-### 📍 Phase 5 - Géométrie Analytique
-- Vecteurs dans le plan
-- Repérage
-- Équations de droites
-
-### 📍 Phases Suivantes
-- Suites & Analyse
-- Probabilités & Statistiques
-- Trigonométrie
-- Extension collège
-
-📖 Consultez [ROADMAP.md](ROADMAP.md) pour le plan de développement complet.
-
----
-
-## 🛠️ Stack Technique
-
-- **Frontend** : HTML5, CSS3, JavaScript vanilla
-- **Architecture** : Client-side uniquement (pas de backend requis)
-- **Dépendances** : Aucune (0 KB de dépendances !)
-- **Performance** : Léger et rapide
-
-### Pourquoi pas de framework ?
-- ✅ Simplicité maximale
-- ✅ Pas de build process
-- ✅ Facilité de déploiement (glisser-déposer)
-- ✅ Pédagogique (code lisible pour les étudiants)
-- ✅ Performance optimale
+# Puis ouvrir http://localhost:8000
+```
 
 ---
 
 ## 📂 Structure du Projet
 
 ```
-mathsfacile/
-├── mathsfacile-v1.html    # Application principale (v1.0)
-├── ROADMAP.md             # Plan de développement détaillé
-├── README.md              # Ce fichier
-├── GIT_GUIDE.md           # Guide Git pour débutants
-└── GITHUB_SETUP.md        # Instructions de configuration GitHub
+Website_Project/
+├── index.html              # Équations
+├── developpement.html      # Développement
+├── reduction.html          # Réduction
+├── factorisation.html      # Factorisation
+├── inequations.html        # Inéquations
+│
+├── css/
+│   ├── theme.css           # Variables (couleurs, espacements)
+│   ├── base.css            # Reset, typographie
+│   ├── layout.css          # Navigation, cards, grilles
+│   └── exercices.css       # Styles spécifiques exercices
+│
+├── js/
+│   ├── utils.js            # Fonctions utilitaires (PGCD, formatage...)
+│   ├── ui.js               # Manipulation DOM
+│   ├── main.js             # Initialisation globale
+│   ├── equations.js        # Logique équations
+│   ├── developpement.js    # Logique développement
+│   ├── reduction.js        # Logique réduction
+│   ├── factorisation.js    # Logique factorisation
+│   └── inequations.js      # Logique inéquations
+│
+├── tests/
+│   └── utils.test.js       # Tests unitaires (Jest)
+│
+├── CONTEXT.md              # Documentation technique pour développeurs
+├── ROADMAP.md              # Plan de développement
+└── README.md               # Ce fichier
 ```
 
 ---
 
-## 🎯 Objectifs du Projet
+## 🧪 Tests
 
-1. **Maximiser l'engagement** des élèves grâce à une pratique illimitée
-2. **Fournir des explications claires** pour une meilleure compréhension
-3. **Couvrir le programme complet** de mathématiques français (collège → terminale)
-4. **Maintenir la simplicité** et la facilité d'utilisation
-5. **Rester accessible** sans connexion internet (après téléchargement)
+```bash
+# Installer les dépendances de test
+npm install
+
+# Lancer les tests
+npm test
+
+# Mode watch (relance automatique)
+npm run test:watch
+
+# Couverture de code
+npm run test:coverage
+```
 
 ---
 
-## 📸 Captures d'Écran
+## 🗺️ Roadmap
 
-### Interface Principale
-![Interface](https://via.placeholder.com/800x400?text=MathsFacile+Interface)
-*Choisissez le type d'équation et le mode de génération*
+### ✅ Phase 1 - Algèbre de Base (Complète)
+- [x] Équations du 1er degré
+- [x] Développement d'expressions
+- [x] Réduction d'expressions
+- [x] Factorisation
+- [x] Inéquations du 1er degré
 
-### Résolution Détaillée
-![Solution](https://via.placeholder.com/800x400?text=Solution+Détaillée)
-*Chaque étape est expliquée en français*
+### 🔄 Phase 2 - Calculs Numériques (À venir)
+- [ ] Fractions
+- [ ] Pourcentages
+- [ ] Puissances
+- [ ] Racines carrées
+
+### 📋 Phases Futures
+- Phase 3 : Second degré
+- Phase 4 : Fonctions
+- Phase 5 : Géométrie analytique
+- Phase 6 : Suites et analyse
+
+📖 Voir [ROADMAP.md](ROADMAP.md) pour le détail complet.
+
+---
+
+## 🛠️ Stack Technique
+
+| Technologie | Utilisation |
+|-------------|-------------|
+| HTML5 | Structure des pages |
+| CSS3 | Styles, variables CSS, responsive |
+| JavaScript (ES6+) | Logique, génération, DOM |
+| Jest | Tests unitaires |
+| SVG | Flèches de distributivité |
+
+### Pourquoi Vanilla JS ?
+- ✅ Zéro dépendance = zéro vulnérabilité
+- ✅ Chargement instantané
+- ✅ Fonctionne partout
+- ✅ Code pédagogique et lisible
+- ✅ Maintenance simplifiée
 
 ---
 
 ## 🤝 Contribuer
 
-Les contributions sont les bienvenues ! Voici comment participer :
+Les contributions sont bienvenues !
 
 ### Signaler un Bug
-1. Vérifiez qu'il n'existe pas déjà dans les [Issues](../../issues)
-2. Créez une nouvelle issue avec :
-   - Description claire du bug
+1. Vérifier qu'il n'existe pas déjà dans les [Issues](../../issues)
+2. Créer une issue avec :
+   - Description du bug
    - Étapes pour reproduire
-   - Comportement attendu vs. obtenu
-   - Captures d'écran si pertinent
+   - Comportement attendu vs obtenu
+   - Screenshots si pertinent
 
-### Proposer une Fonctionnalité
-1. Ouvrez une issue avec le tag `enhancement`
-2. Décrivez la fonctionnalité et son utilité
-3. Attendez les retours avant de commencer le développement
+### Proposer une Amélioration
+1. Ouvrir une issue avec le tag `enhancement`
+2. Décrire la fonctionnalité proposée
+3. Attendre validation avant développement
 
-### Soumettre une Pull Request
+### Soumettre du Code
 ```bash
-# 1. Forkez le projet
-# 2. Créez une branche
-git checkout -b feature/nouvelle-fonctionnalite
+# 1. Fork le projet
+# 2. Créer une branche
+git checkout -b feat/ma-fonctionnalite
 
-# 3. Committez vos changements
-git commit -m "feat: Ajoute calcul de pourcentages"
+# 3. Développer et tester
+npm test
 
-# 4. Pushez vers votre fork
-git push origin feature/nouvelle-fonctionnalite
+# 4. Commiter
+git commit -m "feat: ajoute [fonctionnalité]"
 
-# 5. Ouvrez une Pull Request
+# 5. Push et Pull Request
+git push origin feat/ma-fonctionnalite
 ```
 
-### Guidelines
-- Suivez le style de code existant
-- Testez votre code avant de soumettre
-- Écrivez des messages de commit clairs (voir [GIT_GUIDE.md](GIT_GUIDE.md))
-- Une fonctionnalité = une Pull Request
+### Conventions de Commit
+```
+feat:     Nouvelle fonctionnalité
+fix:      Correction de bug
+refactor: Refactoring
+style:    CSS, formatage
+docs:     Documentation
+test:     Tests
+```
 
 ---
 
-## 📊 Métriques & Analytics
+## 📊 Métriques Cibles
 
-### Objectifs (3 mois)
-- 🎯 1 000 exercices résolus/mois
-- ⏱️ Temps moyen par session : 10-15 min
-- 📉 Taux de rebond < 50%
-
-### Objectifs (6 mois)
-- 🎯 10 000 exercices résolus/mois
-- 👥 1 000 utilisateurs actifs/mois
-- 📄 3-5 pages vues par session
+| Période | Objectif |
+|---------|----------|
+| 3 mois | 1 000 exercices résolus/mois |
+| 6 mois | 10 000 exercices résolus/mois |
+| 12 mois | 100 000 exercices résolus/mois |
 
 ---
 
 ## 📝 License
 
-MIT License - Libre d'utilisation et de modification
-
-```
-Copyright (c) 2026 MathsFacile
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software...
-```
-
-Voir [LICENSE](LICENSE) pour le texte complet.
+MIT License - Voir [LICENSE](LICENSE)
 
 ---
 
-## 🙏 Remerciements
-
-- Tous les contributeurs qui améliorent ce projet
-- Les enseignants qui fournissent des retours précieux
-- Les élèves qui utilisent et testent la plateforme
-
----
-
-## 📞 Contact & Support
-
-- 🐛 **Bugs** : [Ouvrir une issue](../../issues)
-- 💡 **Suggestions** : [Discussions](../../discussions)
-- 📧 **Email** : contact@mathsfacile.com (à venir)
-
----
-
-## 🔗 Liens Utiles
-
-- 📖 [Roadmap Complète](ROADMAP.md)
-- 🎓 [Guide Git pour Débutants](GIT_GUIDE.md)
-- 🔧 [Configuration GitHub](GITHUB_SETUP.md)
-- 🌐 [Site Web](https://mathsfacile.com) *(à venir)*
-- 📱 [Application Mobile](https://app.mathsfacile.com) *(à venir)*
-
----
-
-## 📈 Statistiques du Projet
-
-![GitHub stars](https://img.shields.io/github/stars/USERNAME/mathsfacile?style=social)
-![GitHub forks](https://img.shields.io/github/forks/USERNAME/mathsfacile?style=social)
-![GitHub issues](https://img.shields.io/github/issues/USERNAME/mathsfacile)
-![GitHub pull requests](https://img.shields.io/github/issues-pr/USERNAME/mathsfacile)
-![License](https://img.shields.io/github/license/USERNAME/mathsfacile)
-
----
-
-## 🚦 Statut du Projet
-
-| Module | Statut | Version |
-|--------|--------|---------|
-| Équations 1er degré | ✅ Terminé | v1.0 |
-| Développement | 🔄 En cours | - |
-| Factorisation | 📋 Planifié | - |
-| Inéquations | 📋 Planifié | - |
-| Calculs numériques | 📋 Planifié | - |
-
----
-
-## ⭐ Si vous aimez ce projet...
-
-- ⭐ Donnez une étoile au dépôt
-- 🍴 Forkez-le et contribuez
-- 📢 Partagez-le avec vos amis/collègues
-- 💬 Laissez un commentaire dans les discussions
-
----
-
-<div align="center">
-
-**Fait avec ❤️ pour les mathématiques et l'éducation**
-
-[Démarrer](mathsfacile-v1.html) | [Documentation](ROADMAP.md) | [Contribuer](#contribuer) | [Support](#contact--support)
-
-</div>
