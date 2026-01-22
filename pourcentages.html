@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MathsFacile - Pourcentages</title>
+    <meta name="description" content="Entraîne-toi aux calculs de pourcentages : calculer un pourcentage, augmentation, réduction, retrouver la valeur initiale. Exercices illimités avec corrections détaillées.">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/exercices.css">
+    
+    <style>
+        .input-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .input-group.hidden {
+            display: none;
+        }
+        
+        .input-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .input-item label {
+            font-size: 0.85em;
+            font-weight: 600;
+            color: var(--gray-600);
+        }
+        
+        .input-item input,
+        .input-item select {
+            width: 100px;
+            padding: 10px;
+            text-align: center;
+            font-size: 1.1em;
+        }
+        
+        .input-item .unit {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: var(--gray-500);
+        }
+        
+        .input-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        /* Expression display */
+        #expressionDisplay {
+            font-size: 1.3em;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="nav">
+            <a href="index.html">Équations</a>
+            <a href="developpement.html">Développement</a>
+            <a href="reduction.html">Réduction</a>
+            <a href="factorisation.html">Factorisation</a>
+            <a href="inequations.html">Inéquations</a>
+            <a href="fractions.html">Fractions</a>
+            <a href="pourcentages.html">Pourcentages</a>
+        </nav>
+
+        <header>
+            <h1>🎓 Pourcentages</h1>
+            <p class="subtitle">Exercices interactifs</p>
+            <p class="intro">Entraîne-toi aux calculs de pourcentages.<br>Choisis un type d'exercice, puis clique sur <strong>Correction</strong>.</p>
+        </header>
+
+        <div class="card">
+            <div class="type-selector grid-2">
+                <button class="type-btn active" data-type="calculer">
+                    <div class="example">25% de 80 = ?</div>
+                    <div class="label">Calculer un pourcentage</div>
+                </button>
+                <button class="type-btn" data-type="trouver">
+                    <div class="example">20 sur 80 = ?%</div>
+                    <div class="label">Trouver le pourcentage</div>
+                </button>
+                <button class="type-btn" data-type="augmentation">
+                    <div class="example">80 + 15% = ?</div>
+                    <div class="label">Augmentation</div>
+                </button>
+                <button class="type-btn" data-type="reduction">
+                    <div class="example">120 − 30% = ?</div>
+                    <div class="label">Réduction</div>
+                </button>
+                <button class="type-btn" data-type="retrouver">
+                    <div class="example">Après −20% → 80. Initial ?</div>
+                    <div class="label">Retrouver la valeur initiale</div>
+                </button>
+            </div>
+
+            <!-- Inputs: Calculer -->
+            <div class="input-group" id="inputsCalculer">
+                <div class="input-item">
+                    <label>Pourcentage</label>
+                    <div class="input-row">
+                        <input type="number" id="pourcentage" value="25" min="0">
+                        <span class="unit">%</span>
+                    </div>
+                </div>
+                <div class="input-item">
+                    <label>de</label>
+                    <input type="number" id="valeur" value="80">
+                </div>
+            </div>
+
+            <!-- Inputs: Trouver -->
+            <div class="input-group hidden" id="inputsTrouver">
+                <div class="input-item">
+                    <label>Partie</label>
+                    <input type="number" id="partie" value="20">
+                </div>
+                <div class="input-item">
+                    <label>sur (total)</label>
+                    <input type="number" id="total" value="80">
+                </div>
+            </div>
+
+            <!-- Inputs: Augmentation / Réduction -->
+            <div class="input-group hidden" id="inputsVariation">
+                <div class="input-item">
+                    <label>Valeur initiale</label>
+                    <input type="number" id="valeurInitiale" value="100">
+                </div>
+                <div class="input-item">
+                    <label>Variation</label>
+                    <div class="input-row">
+                        <input type="number" id="pourcentageVar" value="20" min="0">
+                        <span class="unit">%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Inputs: Retrouver -->
+            <div class="input-group hidden" id="inputsRetrouver">
+                <div class="input-item">
+                    <label>Type</label>
+                    <select id="typeVariation">
+                        <option value="augmentation">Augmentation</option>
+                        <option value="reduction">Réduction</option>
+                    </select>
+                </div>
+                <div class="input-item">
+                    <label>Pourcentage</label>
+                    <div class="input-row">
+                        <input type="number" id="pourcentageRetro" value="20" min="0">
+                        <span class="unit">%</span>
+                    </div>
+                </div>
+                <div class="input-item">
+                    <label>Valeur finale</label>
+                    <input type="number" id="valeurFinale" value="80">
+                </div>
+            </div>
+
+            <div class="expression-display">
+                <div class="expression" id="expressionDisplay">25% de 80 = ?</div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn-generate" id="generateBtn">🎲 Nouveau</button>
+                <button class="btn-solve" id="solveBtn">✓ Correction</button>
+            </div>
+
+            <div class="solution" id="solutionDiv">
+                <h3>📝 Résolution</h3>
+                <div id="stepsContainer"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="js/utils.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/pourcentages.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', initPourcentagesPage);
+    </script>
+</body>
+</html>
