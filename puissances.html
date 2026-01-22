@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MathsFacile - Puissances</title>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/exercices.css">
+</head>
+<body>
+    <div class="container">
+        <nav class="nav">
+            <a href="index.html">Équations</a>
+            <a href="developpement.html">Développement</a>
+            <a href="reduction.html">Réduction</a>
+            <a href="factorisation.html">Factorisation</a>
+            <a href="inequations.html">Inéquations</a>
+            <a href="fractions.html">Fractions</a>
+            <a href="pourcentages.html">Pourcentages</a>
+            <a href="puissances.html">Puissances</a>
+        </nav>
+
+        <header>
+            <h1>🎓 Puissances</h1>
+            <p class="subtitle">Exercices interactifs</p>
+            <p class="intro">Entraîne-toi aux propriétés des puissances et notation scientifique.<br>Clique sur <strong>Correction</strong> pour voir les étapes détaillées.</p>
+        </header>
+
+        <div class="card">
+            <div class="type-selector">
+                <button class="type-btn active" data-type="1">
+                    <div class="example">a<sup>m</sup> × a<sup>n</sup></div>
+                    <div class="label">Produit</div>
+                </button>
+                <button class="type-btn" data-type="2">
+                    <div class="example">a<sup>m</sup> ÷ a<sup>n</sup></div>
+                    <div class="label">Quotient</div>
+                </button>
+                <button class="type-btn" data-type="3">
+                    <div class="example">(a<sup>m</sup>)<sup>n</sup></div>
+                    <div class="label">Puissance</div>
+                </button>
+                <button class="type-btn" data-type="4">
+                    <div class="example">(ab)<sup>n</sup></div>
+                    <div class="label">Produit élevé</div>
+                </button>
+                <button class="type-btn" data-type="5">
+                    <div class="example">a × 10<sup>n</sup></div>
+                    <div class="label">Notation scientifique</div>
+                </button>
+                <button class="type-btn" data-type="6">
+                    <div class="example">Mélange</div>
+                    <div class="label">Combiné</div>
+                </button>
+            </div>
+
+            <div class="expression-display">
+                <div class="expression" id="expressionDisplay">2³ × 2⁵</div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn-generate" id="generateBtn">🎲 Nouveau</button>
+                <button class="btn-solve" id="solveBtn">✓ Correction</button>
+            </div>
+
+            <div class="solution" id="solutionDiv">
+                <h3>📝 Résolution</h3>
+                <div id="stepsContainer"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="js/utils.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/puissances.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', initPuissancesPage);
+    </script>
+</body>
+</html>

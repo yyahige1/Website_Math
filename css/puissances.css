@@ -1,0 +1,65 @@
+/* Fichier: css/puissances.css */
+/* Styles spécifiques au module Puissances */
+
+/* Grille pour afficher les formules */
+.formulas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.formula-item {
+    padding: 0.75rem;
+    background: var(--background-light, #f8f9fa);
+    border-left: 3px solid var(--primary, #667eea);
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+}
+
+.formula-item strong {
+    color: var(--primary, #667eea);
+    display: block;
+    margin-bottom: 0.25rem;
+}
+
+/* Mise en forme des exposants dans les formules */
+.formula-item sup {
+    font-size: 0.7em;
+    vertical-align: super;
+}
+
+/* Card d'information */
+.info-card {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    border: none;
+}
+
+.info-card h3 {
+    color: var(--text-dark, #2d3748);
+    margin-bottom: 0.5rem;
+}
+
+/* Amélioration de l'affichage des exposants dans l'exercice */
+#expression-display sup {
+    font-size: 0.75em;
+    vertical-align: super;
+    line-height: 0;
+}
+
+/* Styles pour la notation scientifique */
+.scientific-notation {
+    font-family: 'Courier New', monospace;
+    font-size: 1.1em;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .formulas-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .formula-item {
+        font-size: 0.9rem;
+    }
+}
