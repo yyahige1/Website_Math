@@ -1,0 +1,59 @@
+/* Fichier: css/racines.css */
+/* Styles pour les fractions verticales dans le module Racines */
+
+/* Fraction inline (dans le texte) */
+.fraction-inline {
+    display: inline-flex;
+    flex-direction: column;
+    vertical-align: middle;
+    text-align: center;
+    font-size: 1em;
+    margin: 0 0.3em;
+}
+
+.fraction-num {
+    border-bottom: 2px solid var(--text-dark, #2d3748);
+    padding: 0.1em 0.3em;
+    line-height: 1.2;
+}
+
+.fraction-den {
+    padding: 0.1em 0.3em;
+    line-height: 1.2;
+}
+
+.fraction-line {
+    display: none; /* La bordure du numérateur sert de ligne */
+}
+
+/* Fraction dans les étapes de résolution */
+.step-expression .fraction-inline {
+    font-size: 1.2em;
+}
+
+/* Fraction dans le résultat final */
+.result-highlight .fraction-inline {
+    font-size: 1.4em;
+}
+
+/* Fraction dans l'affichage de l'exercice */
+.expression-display .fraction-inline {
+    font-size: 1.5em;
+}
+
+/* Ajustements pour les couleurs dans les fractions */
+.fraction-num .term-red,
+.fraction-num .term-blue,
+.fraction-num .term-green,
+.fraction-num .term-orange,
+.fraction-den .term-red,
+.fraction-den .term-blue,
+.fraction-den .term-green,
+.fraction-den .term-orange {
+    font-weight: 600;
+}
+
+/* Espacement pour les fractions multiples */
+.step-expression .fraction-inline + .fraction-inline {
+    margin-left: 0.5em;
+}

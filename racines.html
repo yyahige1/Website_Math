@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MathsFacile - Réduction</title>
+    <title>MathsFacile - Racines carrées</title>
     
     <!-- CSS -->
     <link rel="stylesheet" href="css/theme.css">
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/layout.css">
     <link rel="stylesheet" href="css/exercices.css">
+    <link rel="stylesheet" href="css/racines.css">
 </head>
 <body>
     <div class="container">
@@ -26,42 +27,41 @@
         </nav>
 
         <header>
-            <h1>🎓 Réduction</h1>
+            <h1>🎓 Racines carrées</h1>
             <p class="subtitle">Exercices interactifs</p>
-            <p class="intro">Entraîne-toi à réduire des expressions algébriques.<br>Clique sur <strong>Correction</strong> pour voir le regroupement des termes.</p>
+            <p class="intro">Entraîne-toi à simplifier des racines carrées et effectuer des opérations.<br>Clique sur <strong>Correction</strong> pour voir les étapes détaillées.</p>
         </header>
 
         <div class="card">
             <div class="type-selector">
-                <button class="type-btn active" data-type="avec-x">
-                    <div class="example">4x + 7 − 2x + 3</div>
-                    <div class="label">Termes en x et nombres</div>
+                <button class="type-btn active" data-type="1">
+                    <div class="example">√72 = ?</div>
+                    <div class="label">Simplification</div>
                 </button>
-                <button class="type-btn" data-type="avec-x2">
-                    <div class="example">2x² + 3x − x² + 5</div>
-                    <div class="label">Avec x²</div>
+                <button class="type-btn" data-type="2">
+                    <div class="example">√a + √b</div>
+                    <div class="label">Addition</div>
                 </button>
-                <button class="type-btn" data-type="avec-parentheses">
-                    <div class="example">2(x + 3) + 5x − 4</div>
-                    <div class="label">Avec parenthèses</div>
+                <button class="type-btn" data-type="3">
+                    <div class="example">√a × √b</div>
+                    <div class="label">Multiplication</div>
                 </button>
-            </div>
-
-            <!-- Nombre de termes -->
-            <div class="coefficients">
-                <div class="coef-group">
-                    <label>Nombre de termes</label>
-                    <select id="nbTerms">
-                        <option value="3">3</option>
-                        <option value="4" selected>4</option>
-                        <option value="5">5</option>
-                        <option value="6">6</option>
-                    </select>
-                </div>
+                <button class="type-btn" data-type="4">
+                    <div class="example">1/√a</div>
+                    <div class="label">Rationaliser</div>
+                </button>
+                <button class="type-btn" data-type="5">
+                    <div class="example">1/(√a + b)</div>
+                    <div class="label">Expression conjuguée</div>
+                </button>
+                <button class="type-btn" data-type="6">
+                    <div class="example">a/(√b + c)</div>
+                    <div class="label">Fraction conjuguée</div>
+                </button>
             </div>
 
             <div class="expression-display">
-                <div class="expression" id="expressionDisplay">4x + 7 − 2x + 3</div>
+                <div class="expression" id="expressionDisplay">√72</div>
             </div>
 
             <div class="action-buttons">
@@ -70,7 +70,7 @@
             </div>
 
             <div class="solution" id="solutionDiv">
-                <h3>📝 Réduction</h3>
+                <h3>📝 Résolution</h3>
                 <div id="stepsContainer"></div>
             </div>
         </div>
@@ -80,9 +80,9 @@
     <script src="js/utils.js"></script>
     <script src="js/ui.js"></script>
     <script src="js/main.js"></script>
-    <script src="js/reduction.js"></script>
+    <script src="js/racines.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', initReductionPage);
+        document.addEventListener('DOMContentLoaded', initRacinesPage);
     </script>
 </body>
 </html>
