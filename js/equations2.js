@@ -27,21 +27,29 @@ function getEquation2Values() {
     const type = Equations2State.currentType;
 
     switch (type) {
-        case 'discriminant':
+        case 'discriminant': {
+            const a = parseFloat($('a_disc').value);
+            const b = parseFloat($('b_disc').value);
+            const c = parseFloat($('c_disc').value);
             return {
                 type: 'discriminant',
-                a: parseFloat($('a_disc').value) || 1,
-                b: parseFloat($('b_disc').value) || 0,
-                c: parseFloat($('c_disc').value) || 0
+                a: !isNaN(a) ? a : 1,
+                b: !isNaN(b) ? b : 0,
+                c: !isNaN(c) ? c : 0
             };
+        }
 
-        case 'canonique':
+        case 'canonique': {
+            const a = parseFloat($('a_canon').value);
+            const b = parseFloat($('b_canon').value);
+            const c = parseFloat($('c_canon').value);
             return {
                 type: 'canonique',
-                a: parseFloat($('a_canon').value) || 1,
-                b: parseFloat($('b_canon').value) || 0,
-                c: parseFloat($('c_canon').value) || 0
+                a: !isNaN(a) ? a : 1,
+                b: !isNaN(b) ? b : 0,
+                c: !isNaN(c) ? c : 0
             };
+        }
 
         case 'particuliere':
             const particularType = $('particularType').value;
@@ -57,13 +65,17 @@ function getEquation2Values() {
                 b: particularType === 'ax2+bx' ? (!isNaN(bVal) ? bVal : 1) : 0
             };
 
-        case 'somme-produit':
+        case 'somme-produit': {
+            const a = parseFloat($('a_sp').value);
+            const b = parseFloat($('b_sp').value);
+            const c = parseFloat($('c_sp').value);
             return {
                 type: 'somme-produit',
-                a: parseFloat($('a_sp').value) || 1,
-                b: parseFloat($('b_sp').value) || 0,
-                c: parseFloat($('c_sp').value) || 0
+                a: !isNaN(a) ? a : 1,
+                b: !isNaN(b) ? b : 0,
+                c: !isNaN(c) ? c : 0
             };
+        }
 
         default:
             return { type: 'discriminant', a: 1, b: 0, c: 0 };
@@ -644,8 +656,10 @@ function initEquations2Page() {
     $('generateBtn').addEventListener('click', generateEquation2);
     $('solveBtn').addEventListener('click', solveEquation2);
 
-    // Initialiser l'affichage des inputs particuliers
-    updateParticularInputs();
+    // Initialiser l'affichage des inputs particuliers si on est dans ce mode
+    if (Equations2State.currentType === 'particuliere') {
+        updateParticularInputs();
+    }
 
     // Générer une première équation
     generateEquation2();

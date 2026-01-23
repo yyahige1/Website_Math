@@ -68,10 +68,12 @@ function formatTerm(coef, variable, isFirst) {
 
 /**
  * Formate un nombre (arrondit si décimal)
- * @param {number} num 
+ * @param {number} num
  * @returns {number|string}
  */
 function formatNumber(num) {
+    // Gérer les cas invalides
+    if (num === undefined || num === null || isNaN(num)) return 0;
     if (Number.isInteger(num)) return num;
     return Math.round(num * 1000) / 1000;
 }
