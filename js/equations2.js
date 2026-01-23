@@ -16,7 +16,7 @@ const Equations2State = {
  * @returns {string}
  */
 function generateFraction(num, den) {
-    return `<span class="frac"><span class="num">${formatNumber(num)}</span><span class="den">${formatNumber(den)}</span></span>`;
+    return `<span class="frac"><span class="num">${num}</span><span class="den">${den}</span></span>`;
 }
 
 /**
@@ -27,108 +27,41 @@ function getEquation2Values() {
     const type = Equations2State.currentType;
 
     switch (type) {
-        case 'discriminant': {
-            const a = parseFloat($('a_disc').value);
-            const b = parseFloat($('b_disc').value);
-            const c = parseFloat($('c_disc').value);
+        case 'discriminant':
             return {
                 type: 'discriminant',
-                a: !isNaN(a) ? a : 1,
-                b: !isNaN(b) ? b : 0,
-                c: !isNaN(c) ? c : 0
+                a: parseFloat($('a_disc').value) || 1,
+                b: parseFloat($('b_disc').value) || 0,
+                c: parseFloat($('c_disc').value) || 0
             };
-        }
 
-        case 'canonique': {
-            const a = parseFloat($('a_canon').value);
-            const b = parseFloat($('b_canon').value);
-            const c = parseFloat($('c_canon').value);
+        case 'canonique':
             return {
                 type: 'canonique',
-                a: !isNaN(a) ? a : 1,
-                b: !isNaN(b) ? b : 0,
-                c: !isNaN(c) ? c : 0
+                a: parseFloat($('a_canon').value) || 1,
+                b: parseFloat($('b_canon').value) || 0,
+                c: parseFloat($('c_canon').value) || 0
             };
-        }
 
         case 'particuliere':
             const particularType = $('particularType').value;
-            const aVal = parseFloat($('a_part').value);
-            const bVal = parseFloat($('b_part').value);
-            const cVal = parseFloat($('c_part').value);
-
             return {
                 type: 'particuliere',
                 particularType: particularType,
-                a: !isNaN(aVal) ? aVal : 1,
-                c: !isNaN(cVal) ? cVal : 0,
-                b: particularType === 'ax2+bx' ? (!isNaN(bVal) ? bVal : 1) : 0
+                a: parseFloat($('a_part').value) || 1,
+                c: parseFloat($('c_part').value) || 0
             };
 
-        case 'somme-produit': {
-            const a = parseFloat($('a_sp').value);
-            const b = parseFloat($('b_sp').value);
-            const c = parseFloat($('c_sp').value);
+        case 'somme-produit':
             return {
                 type: 'somme-produit',
-                a: !isNaN(a) ? a : 1,
-                b: !isNaN(b) ? b : 0,
-                c: !isNaN(c) ? c : 0
+                a: parseFloat($('a_sp').value) || 1,
+                b: parseFloat($('b_sp').value) || 0,
+                c: parseFloat($('c_sp').value) || 0
             };
-        }
 
         default:
             return { type: 'discriminant', a: 1, b: 0, c: 0 };
-    }
-}
-
-/**
- * Met à jour les inputs affichés pour les équations particulières
- */
-function updateParticularInputs() {
-    const particularType = $('particularType').value;
-
-    // Récupérer tous les labels et inputs
-    const labelA = $('label_a_part');
-    const inputA = $('a_part');
-    const labelB = $('label_b_part');
-    const inputB = $('b_part');
-    const labelC = $('label_c_part');
-    const inputC = $('c_part');
-
-    if (particularType === 'ax2+c') {
-        // Afficher a et c, cacher b
-        labelA.style.display = '';
-        inputA.style.display = '';
-        labelB.style.display = 'none';
-        inputB.style.display = 'none';
-        labelC.style.display = '';
-        inputC.style.display = '';
-        // S'assurer que les valeurs sont valides
-        if (!inputA.value || isNaN(parseFloat(inputA.value))) inputA.value = 1;
-        if (!inputC.value || isNaN(parseFloat(inputC.value))) inputC.value = -9;
-    } else if (particularType === 'ax2+bx') {
-        // Afficher a et b, cacher c
-        labelA.style.display = '';
-        inputA.style.display = '';
-        labelB.style.display = '';
-        inputB.style.display = '';
-        labelC.style.display = 'none';
-        inputC.style.display = 'none';
-        // S'assurer que les valeurs sont valides
-        if (!inputA.value || isNaN(parseFloat(inputA.value))) inputA.value = 1;
-        if (!inputB.value || isNaN(parseFloat(inputB.value))) inputB.value = 2;
-    } else {
-        // Type (x-a)²=k : afficher a et c (qui représentent a et k)
-        labelA.style.display = '';
-        inputA.style.display = '';
-        labelB.style.display = 'none';
-        inputB.style.display = 'none';
-        labelC.style.display = '';
-        inputC.style.display = '';
-        // S'assurer que les valeurs sont valides
-        if (!inputA.value || isNaN(parseFloat(inputA.value))) inputA.value = 2;
-        if (!inputC.value || isNaN(parseFloat(inputC.value))) inputC.value = 9;
     }
 }
 
@@ -143,9 +76,9 @@ function updateEquation2Display() {
         if (eq.particularType === 'ax2+c') {
             display = formatQuadraticEquation(eq.a, 0, eq.c);
         } else if (eq.particularType === 'ax2+bx') {
-            display = formatQuadraticEquation(eq.a, eq.b, 0);
+            display = formatQuadraticEquation(eq.a, eq.a, 0);
         } else {
-            display = `(x - ${eq.a})² = ${eq.c}`;
+            display = `(x - ${formatNumber(eq.a)})² = ${formatNumber(eq.c)}`;
         }
     } else {
         display = formatQuadraticEquation(eq.a, eq.b, eq.c);
@@ -231,7 +164,7 @@ function generateEquation2() {
                 $('c_part').value = randCoef(-20, 20, false, true);
             } else if (particularType === 'ax2+bx') {
                 $('a_part').value = randCoef(1, 5, false, true);
-                $('b_part').value = randCoef(2, 10, false, true);
+                $('c_part').value = randCoef(1, 10, false, true);
             } else {
                 $('a_part').value = randCoef(-5, 5, false, true);
                 $('c_part').value = randCoef(1, 25, false, true);
@@ -510,14 +443,14 @@ function solveParticularSteps(eq) {
 
     } else if (particularType === 'ax2+bx') {
         // Type ax² + bx = 0
-        const b = eq.b;
+        const b = parseFloat($('c_part').value) || 1;  // b est stocké dans c_part pour ce cas
         html += '<div class="step">';
         html += '<div class="step-title">Équation de type ax² + bx = 0</div>';
         html += '<div class="step-content">';
         html += `<div class="math-line"><span class="color-coef">${formatNumber(a)}</span>x² + <span class="color-coef">${formatNumber(b)}</span>x = 0</div>`;
         html += `<div class="highlight-box">Mise en facteur par x</div>`;
         html += `<div class="math-line">x(<span class="color-coef">${formatNumber(a)}</span>x + <span class="color-coef">${formatNumber(b)}</span>) = 0</div>`;
-        html += '<p><strong>Produit nul</strong> : x = 0 ou <span class="color-coef">${formatNumber(a)}</span>x + <span class="color-coef">${formatNumber(b)}</span> = 0</p>';
+        html += `<p><strong>Produit nul</strong> : x = 0 ou <span class="color-coef">${formatNumber(a)}</span>x + <span class="color-coef">${formatNumber(b)}</span> = 0</p>`;
         html += `<div class="separator"></div>`;
         html += `<div class="math-line">x = <span class="color-solution">0</span> ou x = <span class="color-solution">${formatNumber(-b / a)}</span></div>`;
         html += '<div class="final-result">';
@@ -637,14 +570,7 @@ function initEquations2Page() {
         };
 
         $(typeMap[type]).classList.remove('hidden');
-
-        // Initialiser les inputs particuliers si nécessaire
-        if (type === 'particuliere') {
-            updateParticularInputs();
-        }
-
-        // Générer une nouvelle équation pour ce type
-        generateEquation2();
+        updateEquation2Display();
     });
 
     // Écouteurs d'événements pour les inputs
@@ -653,20 +579,9 @@ function initEquations2Page() {
         input.addEventListener('input', updateEquation2Display);
     });
 
-    // Listener spécial pour le changement de type d'équation particulière
-    $('particularType').addEventListener('change', () => {
-        updateParticularInputs();
-        generateEquation2();
-    });
-
     // Boutons
     $('generateBtn').addEventListener('click', generateEquation2);
     $('solveBtn').addEventListener('click', solveEquation2);
-
-    // Initialiser l'affichage des inputs particuliers si on est dans ce mode
-    if (Equations2State.currentType === 'particuliere') {
-        updateParticularInputs();
-    }
 
     // Générer une première équation
     generateEquation2();
