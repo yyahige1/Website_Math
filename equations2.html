@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MathsFacile - Équations du 2nd degré</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/exercices.css">
+</head>
+<body>
+    <div class="container">
+        <nav class="nav">
+            <a href="index.html">Équations</a>
+            <a href="developpement.html">Développement</a>
+            <a href="reduction.html">Réduction</a>
+            <a href="factorisation.html">Factorisation</a>
+            <a href="inequations.html">Inéquations</a>
+            <a href="fractions.html">Fractions</a>
+            <a href="pourcentages.html">Pourcentages</a>
+            <a href="puissances.html">Puissances</a>
+            <a href="racines.html">Racines carrées</a>
+            <a href="equations2.html" class="active">Équations 2nd degré</a>
+        </nav>
+
+        <header>
+            <h1>🎓 Équations du 2nd degré</h1>
+            <p class="subtitle">Exercices interactifs - Niveau 1ère</p>
+            <p class="intro">Entraîne-toi à résoudre des équations du second degré (ax² + bx + c = 0).<br>Choisis un type, modifie les valeurs, puis clique sur <strong>Correction</strong>.</p>
+        </header>
+
+        <div class="card">
+            <div class="type-selector">
+                <button class="type-btn active" data-type="discriminant">
+                    <div class="example">ax² + bx + c = 0</div>
+                    <div class="label">Discriminant (méthode générale)</div>
+                </button>
+                <button class="type-btn" data-type="canonique">
+                    <div class="example">ax² + bx + c = 0</div>
+                    <div class="label">Forme canonique</div>
+                </button>
+                <button class="type-btn" data-type="particuliere">
+                    <div class="example">ax² + c = 0 ou ax² + bx = 0</div>
+                    <div class="label">Équations particulières</div>
+                </button>
+                <button class="type-btn" data-type="somme-produit">
+                    <div class="example">S et P</div>
+                    <div class="label">Somme et produit</div>
+                </button>
+            </div>
+
+            <!-- Coefficients Type discriminant -->
+            <div class="coefficients" id="coeffDiscriminant">
+                <div class="coef-group">
+                    <label>a (coefficient de x²)</label>
+                    <input type="number" id="a_disc" value="1" step="any">
+                </div>
+                <div class="coef-group">
+                    <label>b (coefficient de x)</label>
+                    <input type="number" id="b_disc" value="-5" step="any">
+                </div>
+                <div class="coef-group">
+                    <label>c (terme constant)</label>
+                    <input type="number" id="c_disc" value="6" step="any">
+                </div>
+            </div>
+
+            <!-- Coefficients Type canonique -->
+            <div class="coefficients hidden" id="coeffCanonique">
+                <div class="coef-group">
+                    <label>a</label>
+                    <input type="number" id="a_canon" value="2" step="any">
+                </div>
+                <div class="coef-group">
+                    <label>b</label>
+                    <input type="number" id="b_canon" value="-8" step="any">
+                </div>
+                <div class="coef-group">
+                    <label>c</label>
+                    <input type="number" id="c_canon" value="6" step="any">
+                </div>
+            </div>
+
+            <!-- Coefficients Type particuliere -->
+            <div class="coefficients hidden" id="coeffParticuliere">
+                <div class="coef-group">
+                    <label>Type</label>
+                    <select id="particularType">
+                        <option value="ax2+c">ax² + c = 0 (sans x)</option>
+                        <option value="ax2+bx">ax² + bx = 0 (sans c)</option>
+                        <option value="xminus2">(x - a)² = k</option>
+                    </select>
+                </div>
+                <div class="coef-group" id="particularCoefs">
+                    <label>a</label>
+                    <input type="number" id="a_part" value="1" step="any">
+                    <label>c</label>
+                    <input type="number" id="c_part" value="-9" step="any">
+                </div>
+            </div>
+
+            <!-- Coefficients Type somme-produit -->
+            <div class="coefficients hidden" id="coeffSommeProduit">
+                <div class="coef-group">
+                    <label>a (coefficient de x²)</label>
+                    <input type="number" id="a_sp" value="1" step="any">
+                </div>
+                <div class="coef-group">
+                    <label>b (coefficient de x)</label>
+                    <input type="number" id="b_sp" value="-7" step="any">
+                </div>
+                <div class="coef-group">
+                    <label>c (terme constant)</label>
+                    <input type="number" id="c_sp" value="12" step="any">
+                </div>
+                <div class="info-text">
+                    <p>💡 Rappel : Somme S = -b/a, Produit P = c/a</p>
+                </div>
+            </div>
+
+            <div class="expression-display">
+                <div class="expression" id="expressionDisplay">x² - 5x + 6 = 0</div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn-generate" id="generateBtn">🎲 Nouveau</button>
+                <button class="btn-solve" id="solveBtn">✓ Correction</button>
+            </div>
+
+            <div class="solution" id="solutionDiv">
+                <h3>📝 Résolution</h3>
+                <div id="stepsContainer"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="js/utils.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/equations2.js"></script>
+    <script>
+        // Initialiser la page
+        document.addEventListener('DOMContentLoaded', initEquations2Page);
+    </script>
+</body>
+</html>
