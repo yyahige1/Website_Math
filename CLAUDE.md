@@ -42,10 +42,11 @@ MathsFacile is an interactive mathematics training platform for French secondary
 | Phase | Status | Modules |
 |-------|--------|---------|
 | Phase 1 - Algèbre de Base | ✅ Complete | 5/5 modules |
-| Phase 2 - Calculs Numériques | 🔄 In Progress | 4/4 modules |
-| Phase 3+ | 📋 Planned | See ROADMAP.md |
+| Phase 2 - Calculs Numériques | ✅ Complete | 4/4 modules |
+| Phase 3 - Second Degré | 🔄 In Progress | 0/3 modules |
+| Phase 4+ | 📋 Planned | See ROADMAP.md |
 
-**Available Modules**: Équations, Développement, Réduction, Factorisation, Inéquations, Fractions, Pourcentages, Puissances, Racines carrées
+**Available Modules**: Équations, Développement, Réduction, Factorisation, Inéquations, Fractions, Pourcentages, Puissances, Racines carrées (9 modules total)
 
 ---
 
@@ -56,20 +57,30 @@ MathsFacile is an interactive mathematics training platform for French secondary
 ```
 Website_Math/
 ├── index.html              # Équations module (landing page)
-├── {module}.html           # One HTML file per module
+├── {module}.html           # One HTML file per module (9 modules)
+│   ├── developpement.html
+│   ├── reduction.html
+│   ├── factorisation.html
+│   ├── inequations.html
+│   ├── fractions.html
+│   ├── pourcentages.html
+│   ├── puissances.html
+│   └── racines.html
 ├── css/
 │   ├── theme.css           # CSS variables (colors, spacing, fonts)
 │   ├── base.css            # Reset, typography, base styles
 │   ├── layout.css          # Navigation, cards, grids, responsive
 │   ├── exercices.css       # Exercise-specific styles (common)
-│   └── {module}.css        # Module-specific styles (if needed)
+│   ├── puissances.css      # Module-specific styles for puissances
+│   └── racines.css         # Module-specific styles for racines
 ├── js/
 │   ├── utils.js            # Pure utility functions (PGCD, formatting, random)
 │   ├── ui.js               # DOM manipulation helpers
 │   ├── main.js             # Global initialization (not always used)
-│   └── {module}.js         # Module-specific logic
+│   └── {module}.js         # Module-specific logic (9 modules)
 ├── tests/
-│   └── {module}.test.js    # Jest unit tests
+│   └── {module}.test.js    # Jest unit tests (10 test files)
+├── CLAUDE.md               # This file - AI assistant guide
 ├── README.md               # User-facing documentation
 ├── ROADMAP.md              # Development roadmap
 ├── git_guide.md            # Git workflow guide
@@ -806,6 +817,67 @@ function solve(a, b, c) {
     // Normal case
     const x = (c - b) / a;
     return { hasSolution: true, value: x };
+}
+```
+
+### Pattern 8: Fraction Simplification (Phase 2)
+
+```javascript
+// Simplify fractions using GCD
+function simplifyFraction(num, den) {
+    if (den === 0) {
+        return { error: "Division par zéro" };
+    }
+
+    const diviseur = gcd(Math.abs(num), Math.abs(den));
+    let simpleNum = num / diviseur;
+    let simpleDen = den / diviseur;
+
+    // Keep negative in numerator
+    if (simpleDen < 0) {
+        simpleNum = -simpleNum;
+        simpleDen = -simpleDen;
+    }
+
+    return { num: simpleNum, den: simpleDen };
+}
+```
+
+### Pattern 9: Exponent Notation (Phase 2)
+
+```javascript
+// Format exponents with <sup> tags
+function formatExponent(base, exp) {
+    if (exp === 0) return '1';
+    if (exp === 1) return base.toString();
+
+    return `${base}<sup>${exp}</sup>`;
+}
+
+// Scientific notation
+function toScientificNotation(num) {
+    if (num === 0) return '0';
+
+    const exp = Math.floor(Math.log10(Math.abs(num)));
+    const mantissa = num / Math.pow(10, exp);
+
+    return `${formatNumber(mantissa)} × 10<sup>${exp}</sup>`;
+}
+```
+
+### Pattern 10: Conjugate Expressions (Phase 2 - Racines)
+
+```javascript
+// Generate conjugate for square roots
+function getConjugate(a, sqrtB) {
+    // For expression: a + √b, conjugate is: a - √b
+    // Used in rationalization: 1/(a + √b) = (a - √b)/((a + √b)(a - √b))
+
+    return {
+        original: `${a} + √${sqrtB}`,
+        conjugate: `${a} - √${sqrtB}`,
+        product: a * a - sqrtB  // (a + √b)(a - √b) = a² - b
+    };
 }
 ```
 

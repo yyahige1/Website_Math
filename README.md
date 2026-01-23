@@ -10,7 +10,9 @@ Une plateforme d'entraînement en mathématiques interactive pour l'enseignement
 
 ## ✨ Fonctionnalités
 
-### Modules Disponibles (v1.0)
+### Modules Disponibles (v1.2)
+
+#### Phase 1 - Algèbre de Base (5 modules)
 
 | Module | Description | Types d'exercices |
 |--------|-------------|-------------------|
@@ -19,6 +21,15 @@ Une plateforme d'entraînement en mathématiques interactive pour l'enseignement
 | **Réduction** | Simplification d'expressions | Termes en x, x², avec parenthèses |
 | **Factorisation** | Mise en facteur | Facteur commun, identités remarquables |
 | **Inéquations** | Inéquations du 1er degré | Avec représentation graphique |
+
+#### Phase 2 - Calculs Numériques (4 modules)
+
+| Module | Description | Types d'exercices |
+|--------|-------------|-------------------|
+| **Fractions** | Opérations sur fractions | Addition, soustraction, multiplication, division, simplification, inverse |
+| **Pourcentages** | Calculs de pourcentages | Calculer %, appliquer %, variation, évolution, taux global |
+| **Puissances** | Calcul avec puissances | Produit, quotient, puissance, produit élevé, notation scientifique, combiné |
+| **Racines carrées** | Calcul avec racines | Carrés parfaits, simplification, expression conjuguée, fraction conjuguée |
 
 ### Points Forts
 
@@ -61,18 +72,24 @@ npx serve .
 ## 📂 Structure du Projet
 
 ```
-Website_Project/
-├── index.html              # Équations
+Website_Math/
+├── index.html              # Équations (landing page)
 ├── developpement.html      # Développement
 ├── reduction.html          # Réduction
 ├── factorisation.html      # Factorisation
 ├── inequations.html        # Inéquations
+├── fractions.html          # Fractions
+├── pourcentages.html       # Pourcentages
+├── puissances.html         # Puissances
+├── racines.html            # Racines carrées
 │
 ├── css/
 │   ├── theme.css           # Variables (couleurs, espacements)
 │   ├── base.css            # Reset, typographie
 │   ├── layout.css          # Navigation, cards, grilles
-│   └── exercices.css       # Styles spécifiques exercices
+│   ├── exercices.css       # Styles communs exercices
+│   ├── puissances.css      # Styles spécifiques puissances
+│   └── racines.css         # Styles spécifiques racines
 │
 ├── js/
 │   ├── utils.js            # Fonctions utilitaires (PGCD, formatage...)
@@ -82,12 +99,17 @@ Website_Project/
 │   ├── developpement.js    # Logique développement
 │   ├── reduction.js        # Logique réduction
 │   ├── factorisation.js    # Logique factorisation
-│   └── inequations.js      # Logique inéquations
+│   ├── inequations.js      # Logique inéquations
+│   ├── fractions.js        # Logique fractions
+│   ├── pourcentages.js     # Logique pourcentages
+│   ├── puissances.js       # Logique puissances
+│   └── racines.js          # Logique racines carrées
 │
 ├── tests/
-│   └── utils.test.js       # Tests unitaires (Jest)
+│   ├── *.test.js           # Tests unitaires pour chaque module
+│   └── utils.test.js       # Tests utilitaires
 │
-├── CONTEXT.md              # Documentation technique pour développeurs
+├── CLAUDE.md               # Guide pour assistants IA
 ├── ROADMAP.md              # Plan de développement
 └── README.md               # Ce fichier
 ```
@@ -121,17 +143,23 @@ npm run test:coverage
 - [x] Factorisation
 - [x] Inéquations du 1er degré
 
-### 🔄 Phase 2 - Calculs Numériques (À venir)
-- [ ] Fractions
-- [ ] Pourcentages
-- [ ] Puissances
-- [ ] Racines carrées
+### ✅ Phase 2 - Calculs Numériques (Complète)
+- [x] Fractions (6 types d'exercices)
+- [x] Pourcentages (5 types d'exercices)
+- [x] Puissances (6 types d'exercices)
+- [x] Racines carrées (6 types d'exercices)
+
+### 🔄 Phase 3 - Second Degré (En cours)
+- [ ] Équations du 2nd degré
+- [ ] Inéquations du 2nd degré
+- [ ] Paraboles et fonctions
 
 ### 📋 Phases Futures
-- Phase 3 : Second degré
-- Phase 4 : Fonctions
-- Phase 5 : Géométrie analytique
+- Phase 4 : Fonctions (affines, polynômes, dérivées)
+- Phase 5 : Géométrie analytique (vecteurs, droites)
 - Phase 6 : Suites et analyse
+- Phase 7 : Probabilités et statistiques
+- Phase 8 : Nombres complexes et avancé
 
 📖 Voir [ROADMAP.md](ROADMAP.md) pour le détail complet.
 
