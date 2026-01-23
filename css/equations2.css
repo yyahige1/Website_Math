@@ -1,0 +1,210 @@
+/* ========================================
+   EQUATIONS2.CSS - Styles spécifiques équations 2nd degré
+   ======================================== */
+
+/* Fractions avec barre horizontale */
+.frac {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: 1.1em;
+    font-weight: 600;
+    margin: 0 4px;
+    vertical-align: middle;
+}
+
+.frac .num {
+    border-bottom: 2px solid var(--gray-800);
+    padding: 2px 8px;
+    min-width: 30px;
+    text-align: center;
+}
+
+.frac .den {
+    padding: 2px 8px;
+    min-width: 30px;
+    text-align: center;
+}
+
+/* Couleurs pour les différents éléments */
+.color-delta {
+    color: #e74c3c;
+    font-weight: 700;
+}
+
+.color-coef {
+    color: #3498db;
+    font-weight: 600;
+}
+
+.color-solution {
+    color: #27ae60;
+    font-weight: 700;
+    font-size: 1.1em;
+}
+
+.color-alpha {
+    color: #9b59b6;
+    font-weight: 600;
+}
+
+.color-beta {
+    color: #e67e22;
+    font-weight: 600;
+}
+
+.color-somme {
+    color: #1abc9c;
+    font-weight: 700;
+}
+
+.color-produit {
+    color: #f39c12;
+    font-weight: 700;
+}
+
+/* Highlight boxes */
+.highlight-box {
+    background: var(--primary-light);
+    border-left: 4px solid var(--primary);
+    padding: 12px 16px;
+    margin: 8px 0;
+    border-radius: var(--radius-md);
+}
+
+.highlight-success {
+    background: var(--success-light);
+    border-left: 4px solid var(--success);
+}
+
+.highlight-warning {
+    background: #fff3cd;
+    border-left: 4px solid #ffc107;
+}
+
+.highlight-danger {
+    background: #f8d7da;
+    border-left: 4px solid #dc3545;
+}
+
+/* Delta box */
+.delta-box {
+    display: inline-block;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 8px 16px;
+    border-radius: var(--radius-md);
+    font-weight: 700;
+    font-size: 1.2em;
+    margin: 8px 0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Solution box améliorée */
+.final-result {
+    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+    color: white;
+    padding: 16px 24px;
+    border-radius: var(--radius-lg);
+    font-size: 1.3em;
+    font-weight: 700;
+    margin: 16px 0;
+    text-align: center;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Step content avec espacement */
+.step-content .math-line {
+    padding: 6px 0;
+    font-size: 1.1em;
+}
+
+/* Formules importantes */
+.formula-box {
+    background: #f8f9fa;
+    border: 2px dashed var(--primary);
+    padding: 12px;
+    margin: 12px 0;
+    border-radius: var(--radius-md);
+    text-align: center;
+    font-weight: 600;
+}
+
+/* Racine carrée stylée */
+.sqrt {
+    font-size: 1.2em;
+    font-weight: 700;
+}
+
+/* Puissance (exposant) */
+sup {
+    font-size: 0.75em;
+    vertical-align: super;
+}
+
+/* Indices */
+sub {
+    font-size: 0.75em;
+    vertical-align: sub;
+}
+
+/* Expression en couleur */
+.expr-highlight {
+    background: #fff9c4;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+/* Cas particuliers */
+.case-positive {
+    color: #27ae60;
+}
+
+.case-zero {
+    color: #3498db;
+}
+
+.case-negative {
+    color: #e74c3c;
+}
+
+/* Vérification */
+.verification {
+    background: #e8f5e9;
+    border-left: 4px solid #4caf50;
+    padding: 12px;
+    margin: 12px 0;
+    border-radius: 4px;
+}
+
+.verification::before {
+    content: "✓ ";
+    font-weight: 700;
+    color: #4caf50;
+    font-size: 1.2em;
+}
+
+/* Séparateurs */
+.separator {
+    border-top: 2px dashed var(--gray-300);
+    margin: 16px 0;
+}
+
+/* Animation pour les résultats */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.final-result,
+.delta-box {
+    animation: slideIn 0.4s ease-out;
+}
