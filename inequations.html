@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/layout.css">
     <link rel="stylesheet" href="css/exercices.css">
+    <link rel="stylesheet" href="css/navigation.css">
 </head>
 <body>
     <div class="container">
@@ -25,6 +26,93 @@
             <a href="racines.html">Racines carrées</a>
             <a href="equations2.html">Équations 2nd degré</a>
         </nav>
+        <!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MathsFacile - Exemple Navigation</title>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/exercices.css">
+    <link rel="stylesheet" href="css/navigation.css">
+</head>
+<body>
+    <!-- NOUVELLE NAVIGATION -->
+    <nav class="nav">
+        <div class="nav-container">
+            <!-- Logo -->
+            <a href="index.html" class="nav-brand">MathsFacile</a>
+
+            <!-- Hamburger (mobile uniquement) -->
+            <button class="nav-hamburger" aria-label="Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <!-- Menu principal -->
+            <ul class="nav-menu">
+                <!-- Catégorie : Algèbre -->
+                <li class="nav-item has-dropdown">
+                    <a href="#" class="nav-link">
+                        Algèbre
+                        <span class="arrow">▾</span>
+                    </a>
+                    <ul class="nav-dropdown">
+                        <li><a href="index.html">Équations</a></li>
+                        <li><a href="developpement.html">Développement</a></li>
+                        <li><a href="reduction.html">Réduction</a></li>
+                        <li><a href="factorisation.html">Factorisation</a></li>
+                        <li><a href="inequations.html">Inéquations</a></li>
+                    </ul>
+                </li>
+
+                <!-- Catégorie : Calculs -->
+                <li class="nav-item has-dropdown">
+                    <a href="#" class="nav-link">
+                        Calculs
+                        <span class="arrow">▾</span>
+                    </a>
+                    <ul class="nav-dropdown">
+                        <li><a href="fractions.html">Fractions</a></li>
+                        <li><a href="pourcentages.html">Pourcentages</a></li>
+                        <li><a href="puissances.html">Puissances</a></li>
+                        <li><a href="racines.html">Racines carrées</a></li>
+                    </ul>
+                </li>
+
+                <!-- Future Phase 3 (exemple) -->
+                <!--
+                <li class="nav-item has-dropdown">
+                    <a href="#" class="nav-link">
+                        Second degré
+                        <span class="arrow">▾</span>
+                    </a>
+                    <ul class="nav-dropdown">
+                        <li><a href="equations2.html">Équations 2nd degré</a></li>
+                        <li><a href="canonique.html">Forme canonique</a></li>
+                        <li><a href="systemes.html">Systèmes 2×2</a></li>
+                    </ul>
+                </li>
+                -->
+            </ul>
+        </div>
+    </nav>
+
+    
+
+    <!-- JavaScript -->
+    <script src="js/utils.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/navigation.js"></script>
+    <!-- Script spécifique à la page -->
+</body>
+</html>
 
         <header>
             <h1>🎓 Inéquations</h1>
@@ -119,6 +207,7 @@
     <script src="js/ui.js"></script>
     <script src="js/main.js"></script>
     <script src="js/inequations.js"></script>
+    <script src="js/navigation.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', initInequationsPage);
     </script>

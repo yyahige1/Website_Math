@@ -7,6 +7,17 @@ const PuissancesState = {
 };
 
 /**
+ * Crée une fraction verticale en HTML
+ */
+function createFraction(numerator, denominator) {
+    return `<div class="fraction-inline">
+        <span class="fraction-num">${numerator}</span>
+        <span class="fraction-line"></span>
+        <span class="fraction-den">${denominator}</span>
+    </div>`;
+}
+
+/**
  * Initialise la page Puissances
  */
 function initPuissancesPage() {
@@ -131,7 +142,7 @@ function genQuotient() {
         base: base,
         exp1: exp1,
         exp2: exp2,
-        expression: `${base}<sup>${exp1}</sup> ÷ ${base}<sup>${exp2}</sup>`,
+        expression: createFraction(`${base}<sup>${exp1}</sup>`, `${base}<sup>${exp2}</sup>`),
         result: exp1 - exp2
     };
 }
@@ -173,17 +184,30 @@ function genScientific() {
     const exp1 = randInt(-3, 8);
     const exp2 = randInt(-3, 8);
     
-    const sign = operation === 'mult' ? '×' : '÷';
-    
-    return {
-        type: 5,
-        operation: operation,
-        coef1: coef1,
-        coef2: coef2,
-        exp1: exp1,
-        exp2: exp2,
-        expression: `(${coef1.toFixed(1)} × 10<sup>${exp1}</sup>) ${sign} (${coef2.toFixed(1)} × 10<sup>${exp2}</sup>)`
-    };
+    if (operation === 'mult') {
+        return {
+            type: 5,
+            operation: 'mult',
+            coef1: coef1,
+            coef2: coef2,
+            exp1: exp1,
+            exp2: exp2,
+            expression: `(${coef1.toFixed(1)} × 10<sup>${exp1}</sup>) × (${coef2.toFixed(1)} × 10<sup>${exp2}</sup>)`
+        };
+    } else {
+        return {
+            type: 5,
+            operation: 'div',
+            coef1: coef1,
+            coef2: coef2,
+            exp1: exp1,
+            exp2: exp2,
+            expression: createFraction(
+                `${coef1.toFixed(1)} × 10<sup>${exp1}</sup>`,
+                `${coef2.toFixed(1)} × 10<sup>${exp2}</sup>`
+            )
+        };
+    }
 }
 
 function genCombined() {
@@ -198,7 +222,10 @@ function genCombined() {
         exp1: exp1,
         exp2: exp2,
         exp3: exp3,
-        expression: `${base}<sup>${exp1}</sup> × ${base}<sup>${exp2}</sup> ÷ ${base}<sup>${exp3}</sup>`,
+        expression: createFraction(
+            `${base}<sup>${exp1}</sup> × ${base}<sup>${exp2}</sup>`,
+            `${base}<sup>${exp3}</sup>`
+        ),
         result: exp1 + exp2 - exp3
     };
 }
@@ -214,20 +241,35 @@ function solveProduct(ex) {
     html += `</div>`;
     
     html += `<div class="step">`;
-    html += `<div class="step-expression">On applique : a<sup>m</sup> × a<sup>n</sup> = a<sup>m+n</sup></div>`;
-    html += `<div class="step-explanation">Produit de puissances de même base</div>`;
+    html += `<div class="step-expression">Les deux puissances ont la même <span class="term-green">base : ${ex.base}</span></div>`;
+    html += `<div class="step-explanation">On peut appliquer la règle du produit</div>`;
     html += `</div>`;
     
     html += `<div class="step">`;
-    html += `<div class="step-expression">${ex.base}<sup>${ex.exp1}+${ex.exp2}</sup> = ${ex.base}<sup>${ex.result}</sup></div>`;
+    html += `<div class="step-expression">Règle : <span class="term-red">a<sup>m</sup> × a<sup>n</sup> = a<sup>m+n</sup></span></div>`;
+    html += `<div class="step-explanation">Quand on multiplie, on additionne les exposants</div>`;
+    html += `</div>`;
+    
+    html += `<div class="step">`;
+    html += `<div class="step-expression"><span class="term-green">${ex.base}</span><sup><span class="term-blue">${ex.exp1}</span>+<span class="term-blue">${ex.exp2}</span></sup></div>`;
     html += `<div class="step-explanation">On additionne les exposants</div>`;
     html += `</div>`;
     
-    const numResult = Math.pow(ex.base, ex.result);
-    if (ex.result <= 10 && numResult <= 100000) {
-        html += `<div class="result-highlight">${ex.base}<sup>${ex.result}</sup> = ${numResult}</div>`;
+    html += `<div class="step">`;
+    html += `<div class="step-expression"><span class="term-green">${ex.base}</span><sup><span class="term-orange">${ex.result}</span></sup></div>`;
+    html += `<div class="step-explanation">Car <span class="term-blue">${ex.exp1}</span> + <span class="term-blue">${ex.exp2}</span> = <span class="term-orange">${ex.result}</span></div>`;
+    html += `</div>`;
+    
+    const numericResult = Math.pow(ex.base, ex.result);
+    if (ex.result <= 10 && numericResult <= 100000) {
+        html += `<div class="step">`;
+        html += `<div class="step-expression">Calcul de la valeur numérique</div>`;
+        html += `<div class="step-explanation">${ex.base}<sup>${ex.result}</sup> = ${ex.base} × ${ex.base} × ... (${ex.result} fois)</div>`;
+        html += `</div>`;
+        
+        html += `<div class="result-highlight"><span class="term-green">${ex.base}</span><sup><span class="term-orange">${ex.result}</span></sup> = <span class="term-blue">${numericResult}</span></div>`;
     } else {
-        html += `<div class="result-highlight">${ex.base}<sup>${ex.result}</sup></div>`;
+        html += `<div class="result-highlight"><span class="term-green">${ex.base}</span><sup><span class="term-orange">${ex.result}</span></sup></div>`;
     }
     
     return html;
@@ -237,25 +279,40 @@ function solveQuotient(ex) {
     let html = '';
     
     html += `<div class="step">`;
-    html += `<div class="step-expression">${ex.expression}</div>`;
+    html += `<div class="step-expression">${createFraction(`${ex.base}<sup>${ex.exp1}</sup>`, `${ex.base}<sup>${ex.exp2}</sup>`)}</div>`;
     html += `<div class="step-explanation">Expression de départ</div>`;
     html += `</div>`;
     
     html += `<div class="step">`;
-    html += `<div class="step-expression">On applique : a<sup>m</sup> ÷ a<sup>n</sup> = a<sup>m−n</sup></div>`;
-    html += `<div class="step-explanation">Quotient de puissances de même base</div>`;
+    html += `<div class="step-expression">Les deux puissances ont la même <span class="term-green">base : ${ex.base}</span></div>`;
+    html += `<div class="step-explanation">On peut appliquer la règle du quotient</div>`;
     html += `</div>`;
     
     html += `<div class="step">`;
-    html += `<div class="step-expression">${ex.base}<sup>${ex.exp1}−${ex.exp2}</sup> = ${ex.base}<sup>${ex.result}</sup></div>`;
+    html += `<div class="step-expression">Règle : ${createFraction(`<span class="term-red">a<sup>m</sup></span>`, `<span class="term-red">a<sup>n</sup></span>`)} = <span class="term-red">a<sup>m−n</sup></span></div>`;
+    html += `<div class="step-explanation">Quand on divise, on soustrait les exposants</div>`;
+    html += `</div>`;
+    
+    html += `<div class="step">`;
+    html += `<div class="step-expression"><span class="term-green">${ex.base}</span><sup><span class="term-blue">${ex.exp1}</span>−<span class="term-blue">${ex.exp2}</span></sup></div>`;
     html += `<div class="step-explanation">On soustrait les exposants</div>`;
     html += `</div>`;
     
-    const numResult = Math.pow(ex.base, ex.result);
-    if (ex.result <= 8 && numResult <= 100000) {
-        html += `<div class="result-highlight">${ex.base}<sup>${ex.result}</sup> = ${numResult}</div>`;
+    html += `<div class="step">`;
+    html += `<div class="step-expression"><span class="term-green">${ex.base}</span><sup><span class="term-orange">${ex.result}</span></sup></div>`;
+    html += `<div class="step-explanation">Car <span class="term-blue">${ex.exp1}</span> − <span class="term-blue">${ex.exp2}</span> = <span class="term-orange">${ex.result}</span></div>`;
+    html += `</div>`;
+    
+    const numericResult = Math.pow(ex.base, ex.result);
+    if (ex.result <= 8 && numericResult <= 100000) {
+        html += `<div class="step">`;
+        html += `<div class="step-expression">Calcul de la valeur numérique</div>`;
+        html += `<div class="step-explanation">${ex.base}<sup>${ex.result}</sup> = ${numericResult}</div>`;
+        html += `</div>`;
+        
+        html += `<div class="result-highlight"><span class="term-green">${ex.base}</span><sup><span class="term-orange">${ex.result}</span></sup> = <span class="term-blue">${numericResult}</span></div>`;
     } else {
-        html += `<div class="result-highlight">${ex.base}<sup>${ex.result}</sup></div>`;
+        html += `<div class="result-highlight"><span class="term-green">${ex.base}</span><sup><span class="term-orange">${ex.result}</span></sup></div>`;
     }
     
     return html;
@@ -270,20 +327,35 @@ function solvePower(ex) {
     html += `</div>`;
     
     html += `<div class="step">`;
-    html += `<div class="step-expression">On applique : (a<sup>m</sup>)<sup>n</sup> = a<sup>m×n</sup></div>`;
-    html += `<div class="step-explanation">Puissance de puissance</div>`;
+    html += `<div class="step-expression">On a une <span class="term-red">puissance d'une puissance</span></div>`;
+    html += `<div class="step-explanation">La base est ${ex.base}, l'exposant interne est ${ex.exp1}, l'exposant externe est ${ex.exp2}</div>`;
     html += `</div>`;
     
     html += `<div class="step">`;
-    html += `<div class="step-expression">${ex.base}<sup>${ex.exp1}×${ex.exp2}</sup> = ${ex.base}<sup>${ex.result}</sup></div>`;
+    html += `<div class="step-expression">Règle : <span class="term-red">(a<sup>m</sup>)<sup>n</sup> = a<sup>m×n</sup></span></div>`;
     html += `<div class="step-explanation">On multiplie les exposants</div>`;
     html += `</div>`;
     
-    const numResult = Math.pow(ex.base, ex.result);
-    if (ex.result <= 10 && numResult <= 100000) {
-        html += `<div class="result-highlight">${ex.base}<sup>${ex.result}</sup> = ${numResult}</div>`;
+    html += `<div class="step">`;
+    html += `<div class="step-expression"><span class="term-green">${ex.base}</span><sup><span class="term-blue">${ex.exp1}</span>×<span class="term-blue">${ex.exp2}</span></sup></div>`;
+    html += `<div class="step-explanation">On multiplie les exposants entre eux</div>`;
+    html += `</div>`;
+    
+    html += `<div class="step">`;
+    html += `<div class="step-expression"><span class="term-green">${ex.base}</span><sup><span class="term-orange">${ex.result}</span></sup></div>`;
+    html += `<div class="step-explanation">Car <span class="term-blue">${ex.exp1}</span> × <span class="term-blue">${ex.exp2}</span> = <span class="term-orange">${ex.result}</span></div>`;
+    html += `</div>`;
+    
+    const numericResult = Math.pow(ex.base, ex.result);
+    if (ex.result <= 10 && numericResult <= 100000) {
+        html += `<div class="step">`;
+        html += `<div class="step-expression">Calcul de la valeur numérique</div>`;
+        html += `<div class="step-explanation">${ex.base}<sup>${ex.result}</sup> = ${numericResult}</div>`;
+        html += `</div>`;
+        
+        html += `<div class="result-highlight"><span class="term-green">${ex.base}</span><sup><span class="term-orange">${ex.result}</span></sup> = <span class="term-blue">${numericResult}</span></div>`;
     } else {
-        html += `<div class="result-highlight">${ex.base}<sup>${ex.result}</sup></div>`;
+        html += `<div class="result-highlight"><span class="term-green">${ex.base}</span><sup><span class="term-orange">${ex.result}</span></sup></div>`;
     }
     
     return html;
@@ -298,20 +370,37 @@ function solveProductPower(ex) {
     html += `</div>`;
     
     html += `<div class="step">`;
-    html += `<div class="step-expression">On applique : (ab)<sup>n</sup> = a<sup>n</sup> × b<sup>n</sup></div>`;
-    html += `<div class="step-explanation">Puissance d'un produit</div>`;
+    html += `<div class="step-expression">On a un <span class="term-red">produit élevé à une puissance</span></div>`;
+    html += `<div class="step-explanation">Les bases sont ${ex.base1} et ${ex.base2}, l'exposant est ${ex.exp}</div>`;
     html += `</div>`;
     
-    const result = `${ex.base1}<sup>${ex.exp}</sup> × ${ex.base2}<sup>${ex.exp}</sup>`;
+    html += `<div class="step">`;
+    html += `<div class="step-expression">Règle : <span class="term-red">(ab)<sup>n</sup> = a<sup>n</sup> × b<sup>n</sup></span></div>`;
+    html += `<div class="step-explanation">Chaque facteur est élevé à la puissance</div>`;
+    html += `</div>`;
+    
+    const result = `<span class="term-blue">${ex.base1}<sup>${ex.exp}</sup></span> × <span class="term-green">${ex.base2}<sup>${ex.exp}</sup></span>`;
+    
     html += `<div class="step">`;
     html += `<div class="step-expression">${result}</div>`;
-    html += `<div class="step-explanation">Résultat développé</div>`;
+    html += `<div class="step-explanation">On applique l'exposant à chaque base</div>`;
     html += `</div>`;
     
     const num1 = Math.pow(ex.base1, ex.exp);
     const num2 = Math.pow(ex.base2, ex.exp);
+    
     if (ex.exp <= 5 && num1 <= 10000 && num2 <= 10000) {
-        html += `<div class="result-highlight">${result} = ${num1} × ${num2} = ${num1 * num2}</div>`;
+        html += `<div class="step">`;
+        html += `<div class="step-expression">Calcul des valeurs numériques</div>`;
+        html += `<div class="step-explanation"><span class="term-blue">${ex.base1}<sup>${ex.exp}</sup> = ${num1}</span> et <span class="term-green">${ex.base2}<sup>${ex.exp}</sup> = ${num2}</span></div>`;
+        html += `</div>`;
+        
+        html += `<div class="step">`;
+        html += `<div class="step-expression"><span class="term-blue">${num1}</span> × <span class="term-green">${num2}</span></div>`;
+        html += `<div class="step-explanation">On multiplie les résultats</div>`;
+        html += `</div>`;
+        
+        html += `<div class="result-highlight"><span class="term-orange">${num1 * num2}</span></div>`;
     } else {
         html += `<div class="result-highlight">${result}</div>`;
     }
@@ -322,56 +411,84 @@ function solveProductPower(ex) {
 function solveScientific(ex) {
     let html = '';
     
-    html += `<div class="step">`;
-    html += `<div class="step-expression">${ex.expression}</div>`;
-    html += `<div class="step-explanation">Expression de départ</div>`;
-    html += `</div>`;
-    
     if (ex.operation === 'mult') {
+        html += `<div class="step">`;
+        html += `<div class="step-expression">${ex.expression}</div>`;
+        html += `<div class="step-explanation">Expression de départ</div>`;
+        html += `</div>`;
+        
+        html += `<div class="step">`;
+        html += `<div class="step-expression">On regroupe : (<span class="term-blue">${ex.coef1.toFixed(1)}</span> × <span class="term-blue">${ex.coef2.toFixed(1)}</span>) × (10<sup><span class="term-green">${ex.exp1}</span></sup> × 10<sup><span class="term-green">${ex.exp2}</span></sup>)</div>`;
+        html += `<div class="step-explanation">On sépare les coefficients et les puissances de 10</div>`;
+        html += `</div>`;
+        
         const newCoef = ex.coef1 * ex.coef2;
         const newExp = ex.exp1 + ex.exp2;
         
         html += `<div class="step">`;
-        html += `<div class="step-expression">(${ex.coef1.toFixed(1)} × ${ex.coef2.toFixed(1)}) × (10<sup>${ex.exp1}</sup> × 10<sup>${ex.exp2}</sup>)</div>`;
-        html += `<div class="step-explanation">On regroupe coefficients et puissances de 10</div>`;
+        html += `<div class="step-expression"><span class="term-orange">${newCoef.toFixed(2)}</span> × 10<sup><span class="term-red">${newExp}</span></sup></div>`;
+        html += `<div class="step-explanation">Coefficients : <span class="term-blue">${ex.coef1.toFixed(1)} × ${ex.coef2.toFixed(1)} = ${newCoef.toFixed(2)}</span>, Exposants : <span class="term-green">${ex.exp1} + ${ex.exp2} = ${newExp}</span></div>`;
+        html += `</div>`;
+        
+        // Ajustement notation scientifique
+        if (newCoef >= 10) {
+            const adj = newCoef / 10;
+            const adjExp = newExp + 1;
+            html += `<div class="step">`;
+            html += `<div class="step-expression">Ajustement pour notation scientifique (1 ≤ coef < 10)</div>`;
+            html += `<div class="step-explanation">${newCoef.toFixed(2)} = ${adj.toFixed(1)} × 10, donc on ajoute 1 à l'exposant</div>`;
+            html += `</div>`;
+            html += `<div class="result-highlight"><span class="term-orange">${adj.toFixed(1)}</span> × 10<sup><span class="term-red">${adjExp}</span></sup></div>`;
+        } else if (newCoef < 1) {
+            const adj = newCoef * 10;
+            const adjExp = newExp - 1;
+            html += `<div class="step">`;
+            html += `<div class="step-expression">Ajustement pour notation scientifique (1 ≤ coef < 10)</div>`;
+            html += `<div class="step-explanation">${newCoef.toFixed(2)} = ${adj.toFixed(1)} ÷ 10, donc on retire 1 à l'exposant</div>`;
+            html += `</div>`;
+            html += `<div class="result-highlight"><span class="term-orange">${adj.toFixed(1)}</span> × 10<sup><span class="term-red">${adjExp}</span></sup></div>`;
+        } else {
+            html += `<div class="result-highlight"><span class="term-orange">${newCoef.toFixed(1)}</span> × 10<sup><span class="term-red">${newExp}</span></sup></div>`;
+        }
+    } else {
+        // Division
+        html += `<div class="step">`;
+        html += `<div class="step-expression">${createFraction(`${ex.coef1.toFixed(1)} × 10<sup>${ex.exp1}</sup>`, `${ex.coef2.toFixed(1)} × 10<sup>${ex.exp2}</sup>`)}</div>`;
+        html += `<div class="step-explanation">Expression de départ</div>`;
         html += `</div>`;
         
         html += `<div class="step">`;
-        html += `<div class="step-expression">${newCoef.toFixed(2)} × 10<sup>${newExp}</sup></div>`;
-        html += `<div class="step-explanation">On multiplie et on additionne les exposants</div>`;
+        html += `<div class="step-expression">${createFraction(`<span class="term-blue">${ex.coef1.toFixed(1)}</span>`, `<span class="term-blue">${ex.coef2.toFixed(1)}</span>`)} × ${createFraction(`10<sup><span class="term-green">${ex.exp1}</span></sup>`, `10<sup><span class="term-green">${ex.exp2}</span></sup>`)}</div>`;
+        html += `<div class="step-explanation">On sépare les coefficients et les puissances de 10</div>`;
         html += `</div>`;
         
-        if (newCoef >= 10) {
-            const adj = newCoef / 10;
-            html += `<div class="result-highlight">${adj.toFixed(1)} × 10<sup>${newExp + 1}</sup></div>`;
-        } else if (newCoef < 1) {
-            const adj = newCoef * 10;
-            html += `<div class="result-highlight">${adj.toFixed(1)} × 10<sup>${newExp - 1}</sup></div>`;
-        } else {
-            html += `<div class="result-highlight">${newCoef.toFixed(1)} × 10<sup>${newExp}</sup></div>`;
-        }
-    } else {
         const newCoef = ex.coef1 / ex.coef2;
         const newExp = ex.exp1 - ex.exp2;
         
         html += `<div class="step">`;
-        html += `<div class="step-expression">(${ex.coef1.toFixed(1)} ÷ ${ex.coef2.toFixed(1)}) × (10<sup>${ex.exp1}</sup> ÷ 10<sup>${ex.exp2}</sup>)</div>`;
-        html += `<div class="step-explanation">On regroupe coefficients et puissances de 10</div>`;
+        html += `<div class="step-expression"><span class="term-orange">${newCoef.toFixed(2)}</span> × 10<sup><span class="term-red">${newExp}</span></sup></div>`;
+        html += `<div class="step-explanation">Coefficients : ${createFraction(`<span class="term-blue">${ex.coef1.toFixed(1)}</span>`, `<span class="term-blue">${ex.coef2.toFixed(1)}</span>`)} = <span class="term-orange">${newCoef.toFixed(2)}</span>, Exposants : <span class="term-green">${ex.exp1} − ${ex.exp2} = ${newExp}</span></div>`;
         html += `</div>`;
         
-        html += `<div class="step">`;
-        html += `<div class="step-expression">${newCoef.toFixed(2)} × 10<sup>${newExp}</sup></div>`;
-        html += `<div class="step-explanation">On divise et on soustrait les exposants</div>`;
-        html += `</div>`;
-        
+        // Ajustement notation scientifique
         if (newCoef >= 10) {
             const adj = newCoef / 10;
-            html += `<div class="result-highlight">${adj.toFixed(1)} × 10<sup>${newExp + 1}</sup></div>`;
+            const adjExp = newExp + 1;
+            html += `<div class="step">`;
+            html += `<div class="step-expression">Ajustement pour notation scientifique</div>`;
+            html += `<div class="step-explanation">${newCoef.toFixed(2)} ÷ 10 = ${adj.toFixed(1)}</div>`;
+            html += `</div>`;
+            html += `<div class="result-highlight"><span class="term-orange">${adj.toFixed(1)}</span> × 10<sup><span class="term-red">${adjExp}</span></sup></div>`;
         } else if (newCoef < 1) {
             const adj = newCoef * 10;
-            html += `<div class="result-highlight">${adj.toFixed(1)} × 10<sup>${newExp - 1}</sup></div>`;
+            const adjExp = newExp - 1;
+            html += `<div class="step">`;
+            html += `<div class="step-expression">Ajustement pour notation scientifique</div>`;
+            html += `<div class="step-explanation">${newCoef.toFixed(2)} × 10 = ${adj.toFixed(1)}</div>`;
+            html += `</div>`;
+            html += `<div class="result-highlight"><span class="term-orange">${adj.toFixed(1)}</span> × 10<sup><span class="term-red">${adjExp}</span></sup></div>`;
         } else {
-            html += `<div class="result-highlight">${newCoef.toFixed(1)} × 10<sup>${newExp}</sup></div>`;
+            html += `<div class="result-highlight"><span class="term-orange">${newCoef.toFixed(1)}</span> × 10<sup><span class="term-red">${newExp}</span></sup></div>`;
         }
     }
     
@@ -382,31 +499,47 @@ function solveCombined(ex) {
     let html = '';
     
     html += `<div class="step">`;
-    html += `<div class="step-expression">${ex.expression}</div>`;
+    html += `<div class="step-expression">${createFraction(`${ex.base}<sup>${ex.exp1}</sup> × ${ex.base}<sup>${ex.exp2}</sup>`, `${ex.base}<sup>${ex.exp3}</sup>`)}</div>`;
     html += `<div class="step-explanation">Expression de départ</div>`;
     html += `</div>`;
     
     html += `<div class="step">`;
-    html += `<div class="step-expression">${ex.base}<sup>${ex.exp1}+${ex.exp2}−${ex.exp3}</sup></div>`;
-    html += `<div class="step-explanation">Produit → addition, Quotient → soustraction</div>`;
+    html += `<div class="step-expression">Au numérateur : <span class="term-red">produit de puissances</span> → on additionne</div>`;
+    html += `<div class="step-explanation">Au dénominateur : une seule puissance</div>`;
     html += `</div>`;
     
     const sum = ex.exp1 + ex.exp2;
+    
     html += `<div class="step">`;
-    html += `<div class="step-expression">${ex.base}<sup>${sum}−${ex.exp3}</sup></div>`;
-    html += `<div class="step-explanation">${ex.exp1} + ${ex.exp2} = ${sum}</div>`;
+    html += `<div class="step-expression">${createFraction(`<span class="term-green">${ex.base}</span><sup><span class="term-blue">${ex.exp1}</span>+<span class="term-blue">${ex.exp2}</span></sup>`, `<span class="term-green">${ex.base}</span><sup>${ex.exp3}</sup>`)}</div>`;
+    html += `<div class="step-explanation">On applique a<sup>m</sup> × a<sup>n</sup> = a<sup>m+n</sup> au numérateur</div>`;
     html += `</div>`;
     
     html += `<div class="step">`;
-    html += `<div class="step-expression">${ex.base}<sup>${ex.result}</sup></div>`;
-    html += `<div class="step-explanation">${sum} − ${ex.exp3} = ${ex.result}</div>`;
+    html += `<div class="step-expression">${createFraction(`<span class="term-green">${ex.base}</span><sup><span class="term-orange">${sum}</span></sup>`, `<span class="term-green">${ex.base}</span><sup>${ex.exp3}</sup>`)}</div>`;
+    html += `<div class="step-explanation">Car <span class="term-blue">${ex.exp1} + ${ex.exp2} = ${sum}</span></div>`;
     html += `</div>`;
     
-    const numResult = Math.pow(ex.base, ex.result);
-    if (ex.result <= 10 && numResult <= 100000) {
-        html += `<div class="result-highlight">${ex.base}<sup>${ex.result}</sup> = ${numResult}</div>`;
+    html += `<div class="step">`;
+    html += `<div class="step-expression">Maintenant on a un <span class="term-red">quotient de puissances</span> → on soustrait</div>`;
+    html += `<div class="step-explanation">Règle : a<sup>m</sup> ÷ a<sup>n</sup> = a<sup>m−n</sup></div>`;
+    html += `</div>`;
+    
+    html += `<div class="step">`;
+    html += `<div class="step-expression"><span class="term-green">${ex.base}</span><sup><span class="term-orange">${sum}</span>−${ex.exp3}</sup></div>`;
+    html += `<div class="step-explanation">On soustrait les exposants</div>`;
+    html += `</div>`;
+    
+    html += `<div class="step">`;
+    html += `<div class="step-expression"><span class="term-green">${ex.base}</span><sup><span class="term-blue">${ex.result}</span></sup></div>`;
+    html += `<div class="step-explanation">Car <span class="term-orange">${sum}</span> − ${ex.exp3} = <span class="term-blue">${ex.result}</span></div>`;
+    html += `</div>`;
+    
+    const numericResult = Math.pow(ex.base, ex.result);
+    if (ex.result <= 10 && numericResult <= 100000) {
+        html += `<div class="result-highlight"><span class="term-green">${ex.base}</span><sup><span class="term-blue">${ex.result}</span></sup> = <span class="term-orange">${numericResult}</span></div>`;
     } else {
-        html += `<div class="result-highlight">${ex.base}<sup>${ex.result}</sup></div>`;
+        html += `<div class="result-highlight"><span class="term-green">${ex.base}</span><sup><span class="term-blue">${ex.result}</span></sup></div>`;
     }
     
     return html;
