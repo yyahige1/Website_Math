@@ -579,6 +579,22 @@ function initEquations2Page() {
         input.addEventListener('input', updateEquation2Display);
     });
 
+    // Listener pour changer le label du second coefficient selon le type d'équation particulière
+    $('particularType').addEventListener('change', () => {
+        const particularType = $('particularType').value;
+        const label = $('label_second_coef');
+
+        if (particularType === 'ax2+c') {
+            label.textContent = 'c';
+        } else if (particularType === 'ax2+bx') {
+            label.textContent = 'b';
+        } else {
+            label.textContent = 'k';
+        }
+
+        generateEquation2();
+    });
+
     // Boutons
     $('generateBtn').addEventListener('click', generateEquation2);
     $('solveBtn').addEventListener('click', solveEquation2);
