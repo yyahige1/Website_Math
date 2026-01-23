@@ -637,7 +637,14 @@ function initEquations2Page() {
         };
 
         $(typeMap[type]).classList.remove('hidden');
-        updateEquation2Display();
+
+        // Initialiser les inputs particuliers si nécessaire
+        if (type === 'particuliere') {
+            updateParticularInputs();
+        }
+
+        // Générer une nouvelle équation pour ce type
+        generateEquation2();
     });
 
     // Écouteurs d'événements pour les inputs
