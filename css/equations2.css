@@ -208,3 +208,45 @@ sub {
 .delta-box {
     animation: slideIn 0.4s ease-out;
 }
+
+/* Tableau de signes */
+.sign-table {
+    margin: 20px 0;
+    overflow-x: auto;
+}
+
+.sign-table table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0;
+    background: white;
+    border: 2px solid var(--gray-300);
+    border-radius: var(--radius-md);
+}
+
+.sign-table td {
+    padding: 12px 8px;
+    text-align: center;
+    border: 1px solid var(--gray-300);
+    font-size: 1.1em;
+}
+
+.sign-table tr:first-child td {
+    background: var(--primary-light);
+    font-weight: 600;
+}
+
+.sign-table tr:nth-child(2) td {
+    font-weight: 700;
+    font-size: 1.2em;
+}
+
+/* Texte informatif */
+.info-text {
+    background: #e3f2fd;
+    border-left: 4px solid #2196f3;
+    padding: 10px 14px;
+    margin: 12px 0;
+    border-radius: 4px;
+    font-size: 0.95em;
+}
