@@ -50,7 +50,7 @@ function getEquation2Values() {
                 particularType: particularType,
                 a: parseFloat($('a_part').value) || 1,
                 c: parseFloat($('c_part').value) || 0,
-                b: particularType === 'ax2+bx' ? parseFloat($('a_part').value) || 1 : 0
+                b: particularType === 'ax2+bx' ? parseFloat($('b_part').value) || 1 : 0
             };
 
         case 'somme-produit':
@@ -67,6 +67,47 @@ function getEquation2Values() {
 }
 
 /**
+ * Met à jour les inputs affichés pour les équations particulières
+ */
+function updateParticularInputs() {
+    const particularType = $('particularType').value;
+
+    // Récupérer tous les labels et inputs
+    const labelA = $('label_a_part');
+    const inputA = $('a_part');
+    const labelB = $('label_b_part');
+    const inputB = $('b_part');
+    const labelC = $('label_c_part');
+    const inputC = $('c_part');
+
+    if (particularType === 'ax2+c') {
+        // Afficher a et c, cacher b
+        labelA.style.display = '';
+        inputA.style.display = '';
+        labelB.style.display = 'none';
+        inputB.style.display = 'none';
+        labelC.style.display = '';
+        inputC.style.display = '';
+    } else if (particularType === 'ax2+bx') {
+        // Afficher a et b, cacher c
+        labelA.style.display = '';
+        inputA.style.display = '';
+        labelB.style.display = '';
+        inputB.style.display = '';
+        labelC.style.display = 'none';
+        inputC.style.display = 'none';
+    } else {
+        // Type (x-a)²=k : afficher a et c (qui représentent a et k)
+        labelA.style.display = '';
+        inputA.style.display = '';
+        labelB.style.display = 'none';
+        inputB.style.display = 'none';
+        labelC.style.display = '';
+        inputC.style.display = '';
+    }
+}
+
+/**
  * Met à jour l'affichage de l'équation
  */
 function updateEquation2Display() {
@@ -77,7 +118,7 @@ function updateEquation2Display() {
         if (eq.particularType === 'ax2+c') {
             display = formatQuadraticEquation(eq.a, 0, eq.c);
         } else if (eq.particularType === 'ax2+bx') {
-            display = formatQuadraticEquation(eq.a, eq.a, 0);
+            display = formatQuadraticEquation(eq.a, eq.b, 0);
         } else {
             display = `(x - ${eq.a})² = ${eq.c}`;
         }
@@ -165,6 +206,7 @@ function generateEquation2() {
                 $('c_part').value = randCoef(-20, 20, false, true);
             } else if (particularType === 'ax2+bx') {
                 $('a_part').value = randCoef(1, 5, false, true);
+                $('b_part').value = randCoef(2, 10, false, true);
             } else {
                 $('a_part').value = randCoef(-5, 5, false, true);
                 $('c_part').value = randCoef(1, 25, false, true);
@@ -443,7 +485,7 @@ function solveParticularSteps(eq) {
 
     } else if (particularType === 'ax2+bx') {
         // Type ax² + bx = 0
-        const b = a;  // Dans ce cas particulier
+        const b = eq.b;
         html += '<div class="step">';
         html += '<div class="step-title">Équation de type ax² + bx = 0</div>';
         html += '<div class="step-content">';
@@ -579,9 +621,18 @@ function initEquations2Page() {
         input.addEventListener('input', updateEquation2Display);
     });
 
+    // Listener spécial pour le changement de type d'équation particulière
+    $('particularType').addEventListener('change', () => {
+        updateParticularInputs();
+        generateEquation2();
+    });
+
     // Boutons
     $('generateBtn').addEventListener('click', generateEquation2);
     $('solveBtn').addEventListener('click', solveEquation2);
+
+    // Initialiser l'affichage des inputs particuliers
+    updateParticularInputs();
 
     // Générer une première équation
     generateEquation2();
