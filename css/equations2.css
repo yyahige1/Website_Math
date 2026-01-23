@@ -208,3 +208,59 @@ sub {
 .delta-box {
     animation: slideIn 0.4s ease-out;
 }
+
+/* Astuce Somme et Produit */
+.formula-reminder {
+    background: linear-gradient(135deg, #e8f5e9 0%, #fff9c4 100%);
+    border: 2px solid #4caf50;
+    border-radius: var(--radius-md);
+    padding: 16px;
+    margin-top: 20px;
+}
+
+.reminder-title {
+    font-weight: 700;
+    font-size: 1.1em;
+    margin-bottom: 12px;
+    color: #2e7d32;
+    text-align: center;
+}
+
+.formulas-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.formula-item {
+    background: white;
+    padding: 12px;
+    border-radius: var(--radius-sm);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.formula-label {
+    display: block;
+    font-size: 0.85em;
+    font-weight: 600;
+    color: var(--gray-600);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.formula-content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.2em;
+    font-weight: 600;
+    justify-content: center;
+}
+
+/* Responsive pour mobile */
+@media (max-width: 600px) {
+    .formulas-grid {
+        grid-template-columns: 1fr;
+    }
+}

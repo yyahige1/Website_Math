@@ -16,7 +16,7 @@ const Equations2State = {
  * @returns {string}
  */
 function generateFraction(num, den) {
-    return `<span class="frac"><span class="num">${formatNumber(num)}</span><span class="den">${formatNumber(den)}</span></span>`;
+    return `<span class="frac"><span class="num">${num}</span><span class="den">${den}</span></span>`;
 }
 
 /**
@@ -49,8 +49,7 @@ function getEquation2Values() {
                 type: 'particuliere',
                 particularType: particularType,
                 a: parseFloat($('a_part').value) || 1,
-                c: parseFloat($('c_part').value) || 0,
-                b: particularType === 'ax2+bx' ? parseFloat($('a_part').value) || 1 : 0
+                c: parseFloat($('c_part').value) || 0
             };
 
         case 'somme-produit':
@@ -79,7 +78,7 @@ function updateEquation2Display() {
         } else if (eq.particularType === 'ax2+bx') {
             display = formatQuadraticEquation(eq.a, eq.a, 0);
         } else {
-            display = `(x - ${eq.a})² = ${eq.c}`;
+            display = `(x - ${formatNumber(eq.a)})² = ${formatNumber(eq.c)}`;
         }
     } else {
         display = formatQuadraticEquation(eq.a, eq.b, eq.c);
@@ -165,6 +164,7 @@ function generateEquation2() {
                 $('c_part').value = randCoef(-20, 20, false, true);
             } else if (particularType === 'ax2+bx') {
                 $('a_part').value = randCoef(1, 5, false, true);
+                $('c_part').value = randCoef(1, 10, false, true);
             } else {
                 $('a_part').value = randCoef(-5, 5, false, true);
                 $('c_part').value = randCoef(1, 25, false, true);
@@ -443,14 +443,14 @@ function solveParticularSteps(eq) {
 
     } else if (particularType === 'ax2+bx') {
         // Type ax² + bx = 0
-        const b = a;  // Dans ce cas particulier
+        const b = parseFloat($('c_part').value) || 1;  // b est stocké dans c_part pour ce cas
         html += '<div class="step">';
         html += '<div class="step-title">Équation de type ax² + bx = 0</div>';
         html += '<div class="step-content">';
         html += `<div class="math-line"><span class="color-coef">${formatNumber(a)}</span>x² + <span class="color-coef">${formatNumber(b)}</span>x = 0</div>`;
         html += `<div class="highlight-box">Mise en facteur par x</div>`;
         html += `<div class="math-line">x(<span class="color-coef">${formatNumber(a)}</span>x + <span class="color-coef">${formatNumber(b)}</span>) = 0</div>`;
-        html += '<p><strong>Produit nul</strong> : x = 0 ou <span class="color-coef">${formatNumber(a)}</span>x + <span class="color-coef">${formatNumber(b)}</span> = 0</p>';
+        html += `<p><strong>Produit nul</strong> : x = 0 ou <span class="color-coef">${formatNumber(a)}</span>x + <span class="color-coef">${formatNumber(b)}</span> = 0</p>`;
         html += `<div class="separator"></div>`;
         html += `<div class="math-line">x = <span class="color-solution">0</span> ou x = <span class="color-solution">${formatNumber(-b / a)}</span></div>`;
         html += '<div class="final-result">';

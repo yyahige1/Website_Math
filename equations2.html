@@ -149,19 +149,43 @@
             <!-- Coefficients Type somme-produit -->
             <div class="coefficients hidden" id="coeffSommeProduit">
                 <div class="coef-group">
-                    <label>a (coefficient de x²)</label>
-                    <input type="number" id="a_sp" value="1" step="any">
+                    <label for="a_sp">a (coefficient de x²)</label>
+                    <input type="number" id="a_sp" value="1" step="any" readonly style="background: #f0f0f0;">
                 </div>
                 <div class="coef-group">
-                    <label>b (coefficient de x)</label>
+                    <label for="b_sp">b (coefficient de x)</label>
                     <input type="number" id="b_sp" value="-7" step="any">
                 </div>
                 <div class="coef-group">
-                    <label>c (terme constant)</label>
+                    <label for="c_sp">c (terme constant)</label>
                     <input type="number" id="c_sp" value="12" step="any">
                 </div>
-                <div class="info-text">
-                    <p>💡 Rappel : Somme S = -b/a, Produit P = c/a</p>
+
+                <!-- Astuce avec fractions -->
+                <div class="formula-reminder">
+                    <p class="reminder-title">💡 Rappel des formules :</p>
+                    <div class="formulas-grid">
+                        <div class="formula-item">
+                            <span class="formula-label">Somme</span>
+                            <div class="formula-content">
+                                <span class="color-somme">S</span> = x₁ + x₂ =
+                                <span class="frac">
+                                    <span class="num">-b</span>
+                                    <span class="den">a</span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="formula-item">
+                            <span class="formula-label">Produit</span>
+                            <div class="formula-content">
+                                <span class="color-produit">P</span> = x₁ × x₂ =
+                                <span class="frac">
+                                    <span class="num">c</span>
+                                    <span class="den">a</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
