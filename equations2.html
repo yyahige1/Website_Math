@@ -10,30 +10,73 @@
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/layout.css">
     <link rel="stylesheet" href="css/exercices.css">
-    <link rel="stylesheet" href="css/equations2.css">
+    <link rel="stylesheet" href="css/navigation.css">
 </head>
+
 <body>
     <div class="container">
+
+        <!-- 🔥 NOUVELLE NAVIGATION -->
         <nav class="nav">
-            <a href="index.html">Équations</a>
-            <a href="developpement.html">Développement</a>
-            <a href="reduction.html">Réduction</a>
-            <a href="factorisation.html">Factorisation</a>
-            <a href="inequations.html">Inéquations</a>
-            <a href="fractions.html">Fractions</a>
-            <a href="pourcentages.html">Pourcentages</a>
-            <a href="puissances.html">Puissances</a>
-            <a href="racines.html">Racines carrées</a>
-            <a href="equations2.html" class="active">Équations 2nd degré</a>
+            <div class="nav-container">
+
+                <!-- Logo -->
+                <a href="index.html" class="nav-brand">MathsFacile</a>
+
+                <!-- Hamburger (mobile) -->
+                <button class="nav-hamburger" aria-label="Menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+
+                <!-- Menu principal -->
+                <ul class="nav-menu">
+
+                    <!-- Algèbre -->
+                    <li class="nav-item has-dropdown">
+                        <a href="#" class="nav-link">
+                            Algèbre <span class="arrow">▾</span>
+                        </a>
+                        <ul class="nav-dropdown">
+                            <li><a href="index.html">Équations</a></li>
+                            <li><a href="developpement.html">Développement</a></li>
+                            <li><a href="reduction.html">Réduction</a></li>
+                            <li><a href="factorisation.html">Factorisation</a></li>
+                            <li><a href="inequations.html">Inéquations</a></li>
+                            <li><a href="equations2.html" class="active">Équations 2nd degré</a></li>
+                        </ul>
+                    </li>
+
+                    <!-- Calculs -->
+                    <li class="nav-item has-dropdown">
+                        <a href="#" class="nav-link">
+                            Calculs <span class="arrow">▾</span>
+                        </a>
+                        <ul class="nav-dropdown">
+                            <li><a href="fractions.html">Fractions</a></li>
+                            <li><a href="pourcentages.html">Pourcentages</a></li>
+                            <li><a href="puissances.html">Puissances</a></li>
+                            <li><a href="racines.html">Racines carrées</a></li>
+                        </ul>
+                    </li>
+
+                </ul>
+            </div>
         </nav>
+        <!-- 🔥 FIN NOUVELLE NAVIGATION -->
 
         <header>
             <h1>🎓 Équations du 2nd degré</h1>
             <p class="subtitle">Exercices interactifs - Niveau 1ère</p>
-            <p class="intro">Entraîne-toi à résoudre des équations du second degré (ax² + bx + c = 0).<br>Choisis un type, modifie les valeurs, puis clique sur <strong>Correction</strong>.</p>
+            <p class="intro">
+                Entraîne-toi à résoudre des équations du second degré (ax² + bx + c = 0).<br>
+                Choisis un type, modifie les valeurs, puis clique sur <strong>Correction</strong>.
+            </p>
         </header>
 
         <div class="card">
+
             <div class="type-selector">
                 <button class="type-btn active" data-type="discriminant">
                     <div class="example">ax² + bx + c = 0</div>
@@ -135,6 +178,7 @@
                 <h3>📝 Résolution</h3>
                 <div id="stepsContainer"></div>
             </div>
+
         </div>
     </div>
 
@@ -142,10 +186,12 @@
     <script src="js/utils.js"></script>
     <script src="js/ui.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/navigation.js"></script>
     <script src="js/equations2.js"></script>
     <script>
-        // Initialiser la page
         document.addEventListener('DOMContentLoaded', initEquations2Page);
     </script>
+
 </body>
 </html>
+
