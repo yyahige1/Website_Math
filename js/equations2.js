@@ -45,12 +45,16 @@ function getEquation2Values() {
 
         case 'particuliere':
             const particularType = $('particularType').value;
+            const aVal = parseFloat($('a_part').value);
+            const bVal = parseFloat($('b_part').value);
+            const cVal = parseFloat($('c_part').value);
+
             return {
                 type: 'particuliere',
                 particularType: particularType,
-                a: parseFloat($('a_part').value) || 1,
-                c: parseFloat($('c_part').value) || 0,
-                b: particularType === 'ax2+bx' ? parseFloat($('b_part').value) || 1 : 0
+                a: !isNaN(aVal) ? aVal : 1,
+                c: !isNaN(cVal) ? cVal : 0,
+                b: particularType === 'ax2+bx' ? (!isNaN(bVal) ? bVal : 1) : 0
             };
 
         case 'somme-produit':
@@ -88,6 +92,9 @@ function updateParticularInputs() {
         inputB.style.display = 'none';
         labelC.style.display = '';
         inputC.style.display = '';
+        // S'assurer que les valeurs sont valides
+        if (!inputA.value || isNaN(parseFloat(inputA.value))) inputA.value = 1;
+        if (!inputC.value || isNaN(parseFloat(inputC.value))) inputC.value = -9;
     } else if (particularType === 'ax2+bx') {
         // Afficher a et b, cacher c
         labelA.style.display = '';
@@ -96,6 +103,9 @@ function updateParticularInputs() {
         inputB.style.display = '';
         labelC.style.display = 'none';
         inputC.style.display = 'none';
+        // S'assurer que les valeurs sont valides
+        if (!inputA.value || isNaN(parseFloat(inputA.value))) inputA.value = 1;
+        if (!inputB.value || isNaN(parseFloat(inputB.value))) inputB.value = 2;
     } else {
         // Type (x-a)²=k : afficher a et c (qui représentent a et k)
         labelA.style.display = '';
@@ -104,6 +114,9 @@ function updateParticularInputs() {
         inputB.style.display = 'none';
         labelC.style.display = '';
         inputC.style.display = '';
+        // S'assurer que les valeurs sont valides
+        if (!inputA.value || isNaN(parseFloat(inputA.value))) inputA.value = 2;
+        if (!inputC.value || isNaN(parseFloat(inputC.value))) inputC.value = 9;
     }
 }
 
