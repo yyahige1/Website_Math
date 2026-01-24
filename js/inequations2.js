@@ -399,6 +399,64 @@ function solveInequation2() {
     html += '</div>';
     updateHTML('stepsContainer', html);
     showSolution();
+
+    // Dessiner le graphique
+    drawGraph(ineq, solution);
+}
+
+/**
+ * Dessine le graphique de l'inéquation
+ */
+function drawGraph(ineq, solution) {
+    const graphContainer = $('graphContainer');
+    graphContainer.style.display = 'block';
+
+    // Déterminer les limites du graphique en fonction des racines
+    let xMin = -10, xMax = 10, yMin = -10, yMax = 10;
+
+    if (solution.nbSolutions === 2) {
+        const spread = solution.x2 - solution.x1;
+        xMin = solution.x1 - spread * 0.5;
+        xMax = solution.x2 + spread * 0.5;
+    } else if (solution.nbSolutions === 1) {
+        xMin = solution.x0 - 5;
+        xMax = solution.x0 + 5;
+    }
+
+    // Ajuster yMin et yMax en fonction de la parabole
+    const vertex_x = -ineq.b / (2 * ineq.a);
+    const vertex_y = ineq.a * vertex_x * vertex_x + ineq.b * vertex_x + ineq.c;
+
+    if (ineq.a > 0) {
+        // Parabole vers le haut
+        yMin = Math.min(-2, vertex_y - 2);
+        yMax = Math.max(10, vertex_y + 8);
+    } else {
+        // Parabole vers le bas
+        yMin = Math.min(-10, vertex_y - 8);
+        yMax = Math.max(2, vertex_y + 2);
+    }
+
+    // Créer le graphique
+    const graph = new GraphCanvas('graphCanvas', {
+        width: 600,
+        height: 400,
+        xMin: xMin,
+        xMax: xMax,
+        yMin: yMin,
+        yMax: yMax
+    });
+
+    // Préparer les racines pour le graphique
+    let roots = null;
+    if (solution.nbSolutions === 2) {
+        roots = { x1: solution.x1, x2: solution.x2 };
+    } else if (solution.nbSolutions === 1) {
+        roots = { x0: solution.x0 };
+    }
+
+    // Dessiner l'inéquation
+    graph.drawQuadraticInequality(ineq.a, ineq.b, ineq.c, ineq.sign, roots);
 }
 
 /**

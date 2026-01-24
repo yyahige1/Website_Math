@@ -117,6 +117,14 @@
             <div class="solution" id="solutionDiv">
                 <h3>📝 Résolution</h3>
                 <div id="stepsContainer"></div>
+
+                <!-- Graphique -->
+                <div class="graph-container" id="graphContainer" style="display: none;">
+                    <h4>📊 Représentation graphique</h4>
+                    <div style="text-align: center; margin: 20px 0;">
+                        <canvas id="graphCanvas" style="border: 1px solid #ddd; border-radius: 8px;"></canvas>
+                    </div>
+                </div>
             </div>
 
         </div>
@@ -127,6 +135,7 @@
     <script src="js/ui.js"></script>
     <script src="js/main.js"></script>
     <script src="js/navigation.js"></script>
+    <script src="js/graphing.js"></script>
     <script src="js/inequations2.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', initInequations2Page);
