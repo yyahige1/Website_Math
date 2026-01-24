@@ -471,3 +471,61 @@
         flex-direction: column;
     }
 }
+
+/* ========== SYSTÈMES D'ÉQUATIONS ========== */
+.system-equations {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.equation-group {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.equation-group label {
+    min-width: 100px;
+    font-weight: 600;
+}
+
+.equation-inputs {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    flex-wrap: wrap;
+}
+
+.equation-inputs input {
+    width: 80px;
+}
+
+.equation-inputs span {
+    font-weight: 500;
+    color: var(--gray-700);
+}
+
+.system-display {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    font-family: var(--font-mono);
+    font-size: 1.2em;
+}
+
+.system-display > span {
+    font-size: 3em;
+    line-height: 1;
+    color: var(--primary);
+}
+
+.system-lines {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.system-lines div {
+    padding: var(--spacing-xs) 0;
+}

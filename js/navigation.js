@@ -36,6 +36,7 @@ function generateNavigation(currentPage = '') {
                         <li><a href="inequations.html" ${currentPage === 'inequations' ? 'class="active"' : ''}>Inéquations</a></li>
                         <li><a href="equations2.html" ${currentPage === 'equations2' ? 'class="active"' : ''}>Équations 2nd degré</a></li>
                         <li><a href="inequations2.html" ${currentPage === 'inequations2' ? 'class="active"' : ''}>Inéquations 2nd degré</a></li>
+                        <li><a href="systemes.html" ${currentPage === 'systemes' ? 'class="active"' : ''}>Systèmes d'équations</a></li>
                     </ul>
                 </li>
 
