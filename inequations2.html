@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MathsFacile - Inéquations du 2nd degré</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/exercices.css">
+    <link rel="stylesheet" href="css/equations2.css">
+    <link rel="stylesheet" href="css/navigation.css">
+
+</head>
+
+<body>
+    <div class="container">
+
+        <!-- 🔥 NOUVELLE NAVIGATION -->
+        <nav class="nav">
+            <div class="nav-container">
+
+                <!-- Logo -->
+                <a href="index.html" class="nav-brand">MathsFacile</a>
+
+                <!-- Hamburger (mobile) -->
+                <button class="nav-hamburger" aria-label="Menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+
+                <!-- Menu principal -->
+                <ul class="nav-menu">
+
+                    <!-- Algèbre -->
+                    <li class="nav-item has-dropdown">
+                        <a href="#" class="nav-link">
+                            Algèbre <span class="arrow">▾</span>
+                        </a>
+                        <ul class="nav-dropdown">
+                            <li><a href="index.html">Équations</a></li>
+                            <li><a href="developpement.html">Développement</a></li>
+                            <li><a href="reduction.html">Réduction</a></li>
+                            <li><a href="factorisation.html">Factorisation</a></li>
+                            <li><a href="inequations.html">Inéquations</a></li>
+                            <li><a href="equations2.html">Équations 2nd degré</a></li>
+                            <li><a href="inequations2.html" class="active">Inéquations 2nd degré</a></li>
+                        </ul>
+                    </li>
+
+                    <!-- Calculs -->
+                    <li class="nav-item has-dropdown">
+                        <a href="#" class="nav-link">
+                            Calculs <span class="arrow">▾</span>
+                        </a>
+                        <ul class="nav-dropdown">
+                            <li><a href="fractions.html">Fractions</a></li>
+                            <li><a href="pourcentages.html">Pourcentages</a></li>
+                            <li><a href="puissances.html">Puissances</a></li>
+                            <li><a href="racines.html">Racines carrées</a></li>
+                        </ul>
+                    </li>
+
+                </ul>
+            </div>
+        </nav>
+        <!-- 🔥 FIN NOUVELLE NAVIGATION -->
+
+        <header>
+            <h1>🎓 Inéquations du 2nd degré</h1>
+            <p class="subtitle">Exercices interactifs - Niveau 1ère</p>
+            <p class="intro">
+                Entraîne-toi à résoudre des inéquations du second degré (ax² + bx + c > 0, etc.).<br>
+                Choisis les coefficients, le signe, puis clique sur <strong>Correction</strong>.
+            </p>
+        </header>
+
+        <div class="card">
+
+            <!-- Coefficients -->
+            <div class="coefficients" id="coeffInequation2">
+                <div class="coef-group">
+                    <label>a (coefficient de x²)</label>
+                    <input type="number" id="a_ineq" value="1" step="any">
+                </div>
+                <div class="coef-group">
+                    <label>b (coefficient de x)</label>
+                    <input type="number" id="b_ineq" value="-5" step="any">
+                </div>
+                <div class="coef-group">
+                    <label>c (terme constant)</label>
+                    <input type="number" id="c_ineq" value="6" step="any">
+                </div>
+                <div class="coef-group">
+                    <label>Signe</label>
+                    <select id="sign_ineq">
+                        <option value=">">></option>
+                        <option value=">=">≥</option>
+                        <option value="<"><</option>
+                        <option value="<=">≤</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="expression-display">
+                <div class="expression" id="expressionDisplay">x² - 5x + 6 > 0</div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn-generate" id="generateBtn">🎲 Nouveau</button>
+                <button class="btn-solve" id="solveBtn">✓ Correction</button>
+            </div>
+
+            <div class="solution" id="solutionDiv">
+                <h3>📝 Résolution</h3>
+                <div id="stepsContainer"></div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="js/utils.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/navigation.js"></script>
+    <script src="js/inequations2.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', initInequations2Page);
+    </script>
+
+</body>
+</html>

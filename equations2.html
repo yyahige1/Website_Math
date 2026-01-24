@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/layout.css">
     <link rel="stylesheet" href="css/exercices.css">
-    <link rel="stylesheet" href="css/equation2.css">
+    <link rel="stylesheet" href="css/equations2.css">
     <link rel="stylesheet" href="css/navigation.css">
 
 </head>
@@ -47,6 +47,8 @@
                             <li><a href="factorisation.html">Factorisation</a></li>
                             <li><a href="inequations.html">Inéquations</a></li>
                             <li><a href="equations2.html" class="active">Équations 2nd degré</a></li>
+                            <li><a href="inequations2.html">Inéquations 2nd degré</a></li>
+                        <li><a href="systemes.html">Systèmes d'équations</a></li>
                         </ul>
                     </li>
 
@@ -140,10 +142,12 @@
                         <option value="xminus2">(x - a)² = k</option>
                     </select>
                 </div>
-                <div class="coef-group" id="particularCoefs">
+                <div class="coef-group">
                     <label>a</label>
                     <input type="number" id="a_part" value="1" step="any">
-                    <label>c</label>
+                </div>
+                <div class="coef-group">
+                    <label id="label_second_coef">c</label>
                     <input type="number" id="c_part" value="-9" step="any">
                 </div>
             </div>
@@ -151,19 +155,16 @@
             <!-- Coefficients Type somme-produit -->
             <div class="coefficients hidden" id="coeffSommeProduit">
                 <div class="coef-group">
-                    <label>a (coefficient de x²)</label>
+                    <label>a</label>
                     <input type="number" id="a_sp" value="1" step="any">
                 </div>
                 <div class="coef-group">
-                    <label>b (coefficient de x)</label>
+                    <label>b</label>
                     <input type="number" id="b_sp" value="-7" step="any">
                 </div>
                 <div class="coef-group">
-                    <label>c (terme constant)</label>
+                    <label>c</label>
                     <input type="number" id="c_sp" value="12" step="any">
-                </div>
-                <div class="info-text">
-                    <p>💡 Rappel : Somme S = -b/a, Produit P = c/a</p>
                 </div>
             </div>
 
