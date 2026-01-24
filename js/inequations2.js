@@ -262,7 +262,7 @@ function solveInequation2() {
     } else if (solution.nbSolutions === 1) {
         html += `<td>-∞</td><td colspan="2"></td><td>${formatNumber(solution.x0)}</td><td colspan="2"></td><td>+∞</td>`;
     } else {
-        html += '<td>-∞</td><td colspan="2"></td><td>+∞</td>';
+        html += '<td>-∞</td><td colspan="4"></td><td>+∞</td>';
     }
     html += '</tr>';
 
@@ -281,10 +281,11 @@ function solveInequation2() {
             html += '<td></td><td>-</td><td></td><td>0</td><td>-</td><td></td><td></td>';
         }
     } else {
+        // Pas de racines : signe constant
         if (ineq.a > 0) {
-            html += '<td></td><td>+</td><td></td><td></td>';
+            html += '<td></td><td colspan="4">+</td><td></td>';
         } else {
-            html += '<td></td><td>-</td><td></td><td></td>';
+            html += '<td></td><td colspan="4">-</td><td></td>';
         }
     }
     html += '</tr>';
@@ -307,7 +308,7 @@ function solveInequation2() {
     html += '<div class="step-content">';
 
     const signSymbol = ineq.sign === '>=' ? '≥' : ineq.sign === '<=' ? '≤' : ineq.sign;
-    html += `<p>On cherche les valeurs de x pour lesquelles ${formatNumber(ineq.a)}x² + ${formatNumber(ineq.b)}x + ${formatNumber(ineq.c)} ${signSymbol} 0</p>`;
+    html += `<p>On cherche les valeurs de x pour lesquelles ${formatQuadraticInequation(ineq.a, ineq.b, ineq.c, ineq.sign).replace(' ' + signSymbol + ' 0', '')} ${signSymbol} 0</p>`;
 
     const intervals = getSignIntervals(ineq.a, solution);
     let solutionSet = '';
