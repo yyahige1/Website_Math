@@ -1,0 +1,136 @@
+/* ========================================
+   DEVELOPPEMENT.CSS - Styles pour module développement
+   ======================================== */
+
+/* Container des flèches SVG */
+.arrows-container {
+    position: relative;
+    padding: 40px 20px;
+    margin: 20px 0;
+    min-height: 120px;
+    background: var(--white, #ffffff);
+    border-radius: var(--radius-md, 8px);
+}
+
+.arrow-expr {
+    text-align: center;
+    font-family: var(--font-mono, monospace);
+    font-size: 1.3em;
+    font-weight: 700;
+    color: var(--gray-800, #333);
+    position: relative;
+    z-index: 1;
+}
+
+.arrow-term {
+    display: inline-block;
+    padding: 4px 8px;
+    margin: 0 2px;
+}
+
+/* SVG pour les flèches */
+.arrows-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: visible;
+    z-index: 0;
+}
+
+/* Grille de résultats pour distributivité */
+.results-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-md, 12px);
+    margin-top: var(--spacing-lg, 16px);
+}
+
+/* 4 résultats pour double distributivité */
+.results-grid-4 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-md, 12px);
+    margin-top: var(--spacing-lg, 16px);
+}
+
+/* Étiquettes a et b pour identités remarquables */
+.identity-boxes {
+    display: flex;
+    gap: var(--spacing-md, 12px);
+    margin: var(--spacing-lg, 16px) 0;
+}
+
+.id-box {
+    flex: 1;
+    padding: 12px;
+    border-radius: var(--radius-md, 8px);
+    text-align: center;
+}
+
+.id-box-a {
+    background: var(--term-red-bg, #ffebee);
+    border: 2px solid #ef5350;
+}
+
+.id-box-b {
+    background: var(--term-blue-bg, #e3f2fd);
+    border: 2px solid #42a5f5;
+}
+
+.id-label {
+    display: block;
+    font-size: 0.85em;
+    font-weight: 600;
+    margin-bottom: var(--spacing-xs, 4px);
+    opacity: 0.8;
+}
+
+.id-box-a .id-label {
+    color: #c62828;
+}
+
+.id-box-b .id-label {
+    color: #1565c0;
+}
+
+.id-value {
+    font-family: var(--font-mono, monospace);
+    font-size: 1.3em;
+    font-weight: 700;
+    color: var(--gray-800, #333);
+}
+
+/* Classes de termes colorés */
+.id-a {
+    color: #ef5350;
+    font-weight: 700;
+}
+
+.id-b {
+    color: #42a5f5;
+    font-weight: 700;
+}
+
+/* Responsive pour petits écrans */
+@media (max-width: 480px) {
+    .arrows-container {
+        padding: 30px 10px;
+        min-height: 100px;
+    }
+
+    .arrow-expr {
+        font-size: 1.1em;
+    }
+
+    .results-grid,
+    .results-grid-4 {
+        grid-template-columns: 1fr;
+    }
+
+    .identity-boxes {
+        flex-direction: column;
+    }
+}
