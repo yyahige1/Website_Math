@@ -154,26 +154,38 @@ function solvePourcentage() {
  */
 function solveCalculer(pourcentage, valeur) {
     let html = '';
-    
+
+    // Formule
+    html += `<div class="formula-box">
+        <div class="formula-title">📐 Formule</div>
+        <div class="formula-content">${pourcentage}% de ${valeur} = ?</div>
+    </div>`;
+
+    // Étape 1: Convertir en décimal
+    const decimal = pourcentage / 100;
     html += createStepHTML({
-        expression: `${pourcentage}% de ${valeur}`,
-        explanation: 'Calculer un pourcentage d\'une valeur'
+        expression: `<span class="value-percent">${pourcentage}%</span> = ${pourcentage} ÷ 100 = <span class="value-highlight">${decimal}</span>`,
+        explanation: '📍 Étape 1 : Convertir le pourcentage en nombre décimal'
     });
-    
+
+    // Étape 2: Multiplier
+    const resultat = decimal * valeur;
     html += createStepHTML({
-        expression: `${pourcentage}% = ${pourcentage}/100 = ${pourcentage / 100}`,
-        explanation: 'Convertir le pourcentage en nombre décimal'
+        expression: `<span class="value-highlight">${decimal}</span> × <span class="value-initial">${valeur}</span> = <span class="value-result">${formatNumber(resultat)}</span>`,
+        explanation: '📍 Étape 2 : Multiplier le nombre décimal par la valeur'
     });
-    
-    const resultat = (pourcentage / 100) * valeur;
-    
-    html += createStepHTML({
-        expression: `${pourcentage / 100} × ${valeur} = ${formatNumber(resultat)}`,
-        explanation: 'Multiplier par la valeur'
-    });
-    
-    html += createResultHTML(`${pourcentage}% de ${valeur} = <strong>${formatNumber(resultat)}</strong>`);
-    
+
+    // Barre visuelle
+    html += `<div class="percentage-bar">
+        <div class="percentage-bar-container">
+            <div class="percentage-bar-fill" style="width: ${pourcentage}%;">${pourcentage}%</div>
+        </div>
+        <div class="percentage-bar-label">${pourcentage}% de ${valeur} = ${formatNumber(resultat)}</div>
+    </div>`;
+
+    // Résultat final
+    html += createResultHTML(`<span class="value-percent">${pourcentage}%</span> de <span class="value-initial">${valeur}</span> = <span class="value-result">${formatNumber(resultat)}</span>`);
+
     return html;
 }
 
@@ -182,33 +194,43 @@ function solveCalculer(pourcentage, valeur) {
  */
 function solveTrouver(partie, total) {
     let html = '';
-    
-    html += createStepHTML({
-        expression: `${partie} sur ${total} = ? %`,
-        explanation: 'Trouver quel pourcentage représente une partie'
-    });
-    
+
+    // Formule
+    html += `<div class="formula-box">
+        <div class="formula-title">📐 Formule</div>
+        <div class="formula-content">${partie} sur ${total} = ? %</div>
+    </div>`;
+
     if (total === 0) {
         html += createAlertHTML('warning', 'Division par zéro impossible !');
         return html;
     }
-    
+
+    // Étape 1: Division
     const fraction = partie / total;
-    
     html += createStepHTML({
-        expression: `${partie} ÷ ${total} = ${formatNumber(fraction)}`,
-        explanation: 'Diviser la partie par le total'
+        expression: `<span class="value-highlight">${partie}</span> ÷ <span class="value-initial">${total}</span> = ${formatNumber(fraction)}`,
+        explanation: '📍 Étape 1 : Diviser la partie par le total'
     });
-    
+
+    // Étape 2: Multiplier par 100
     const pourcentage = fraction * 100;
-    
     html += createStepHTML({
-        expression: `${formatNumber(fraction)} × 100 = ${formatNumber(pourcentage)}%`,
-        explanation: 'Multiplier par 100 pour obtenir le pourcentage'
+        expression: `${formatNumber(fraction)} × 100 = <span class="value-percent">${formatNumber(pourcentage)}%</span>`,
+        explanation: '📍 Étape 2 : Multiplier par 100 pour obtenir le pourcentage'
     });
-    
-    html += createResultHTML(`${partie} représente <strong>${formatNumber(pourcentage)}%</strong> de ${total}`);
-    
+
+    // Barre visuelle
+    html += `<div class="percentage-bar">
+        <div class="percentage-bar-container">
+            <div class="percentage-bar-fill" style="width: ${Math.min(pourcentage, 100)}%;">${formatNumber(pourcentage)}%</div>
+        </div>
+        <div class="percentage-bar-label">${partie} représente ${formatNumber(pourcentage)}% de ${total}</div>
+    </div>`;
+
+    // Résultat final
+    html += createResultHTML(`<span class="value-highlight">${partie}</span> représente <span class="value-percent">${formatNumber(pourcentage)}%</span> de <span class="value-initial">${total}</span>`);
+
     return html;
 }
 
@@ -217,41 +239,58 @@ function solveTrouver(partie, total) {
  */
 function solveAugmentation(valeurInitiale, pourcentage) {
     let html = '';
-    
-    html += createStepHTML({
-        expression: `${valeurInitiale} + ${pourcentage}%`,
-        explanation: 'Augmenter une valeur d\'un pourcentage'
-    });
-    
+
+    // Formule
+    html += `<div class="formula-box">
+        <div class="formula-title">📐 Augmentation</div>
+        <div class="formula-content">${valeurInitiale} + ${pourcentage}% = ?</div>
+    </div>`;
+
     // Méthode 1: Calculer l'augmentation
     const augmentation = (pourcentage / 100) * valeurInitiale;
-    
     html += createStepHTML({
-        expression: `Augmentation = ${pourcentage}% × ${valeurInitiale} = ${formatNumber(augmentation)}`,
-        explanation: 'Calculer le montant de l\'augmentation'
+        expression: `Augmentation = <span class="value-percent">${pourcentage}%</span> × <span class="value-initial">${valeurInitiale}</span> = <span class="value-highlight">${formatNumber(augmentation)}</span>`,
+        explanation: '📍 Étape 1 : Calculer le montant de l\'augmentation'
     });
-    
+
     const resultat = valeurInitiale + augmentation;
-    
     html += createStepHTML({
-        expression: `${valeurInitiale} + ${formatNumber(augmentation)} = ${formatNumber(resultat)}`,
-        explanation: 'Ajouter l\'augmentation à la valeur initiale'
+        expression: `<span class="value-initial">${valeurInitiale}</span> + <span class="value-highlight">${formatNumber(augmentation)}</span> = <span class="value-result">${formatNumber(resultat)}</span>`,
+        explanation: '📍 Étape 2 : Ajouter l\'augmentation à la valeur initiale'
     });
-    
+
+    // Comparaison visuelle
+    html += `<div class="comparison-box">
+        <div class="comparison-item before">
+            <div class="comparison-label">Avant</div>
+            <div class="comparison-value">${valeurInitiale}</div>
+        </div>
+        <div class="comparison-arrow">→</div>
+        <div class="comparison-item after">
+            <div class="comparison-label">Après +${pourcentage}%</div>
+            <div class="comparison-value">${formatNumber(resultat)}</div>
+        </div>
+    </div>`;
+
     // Méthode alternative avec coefficient
     const coef = 1 + pourcentage / 100;
-    html += `
-        <div class="step" style="background: var(--info-light); border-left-color: var(--info);">
-            <div class="step-expression">💡 Méthode rapide : coefficient multiplicateur</div>
-            <div class="step-explanation">
-                Augmenter de ${pourcentage}% = multiplier par ${coef}<br>
-                ${valeurInitiale} × ${coef} = ${formatNumber(resultat)}
-            </div>
+    html += `<div class="method-alt">
+        <div class="method-alt-title">💡 Méthode rapide : coefficient multiplicateur</div>
+        <div class="method-alt-content">
+            <p>Augmenter de ${pourcentage}% revient à multiplier par <strong>${formatNumber(coef)}</strong></p>
+            <div class="method-alt-formula">${valeurInitiale} × ${formatNumber(coef)} = ${formatNumber(resultat)}</div>
         </div>
-    `;
-    
-    html += createResultHTML(`${valeurInitiale} + ${pourcentage}% = <strong>${formatNumber(resultat)}</strong>`);
-    
+    </div>`;
+
+    // Coefficient box
+    html += `<div class="coefficient-box">
+        <div class="coefficient-label">Coefficient multiplicateur</div>
+        <div class="coefficient-value">${formatNumber(coef)}</div>
+        <div class="coefficient-explanation">Pour augmenter de ${pourcentage}%, on multiplie par ${formatNumber(coef)}</div>
+    </div>`;
+
+    html += createResultHTML(`<span class="value-initial">${valeurInitiale}</span> + <span class="value-percent">${pourcentage}%</span> = <span class="value-result">${formatNumber(resultat)}</span>`);
+
     return html;
 }
 
