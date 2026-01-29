@@ -22,15 +22,19 @@
     cursor: pointer;
     transition: all var(--transition-fast);
     text-align: center;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
 .type-btn:hover {
-    border-color: var(--gray-400);
+    border-color: var(--primary);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(102, 126, 234, 0.2);
 }
 
 .type-btn.active {
     border-color: var(--primary);
-    background: #f0f3ff;
+    background: linear-gradient(135deg, #f0f3ff 0%, #e8ecff 100%);
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.25);
 }
 
 .type-btn .example {
@@ -57,19 +61,22 @@
 
 /* ========== EXPRESSION DISPLAY ========== */
 .expression-display {
-    background: var(--gray-200);
+    background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf0 100%);
     padding: var(--spacing-xl);
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-lg);
     text-align: center;
     margin-bottom: var(--spacing-lg);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.9);
 }
 
 .expression {
-    font-size: 1.4em;
-    font-weight: 600;
+    font-size: 1.5em;
+    font-weight: 700;
     color: var(--gray-800);
     font-family: var(--font-mono);
     word-break: break-word;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
 }
 
 /* ========== SOLUTION ========== */

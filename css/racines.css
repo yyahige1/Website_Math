@@ -8,18 +8,21 @@
     vertical-align: middle;
     text-align: center;
     font-size: 1em;
-    margin: 0 0.3em;
+    margin: 0 0.4em;
+    min-width: 40px;
 }
 
 .fraction-num {
-    border-bottom: 2px solid var(--text-dark, #2d3748);
-    padding: 0.1em 0.3em;
-    line-height: 1.2;
+    border-bottom: 2px solid var(--gray-800, #333);
+    padding: 0.2em 0.5em;
+    line-height: 1.3;
+    font-weight: 600;
 }
 
 .fraction-den {
-    padding: 0.1em 0.3em;
-    line-height: 1.2;
+    padding: 0.2em 0.5em;
+    line-height: 1.3;
+    font-weight: 600;
 }
 
 .fraction-line {
@@ -27,18 +30,26 @@
 }
 
 /* Fraction dans les étapes de résolution */
+.step-expression {
+    font-size: 1.15em;
+    font-family: var(--font-mono, monospace);
+    padding: 12px 0;
+}
+
 .step-expression .fraction-inline {
-    font-size: 1.2em;
+    font-size: 1.3em;
+    margin: 0 0.5em;
 }
 
 /* Fraction dans le résultat final */
 .result-highlight .fraction-inline {
-    font-size: 1.4em;
+    font-size: 1.5em;
+    font-weight: 700;
 }
 
 /* Fraction dans l'affichage de l'exercice */
 .expression-display .fraction-inline {
-    font-size: 1.5em;
+    font-size: 1.6em;
 }
 
 /* Ajustements pour les couleurs dans les fractions */
@@ -50,10 +61,42 @@
 .fraction-den .term-blue,
 .fraction-den .term-green,
 .fraction-den .term-orange {
-    font-weight: 600;
+    font-weight: 700;
 }
 
 /* Espacement pour les fractions multiples */
 .step-expression .fraction-inline + .fraction-inline {
-    margin-left: 0.5em;
+    margin-left: 0.7em;
+}
+
+/* Amélioration des étapes */
+.step {
+    background: var(--gray-100, #f9f9f9);
+    padding: 16px;
+    margin: 12px 0;
+    border-radius: var(--radius-md, 8px);
+    border-left: 4px solid var(--primary, #667eea);
+}
+
+.step-explanation {
+    margin-top: 8px;
+    color: var(--gray-600, #666);
+    font-style: italic;
+    font-size: 0.95em;
+}
+
+/* Responsive pour petits écrans */
+@media (max-width: 480px) {
+    .fraction-inline {
+        font-size: 0.9em;
+        margin: 0 0.2em;
+    }
+
+    .step-expression .fraction-inline {
+        font-size: 1.1em;
+    }
+
+    .expression-display .fraction-inline {
+        font-size: 1.3em;
+    }
 }
