@@ -386,7 +386,7 @@ function drawArrowAbove(svg, containerRect, from, to, color, level) {
     
     // Plus la flèche est longue, plus elle monte haut
     const distance = Math.abs(x2 - x1);
-    const curveHeight = 15 + level * 10 + distance * 0.1;
+    const curveHeight = 8 + level * 5 + distance * 0.05;
     const midY = Math.min(y1, y2) - curveHeight;
     
     const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
@@ -413,7 +413,7 @@ function drawArrowBelow(svg, containerRect, from, to, color, level) {
     const y2 = toRect.bottom - containerRect.top + 5;
     
     const distance = Math.abs(x2 - x1);
-    const curveHeight = 25 + level * 10 + distance * 0.18;
+    const curveHeight = 12 + level * 5 + distance * 0.08;
     const midY = Math.max(y1, y2) + curveHeight;
     
     const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
