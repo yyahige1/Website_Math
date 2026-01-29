@@ -27,12 +27,62 @@ function getInequation2Values() {
 
 /**
  * Génère une fraction HTML avec barre horizontale
- * @param {number} num - Numérateur
- * @param {number} den - Dénominateur
+ * @param {string|number} num - Numérateur
+ * @param {string|number} den - Dénominateur
  * @returns {string}
  */
 function generateFraction(num, den) {
-    return `<span class="frac"><span class="num">${formatNumber(num)}</span><span class="den">${formatNumber(den)}</span></span>`;
+    return `<span class="frac"><span class="num">${num}</span><span class="den">${den}</span></span>`;
+}
+
+/**
+ * Formate une équation du second degré
+ * @param {number} a - Coefficient de x²
+ * @param {number} b - Coefficient de x
+ * @param {number} c - Terme constant
+ * @returns {string}
+ */
+function formatQuadraticEquation(a, b, c) {
+    let eq = '';
+
+    // Terme en x²
+    if (a === 1) {
+        eq = 'x²';
+    } else if (a === -1) {
+        eq = '-x²';
+    } else {
+        eq = `${formatNumber(a)}x²`;
+    }
+
+    // Terme en x
+    if (b !== 0) {
+        if (b > 0) {
+            eq += ' + ';
+            if (b === 1) {
+                eq += 'x';
+            } else {
+                eq += `${formatNumber(b)}x`;
+            }
+        } else {
+            eq += ' - ';
+            if (b === -1) {
+                eq += 'x';
+            } else {
+                eq += `${formatNumber(Math.abs(b))}x`;
+            }
+        }
+    }
+
+    // Terme constant
+    if (c !== 0) {
+        if (c > 0) {
+            eq += ` + ${formatNumber(c)}`;
+        } else {
+            eq += ` - ${formatNumber(Math.abs(c))}`;
+        }
+    }
+
+    return eq + ' = 0';
 }
 
 /**
@@ -223,7 +273,7 @@ function solveInequation2() {
     html += '<div class="step">';
     html += '<div class="step-title">Étape 1 : Résolution de l\'équation associée</div>';
     html += '<div class="step-content">';
-    html += `<p>Pour résoudre l'inéquation, on résout d'abord l'équation ${formatNumber(ineq.a)}x² + ${formatNumber(ineq.b)}x + ${formatNumber(ineq.c)} = 0</p>`;
+    html += `<p>Pour résoudre l'inéquation, on résout d'abord l'équation ${formatQuadraticEquation(ineq.a, ineq.b, ineq.c)}</p>`;
 
     const solution = solveEquation(ineq.a, ineq.b, ineq.c);
     const delta = solution.delta;

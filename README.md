@@ -10,7 +10,7 @@ Une plateforme d'entraînement en mathématiques interactive pour l'enseignement
 
 ## ✨ Fonctionnalités
 
-### Modules Disponibles (v1.2)
+### Modules Disponibles (v1.3)
 
 #### Phase 1 - Algèbre de Base (5 modules)
 
@@ -31,11 +31,20 @@ Une plateforme d'entraînement en mathématiques interactive pour l'enseignement
 | **Puissances** | Calcul avec puissances | Produit, quotient, puissance, produit élevé, notation scientifique, combiné |
 | **Racines carrées** | Calcul avec racines | Carrés parfaits, simplification, expression conjuguée, fraction conjuguée |
 
+#### Phase 3 - Second Degré (3 modules)
+
+| Module | Description | Types d'exercices |
+|--------|-------------|-------------------|
+| **Équations 2nd degré** | Résolution d'équations ax²+bx+c=0 | Discriminant, forme canonique, équations particulières, somme-produit |
+| **Inéquations 2nd degré** | Résolution d'inéquations | Tableau de signes, ensemble solution, graphique interactif Canvas |
+| **Systèmes d'équations** | Systèmes linéaires 2×2 | Méthode par substitution, méthode par combinaison |
+
 ### Points Forts
 
 - ♾️ **Exercices illimités** - Génération aléatoire infinie
 - 📝 **Corrections détaillées** - Chaque étape expliquée
-- 🎨 **Visualisation** - Flèches SVG, couleurs par terme, droite numérique
+- 🎨 **Visualisation** - Flèches SVG, couleurs par terme, droite numérique, graphiques Canvas
+- 📊 **Graphiques interactifs** - Paraboles, racines, zones de solutions (Canvas pur, zéro dépendance)
 - 📱 **Responsive** - Fonctionne sur mobile, tablette, desktop
 - 🔌 **Hors-ligne** - Aucune connexion requise après téléchargement
 - 🚀 **Léger** - Aucune dépendance, chargement instantané
@@ -73,21 +82,26 @@ npx serve .
 
 ```
 Website_Math/
-├── index.html              # Équations (landing page)
-├── developpement.html      # Développement
-├── reduction.html          # Réduction
+├── index.html              # Équations du 1er degré (landing page)
+├── developpement.html      # Développement d'expressions
+├── reduction.html          # Réduction d'expressions
 ├── factorisation.html      # Factorisation
-├── inequations.html        # Inéquations
+├── inequations.html        # Inéquations du 1er degré
 ├── fractions.html          # Fractions
 ├── pourcentages.html       # Pourcentages
 ├── puissances.html         # Puissances
 ├── racines.html            # Racines carrées
+├── equations2.html         # Équations du 2nd degré
+├── inequations2.html       # Inéquations du 2nd degré
+├── systemes.html           # Systèmes d'équations linéaires
+├── template.html           # Template pour nouvelles pages
 │
 ├── css/
-│   ├── theme.css           # Variables (couleurs, espacements)
+│   ├── theme.css           # Variables CSS (couleurs, espacements)
 │   ├── base.css            # Reset, typographie
 │   ├── layout.css          # Navigation, cards, grilles
 │   ├── exercices.css       # Styles communs exercices
+│   ├── equations2.css      # Styles équations/inéquations 2nd degré
 │   ├── puissances.css      # Styles spécifiques puissances
 │   └── racines.css         # Styles spécifiques racines
 │
@@ -95,15 +109,20 @@ Website_Math/
 │   ├── utils.js            # Fonctions utilitaires (PGCD, formatage...)
 │   ├── ui.js               # Manipulation DOM
 │   ├── main.js             # Initialisation globale
-│   ├── equations.js        # Logique équations
+│   ├── navigation.js       # Génération navigation (factorisation)
+│   ├── graphing.js         # Module graphiques Canvas (paraboles)
+│   ├── equations.js        # Logique équations 1er degré
 │   ├── developpement.js    # Logique développement
 │   ├── reduction.js        # Logique réduction
 │   ├── factorisation.js    # Logique factorisation
-│   ├── inequations.js      # Logique inéquations
+│   ├── inequations.js      # Logique inéquations 1er degré
 │   ├── fractions.js        # Logique fractions
 │   ├── pourcentages.js     # Logique pourcentages
 │   ├── puissances.js       # Logique puissances
-│   └── racines.js          # Logique racines carrées
+│   ├── racines.js          # Logique racines carrées
+│   ├── equations2.js       # Logique équations 2nd degré
+│   ├── inequations2.js     # Logique inéquations 2nd degré
+│   └── systemes.js         # Logique systèmes d'équations
 │
 ├── tests/
 │   ├── *.test.js           # Tests unitaires pour chaque module
@@ -111,6 +130,7 @@ Website_Math/
 │
 ├── CLAUDE.md               # Guide pour assistants IA
 ├── ROADMAP.md              # Plan de développement
+├── NAVIGATION-REFACTOR.md  # Documentation factorisation navigation
 └── README.md               # Ce fichier
 ```
 
@@ -149,10 +169,11 @@ npm run test:coverage
 - [x] Puissances (6 types d'exercices)
 - [x] Racines carrées (6 types d'exercices)
 
-### 🔄 Phase 3 - Second Degré (En cours)
-- [ ] Équations du 2nd degré
-- [ ] Inéquations du 2nd degré
-- [ ] Paraboles et fonctions
+### ✅ Phase 3 - Second Degré (Complète)
+- [x] Équations du 2nd degré (discriminant, canonique, particulières, somme-produit)
+- [x] Inéquations du 2nd degré (tableau de signes, graphiques Canvas)
+- [x] Systèmes d'équations linéaires 2×2 (substitution, combinaison)
+- [x] Module de graphiques Canvas réutilisable (paraboles, racines, zones)
 
 ### 📋 Phases Futures
 - Phase 4 : Fonctions (affines, polynômes, dérivées)
@@ -172,8 +193,9 @@ npm run test:coverage
 | HTML5 | Structure des pages |
 | CSS3 | Styles, variables CSS, responsive |
 | JavaScript (ES6+) | Logique, génération, DOM |
-| Jest | Tests unitaires |
+| Canvas API | Graphiques (paraboles, fonctions) |
 | SVG | Flèches de distributivité |
+| Jest | Tests unitaires (optionnel) |
 
 ### Pourquoi Vanilla JS ?
 - ✅ Zéro dépendance = zéro vulnérabilité
