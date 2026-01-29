@@ -17,8 +17,8 @@ class GraphCanvas {
 
         // Options par défaut
         this.options = {
-            width: options.width || 600,
-            height: options.height || 400,
+            width: options.width || 500,
+            height: options.height || 350,
             padding: options.padding || 40,
             xMin: options.xMin || -10,
             xMax: options.xMax || 10,

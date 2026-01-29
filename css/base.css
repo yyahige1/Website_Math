@@ -53,12 +53,14 @@ input, select, button {
 
 input[type="number"] {
     width: 100%;
+    max-width: 100%;
     padding: 10px;
     border: 2px solid var(--gray-300);
     border-radius: var(--radius-sm);
     font-size: 1em;
     text-align: center;
     transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+    box-sizing: border-box;
 }
 
 input[type="number"]:focus {

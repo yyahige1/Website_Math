@@ -213,10 +213,12 @@ sub {
 .sign-table {
     margin: 20px 0;
     overflow-x: auto;
+    max-width: 100%;
 }
 
 .sign-table table {
     width: 100%;
+    min-width: 300px;
     border-collapse: collapse;
     margin: 10px 0;
     background: white;
@@ -241,6 +243,18 @@ sub {
     font-size: 1.2em;
 }
 
+/* Responsive pour petits écrans */
+@media (max-width: 480px) {
+    .sign-table td {
+        padding: 8px 4px;
+        font-size: 0.95em;
+    }
+
+    .sign-table tr:nth-child(2) td {
+        font-size: 1.05em;
+    }
+}
+
 /* Texte informatif */
 .info-text {
     background: #e3f2fd;
@@ -249,4 +263,40 @@ sub {
     margin: 12px 0;
     border-radius: 4px;
     font-size: 0.95em;
+}
+
+/* Graphiques Canvas */
+.graph-container {
+    margin: 24px 0;
+    padding: 16px;
+    background: #f8f9fa;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--gray-300);
+}
+
+.graph-container h4 {
+    margin: 0 0 16px 0;
+    color: var(--primary);
+    text-align: center;
+}
+
+.graph-container canvas {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+/* Responsive pour petits écrans */
+@media (max-width: 768px) {
+    .graph-container {
+        padding: 12px;
+    }
+
+    .graph-container canvas {
+        max-width: 100%;
+    }
 }
