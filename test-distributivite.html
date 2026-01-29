@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Distributivité Pédagogique</title>
+    <link rel="stylesheet" href="test-distributivite.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎓 Test : Distributivité Pédagogique</h1>
+            <p>Approches sans flèches - plus intuitives</p>
+        </header>
+
+        <div class="card">
+            <h2>Méthode testée</h2>
+            <div class="method-selector">
+                <button class="method-btn active" data-method="simple">Distributivité Simple</button>
+                <button class="method-btn" data-method="double">Distributivité Double</button>
+            </div>
+
+            <!-- Simple Distributivité -->
+            <div id="simpleMethod" class="method-content active">
+                <div class="expression-display">
+                    <span class="term-k">3</span>
+                    <span class="operator">(</span>
+                    <span class="term-a">2x</span>
+                    <span class="operator"> + </span>
+                    <span class="term-b">5</span>
+                    <span class="operator">)</span>
+                </div>
+
+                <div class="steps-container">
+                    <!-- Étape 0 : Expression de départ -->
+                    <div class="step-card" data-step="0">
+                        <div class="step-number">📝 Expression de départ</div>
+                        <div class="step-visual">
+                            <div class="simple-visual">
+                                <div class="multiplier term-k">3</div>
+                                <div class="operator">×</div>
+                                <div class="parenthesis">
+                                    <span class="term-a">2x</span>
+                                    <span class="operator">+</span>
+                                    <span class="term-b">5</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="step-explanation">
+                            On doit multiplier <span class="term-k">3</span> par chaque terme de la parenthèse
+                        </div>
+                    </div>
+
+                    <!-- Étape 1 : Premier produit -->
+                    <div class="step-card" data-step="1">
+                        <div class="step-number">1️⃣ Premier produit</div>
+                        <div class="step-visual">
+                            <div class="product-box active-k active-a">
+                                <div class="product-terms">
+                                    <span class="term-k">3</span>
+                                    <span class="operator">×</span>
+                                    <span class="term-a">2x</span>
+                                </div>
+                                <div class="product-result">
+                                    <span class="result-ka">6x</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="step-explanation">
+                            <span class="term-k">3</span> × <span class="term-a">2x</span> = <span class="result-ka">6x</span>
+                        </div>
+                    </div>
+
+                    <!-- Étape 2 : Deuxième produit -->
+                    <div class="step-card" data-step="2">
+                        <div class="step-number">2️⃣ Deuxième produit</div>
+                        <div class="step-visual">
+                            <div class="product-box active-k active-b">
+                                <div class="product-terms">
+                                    <span class="term-k">3</span>
+                                    <span class="operator">×</span>
+                                    <span class="term-b">5</span>
+                                </div>
+                                <div class="product-result">
+                                    <span class="result-kb">15</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="step-explanation">
+                            <span class="term-k">3</span> × <span class="term-b">5</span> = <span class="result-kb">15</span>
+                        </div>
+                    </div>
+
+                    <!-- Étape 3 : Résultat final -->
+                    <div class="step-card" data-step="3">
+                        <div class="step-number">✅ Résultat final</div>
+                        <div class="step-visual">
+                            <div class="final-expression">
+                                <span class="result-ka">6x</span>
+                                <span class="operator"> + </span>
+                                <span class="result-kb">15</span>
+                            </div>
+                        </div>
+                        <div class="step-explanation">
+                            On additionne les deux produits obtenus
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Double Distributivité -->
+            <div id="doubleMethod" class="method-content">
+                <div class="expression-display">
+                    <span class="operator">(</span>
+                    <span class="term-a">2x</span>
+                    <span class="operator"> + </span>
+                    <span class="term-b">3</span>
+                    <span class="operator">)(</span>
+                    <span class="term-c">x</span>
+                    <span class="operator"> + </span>
+                    <span class="term-d">4</span>
+                    <span class="operator">)</span>
+                </div>
+
+                <div class="steps-container">
+                    <!-- Étape 0 : Méthode des aires -->
+                    <div class="step-card" data-step="0">
+                        <div class="step-number">📐 Méthode des aires (rectangle)</div>
+                        <div class="step-visual">
+                            <div class="grid-container">
+                                <div class="grid-labels">
+                                    <div class="grid-label-corner"></div>
+                                    <div class="grid-label-top">
+                                        <span class="term-c">x</span>
+                                    </div>
+                                    <div class="grid-label-top">
+                                        <span class="term-d">4</span>
+                                    </div>
+                                </div>
+                                <div class="grid-row">
+                                    <div class="grid-label-left">
+                                        <span class="term-a">2x</span>
+                                    </div>
+                                    <div class="grid-cell" data-product="ac">
+                                        <span class="question">?</span>
+                                    </div>
+                                    <div class="grid-cell" data-product="ad">
+                                        <span class="question">?</span>
+                                    </div>
+                                </div>
+                                <div class="grid-row">
+                                    <div class="grid-label-left">
+                                        <span class="term-b">3</span>
+                                    </div>
+                                    <div class="grid-cell" data-product="bc">
+                                        <span class="question">?</span>
+                                    </div>
+                                    <div class="grid-cell" data-product="bd">
+                                        <span class="question">?</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="step-explanation">
+                            Chaque case du rectangle = un produit à calculer
+                        </div>
+                    </div>
+
+                    <!-- Étape 1 : Premier produit (ac) -->
+                    <div class="step-card" data-step="1">
+                        <div class="step-number">1️⃣ Case en haut à gauche</div>
+                        <div class="step-visual">
+                            <div class="product-box active-a active-c">
+                                <div class="product-terms">
+                                    <span class="term-a">2x</span>
+                                    <span class="operator">×</span>
+                                    <span class="term-c">x</span>
+                                </div>
+                                <div class="product-result">
+                                    <span class="result-ac">2x²</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="step-explanation">
+                            <span class="term-a">2x</span> × <span class="term-c">x</span> = <span class="result-ac">2x²</span>
+                        </div>
+                    </div>
+
+                    <!-- Étape 2 : Deuxième produit (ad) -->
+                    <div class="step-card" data-step="2">
+                        <div class="step-number">2️⃣ Case en haut à droite</div>
+                        <div class="step-visual">
+                            <div class="product-box active-a active-d">
+                                <div class="product-terms">
+                                    <span class="term-a">2x</span>
+                                    <span class="operator">×</span>
+                                    <span class="term-d">4</span>
+                                </div>
+                                <div class="product-result">
+                                    <span class="result-ad">8x</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="step-explanation">
+                            <span class="term-a">2x</span> × <span class="term-d">4</span> = <span class="result-ad">8x</span>
+                        </div>
+                    </div>
+
+                    <!-- Étape 3 : Troisième produit (bc) -->
+                    <div class="step-card" data-step="3">
+                        <div class="step-number">3️⃣ Case en bas à gauche</div>
+                        <div class="step-visual">
+                            <div class="product-box active-b active-c">
+                                <div class="product-terms">
+                                    <span class="term-b">3</span>
+                                    <span class="operator">×</span>
+                                    <span class="term-c">x</span>
+                                </div>
+                                <div class="product-result">
+                                    <span class="result-bc">3x</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="step-explanation">
+                            <span class="term-b">3</span> × <span class="term-c">x</span> = <span class="result-bc">3x</span>
+                        </div>
+                    </div>
+
+                    <!-- Étape 4 : Quatrième produit (bd) -->
+                    <div class="step-card" data-step="4">
+                        <div class="step-number">4️⃣ Case en bas à droite</div>
+                        <div class="step-visual">
+                            <div class="product-box active-b active-d">
+                                <div class="product-terms">
+                                    <span class="term-b">3</span>
+                                    <span class="operator">×</span>
+                                    <span class="term-d">4</span>
+                                </div>
+                                <div class="product-result">
+                                    <span class="result-bd">12</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="step-explanation">
+                            <span class="term-b">3</span> × <span class="term-d">4</span> = <span class="result-bd">12</span>
+                        </div>
+                    </div>
+
+                    <!-- Étape 5 : Grille complète -->
+                    <div class="step-card" data-step="5">
+                        <div class="step-number">📊 Rectangle complet</div>
+                        <div class="step-visual">
+                            <div class="grid-container filled">
+                                <div class="grid-labels">
+                                    <div class="grid-label-corner"></div>
+                                    <div class="grid-label-top">
+                                        <span class="term-c">x</span>
+                                    </div>
+                                    <div class="grid-label-top">
+                                        <span class="term-d">4</span>
+                                    </div>
+                                </div>
+                                <div class="grid-row">
+                                    <div class="grid-label-left">
+                                        <span class="term-a">2x</span>
+                                    </div>
+                                    <div class="grid-cell filled" data-product="ac">
+                                        <span class="result-ac">2x²</span>
+                                    </div>
+                                    <div class="grid-cell filled" data-product="ad">
+                                        <span class="result-ad">8x</span>
+                                    </div>
+                                </div>
+                                <div class="grid-row">
+                                    <div class="grid-label-left">
+                                        <span class="term-b">3</span>
+                                    </div>
+                                    <div class="grid-cell filled" data-product="bc">
+                                        <span class="result-bc">3x</span>
+                                    </div>
+                                    <div class="grid-cell filled" data-product="bd">
+                                        <span class="result-bd">12</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="step-explanation">
+                            On a calculé l'aire de chaque rectangle
+                        </div>
+                    </div>
+
+                    <!-- Étape 6 : Résultat final -->
+                    <div class="step-card" data-step="6">
+                        <div class="step-number">✅ Résultat final</div>
+                        <div class="step-visual">
+                            <div class="final-expression">
+                                <span class="result-ac">2x²</span>
+                                <span class="operator"> + </span>
+                                <span class="result-ad">8x</span>
+                                <span class="operator"> + </span>
+                                <span class="result-bc">3x</span>
+                                <span class="operator"> + </span>
+                                <span class="result-bd">12</span>
+                            </div>
+                        </div>
+                        <div class="step-explanation">
+                            On additionne les 4 produits (les 4 aires)
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <div class="navigation">
+                <button id="prevBtn" class="nav-btn">⬅ Précédent</button>
+                <div id="stepIndicator" class="step-indicator">Étape 1 / 4</div>
+                <button id="nextBtn" class="nav-btn">Suivant ➡</button>
+            </div>
+
+            <div class="controls">
+                <button id="resetBtn" class="control-btn">🔄 Recommencer</button>
+                <button id="generateBtn" class="control-btn">🎲 Nouvel exercice</button>
+            </div>
+        </div>
+
+        <div class="info-card">
+            <h3>🎯 Approches testées</h3>
+            <ul>
+                <li>✅ <strong>Pas de flèches</strong> - Plus clair visuellement</li>
+                <li>✅ <strong>Couleurs cohérentes</strong> - Chaque terme garde sa couleur</li>
+                <li>✅ <strong>Animation étape par étape</strong> - Suit le raisonnement</li>
+                <li>✅ <strong>Méthode des aires (double)</strong> - Rectangle 2×2 très intuitif</li>
+                <li>✅ <strong>Boîtes de produits</strong> - Visualisation des calculs</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="test-distributivite.js"></script>
+</body>
+</html>
