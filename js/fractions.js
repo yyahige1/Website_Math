@@ -324,7 +324,7 @@ function solveDivision(num1, den1, num2, den2) {
     });
     
     html += createStepHTML({
-        expression: `${fracHTML(num1 + ' × ' + den2, den1 + ' × ' + num2)}`,
+        expression: `${fracHTML(num1 * den2, den1 * num2)}`,
         explanation: 'Multiplier numérateurs et dénominateurs'
     });
     
