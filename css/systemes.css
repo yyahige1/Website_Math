@@ -1,0 +1,448 @@
+/* ========================================
+   SYSTEMES.CSS - Styles pour systèmes d'équations
+   ======================================== */
+
+/* System display */
+.system-display {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 1.4em;
+    font-family: var(--font-mono);
+    font-weight: 600;
+}
+
+.system-display > span {
+    font-size: 2.5em;
+    font-weight: 300;
+    color: var(--primary);
+}
+
+.system-lines {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.system-lines div {
+    padding: 4px 0;
+}
+
+/* Equation inputs styling */
+.system-equations {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: var(--spacing-lg);
+}
+
+.equation-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.equation-group label {
+    font-weight: 600;
+    color: var(--gray-700);
+}
+
+.equation-inputs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.equation-inputs input {
+    width: 80px;
+    padding: 8px;
+    border: 2px solid var(--gray-300);
+    border-radius: var(--radius-md);
+    text-align: center;
+    font-size: 1.1em;
+    font-weight: 600;
+}
+
+.equation-inputs span {
+    font-weight: 600;
+    color: var(--gray-700);
+}
+
+/* Box de formule initiale */
+.formula-box {
+    background: linear-gradient(135deg, #f0f3ff 0%, #e8ecff 100%);
+    border: 2px solid var(--primary);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    margin: 20px 0;
+    text-align: center;
+}
+
+.formula-title {
+    font-weight: 700;
+    color: var(--primary);
+    font-size: 1.1em;
+    margin-bottom: 12px;
+}
+
+.formula-system {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    font-size: 1.4em;
+    font-family: var(--font-mono);
+    font-weight: 600;
+}
+
+.formula-system > span {
+    font-size: 2em;
+    font-weight: 300;
+    color: var(--primary);
+}
+
+.formula-system-lines {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+/* Étapes avec couleurs */
+.step-box {
+    background: white;
+    border-left: 5px solid var(--primary);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    margin: 16px 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s;
+}
+
+.step-box:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+}
+
+.step-box.step-1 {
+    border-left-color: #3498db;
+    background: linear-gradient(135deg, #ffffff 0%, #f0f7ff 100%);
+}
+
+.step-box.step-2 {
+    border-left-color: #2ecc71;
+    background: linear-gradient(135deg, #ffffff 0%, #f0fff4 100%);
+}
+
+.step-box.step-3 {
+    border-left-color: #f39c12;
+    background: linear-gradient(135deg, #ffffff 0%, #fff9f0 100%);
+}
+
+.step-box.step-4 {
+    border-left-color: #9b59b6;
+    background: linear-gradient(135deg, #ffffff 0%, #f9f0ff 100%);
+}
+
+.step-number {
+    font-size: 1.2em;
+    font-weight: 700;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.step-box.step-1 .step-number {
+    color: #3498db;
+}
+
+.step-box.step-2 .step-number {
+    color: #2ecc71;
+}
+
+.step-box.step-3 .step-number {
+    color: #f39c12;
+}
+
+.step-box.step-4 .step-number {
+    color: #9b59b6;
+}
+
+/* Calcul détaillé box */
+.calculation-detail {
+    background: rgba(102, 126, 234, 0.05);
+    border: 2px solid rgba(102, 126, 234, 0.2);
+    border-radius: var(--radius-md);
+    padding: 16px;
+    margin: 12px 0;
+    font-family: var(--font-mono);
+    font-size: 1.15em;
+    line-height: 1.8;
+}
+
+.calculation-detail .calc-line {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 6px 0;
+}
+
+.calculation-detail .calc-arrow {
+    color: var(--primary);
+    font-weight: 700;
+}
+
+/* Box de transformation */
+.transform-box {
+    background: linear-gradient(135deg, #fff9e6 0%, #fff3cd 100%);
+    border: 2px solid #ffc107;
+    border-radius: var(--radius-md);
+    padding: 16px;
+    margin: 12px 0;
+}
+
+.transform-title {
+    font-weight: 700;
+    color: #f57c00;
+    margin-bottom: 8px;
+    font-size: 0.95em;
+}
+
+.transform-content {
+    font-family: var(--font-mono);
+    font-size: 1.15em;
+    line-height: 1.8;
+    color: var(--gray-800);
+}
+
+/* Math line (équations intermédiaires) */
+.math-line {
+    padding: 8px 16px;
+    margin: 8px 0;
+    font-family: var(--font-mono);
+    font-size: 1.2em;
+    font-weight: 600;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.02);
+    border-radius: 6px;
+}
+
+/* Highlight boxes pour résultats */
+.highlight-value {
+    display: inline-block;
+    background: rgba(102, 126, 234, 0.15);
+    color: var(--primary);
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-family: var(--font-mono);
+}
+
+.value-x {
+    background: rgba(52, 152, 219, 0.15);
+    color: #2980b9;
+}
+
+.value-y {
+    background: rgba(46, 204, 113, 0.15);
+    color: #27ae60;
+}
+
+.value-equation {
+    background: rgba(243, 156, 18, 0.15);
+    color: #d68910;
+}
+
+/* Result boxes */
+.result-box {
+    background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+    border: 3px solid #4caf50;
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    margin: 16px 0;
+    text-align: center;
+}
+
+.result-label {
+    font-weight: 600;
+    color: #2e7d32;
+    margin-bottom: 8px;
+    font-size: 0.95em;
+}
+
+.result-value {
+    font-size: 2em;
+    font-weight: 700;
+    color: #1b5e20;
+    font-family: var(--font-mono);
+}
+
+/* Final result */
+.final-result {
+    background: linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%);
+    border: 3px solid #4caf50;
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    margin: 24px 0;
+    text-align: center;
+    font-size: 2em;
+    font-weight: 700;
+    font-family: var(--font-mono);
+    box-shadow: 0 8px 24px rgba(150, 230, 161, 0.3);
+}
+
+.color-solution {
+    color: #1b5e20;
+    padding: 4px 8px;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 6px;
+}
+
+/* Arithmetic steps */
+.arithmetic-step {
+    padding: 12px 16px;
+    margin: 8px 0;
+    background: white;
+    border: 2px solid var(--gray-300);
+    border-radius: var(--radius-md);
+    font-family: var(--font-mono);
+    font-size: 1.1em;
+}
+
+.arithmetic-step .step-desc {
+    color: var(--gray-600);
+    font-size: 0.9em;
+    margin-bottom: 6px;
+    font-family: var(--font-base);
+}
+
+.arithmetic-step .step-calc {
+    font-weight: 600;
+    color: var(--gray-800);
+}
+
+/* Substitution highlight */
+.substitution-box {
+    background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+    border: 2px solid #2196f3;
+    border-radius: var(--radius-md);
+    padding: 16px;
+    margin: 12px 0;
+}
+
+.substitution-label {
+    font-weight: 700;
+    color: #1976d2;
+    margin-bottom: 8px;
+    font-size: 0.95em;
+}
+
+.substitution-content {
+    font-family: var(--font-mono);
+    font-size: 1.15em;
+    font-weight: 600;
+    color: var(--gray-800);
+}
+
+/* Combination method - multipliers */
+.multiplier-box {
+    background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+    border: 2px solid #9c27b0;
+    border-radius: var(--radius-md);
+    padding: 16px;
+    margin: 12px 0;
+}
+
+.multiplier-label {
+    font-weight: 700;
+    color: #7b1fa2;
+    margin-bottom: 8px;
+    font-size: 0.95em;
+}
+
+.multiplier-content {
+    font-family: var(--font-mono);
+    font-size: 1.15em;
+    font-weight: 600;
+    color: var(--gray-800);
+}
+
+/* Addition step */
+.addition-box {
+    background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+    border: 2px solid #ff9800;
+    border-radius: var(--radius-md);
+    padding: 16px;
+    margin: 12px 0;
+}
+
+.addition-label {
+    font-weight: 700;
+    color: #f57c00;
+    margin-bottom: 8px;
+    font-size: 0.95em;
+}
+
+.addition-content {
+    font-family: var(--font-mono);
+    font-size: 1.15em;
+    font-weight: 600;
+    color: var(--gray-800);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .system-display {
+        font-size: 1.2em;
+    }
+
+    .system-display > span {
+        font-size: 2em;
+    }
+
+    .formula-system {
+        font-size: 1.2em;
+    }
+
+    .formula-system > span {
+        font-size: 1.8em;
+    }
+
+    .equation-inputs {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .equation-inputs input {
+        width: 100%;
+    }
+
+    .step-box {
+        padding: 16px;
+    }
+
+    .math-line {
+        font-size: 1em;
+    }
+
+    .calculation-detail {
+        font-size: 1em;
+    }
+
+    .transform-content,
+    .substitution-content,
+    .multiplier-content,
+    .addition-content {
+        font-size: 1em;
+    }
+
+    .result-value {
+        font-size: 1.6em;
+    }
+
+    .final-result {
+        font-size: 1.5em;
+        padding: 16px;
+    }
+}
