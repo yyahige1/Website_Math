@@ -68,7 +68,8 @@ function updatePourcentageDisplay() {
             break;
         case 'retrouver':
             const signe = v.isAugmentation ? '+' : '−';
-            display = `Après ${signe}${v.pourcentage}%, on obtient ${v.valeurFinale}.<br>Valeur initiale = ?`;
+            const coefDisplay = v.isAugmentation ? (1 + v.pourcentage / 100) : (1 - v.pourcentage / 100);
+            display = `Après ${signe}${v.pourcentage}%, on obtient ${v.valeurFinale}.<br>Quelle était la valeur initiale ?<br><small>(CM = ${formatNumber(coefDisplay)})</small>`;
             break;
     }
     
@@ -299,40 +300,58 @@ function solveAugmentation(valeurInitiale, pourcentage) {
  */
 function solveReduction(valeurInitiale, pourcentage) {
     let html = '';
-    
-    html += createStepHTML({
-        expression: `${valeurInitiale} − ${pourcentage}%`,
-        explanation: 'Réduire une valeur d\'un pourcentage'
-    });
-    
+
+    // Formule
+    html += `<div class="formula-box">
+        <div class="formula-title">📐 Réduction</div>
+        <div class="formula-content">${valeurInitiale} − ${pourcentage}% = ?</div>
+    </div>`;
+
+    // Méthode 1: Calculer la réduction
     const reduction = (pourcentage / 100) * valeurInitiale;
-    
     html += createStepHTML({
-        expression: `Réduction = ${pourcentage}% × ${valeurInitiale} = ${formatNumber(reduction)}`,
-        explanation: 'Calculer le montant de la réduction'
+        expression: `Réduction = <span class="value-percent">${pourcentage}%</span> × <span class="value-initial">${valeurInitiale}</span> = <span class="value-highlight">${formatNumber(reduction)}</span>`,
+        explanation: '📍 Étape 1 : Calculer le montant de la réduction'
     });
-    
+
     const resultat = valeurInitiale - reduction;
-    
     html += createStepHTML({
-        expression: `${valeurInitiale} − ${formatNumber(reduction)} = ${formatNumber(resultat)}`,
-        explanation: 'Soustraire la réduction de la valeur initiale'
+        expression: `<span class="value-initial">${valeurInitiale}</span> − <span class="value-highlight">${formatNumber(reduction)}</span> = <span class="value-result">${formatNumber(resultat)}</span>`,
+        explanation: '📍 Étape 2 : Soustraire la réduction de la valeur initiale'
     });
-    
-    // Méthode alternative
-    const coef = 1 - pourcentage / 100;
-    html += `
-        <div class="step" style="background: var(--info-light); border-left-color: var(--info);">
-            <div class="step-expression">💡 Méthode rapide : coefficient multiplicateur</div>
-            <div class="step-explanation">
-                Réduire de ${pourcentage}% = multiplier par ${coef}<br>
-                ${valeurInitiale} × ${coef} = ${formatNumber(resultat)}
-            </div>
+
+    // Comparaison visuelle
+    html += `<div class="comparison-box">
+        <div class="comparison-item before">
+            <div class="comparison-label">Avant</div>
+            <div class="comparison-value">${valeurInitiale}</div>
         </div>
-    `;
-    
-    html += createResultHTML(`${valeurInitiale} − ${pourcentage}% = <strong>${formatNumber(resultat)}</strong>`);
-    
+        <div class="comparison-arrow">→</div>
+        <div class="comparison-item after">
+            <div class="comparison-label">Après −${pourcentage}%</div>
+            <div class="comparison-value">${formatNumber(resultat)}</div>
+        </div>
+    </div>`;
+
+    // Méthode alternative avec coefficient
+    const coef = 1 - pourcentage / 100;
+    html += `<div class="method-alt">
+        <div class="method-alt-title">💡 Méthode rapide : coefficient multiplicateur</div>
+        <div class="method-alt-content">
+            <p>Réduire de ${pourcentage}% revient à multiplier par <strong>${formatNumber(coef)}</strong></p>
+            <div class="method-alt-formula">${valeurInitiale} × ${formatNumber(coef)} = ${formatNumber(resultat)}</div>
+        </div>
+    </div>`;
+
+    // Coefficient box
+    html += `<div class="coefficient-box">
+        <div class="coefficient-label">Coefficient multiplicateur</div>
+        <div class="coefficient-value">${formatNumber(coef)}</div>
+        <div class="coefficient-explanation">Pour réduire de ${pourcentage}%, on multiplie par ${formatNumber(coef)}</div>
+    </div>`;
+
+    html += createResultHTML(`<span class="value-initial">${valeurInitiale}</span> − <span class="value-percent">${pourcentage}%</span> = <span class="value-result">${formatNumber(resultat)}</span>`);
+
     return html;
 }
 
@@ -341,52 +360,60 @@ function solveReduction(valeurInitiale, pourcentage) {
  */
 function solveRetrouver(valeurFinale, pourcentage, isAugmentation) {
     let html = '';
-    
+
     const signe = isAugmentation ? '+' : '−';
     const mot = isAugmentation ? 'augmentation' : 'réduction';
-    
-    html += createStepHTML({
-        expression: `Après ${signe}${pourcentage}%, on obtient ${valeurFinale}`,
-        explanation: `Retrouver la valeur initiale avant ${mot}`
-    });
-    
-    const coef = isAugmentation 
-        ? 1 + pourcentage / 100 
+
+    // Formule
+    html += `<div class="formula-box">
+        <div class="formula-title">📐 Retrouver la valeur initiale</div>
+        <div class="formula-content">Après ${signe}${pourcentage}%, on obtient ${valeurFinale}<br>Valeur initiale = ?</div>
+    </div>`;
+
+    // Étape 1: Coefficient multiplicateur
+    const coef = isAugmentation
+        ? 1 + pourcentage / 100
         : 1 - pourcentage / 100;
-    
+
+    html += `<div class="coefficient-box">
+        <div class="coefficient-label">Coefficient multiplicateur (CM)</div>
+        <div class="coefficient-value">${formatNumber(coef)}</div>
+        <div class="coefficient-explanation">${isAugmentation ? 'Augmenter' : 'Réduire'} de ${pourcentage}% revient à multiplier par ${formatNumber(coef)}</div>
+    </div>`;
+
     html += createStepHTML({
-        expression: `Coefficient multiplicateur = ${coef}`,
-        explanation: isAugmentation 
-            ? `+${pourcentage}% signifie × ${coef}`
-            : `−${pourcentage}% signifie × ${coef}`
+        expression: `${signe}${pourcentage}% signifie × <span class="value-highlight">${formatNumber(coef)}</span>`,
+        explanation: `📍 Étape 1 : Déterminer le coefficient multiplicateur`
     });
-    
+
+    // Étape 2: Équation
     html += createStepHTML({
-        expression: `Valeur initiale × ${coef} = ${valeurFinale}`,
-        explanation: 'L\'équation à résoudre'
+        expression: `Valeur initiale × <span class="value-highlight">${formatNumber(coef)}</span> = <span class="value-result">${valeurFinale}</span>`,
+        explanation: '📍 Étape 2 : Écrire l\'équation'
     });
-    
+
+    // Étape 3: Résolution
     const valeurInitiale = valeurFinale / coef;
-    
     html += createStepHTML({
-        expression: `Valeur initiale = ${valeurFinale} ÷ ${coef} = ${formatNumber(valeurInitiale)}`,
-        explanation: 'Diviser par le coefficient'
+        expression: `Valeur initiale = <span class="value-result">${valeurFinale}</span> ÷ <span class="value-highlight">${formatNumber(coef)}</span> = <span class="value-initial">${formatNumber(valeurInitiale)}</span>`,
+        explanation: '📍 Étape 3 : Diviser la valeur finale par le coefficient'
     });
-    
+
     // Vérification
-    const verif = isAugmentation 
+    const verif = isAugmentation
         ? valeurInitiale * (1 + pourcentage / 100)
         : valeurInitiale * (1 - pourcentage / 100);
-    
-    html += `
-        <div class="verification">
-            <div class="verification-title">✓ Vérification</div>
-            <div>${formatNumber(valeurInitiale)} ${signe} ${pourcentage}% = ${formatNumber(valeurInitiale)} × ${coef} = ${formatNumber(verif)} ✓</div>
+
+    html += `<div class="verification">
+        <div class="verification-title">✓ Vérification</div>
+        <div class="verification-content">
+            <p>On vérifie que <span class="value-initial">${formatNumber(valeurInitiale)}</span> ${signe} ${pourcentage}% donne bien ${valeurFinale} :</p>
+            <p><span class="value-initial">${formatNumber(valeurInitiale)}</span> × <span class="value-highlight">${formatNumber(coef)}</span> = <span class="value-result">${formatNumber(verif)}</span> ✓</p>
         </div>
-    `;
-    
-    html += createResultHTML(`Valeur initiale = <strong>${formatNumber(valeurInitiale)}</strong>`);
-    
+    </div>`;
+
+    html += createResultHTML(`Valeur initiale = <span class="value-initial">${formatNumber(valeurInitiale)}</span>`);
+
     return html;
 }
 
