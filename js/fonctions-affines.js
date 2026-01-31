@@ -420,7 +420,7 @@ function solveImage(a, b, x) {
 
     // Formule
     html += '<div class="formula-box">';
-    html += '<div class="formula-title">📐 Calcul de l'image</div>';
+    html += '<div class="formula-title">📐 Calcul de l\'image</div>';
     html += `<div class="formula-content">f(${x}) = ?</div>`;
     html += `<div class="formula-subtitle">avec f(x) = ${formatLinearFunction(a, b)}</div>`;
     html += '</div>';
@@ -462,14 +462,14 @@ function solveAntecedent(a, b, y) {
 
     // Formule
     html += '<div class="formula-box">';
-    html += '<div class="formula-title">📐 Calcul de l'antécédent</div>';
+    html += '<div class="formula-title">📐 Calcul de l\'antécédent</div>';
     html += `<div class="formula-content">f(x) = ${y}, x = ?</div>`;
     html += `<div class="formula-subtitle">avec f(x) = ${formatLinearFunction(a, b)}</div>`;
     html += '</div>';
 
     // Étape 1: Équation
     html += '<div class="step">';
-    html += '<div class="step-number">📍 Étape 1 : Poser l'équation</div>';
+    html += '<div class="step-number">📍 Étape 1 : Poser l\'équation</div>';
     html += `<div class="step-expression">${formatNumber(a)}x + ${formatNumber(b)} = ${y}</div>`;
     html += '</div>';
 
@@ -527,7 +527,7 @@ function solveEquation(x1, y1, x2, y2) {
 
     // Étape 2: Calculer b avec le point A
     html += '<div class="step">';
-    html += '<div class="step-number">📍 Étape 2 : Calculer l'ordonnée à l'origine b</div>';
+    html += '<div class="step-number">📍 Étape 2 : Calculer l\'ordonnée à l\'origine b</div>';
     html += `<div class="step-explanation">On utilise le point A(${x1}, ${y1}) et la formule y = ax + b</div>`;
     html += `<div class="step-expression">${y1} = ${formatNumber(a)} × ${x1} + b</div>`;
     const ax1 = a * x1;
