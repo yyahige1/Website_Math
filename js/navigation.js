@@ -117,21 +117,13 @@ function initNavigationEvents() {
         });
     }
 
-    // Toggle dropdowns sur mobile
+    // Toggle dropdowns sur mobile - désactivé car dropdowns toujours ouverts
+    // Les catégories servent juste de headers visuels sur mobile
     dropdownToggles.forEach(toggle => {
         toggle.addEventListener('click', (e) => {
-            // Sur mobile uniquement
+            // Sur mobile, les dropdowns sont toujours ouverts (headers non cliquables)
             if (window.innerWidth <= 768) {
                 e.preventDefault();
-                const parent = toggle.parentElement;
-                parent.classList.toggle('active');
-
-                // Fermer les autres dropdowns
-                dropdownToggles.forEach(other => {
-                    if (other !== toggle) {
-                        other.parentElement.classList.remove('active');
-                    }
-                });
             }
         });
     });
