@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MathsFacile - Fonctions Affines</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/exercices.css">
+    <link rel="stylesheet" href="css/navigation.css">
+</head>
+<body>
+    <div class="container">
+        <!-- NOUVELLE NAVIGATION -->
+        <nav class="nav">
+            <div class="nav-container">
+                <!-- Logo -->
+                <a href="index.html" class="nav-brand">MathsFacile</a>
+
+                <!-- Hamburger (mobile uniquement) -->
+                <button class="nav-hamburger" aria-label="Menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+
+                <!-- Menu principal -->
+                <ul class="nav-menu">
+                    <!-- Catégorie : Algèbre -->
+                    <li class="nav-item has-dropdown">
+                        <a href="#" class="nav-link">
+                            Algèbre
+                            <span class="arrow">▾</span>
+                        </a>
+                        <ul class="nav-dropdown">
+                            <li><a href="index.html">Équations</a></li>
+                            <li><a href="developpement.html">Développement</a></li>
+                            <li><a href="reduction.html">Réduction</a></li>
+                            <li><a href="factorisation.html">Factorisation</a></li>
+                            <li><a href="inequations.html">Inéquations</a></li>
+                            <li><a href="equations2.html">Équations 2nd degré</a></li>
+                            <li><a href="inequations2.html">Inéquations 2nd degré</a></li>
+                            <li><a href="systemes.html">Systèmes d'équations</a></li>
+                        </ul>
+                    </li>
+
+                    <!-- Catégorie : Calculs -->
+                    <li class="nav-item has-dropdown">
+                        <a href="#" class="nav-link">
+                            Calculs
+                            <span class="arrow">▾</span>
+                        </a>
+                        <ul class="nav-dropdown">
+                            <li><a href="fractions.html">Fractions</a></li>
+                            <li><a href="pourcentages.html">Pourcentages</a></li>
+                            <li><a href="puissances.html">Puissances</a></li>
+                            <li><a href="racines.html">Racines carrées</a></li>
+                        </ul>
+                    </li>
+
+                    <!-- Catégorie : Fonctions -->
+                    <li class="nav-item has-dropdown">
+                        <a href="#" class="nav-link">
+                            Fonctions
+                            <span class="arrow">▾</span>
+                        </a>
+                        <ul class="nav-dropdown">
+                            <li><a href="fonctions-affines.html" class="active">Fonctions Affines</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <header>
+            <h1>📐 Fonctions Affines</h1>
+            <p class="subtitle">y = ax + b</p>
+            <p class="intro">Entraîne-toi aux fonctions affines.<br>Choisis un type d'exercice, puis clique sur <strong>Correction</strong>.</p>
+        </header>
+
+        <div class="card">
+            <div class="type-selector grid-2">
+                <button class="type-btn active" data-type="graphique">
+                    <div class="example">y = 2x + 3</div>
+                    <div class="label">Représentation graphique</div>
+                </button>
+                <button class="type-btn" data-type="image">
+                    <div class="example">f(5) = ?</div>
+                    <div class="label">Calculer une image</div>
+                </button>
+                <button class="type-btn" data-type="antecedent">
+                    <div class="example">f(x) = 7, x = ?</div>
+                    <div class="label">Calculer un antécédent</div>
+                </button>
+                <button class="type-btn" data-type="equation">
+                    <div class="example">Passe par (1,5) et (3,9)</div>
+                    <div class="label">Trouver l'équation</div>
+                </button>
+                <button class="type-btn" data-type="intersection">
+                    <div class="example">y = 2x + 1 et y = -x + 4</div>
+                    <div class="label">Intersection de droites</div>
+                </button>
+            </div>
+
+            <!-- Inputs Graphique -->
+            <div class="coefficients" id="coeffGraphique">
+                <div class="coef-group">
+                    <label>a (coefficient directeur)</label>
+                    <input type="number" id="a_graph" value="2" step="0.5">
+                </div>
+                <div class="coef-group">
+                    <label>b (ordonnée à l'origine)</label>
+                    <input type="number" id="b_graph" value="3" step="0.5">
+                </div>
+            </div>
+
+            <!-- Inputs Image -->
+            <div class="coefficients hidden" id="coeffImage">
+                <div class="coef-group">
+                    <label>a</label>
+                    <input type="number" id="a_img" value="2" step="0.5">
+                </div>
+                <div class="coef-group">
+                    <label>b</label>
+                    <input type="number" id="b_img" value="3" step="0.5">
+                </div>
+                <div class="coef-group">
+                    <label>x (valeur)</label>
+                    <input type="number" id="x_img" value="5">
+                </div>
+            </div>
+
+            <!-- Inputs Antécédent -->
+            <div class="coefficients hidden" id="coeffAntecedent">
+                <div class="coef-group">
+                    <label>a</label>
+                    <input type="number" id="a_ant" value="2" step="0.5">
+                </div>
+                <div class="coef-group">
+                    <label>b</label>
+                    <input type="number" id="b_ant" value="3" step="0.5">
+                </div>
+                <div class="coef-group">
+                    <label>y (image)</label>
+                    <input type="number" id="y_ant" value="7">
+                </div>
+            </div>
+
+            <!-- Inputs Équation (2 points) -->
+            <div class="coefficients hidden" id="coeffEquation">
+                <div class="coef-info">Point A (x₁, y₁)</div>
+                <div class="coef-group">
+                    <label>x₁</label>
+                    <input type="number" id="x1_eq" value="1">
+                </div>
+                <div class="coef-group">
+                    <label>y₁</label>
+                    <input type="number" id="y1_eq" value="5">
+                </div>
+                <div class="coef-info">Point B (x₂, y₂)</div>
+                <div class="coef-group">
+                    <label>x₂</label>
+                    <input type="number" id="x2_eq" value="3">
+                </div>
+                <div class="coef-group">
+                    <label>y₂</label>
+                    <input type="number" id="y2_eq" value="9">
+                </div>
+            </div>
+
+            <!-- Inputs Intersection -->
+            <div class="coefficients hidden" id="coeffIntersection">
+                <div class="coef-info">Première droite : y = a₁x + b₁</div>
+                <div class="coef-group">
+                    <label>a₁</label>
+                    <input type="number" id="a1_int" value="2" step="0.5">
+                </div>
+                <div class="coef-group">
+                    <label>b₁</label>
+                    <input type="number" id="b1_int" value="1" step="0.5">
+                </div>
+                <div class="coef-info">Deuxième droite : y = a₂x + b₂</div>
+                <div class="coef-group">
+                    <label>a₂</label>
+                    <input type="number" id="a2_int" value="-1" step="0.5">
+                </div>
+                <div class="coef-group">
+                    <label>b₂</label>
+                    <input type="number" id="b2_int" value="4" step="0.5">
+                </div>
+            </div>
+
+            <div class="expression-display">
+                <div class="expression" id="expressionDisplay">y = 2x + 3</div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn-generate" id="generateBtn">🎲 Nouveau</button>
+                <button class="btn-solve" id="solveBtn">✓ Correction</button>
+            </div>
+
+            <div class="solution" id="solutionDiv">
+                <h3>📝 Solution</h3>
+                <div id="stepsContainer"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="js/utils.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/graphing.js"></script>
+    <script src="js/fonctions-affines.js"></script>
+    <script src="js/navigation.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', initFonctionsAffinesPage);
+    </script>
+</body>
+</html>
