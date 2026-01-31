@@ -42,6 +42,8 @@
     background: none;
     border: none;
     padding: 8px;
+    z-index: 1002;
+    position: relative;
 }
 
 .nav-hamburger span {
@@ -167,6 +169,7 @@
         box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
         transition: left 0.3s;
         overflow-y: auto;
+        z-index: 1001;
     }
 
     /* Menu ouvert */
@@ -228,6 +231,7 @@
         opacity: 0;
         visibility: hidden;
         transition: all 0.3s;
+        z-index: 999;
     }
 
     .nav-overlay.active {
