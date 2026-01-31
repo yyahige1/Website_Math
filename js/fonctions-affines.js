@@ -28,7 +28,7 @@ function initFonctionsAffinesPage() {
             FonctionsAffinesState.currentType = btn.dataset.type;
             updateInputVisibility();
             updateDisplay();
-            hideSection('solutionDiv');
+            hideSolution('solutionDiv');
         });
     });
 
@@ -36,8 +36,8 @@ function initFonctionsAffinesPage() {
     setupInputHandlers();
 
     // Boutons
-    $.id('generateBtn').addEventListener('click', generateExercise);
-    $.id('solveBtn').addEventListener('click', solveExercise);
+    $('generateBtn').addEventListener('click', generateExercise);
+    $('solveBtn').addEventListener('click', solveExercise);
 
     // Affichage initial
     updateInputVisibility();
@@ -49,76 +49,76 @@ function initFonctionsAffinesPage() {
 // ============================================================
 function setupInputHandlers() {
     // Graphique
-    $.id('a_graph').addEventListener('input', () => {
-        FonctionsAffinesState.a = parseFloat($.id('a_graph').value);
+    $('a_graph').addEventListener('input', () => {
+        FonctionsAffinesState.a = parseFloat($('a_graph').value);
         updateDisplay();
     });
-    $.id('b_graph').addEventListener('input', () => {
-        FonctionsAffinesState.b = parseFloat($.id('b_graph').value);
+    $('b_graph').addEventListener('input', () => {
+        FonctionsAffinesState.b = parseFloat($('b_graph').value);
         updateDisplay();
     });
 
     // Image
-    $.id('a_img').addEventListener('input', () => {
-        FonctionsAffinesState.a = parseFloat($.id('a_img').value);
+    $('a_img').addEventListener('input', () => {
+        FonctionsAffinesState.a = parseFloat($('a_img').value);
         updateDisplay();
     });
-    $.id('b_img').addEventListener('input', () => {
-        FonctionsAffinesState.b = parseFloat($.id('b_img').value);
+    $('b_img').addEventListener('input', () => {
+        FonctionsAffinesState.b = parseFloat($('b_img').value);
         updateDisplay();
     });
-    $.id('x_img').addEventListener('input', () => {
-        FonctionsAffinesState.x = parseFloat($.id('x_img').value);
+    $('x_img').addEventListener('input', () => {
+        FonctionsAffinesState.x = parseFloat($('x_img').value);
         updateDisplay();
     });
 
     // Antécédent
-    $.id('a_ant').addEventListener('input', () => {
-        FonctionsAffinesState.a = parseFloat($.id('a_ant').value);
+    $('a_ant').addEventListener('input', () => {
+        FonctionsAffinesState.a = parseFloat($('a_ant').value);
         updateDisplay();
     });
-    $.id('b_ant').addEventListener('input', () => {
-        FonctionsAffinesState.b = parseFloat($.id('b_ant').value);
+    $('b_ant').addEventListener('input', () => {
+        FonctionsAffinesState.b = parseFloat($('b_ant').value);
         updateDisplay();
     });
-    $.id('y_ant').addEventListener('input', () => {
-        FonctionsAffinesState.y = parseFloat($.id('y_ant').value);
+    $('y_ant').addEventListener('input', () => {
+        FonctionsAffinesState.y = parseFloat($('y_ant').value);
         updateDisplay();
     });
 
     // Équation (2 points)
-    $.id('x1_eq').addEventListener('input', () => {
-        FonctionsAffinesState.x1 = parseFloat($.id('x1_eq').value);
+    $('x1_eq').addEventListener('input', () => {
+        FonctionsAffinesState.x1 = parseFloat($('x1_eq').value);
         updateDisplay();
     });
-    $.id('y1_eq').addEventListener('input', () => {
-        FonctionsAffinesState.y1 = parseFloat($.id('y1_eq').value);
+    $('y1_eq').addEventListener('input', () => {
+        FonctionsAffinesState.y1 = parseFloat($('y1_eq').value);
         updateDisplay();
     });
-    $.id('x2_eq').addEventListener('input', () => {
-        FonctionsAffinesState.x2 = parseFloat($.id('x2_eq').value);
+    $('x2_eq').addEventListener('input', () => {
+        FonctionsAffinesState.x2 = parseFloat($('x2_eq').value);
         updateDisplay();
     });
-    $.id('y2_eq').addEventListener('input', () => {
-        FonctionsAffinesState.y2 = parseFloat($.id('y2_eq').value);
+    $('y2_eq').addEventListener('input', () => {
+        FonctionsAffinesState.y2 = parseFloat($('y2_eq').value);
         updateDisplay();
     });
 
     // Intersection
-    $.id('a1_int').addEventListener('input', () => {
-        FonctionsAffinesState.a1 = parseFloat($.id('a1_int').value);
+    $('a1_int').addEventListener('input', () => {
+        FonctionsAffinesState.a1 = parseFloat($('a1_int').value);
         updateDisplay();
     });
-    $.id('b1_int').addEventListener('input', () => {
-        FonctionsAffinesState.b1 = parseFloat($.id('b1_int').value);
+    $('b1_int').addEventListener('input', () => {
+        FonctionsAffinesState.b1 = parseFloat($('b1_int').value);
         updateDisplay();
     });
-    $.id('a2_int').addEventListener('input', () => {
-        FonctionsAffinesState.a2 = parseFloat($.id('a2_int').value);
+    $('a2_int').addEventListener('input', () => {
+        FonctionsAffinesState.a2 = parseFloat($('a2_int').value);
         updateDisplay();
     });
-    $.id('b2_int').addEventListener('input', () => {
-        FonctionsAffinesState.b2 = parseFloat($.id('b2_int').value);
+    $('b2_int').addEventListener('input', () => {
+        FonctionsAffinesState.b2 = parseFloat($('b2_int').value);
         updateDisplay();
     });
 }
@@ -133,15 +133,15 @@ function updateInputVisibility() {
     // Afficher les inputs correspondants
     const type = FonctionsAffinesState.currentType;
     if (type === 'graphique') {
-        $.id('coeffGraphique').classList.remove('hidden');
+        $('coeffGraphique').classList.remove('hidden');
     } else if (type === 'image') {
-        $.id('coeffImage').classList.remove('hidden');
+        $('coeffImage').classList.remove('hidden');
     } else if (type === 'antecedent') {
-        $.id('coeffAntecedent').classList.remove('hidden');
+        $('coeffAntecedent').classList.remove('hidden');
     } else if (type === 'equation') {
-        $.id('coeffEquation').classList.remove('hidden');
+        $('coeffEquation').classList.remove('hidden');
     } else if (type === 'intersection') {
-        $.id('coeffIntersection').classList.remove('hidden');
+        $('coeffIntersection').classList.remove('hidden');
     }
 }
 
@@ -169,7 +169,7 @@ function updateDisplay() {
             break;
     }
 
-    $.id('expressionDisplay').innerHTML = display;
+    $('expressionDisplay').innerHTML = display;
 }
 
 // ============================================================
@@ -209,17 +209,17 @@ function generateExercise() {
         case 'graphique':
             FonctionsAffinesState.a = randomInt(-5, 5, [0]);
             FonctionsAffinesState.b = randomInt(-8, 8);
-            $.id('a_graph').value = FonctionsAffinesState.a;
-            $.id('b_graph').value = FonctionsAffinesState.b;
+            $('a_graph').value = FonctionsAffinesState.a;
+            $('b_graph').value = FonctionsAffinesState.b;
             break;
 
         case 'image':
             FonctionsAffinesState.a = randomInt(-5, 5, [0]);
             FonctionsAffinesState.b = randomInt(-8, 8);
             FonctionsAffinesState.x = randomInt(-10, 10);
-            $.id('a_img').value = FonctionsAffinesState.a;
-            $.id('b_img').value = FonctionsAffinesState.b;
-            $.id('x_img').value = FonctionsAffinesState.x;
+            $('a_img').value = FonctionsAffinesState.a;
+            $('b_img').value = FonctionsAffinesState.b;
+            $('x_img').value = FonctionsAffinesState.x;
             break;
 
         case 'antecedent':
@@ -228,9 +228,9 @@ function generateExercise() {
             // Générer y tel que x soit entier
             const x_temp = randomInt(-10, 10);
             FonctionsAffinesState.y = FonctionsAffinesState.a * x_temp + FonctionsAffinesState.b;
-            $.id('a_ant').value = FonctionsAffinesState.a;
-            $.id('b_ant').value = FonctionsAffinesState.b;
-            $.id('y_ant').value = FonctionsAffinesState.y;
+            $('a_ant').value = FonctionsAffinesState.a;
+            $('b_ant').value = FonctionsAffinesState.b;
+            $('y_ant').value = FonctionsAffinesState.y;
             break;
 
         case 'equation':
@@ -239,10 +239,10 @@ function generateExercise() {
             FonctionsAffinesState.y1 = randomInt(-8, 8);
             FonctionsAffinesState.x2 = randomInt(-5, 5, [FonctionsAffinesState.x1]);
             FonctionsAffinesState.y2 = randomInt(-8, 8);
-            $.id('x1_eq').value = FonctionsAffinesState.x1;
-            $.id('y1_eq').value = FonctionsAffinesState.y1;
-            $.id('x2_eq').value = FonctionsAffinesState.x2;
-            $.id('y2_eq').value = FonctionsAffinesState.y2;
+            $('x1_eq').value = FonctionsAffinesState.x1;
+            $('y1_eq').value = FonctionsAffinesState.y1;
+            $('x2_eq').value = FonctionsAffinesState.x2;
+            $('y2_eq').value = FonctionsAffinesState.y2;
             break;
 
         case 'intersection':
@@ -250,15 +250,15 @@ function generateExercise() {
             FonctionsAffinesState.b1 = randomInt(-8, 8);
             FonctionsAffinesState.a2 = randomInt(-5, 5, [0, FonctionsAffinesState.a1]); // Différent de a1
             FonctionsAffinesState.b2 = randomInt(-8, 8);
-            $.id('a1_int').value = FonctionsAffinesState.a1;
-            $.id('b1_int').value = FonctionsAffinesState.b1;
-            $.id('a2_int').value = FonctionsAffinesState.a2;
-            $.id('b2_int').value = FonctionsAffinesState.b2;
+            $('a1_int').value = FonctionsAffinesState.a1;
+            $('b1_int').value = FonctionsAffinesState.b1;
+            $('a2_int').value = FonctionsAffinesState.a2;
+            $('b2_int').value = FonctionsAffinesState.b2;
             break;
     }
 
     updateDisplay();
-    hideSection('solutionDiv');
+    hideSolution('solutionDiv');
 }
 
 // ============================================================
@@ -288,8 +288,8 @@ function solveExercise() {
             break;
     }
 
-    $.id('stepsContainer').innerHTML = html;
-    showSection('solutionDiv');
+    $('stepsContainer').innerHTML = html;
+    showSolution('solutionDiv');
 }
 
 // ============================================================
