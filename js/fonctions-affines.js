@@ -290,6 +290,18 @@ function solveExercise() {
 
     $('stepsContainer').innerHTML = html;
     showSolution('solutionDiv');
+
+    // Dessiner les graphiques après que le DOM soit prêt
+    requestAnimationFrame(() => {
+        if (type === 'graphique') {
+            drawLinearFunction(FonctionsAffinesState.a, FonctionsAffinesState.b);
+        } else if (type === 'intersection') {
+            const x = (FonctionsAffinesState.b2 - FonctionsAffinesState.b1) / (FonctionsAffinesState.a1 - FonctionsAffinesState.a2);
+            const y = FonctionsAffinesState.a1 * x + FonctionsAffinesState.b1;
+            drawTwoLines(FonctionsAffinesState.a1, FonctionsAffinesState.b1,
+                        FonctionsAffinesState.a2, FonctionsAffinesState.b2, x, y);
+        }
+    });
 }
 
 // ============================================================
@@ -343,11 +355,6 @@ function solveGraphique(a, b) {
     html += '<div class="graph-container">';
     html += '<canvas id="functionGraph" width="600" height="400"></canvas>';
     html += '</div>';
-
-    // Dessiner le graphique après un court délai
-    setTimeout(() => {
-        drawLinearFunction(a, b);
-    }, 50);
 
     return html;
 }
@@ -623,11 +630,6 @@ function solveIntersection(a1, b1, a2, b2) {
     html += '<div class="graph-container">';
     html += '<canvas id="functionGraph" width="600" height="400"></canvas>';
     html += '</div>';
-
-    // Dessiner le graphique
-    setTimeout(() => {
-        drawTwoLines(a1, b1, a2, b2, x, y);
-    }, 50);
 
     return html;
 }
