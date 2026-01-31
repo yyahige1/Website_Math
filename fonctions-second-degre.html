@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MathsFacile - Fonctions du 2nd Degré</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/exercices.css">
+    <link rel="stylesheet" href="css/systemes.css">
+    <link rel="stylesheet" href="css/equations2.css">
+    <link rel="stylesheet" href="css/navigation.css">
+</head>
+<body>
+    <div class="container">
+        <!-- NOUVELLE NAVIGATION -->
+        <nav class="nav">
+            <div class="nav-container">
+                <!-- Logo -->
+                <a href="index.html" class="nav-brand">MathsFacile</a>
+
+                <!-- Hamburger (mobile uniquement) -->
+                <button class="nav-hamburger" aria-label="Menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+
+                <!-- Menu principal -->
+                <ul class="nav-menu">
+                    <!-- Catégorie : Algèbre -->
+                    <li class="nav-item has-dropdown">
+                        <a href="#" class="nav-link">
+                            Algèbre
+                            <span class="arrow">▾</span>
+                        </a>
+                        <ul class="nav-dropdown">
+                            <li><a href="index.html">Équations</a></li>
+                            <li><a href="developpement.html">Développement</a></li>
+                            <li><a href="reduction.html">Réduction</a></li>
+                            <li><a href="factorisation.html">Factorisation</a></li>
+                            <li><a href="inequations.html">Inéquations</a></li>
+                            <li><a href="equations2.html">Équations 2nd degré</a></li>
+                            <li><a href="inequations2.html">Inéquations 2nd degré</a></li>
+                            <li><a href="systemes.html">Systèmes d'équations</a></li>
+                        </ul>
+                    </li>
+
+                    <!-- Catégorie : Calculs -->
+                    <li class="nav-item has-dropdown">
+                        <a href="#" class="nav-link">
+                            Calculs
+                            <span class="arrow">▾</span>
+                        </a>
+                        <ul class="nav-dropdown">
+                            <li><a href="fractions.html">Fractions</a></li>
+                            <li><a href="pourcentages.html">Pourcentages</a></li>
+                            <li><a href="puissances.html">Puissances</a></li>
+                            <li><a href="racines.html">Racines carrées</a></li>
+                        </ul>
+                    </li>
+
+                    <!-- Catégorie : Fonctions -->
+                    <li class="nav-item has-dropdown">
+                        <a href="#" class="nav-link">
+                            Fonctions
+                            <span class="arrow">▾</span>
+                        </a>
+                        <ul class="nav-dropdown">
+                            <li><a href="fonctions-affines.html">Fonctions Affines</a></li>
+                            <li><a href="fonctions-second-degre.html" class="active">Fonctions du 2nd Degré</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <header>
+            <h1>📈 Fonctions du 2nd Degré</h1>
+            <p class="subtitle">f(x) = ax² + bx + c (Paraboles)</p>
+            <p class="intro">Entraîne-toi aux fonctions du 2nd degré (paraboles).<br>Choisis un type d'exercice, puis clique sur <strong>Correction</strong>.</p>
+        </header>
+
+        <div class="card">
+            <div class="type-selector grid-2">
+                <button class="type-btn active" data-type="graphique">
+                    <div class="example">f(x) = x² - 4x + 3</div>
+                    <div class="label">Représentation graphique</div>
+                </button>
+                <button class="type-btn" data-type="canonique">
+                    <div class="example">a(x - α)² + β</div>
+                    <div class="label">Forme canonique</div>
+                </button>
+                <button class="type-btn" data-type="sommet">
+                    <div class="example">S(α, β)</div>
+                    <div class="label">Coordonnées du sommet</div>
+                </button>
+                <button class="type-btn" data-type="variations">
+                    <div class="example">Tableau de variations</div>
+                    <div class="label">Étude de variations</div>
+                </button>
+                <button class="type-btn" data-type="extremum">
+                    <div class="example">Maximum / Minimum</div>
+                    <div class="label">Trouver l'extremum</div>
+                </button>
+            </div>
+        </div>
+
+        <!-- Expression affichée -->
+        <div id="expressionContainer" class="card">
+            <div class="expression" id="expressionDisplay">f(x) = x² - 4x + 3</div>
+        </div>
+
+        <!-- Section Graphique (type graphique uniquement) -->
+        <div id="graphiqueSection" class="card" style="display: none;">
+            <h3>📐 Paramètres de la fonction</h3>
+            <div class="param-row">
+                <label>a (coefficient de x²):</label>
+                <input type="number" id="a_graph" value="1" step="0.1">
+            </div>
+            <div class="param-row">
+                <label>b (coefficient de x):</label>
+                <input type="number" id="b_graph" value="-4" step="0.1">
+            </div>
+            <div class="param-row">
+                <label>c (constante):</label>
+                <input type="number" id="c_graph" value="3" step="0.1">
+            </div>
+        </div>
+
+        <!-- Section Forme canonique -->
+        <div id="canoniqueSection" class="card" style="display: none;">
+            <h3>📐 Paramètres de la fonction</h3>
+            <div class="param-row">
+                <label>a (coefficient de x²):</label>
+                <input type="number" id="a_canon" value="1" step="0.1">
+            </div>
+            <div class="param-row">
+                <label>b (coefficient de x):</label>
+                <input type="number" id="b_canon" value="-4" step="0.1">
+            </div>
+            <div class="param-row">
+                <label>c (constante):</label>
+                <input type="number" id="c_canon" value="3" step="0.1">
+            </div>
+        </div>
+
+        <!-- Section Sommet -->
+        <div id="sommetSection" class="card" style="display: none;">
+            <h3>📐 Paramètres de la fonction</h3>
+            <div class="param-row">
+                <label>a (coefficient de x²):</label>
+                <input type="number" id="a_sommet" value="1" step="0.1">
+            </div>
+            <div class="param-row">
+                <label>b (coefficient de x):</label>
+                <input type="number" id="b_sommet" value="-4" step="0.1">
+            </div>
+            <div class="param-row">
+                <label>c (constante):</label>
+                <input type="number" id="c_sommet" value="3" step="0.1">
+            </div>
+        </div>
+
+        <!-- Section Variations -->
+        <div id="variationsSection" class="card" style="display: none;">
+            <h3>📐 Paramètres de la fonction</h3>
+            <div class="param-row">
+                <label>a (coefficient de x²):</label>
+                <input type="number" id="a_var" value="1" step="0.1">
+            </div>
+            <div class="param-row">
+                <label>b (coefficient de x):</label>
+                <input type="number" id="b_var" value="-4" step="0.1">
+            </div>
+            <div class="param-row">
+                <label>c (constante):</label>
+                <input type="number" id="c_var" value="3" step="0.1">
+            </div>
+        </div>
+
+        <!-- Section Extremum -->
+        <div id="extremumSection" class="card" style="display: none;">
+            <h3>📐 Paramètres de la fonction</h3>
+            <div class="param-row">
+                <label>a (coefficient de x²):</label>
+                <input type="number" id="a_ext" value="-2" step="0.1">
+            </div>
+            <div class="param-row">
+                <label>b (coefficient de x):</label>
+                <input type="number" id="b_ext" value="4" step="0.1">
+            </div>
+            <div class="param-row">
+                <label>c (constante):</label>
+                <input type="number" id="c_ext" value="1" step="0.1">
+            </div>
+        </div>
+
+        <!-- Boutons d'action -->
+        <div class="card action-buttons">
+            <button id="newExerciseBtn" class="btn btn-secondary">🔄 Nouvel exercice</button>
+            <button id="solveBtn" class="btn btn-primary">✨ Correction</button>
+        </div>
+
+        <!-- Zone de solution -->
+        <div id="solutionDiv" class="card solution" style="display: none;">
+            <h3>✨ Correction détaillée</h3>
+            <div id="stepsContainer"></div>
+        </div>
+
+        <footer>
+            <p>© 2026 MathsFacile - Fonctions du 2nd Degré</p>
+        </footer>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="js/utils.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/graphing.js"></script>
+    <script src="js/fonctions-second-degre.js"></script>
+    <script src="js/navigation.js"></script>
+</body>
+</html>
