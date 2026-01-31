@@ -154,10 +154,10 @@ function updateDisplay() {
             display = formatLinearFunction(FonctionsAffinesState.a, FonctionsAffinesState.b);
             break;
         case 'image':
-            display = `f(${FonctionsAffinesState.x}) = ? avec f(x) = ${formatLinearFunction(FonctionsAffinesState.a, FonctionsAffinesState.b)}`;
+            display = `f(${FonctionsAffinesState.x}) = ? avec ${formatLinearFunction(FonctionsAffinesState.a, FonctionsAffinesState.b, true)}`;
             break;
         case 'antecedent':
-            display = `f(x) = ${FonctionsAffinesState.y}, x = ? avec f(x) = ${formatLinearFunction(FonctionsAffinesState.a, FonctionsAffinesState.b)}`;
+            display = `f(x) = ${FonctionsAffinesState.y}, x = ? avec ${formatLinearFunction(FonctionsAffinesState.a, FonctionsAffinesState.b, true)}`;
             break;
         case 'equation':
             display = `Droite passant par A(${FonctionsAffinesState.x1}, ${FonctionsAffinesState.y1}) et B(${FonctionsAffinesState.x2}, ${FonctionsAffinesState.y2})`;
@@ -175,12 +175,12 @@ function updateDisplay() {
 // ============================================================
 // Formatage
 // ============================================================
-function formatLinearFunction(a, b) {
-    let result = 'y = ';
+function formatLinearFunction(a, b, useFx = false) {
+    let result = useFx ? 'f(x) = ' : 'y = ';
 
     // Coefficient a
     if (a === 0) {
-        return `y = ${formatNumber(b)}`;
+        return result + `${formatNumber(b)}`;
     } else if (a === 1) {
         result += 'x';
     } else if (a === -1) {
@@ -334,21 +334,28 @@ function solveGraphique(a, b) {
 
     // Points remarquables
     html += '<div class="step">';
-    html += '<div class="step-number">🎯 Points remarquables</div>';
-    html += '<div class="points-table">';
-    html += '<table class="result-table">';
-    html += '<tr><th>x</th><th>y = ' + formatNumber(a) + 'x + ' + formatNumber(b) + '</th></tr>';
+    html += '<div class="step-number">🎯 Construction de la droite</div>';
+    html += '<div class="step-explanation">Pour tracer une droite, on a besoin de deux points :</div>';
 
-    // Point 1: x = 0
-    html += `<tr><td>0</td><td>${formatNumber(b)}</td></tr>`;
-
-    // Point 2: calculer pour x = 1 ou x = 2
-    const x_test = (a !== 0) ? 1 : 2;
-    const y_test = a * x_test + b;
-    html += `<tr><td>${x_test}</td><td>${formatNumber(y_test)}</td></tr>`;
-
-    html += '</table>';
+    // Point 1: ordonnée à l'origine
+    html += '<div class="step-explanation" style="margin-top: 10px;">';
+    html += `<strong>Point 1 - Ordonnée à l'origine :</strong> (0, ${formatNumber(b)})`;
+    html += '<br>C\'est le point où la droite coupe l\'axe des ordonnées.';
     html += '</div>';
+
+    // Point 2: en utilisant la pente
+    const x_test = 1;
+    const y_test = a * x_test + b;
+    html += '<div class="step-explanation" style="margin-top: 10px;">';
+    html += `<strong>Point 2 - En utilisant la pente :</strong> (${x_test}, ${formatNumber(y_test)})`;
+    html += '<br>À partir du point (0, ' + formatNumber(b) + '), on avance de 1 vers la droite (Δx = +1)';
+    if (a > 0) {
+        html += ', puis on monte de ' + formatNumber(a) + ' (Δy = +' + formatNumber(a) + ')';
+    } else if (a < 0) {
+        html += ', puis on descend de ' + formatNumber(Math.abs(a)) + ' (Δy = ' + formatNumber(a) + ')';
+    }
+    html += '</div>';
+
     html += '</div>';
 
     // Graphique
@@ -427,7 +434,7 @@ function solveImage(a, b, x) {
     html += '<div class="formula-box">';
     html += '<div class="formula-title">📐 Calcul de l\'image</div>';
     html += `<div class="formula-content">f(${x}) = ?</div>`;
-    html += `<div class="formula-subtitle">avec f(x) = ${formatLinearFunction(a, b)}</div>`;
+    html += `<div class="formula-subtitle">avec ${formatLinearFunction(a, b, true)}</div>`;
     html += '</div>';
 
     // Étape 1: Substitution
@@ -469,7 +476,7 @@ function solveAntecedent(a, b, y) {
     html += '<div class="formula-box">';
     html += '<div class="formula-title">📐 Calcul de l\'antécédent</div>';
     html += `<div class="formula-content">f(x) = ${y}, x = ?</div>`;
-    html += `<div class="formula-subtitle">avec f(x) = ${formatLinearFunction(a, b)}</div>`;
+    html += `<div class="formula-subtitle">avec ${formatLinearFunction(a, b, true)}</div>`;
     html += '</div>';
 
     // Étape 1: Équation
