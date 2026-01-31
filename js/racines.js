@@ -306,33 +306,68 @@ function solveAddition(ex) {
 
 function solveMultiplication(ex) {
     let html = '';
-    
+
     html += `<div class="step">`;
     html += `<div class="step-expression">${ex.expression}</div>`;
     html += `<div class="step-explanation">Expression de départ</div>`;
     html += `</div>`;
-    
+
     html += `<div class="step">`;
     html += `<div class="step-expression">√<span class="term-red">${ex.a}</span> × √<span class="term-blue">${ex.b}</span> = √(<span class="term-red">${ex.a}</span> × <span class="term-blue">${ex.b}</span>)</div>`;
     html += `<div class="step-explanation">Propriété : √a × √b = √(a×b)</div>`;
     html += `</div>`;
-    
+
     const product = ex.a * ex.b;
-    
+
     html += `<div class="step">`;
     html += `<div class="step-expression">√<span class="term-green">${product}</span></div>`;
     html += `<div class="step-explanation">${ex.a} × ${ex.b} = ${product}</div>`;
     html += `</div>`;
-    
+
     // Simplifier si possible
     const result = simplifySquareRoot(product);
-    
+
     if (result.outside > 1) {
         html += `<div class="step">`;
-        html += `<div class="step-expression">On simplifie √${product}</div>`;
-        html += `<div class="step-explanation">On cherche les carrés parfaits dans ${product}</div>`;
+        html += `<div class="step-expression">On cherche les <span class="term-red">carrés parfaits</span> dans ${product}</div>`;
+        html += `<div class="step-explanation">Carrés parfaits : 4, 9, 16, 25, 36, 49, 64, 81, 100...</div>`;
         html += `</div>`;
-        
+
+        // Trouver quel carré parfait divise le produit
+        const squares = [100, 81, 64, 49, 36, 25, 16, 9, 4];
+        let foundSquare = 1;
+        let remaining = product;
+
+        for (let sq of squares) {
+            if (product % sq === 0) {
+                foundSquare = sq;
+                remaining = product / sq;
+                break;
+            }
+        }
+
+        if (foundSquare > 1) {
+            html += `<div class="step">`;
+            html += `<div class="step-expression">${product} = <span class="term-red">${foundSquare}</span> × ${remaining}</div>`;
+            html += `<div class="step-explanation">${foundSquare} est un carré parfait (${Math.sqrt(foundSquare)}²)</div>`;
+            html += `</div>`;
+
+            html += `<div class="step">`;
+            html += `<div class="step-expression">√${product} = √(<span class="term-red">${foundSquare}</span> × ${remaining})</div>`;
+            html += `<div class="step-explanation">On factorise par le carré parfait</div>`;
+            html += `</div>`;
+
+            html += `<div class="step">`;
+            html += `<div class="step-expression">√<span class="term-red">${foundSquare}</span> × √${remaining}</div>`;
+            html += `<div class="step-explanation">Propriété : √(a×b) = √a × √b</div>`;
+            html += `</div>`;
+
+            html += `<div class="step">`;
+            html += `<div class="step-expression"><span class="term-blue">${Math.sqrt(foundSquare)}</span> × √${remaining}</div>`;
+            html += `<div class="step-explanation">Car √${foundSquare} = ${Math.sqrt(foundSquare)}</div>`;
+            html += `</div>`;
+        }
+
         if (result.inside === 1) {
             html += `<div class="result-highlight"><span class="term-blue">${result.outside}</span></div>`;
         } else {
@@ -341,35 +376,45 @@ function solveMultiplication(ex) {
     } else {
         html += `<div class="result-highlight">√<span class="term-green">${product}</span></div>`;
     }
-    
+
     return html;
 }
 
 function solveRationalisation(ex) {
     let html = '';
-    
+
     html += `<div class="step">`;
     html += `<div class="step-expression">${createFraction('1', `√${ex.radicand}`)}</div>`;
     html += `<div class="step-explanation">Expression de départ</div>`;
     html += `</div>`;
-    
+
+    html += `<div class="step">`;
+    html += `<div class="step-expression">Objectif : éliminer la racine au dénominateur</div>`;
+    html += `<div class="step-explanation">On multiplie par une fraction égale à 1</div>`;
+    html += `</div>`;
+
     html += `<div class="step">`;
     html += `<div class="step-expression">On multiplie par ${createFraction(`<span class="term-red">√${ex.radicand}</span>`, `<span class="term-red">√${ex.radicand}</span>`)}</div>`;
-    html += `<div class="step-explanation">Pour éliminer la racine au dénominateur</div>`;
+    html += `<div class="step-explanation">Car √${ex.radicand}/√${ex.radicand} = 1</div>`;
     html += `</div>`;
-    
+
     html += `<div class="step">`;
     html += `<div class="step-expression">${createFraction(`1 × <span class="term-red">√${ex.radicand}</span>`, `√${ex.radicand} × <span class="term-red">√${ex.radicand}</span>`)}</div>`;
-    html += `<div class="step-explanation">Multiplication en haut et en bas</div>`;
+    html += `<div class="step-explanation">Multiplication du numérateur et du dénominateur</div>`;
     html += `</div>`;
-    
+
+    html += `<div class="step">`;
+    html += `<div class="step-expression">${createFraction(`<span class="term-blue">√${ex.radicand}</span>`, `√${ex.radicand}²`)}</div>`;
+    html += `<div class="step-explanation">Propriété : √a × √a = (√a)² = a</div>`;
+    html += `</div>`;
+
     html += `<div class="step">`;
     html += `<div class="step-expression">${createFraction(`<span class="term-blue">√${ex.radicand}</span>`, `<span class="term-green">${ex.radicand}</span>`)}</div>`;
-    html += `<div class="step-explanation">Car √${ex.radicand} × √${ex.radicand} = ${ex.radicand}</div>`;
+    html += `<div class="step-explanation">Car (√${ex.radicand})² = ${ex.radicand}</div>`;
     html += `</div>`;
-    
+
     html += `<div class="result-highlight">${createFraction(`<span class="term-blue">√${ex.radicand}</span>`, `<span class="term-green">${ex.radicand}</span>`)}</div>`;
-    
+
     return html;
 }
 
@@ -385,8 +430,8 @@ function solveConjuguee(ex) {
     html += `</div>`;
     
     html += `<div class="step">`;
-    html += `<div class="step-expression">On multiplie par ${createFraction(`<span class="term-red">l'expression conjuguée</span>`, `<span class="term-red">${conjugate}</span>`)}</div>`;
-    html += `<div class="step-explanation">Le conjugué de (√a + b) est (√a − b)</div>`;
+    html += `<div class="step-expression">On multiplie par ${createFraction(`<span class="term-red">${conjugate}</span>`, `<span class="term-red">${conjugate}</span>`)}</div>`;
+    html += `<div class="step-explanation">Le conjugué de (√${ex.radicand} ${ex.sign} ${ex.constant}) est (${conjugate})</div>`;
     html += `</div>`;
     
     html += `<div class="step">`;
