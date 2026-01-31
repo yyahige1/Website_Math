@@ -363,10 +363,7 @@ function solveGraphique(a, b) {
 // Dessin du graphique
 // ============================================================
 function drawLinearFunction(a, b) {
-    const canvas = document.getElementById('functionGraph');
-    if (!canvas) return;
-
-    const graph = new GraphCanvas(canvas, {
+    const graph = new GraphCanvas('functionGraph', {
         xMin: -10,
         xMax: 10,
         yMin: -10,
@@ -638,10 +635,7 @@ function solveIntersection(a1, b1, a2, b2) {
 // Dessin de deux droites avec point d'intersection
 // ============================================================
 function drawTwoLines(a1, b1, a2, b2, xInter, yInter) {
-    const canvas = document.getElementById('functionGraph');
-    if (!canvas) return;
-
-    const graph = new GraphCanvas(canvas, {
+    const graph = new GraphCanvas('functionGraph', {
         xMin: -10,
         xMax: 10,
         yMin: -10,
