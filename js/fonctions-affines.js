@@ -372,8 +372,9 @@ function drawLinearFunction(a, b) {
     });
 
     graph.clear();
-    graph.drawAxes();
     graph.drawGrid();
+    graph.drawAxes();
+    graph.drawTicks();
 
     // Dessiner la droite
     const points = [];
@@ -391,12 +392,14 @@ function drawLinearFunction(a, b) {
         ctx.lineWidth = 3;
         ctx.beginPath();
 
-        const firstPoint = graph.toCanvas(points[0].x, points[0].y);
-        ctx.moveTo(firstPoint.x, firstPoint.y);
+        const firstX = graph.toCanvasX(points[0].x);
+        const firstY = graph.toCanvasY(points[0].y);
+        ctx.moveTo(firstX, firstY);
 
         for (let i = 1; i < points.length; i++) {
-            const p = graph.toCanvas(points[i].x, points[i].y);
-            ctx.lineTo(p.x, p.y);
+            const canvasX = graph.toCanvasX(points[i].x);
+            const canvasY = graph.toCanvasY(points[i].y);
+            ctx.lineTo(canvasX, canvasY);
         }
 
         ctx.stroke();
@@ -405,14 +408,12 @@ function drawLinearFunction(a, b) {
     // Marquer les points remarquables
     // Point (0, b)
     graph.drawPoint(0, b, '#e74c3c', 6);
-    graph.drawLabel(0, b, `(0, ${formatNumber(b)})`, 'top');
 
     // Point (1, a+b) ou autre point
     const x_mark = (a !== 0) ? 1 : 2;
     const y_mark = a * x_mark + b;
     if (y_mark >= -10 && y_mark <= 10) {
         graph.drawPoint(x_mark, y_mark, '#e74c3c', 6);
-        graph.drawLabel(x_mark, y_mark, `(${x_mark}, ${formatNumber(y_mark)})`, 'bottom');
     }
 }
 
@@ -644,8 +645,9 @@ function drawTwoLines(a1, b1, a2, b2, xInter, yInter) {
     });
 
     graph.clear();
-    graph.drawAxes();
     graph.drawGrid();
+    graph.drawAxes();
+    graph.drawTicks();
 
     // Dessiner la première droite
     drawLine(graph, a1, b1, '#3498db', 3);
@@ -656,7 +658,6 @@ function drawTwoLines(a1, b1, a2, b2, xInter, yInter) {
     // Marquer le point d'intersection
     if (xInter >= -10 && xInter <= 10 && yInter >= -10 && yInter <= 10) {
         graph.drawPoint(xInter, yInter, '#27ae60', 8);
-        graph.drawLabel(xInter, yInter, `I(${formatNumber(xInter)}, ${formatNumber(yInter)})`, 'top');
     }
 }
 
@@ -675,12 +676,14 @@ function drawLine(graph, a, b, color, lineWidth) {
         ctx.lineWidth = lineWidth;
         ctx.beginPath();
 
-        const firstPoint = graph.toCanvas(points[0].x, points[0].y);
-        ctx.moveTo(firstPoint.x, firstPoint.y);
+        const firstX = graph.toCanvasX(points[0].x);
+        const firstY = graph.toCanvasY(points[0].y);
+        ctx.moveTo(firstX, firstY);
 
         for (let i = 1; i < points.length; i++) {
-            const p = graph.toCanvas(points[i].x, points[i].y);
-            ctx.lineTo(p.x, p.y);
+            const canvasX = graph.toCanvasX(points[i].x);
+            const canvasY = graph.toCanvasY(points[i].y);
+            ctx.lineTo(canvasX, canvasY);
         }
 
         ctx.stroke();
