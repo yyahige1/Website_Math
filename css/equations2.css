@@ -273,50 +273,62 @@ sub {
 
 .variations-table {
     width: 100%;
-    min-width: 450px;
+    min-width: 500px;
     border-collapse: separate;
     border-spacing: 0;
     margin: 12px auto;
     background: white;
-    border: 3px solid #673ab7;
-    border-radius: 12px;
+    border: 3px solid #2c3e50;
+    border-radius: 0;
     overflow: hidden;
-    box-shadow: 0 6px 16px rgba(103, 58, 183, 0.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .variations-table th {
-    padding: 16px 12px;
+    padding: 14px 16px;
     text-align: center;
-    background: linear-gradient(135deg, #673ab7 0%, #512da8 100%);
+    background: #34495e;
     color: white;
     font-weight: 700;
-    font-size: 1.15em;
-    border-right: 2px solid rgba(255, 255, 255, 0.3);
-    min-width: 80px;
-}
-
-.variations-table th:last-child {
-    border-right: none;
+    font-size: 1.05em;
+    border: 2px solid #2c3e50;
+    min-width: 100px;
+    vertical-align: middle;
 }
 
 .variations-table td {
-    padding: 16px 12px;
+    padding: 14px 16px;
     text-align: center;
-    border: 1px solid #e0e0e0;
-    font-size: 1.1em;
-    min-width: 80px;
-    position: relative;
+    border: 2px solid #2c3e50;
+    font-size: 1.15em;
+    min-width: 100px;
+    background: white;
+    font-weight: 600;
+}
+
+/* Ligne x (première ligne) */
+.variations-table tr:nth-child(1) td {
+    background: #ecf0f1;
+    font-weight: 700;
+}
+
+/* Ligne f'(x) ou signe (deuxième ligne) */
+.variations-table tr:nth-child(2) th {
+    background: #7f8c8d;
 }
 
 .variations-table tr:nth-child(2) td {
-    background: #f3e5f5;
-    font-weight: 600;
-    color: #673ab7;
+    background: white;
+    font-size: 1.3em;
 }
 
-.variations-table tr:nth-child(3) td {
-    background: #fafafa;
-    font-weight: 500;
+/* Ligne Variations (dernière ligne) */
+.variations-table tr:last-child th {
+    background: #95a5a6;
+}
+
+.variations-table tr:last-child td {
+    background: #f8f9fa;
 }
 
 /* Flèches de variation */
@@ -335,11 +347,11 @@ sub {
 }
 
 .var-extremum {
-    background: linear-gradient(135deg, #ffd54f 0%, #ffc107 100%) !important;
-    color: #bf360c;
+    background: #fff3cd !important;
+    color: #856404;
     font-weight: 800;
-    font-size: 1.2em;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-size: 1.25em;
+    border: 2px solid #ffc107 !important;
 }
 
 /* Responsive pour petits écrans */
