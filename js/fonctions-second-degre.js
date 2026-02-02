@@ -16,16 +16,10 @@ const FonctionsSecondDegreState = {
  * Initialise la page fonctions du 2nd degré
  */
 function initFonctionsSecondDegrePage() {
-    console.log('Init Fonctions Second Degre Page');
-    try {
-        setupTypeButtons();
-        setupInputHandlers();
-        setupActionButtons();
-        updateExerciseDisplay();
-        console.log('Init completed successfully');
-    } catch (error) {
-        console.error('Error during init:', error);
-    }
+    setupTypeButtons();
+    setupInputHandlers();
+    setupActionButtons();
+    updateExerciseDisplay();
 }
 
 /**
@@ -324,51 +318,40 @@ function generateExercise() {
  * Résout l'exercice
  */
 function solveExercise() {
-    console.log('solveExercise called');
     const type = FonctionsSecondDegreState.currentType;
     const a = FonctionsSecondDegreState.a;
     const b = FonctionsSecondDegreState.b;
     const c = FonctionsSecondDegreState.c;
 
-    console.log('Type:', type, 'a:', a, 'b:', b, 'c:', c);
-
     let html = '';
 
-    try {
-        switch (type) {
-            case 'graphique':
-                html = solveGraphique(a, b, c);
-                break;
-            case 'canonique':
-                html = solveCanonique(a, b, c);
-                break;
-            case 'sommet':
-                html = solveSommet(a, b, c);
-                break;
-            case 'variations':
-                html = solveVariations(a, b, c);
-                break;
-            case 'extremum':
-                html = solveExtremum(a, b, c);
-                break;
-        }
-
-        console.log('HTML generated, length:', html.length);
-        $('stepsContainer').innerHTML = html;
-        console.log('HTML inserted into stepsContainer');
-        showSolution('solutionDiv');
-        console.log('showSolution called');
-
-        // Dessiner les graphiques après que le DOM soit prêt
-        requestAnimationFrame(() => {
-            if (type === 'graphique' || type === 'variations') {
-                console.log('Drawing parabola');
-                drawParabola(a, b, c);
-            }
-        });
-    } catch (error) {
-        console.error('Error in solveExercise:', error);
+    switch (type) {
+        case 'graphique':
+            html = solveGraphique(a, b, c);
+            break;
+        case 'canonique':
+            html = solveCanonique(a, b, c);
+            break;
+        case 'sommet':
+            html = solveSommet(a, b, c);
+            break;
+        case 'variations':
+            html = solveVariations(a, b, c);
+            break;
+        case 'extremum':
+            html = solveExtremum(a, b, c);
+            break;
     }
+
+    $('stepsContainer').innerHTML = html;
+    showSolution('solutionDiv');
+
+    // Dessiner les graphiques après que le DOM soit prêt
+    requestAnimationFrame(() => {
+        if (type === 'graphique' || type === 'variations') {
+            drawParabola(a, b, c);
+        }
+    });
 }
 
 // ============================================================

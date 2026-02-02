@@ -12,8 +12,12 @@ const DeriveesState = {
     coeffs: [3, -5, 2], // ax² + bx + c par défaut
     // Produit
     typeProduit: 'poly_poly',
+    produit_u: [1, 2], // u = x + 2
+    produit_v: [3, -1], // v = 3x - 1
     // Quotient
     typeQuotient: 'poly_linear',
+    quotient_u: [1, 0, -1], // u = x² - 1
+    quotient_v: [1, 2], // v = x + 2
     // Tangente
     a_tang: 1,
     b_tang: -4,
@@ -254,16 +258,17 @@ function generateProduitDisplay() {
 
     switch (type) {
         case 'poly_poly':
-            u = 'x² + 2';
-            v = '3x - 1';
+            u = formatPolynomial(DeriveesState.produit_u, false);
+            v = formatPolynomial(DeriveesState.produit_v, false);
             break;
         case 'poly_sqrt':
-            u = '2x + 3';
+            u = formatPolynomial(DeriveesState.produit_u, false);
             v = '√x';
             break;
         case 'poly_exp':
-            u = 'x + 1';
-            v = '(2x - 3)³';
+            u = formatPolynomial(DeriveesState.produit_u, false);
+            const n = 3; // exposant
+            v = `(${formatPolynomial(DeriveesState.produit_v, false)})³`;
             break;
     }
 
@@ -274,24 +279,8 @@ function generateProduitDisplay() {
  * Génère l'affichage pour un quotient
  */
 function generateQuotientDisplay() {
-    const type = DeriveesState.typeQuotient;
-    let u, v;
-
-    switch (type) {
-        case 'poly_linear':
-            u = 'x² - 1';
-            v = 'x + 2';
-            break;
-        case 'linear_poly':
-            u = '2x + 1';
-            v = 'x² + 1';
-            break;
-        case 'poly_poly':
-            u = 'x² + 2x';
-            v = 'x² - 4';
-            break;
-    }
-
+    const u = formatPolynomial(DeriveesState.quotient_u, false);
+    const v = formatPolynomial(DeriveesState.quotient_v, false);
     return `f(x) = (${u}) / (${v})`;
 }
 
@@ -311,11 +300,44 @@ function generateExercise() {
             break;
 
         case 'produit':
-            // Les coefficients sont générés dynamiquement dans la résolution
+            // Générer u et v selon le type
+            const typeProd = DeriveesState.typeProduit;
+            if (typeProd === 'poly_poly') {
+                // u = ax + b
+                DeriveesState.produit_u = [randCoef(-3, 3, false, true), randCoef(-5, 5, false, false)];
+                // v = cx + d
+                DeriveesState.produit_v = [randCoef(-3, 3, false, true), randCoef(-5, 5, false, false)];
+            } else if (typeProd === 'poly_sqrt') {
+                // u = ax + b
+                DeriveesState.produit_u = [randCoef(-3, 3, false, true), randCoef(-5, 5, false, false)];
+                DeriveesState.produit_v = [1]; // √x a une dérivée spéciale
+            } else if (typeProd === 'poly_exp') {
+                // u = ax + b
+                DeriveesState.produit_u = [randCoef(-3, 3, false, true), randCoef(-5, 5, false, false)];
+                // v = (cx + d)³
+                DeriveesState.produit_v = [randCoef(-2, 2, false, true), randCoef(-4, 4, false, false)];
+            }
             break;
 
         case 'quotient':
-            // Les coefficients sont générés dynamiquement dans la résolution
+            // Générer u et v selon le type
+            const typeQuot = DeriveesState.typeQuotient;
+            if (typeQuot === 'poly_linear') {
+                // u = ax² + bx + c
+                DeriveesState.quotient_u = [randCoef(-2, 2, false, true), randCoef(-5, 5, false, false), randCoef(-5, 5, false, false)];
+                // v = dx + e
+                DeriveesState.quotient_v = [randCoef(-3, 3, false, true), randCoef(-5, 5, false, true)];
+            } else if (typeQuot === 'linear_poly') {
+                // u = ax + b
+                DeriveesState.quotient_u = [randCoef(-3, 3, false, true), randCoef(-5, 5, false, false)];
+                // v = cx² + d
+                DeriveesState.quotient_v = [randCoef(-2, 2, false, true), 0, randCoef(1, 5, false, true)];
+            } else if (typeQuot === 'poly_poly') {
+                // u = ax² + bx + c
+                DeriveesState.quotient_u = [randCoef(-2, 2, false, true), randCoef(-5, 5, false, false), randCoef(-5, 5, false, false)];
+                // v = dx² + ex + f
+                DeriveesState.quotient_v = [randCoef(-2, 2, false, true), randCoef(-5, 5, false, false), randCoef(1, 5, false, true)];
+            }
             break;
 
         case 'tangente':
@@ -440,37 +462,51 @@ function solvePolynomiale(coeffs) {
     return html;
 }
 
+/**
+ * Dérive un polynôme (retourne les coefficients de la dérivée)
+ */
+function derivePolynomial(coeffs) {
+    if (coeffs.length <= 1) return [0];
+    const deriv = [];
+    const n = coeffs.length - 1;
+    for (let i = 0; i < n; i++) {
+        const power = n - i;
+        deriv.push(coeffs[i] * power);
+    }
+    return deriv;
+}
+
 // ============================================================
 // Résolution : Règle du produit
 // ============================================================
 function solveProduit(typeProduit) {
     let html = '';
-    let u, v, uPrime, vPrime, uStr, vStr;
+    let u, v, uPrime, vPrime;
 
+    const u_coeffs = DeriveesState.produit_u;
+    const v_coeffs = DeriveesState.produit_v;
+
+    // Calculer u et u'
+    u = formatPolynomial(u_coeffs, false);
+    const u_deriv = derivePolynomial(u_coeffs);
+    uPrime = formatPolynomial(u_deriv, false);
+
+    // Calculer v et v' selon le type
     switch (typeProduit) {
         case 'poly_poly':
-            uStr = 'x² + 2';
-            vStr = '3x - 1';
-            u = 'x² + 2';
-            v = '3x - 1';
-            uPrime = '2x';
-            vPrime = '3';
+            v = formatPolynomial(v_coeffs, false);
+            const v_deriv = derivePolynomial(v_coeffs);
+            vPrime = formatPolynomial(v_deriv, false);
             break;
         case 'poly_sqrt':
-            uStr = '2x + 3';
-            vStr = '√x';
-            u = '2x + 3';
             v = '√x';
-            uPrime = '2';
             vPrime = '1/(2√x)';
             break;
         case 'poly_exp':
-            uStr = 'x + 1';
-            vStr = '(2x - 3)³';
-            u = 'x + 1';
-            v = '(2x - 3)³';
-            uPrime = '1';
-            vPrime = '3(2x - 3)² × 2 = 6(2x - 3)²';
+            const inner = formatPolynomial(v_coeffs, false);
+            v = `(${inner})³`;
+            const inner_deriv = formatPolynomial(derivePolynomial(v_coeffs), false);
+            vPrime = `3(${inner})² × (${inner_deriv})`;
             break;
     }
 
@@ -506,7 +542,7 @@ function solveProduit(typeProduit) {
 
     // Résultat
     html += '<div class="step">';
-    html += '<div class="step-number">✨ Dérivée (forme développée si besoin)</div>';
+    html += '<div class="step-number">✨ Dérivée finale</div>';
     html += `<div class="result-box result-value">f'(x) = (${uPrime})(${v}) + (${u})(${vPrime})</div>`;
     html += '</div>';
 
@@ -518,28 +554,18 @@ function solveProduit(typeProduit) {
 // ============================================================
 function solveQuotient(typeQuotient) {
     let html = '';
-    let u, v, uPrime, vPrime;
 
-    switch (typeQuotient) {
-        case 'poly_linear':
-            u = 'x² - 1';
-            v = 'x + 2';
-            uPrime = '2x';
-            vPrime = '1';
-            break;
-        case 'linear_poly':
-            u = '2x + 1';
-            v = 'x² + 1';
-            uPrime = '2';
-            vPrime = '2x';
-            break;
-        case 'poly_poly':
-            u = 'x² + 2x';
-            v = 'x² - 4';
-            uPrime = '2x + 2';
-            vPrime = '2x';
-            break;
-    }
+    const u_coeffs = DeriveesState.quotient_u;
+    const v_coeffs = DeriveesState.quotient_v;
+
+    // Calculer u, u', v, v'
+    const u = formatPolynomial(u_coeffs, false);
+    const u_deriv = derivePolynomial(u_coeffs);
+    const uPrime = formatPolynomial(u_deriv, false);
+
+    const v = formatPolynomial(v_coeffs, false);
+    const v_deriv = derivePolynomial(v_coeffs);
+    const vPrime = formatPolynomial(v_deriv, false);
 
     // Fonction
     html += '<div class="formula-box">';
