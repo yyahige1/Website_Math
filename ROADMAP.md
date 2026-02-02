@@ -20,6 +20,9 @@
 - ✅ Fonctions affines (représentation graphique, image, antécédent, équation, intersection)
 - ✅ Fonctions du 2nd degré (représentation graphique, forme canonique, sommet, variations, extremum)
 
+### Niveau Terminale
+- ✅ Dérivées (polynomiale, produit, quotient, tangente, variations)
+
 ### Infrastructure Technique
 - ✅ Module de graphiques Canvas réutilisable (`js/graphing.js`)
 - ✅ Architecture responsive (mobile, tablette, desktop)
@@ -30,7 +33,7 @@
 
 ## 📁 Structure du Projet
 
-### Fichiers HTML (14)
+### Fichiers HTML (15)
 1. `index.html` - Équations 1er degré
 2. `developpement.html` - Développement d'expressions
 3. `reduction.html` - Réduction d'expressions
@@ -45,6 +48,7 @@
 12. `racines.html` - Racines carrées
 13. `fonctions-affines.html` - Fonctions affines
 14. `fonctions-second-degre.html` - Fonctions du 2nd degré
+15. `derivees.html` - Dérivées
 
 ### Modules JavaScript
 - `js/utils.js` - Fonctions utilitaires (PGCD, formatage, etc.)
@@ -63,6 +67,7 @@
 - `js/racines.js` - Logique racines carrées
 - `js/fonctions-affines.js` - Logique fonctions affines
 - `js/fonctions-second-degre.js` - Logique fonctions du 2nd degré
+- `js/derivees.js` - Logique dérivées
 
 ### Feuilles de Style CSS
 - `css/theme.css` - Variables CSS (couleurs, espacements)
@@ -77,50 +82,45 @@
 
 ## 🚀 Prochaines Étapes Recommandées
 
-### 1. 📊 Dérivées (Priorité Haute)
-**Niveau**: Terminale
-
-**Modules à créer**:
-- Calcul de dérivées (règles usuelles)
-- Équation de tangente
-- Étude de variations
-
-**Fichiers à créer**:
-- `derivees.html` + `js/derivees.js`
-
-### 2. 🔢 Suites Numériques (Priorité Moyenne)
+### 1. 🔢 Suites Numériques (Priorité Haute)
 **Niveau**: Première / Terminale
 
 - Suites arithmétiques
 - Suites géométriques
 
-### 3. 📈 Exponentielles et Logarithmes (Priorité Moyenne)
+### 2. 📈 Exponentielles et Logarithmes (Priorité Moyenne)
 **Niveau**: Terminale
 
-### 4. 🎲 Probabilités et Statistiques (Priorité Moyenne)
+### 3. 🎲 Probabilités et Statistiques (Priorité Moyenne)
 **Niveau**: Seconde / Première
 
-### 5. 📐 Trigonométrie (Priorité Basse)
+### 4. 📐 Trigonométrie (Priorité Basse)
 **Niveau**: Seconde / Première
 
 ---
 
 ## 🎯 Prochaine Étape Immédiate
 
-**Recommandation**: Dérivées
+**Recommandation**: Suites Numériques
 
 Ce module est la suite logique car :
-- ✅ Les fonctions du 2nd degré sont maintenant implémentées
-- ✅ Niveau Terminale approprié
-- ✅ Très utile et demandé
-- ✅ Peut réutiliser GraphCanvas pour les tangentes
-- ✅ Complète bien les modules sur les fonctions
+- ✅ Niveau Première/Terminale approprié
+- ✅ Complète bien les modules existants
+- ✅ Très utile et demandé au lycée
+- ✅ Peut réutiliser les structures existantes
+- ✅ Base pour d'autres concepts (limites, etc.)
 
 ---
 
 ## 🔧 Améliorations Récentes
 
 ### Janvier 2026
+- ✅ **Module Dérivées** (`derivees.html` + `derivees.js`)
+  - 5 types d'exercices : polynomiale, produit, quotient, tangente, variations
+  - Représentation graphique de la tangente et de la fonction
+  - Règles de dérivation détaillées
+  - Tableau de variations avec signe de f'
+
 - ✅ **Module Fonctions Affines** (`fonctions-affines.html` + `fonctions-affines.js`)
   - 5 types d'exercices : graphique, image, antécédent, équation, intersection
   - Représentation graphique avec GraphCanvas
@@ -158,12 +158,12 @@ Ce module est la suite logique car :
 
 ## 📊 Statistiques
 
-**Dernière mise à jour**: 31 Janvier 2026
-**Modules d'exercices**: 14
-**Fichiers HTML**: 14
-**Fichiers JavaScript**: 16 (14 modules + utils.js + graphing.js)
+**Dernière mise à jour**: 2 Février 2026
+**Modules d'exercices**: 15
+**Fichiers HTML**: 15
+**Fichiers JavaScript**: 17 (15 modules + utils.js + graphing.js)
 **Fichiers CSS**: 7
-**Lignes de code**: ~8000
+**Lignes de code**: ~9500
 **Dépendances externes**: 0 ✅
 
-**Prochaine étape prioritaire**: Dérivées 📊
+**Prochaine étape prioritaire**: Suites Numériques 🔢
