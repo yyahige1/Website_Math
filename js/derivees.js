@@ -712,18 +712,16 @@ function solveQuotient(typeQuotient) {
 
     html += '</div>';
 
-    // Calcul du dénominateur v²
-    html += '<div class="step">';
-    html += '<div class="step-number">📍 Étape 4 : Calculer le dénominateur [v(x)]²</div>';
-    const vSquared_coeffs = multiplyPolynomials(v_coeffs, v_coeffs);
-    const vSquared = formatPolynomial(vSquared_coeffs, false);
-    html += `<div class="step-expression">[v(x)]² = (${v})² = ${vSquared}</div>`;
-    html += '</div>';
-
-    // Résultat final
+    // Résultat final avec vraie fraction
     html += '<div class="step">';
     html += '<div class="step-number">✨ Dérivée finale</div>';
-    html += `<div class="result-box result-value">f'(x) = (${numerator}) / (${vSquared})</div>`;
+    html += '<div class="result-box result-value" style="font-size: 1.3em;">';
+    html += 'f\'(x) = ';
+    html += '<span class="frac" style="font-size: 1.2em; margin-left: 8px;">';
+    html += `<span class="num">${numerator}</span>`;
+    html += `<span class="den">(${v})²</span>`;
+    html += '</span>';
+    html += '</div>';
     html += '</div>';
 
     return html;
