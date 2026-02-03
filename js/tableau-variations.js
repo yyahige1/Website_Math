@@ -37,6 +37,12 @@ function genererTableauVariations(liste_x, liste_fx, liste_nature, signes_derive
             height: 180px;
             align-items: stretch;
         }
+        .variations-table-wrapper .var-arrow-col {
+            display: flex;         /* Active Flexbox */
+            align-items: center;    /* Centre verticalement la flèche */
+            justify-content: center;/* Centre horizontalement la flèche */
+        }
+
         ${Array.from({length: n_colonnes}, (_, i) =>
             `.variations-table-wrapper .var-col-${i+1} { grid-column: ${i+1}; text-align: center; }`
         ).join('\n')}
@@ -154,7 +160,7 @@ function genererTableauVariations(liste_x, liste_fx, liste_nature, signes_derive
             const arrow_class = signe_intervalle === '+' ? 'var-arrow-up' : 'var-arrow-down';
             const arrow_symbol = signe_intervalle === '+' ? '↗' : '↘';
 
-            html += `<div class="var-col-${col_index_pair}">`;
+            html += `<div class="var-col-${col_index_pair} var-arrow-col">`;
             html += `<span class="var-arrow ${arrow_class}">${arrow_symbol}</span>`;
             html += '</div>';
         }
