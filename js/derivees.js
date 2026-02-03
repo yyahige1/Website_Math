@@ -476,6 +476,68 @@ function derivePolynomial(coeffs) {
     return deriv;
 }
 
+/**
+ * Multiplie deux polynômes
+ * @param {Array} coeffs1 - Coefficients du premier polynôme (du plus haut au plus bas degré)
+ * @param {Array} coeffs2 - Coefficients du second polynôme
+ * @returns {Array} Coefficients du produit
+ * Exemple: (2x + 3) × (x - 1) → [2, 3] × [1, -1] = [2, 1, -3]
+ */
+function multiplyPolynomials(coeffs1, coeffs2) {
+    const deg1 = coeffs1.length - 1;
+    const deg2 = coeffs2.length - 1;
+    const resultDeg = deg1 + deg2;
+    const result = new Array(resultDeg + 1).fill(0);
+
+    for (let i = 0; i <= deg1; i++) {
+        for (let j = 0; j <= deg2; j++) {
+            result[i + j] += coeffs1[i] * coeffs2[j];
+        }
+    }
+
+    return result;
+}
+
+/**
+ * Additionne deux polynômes
+ * @param {Array} coeffs1 - Coefficients du premier polynôme
+ * @param {Array} coeffs2 - Coefficients du second polynôme
+ * @returns {Array} Coefficients de la somme
+ */
+function addPolynomials(coeffs1, coeffs2) {
+    const maxLen = Math.max(coeffs1.length, coeffs2.length);
+    const result = new Array(maxLen).fill(0);
+
+    // Aligner les polynômes par la droite (terme constant)
+    const offset1 = maxLen - coeffs1.length;
+    const offset2 = maxLen - coeffs2.length;
+
+    for (let i = 0; i < coeffs1.length; i++) {
+        result[offset1 + i] += coeffs1[i];
+    }
+    for (let i = 0; i < coeffs2.length; i++) {
+        result[offset2 + i] += coeffs2[i];
+    }
+
+    // Supprimer les zéros en tête si nécessaire
+    while (result.length > 1 && result[0] === 0) {
+        result.shift();
+    }
+
+    return result;
+}
+
+/**
+ * Soustrait deux polynômes
+ * @param {Array} coeffs1 - Coefficients du premier polynôme
+ * @param {Array} coeffs2 - Coefficients du second polynôme
+ * @returns {Array} Coefficients de la différence (coeffs1 - coeffs2)
+ */
+function subtractPolynomials(coeffs1, coeffs2) {
+    const negCoeffs2 = coeffs2.map(c => -c);
+    return addPolynomials(coeffs1, negCoeffs2);
+}
+
 // ============================================================
 // Résolution : Règle du produit
 // ============================================================
@@ -540,11 +602,42 @@ function solveProduit(typeProduit) {
     html += `<div class="step-expression">f'(x) = (${uPrime}) × (${v}) + (${u}) × (${vPrime})</div>`;
     html += '</div>';
 
-    // Résultat
-    html += '<div class="step">';
-    html += '<div class="step-number">✨ Dérivée finale</div>';
-    html += `<div class="result-box result-value">f'(x) = (${uPrime})(${v}) + (${u})(${vPrime})</div>`;
-    html += '</div>';
+    // Développement algébrique (uniquement pour poly_poly)
+    if (typeProduit === 'poly_poly') {
+        html += '<div class="step">';
+        html += '<div class="step-number">📍 Étape 3 : Développer et réduire</div>';
+
+        // Calculer u' × v
+        const uPrimeTimesV_coeffs = multiplyPolynomials(u_deriv, v_coeffs);
+        const uPrimeTimesV = formatPolynomial(uPrimeTimesV_coeffs, false);
+        html += `<div class="step-expression">u'(x) × v(x) = (${uPrime}) × (${v}) = ${uPrimeTimesV}</div>`;
+
+        // Calculer u × v'
+        const v_deriv = derivePolynomial(v_coeffs);
+        const uTimesVPrime_coeffs = multiplyPolynomials(u_coeffs, v_deriv);
+        const uTimesVPrime = formatPolynomial(uTimesVPrime_coeffs, false);
+        html += `<div class="step-expression">u(x) × v'(x) = (${u}) × (${vPrime}) = ${uTimesVPrime}</div>`;
+
+        // Additionner
+        const final_coeffs = addPolynomials(uPrimeTimesV_coeffs, uTimesVPrime_coeffs);
+        const finalResult = formatPolynomial(final_coeffs, false);
+        html += `<div class="step-expression">f'(x) = ${uPrimeTimesV} + ${uTimesVPrime}</div>`;
+        html += `<div class="step-expression">f'(x) = ${finalResult}</div>`;
+
+        html += '</div>';
+
+        // Résultat final
+        html += '<div class="step">';
+        html += '<div class="step-number">✨ Dérivée finale</div>';
+        html += `<div class="result-box result-value">f'(x) = ${finalResult}</div>`;
+        html += '</div>';
+    } else {
+        // Pour les autres types, pas de développement complet
+        html += '<div class="step">';
+        html += '<div class="step-number">✨ Dérivée finale</div>';
+        html += `<div class="result-box result-value">f'(x) = (${uPrime})(${v}) + (${u})(${vPrime})</div>`;
+        html += '</div>';
+    }
 
     return html;
 }
@@ -597,10 +690,40 @@ function solveQuotient(typeQuotient) {
     html += `<div class="step-expression">f'(x) = [(${uPrime}) × (${v}) - (${u}) × (${vPrime})] / (${v})²</div>`;
     html += '</div>';
 
-    // Résultat
+    // Développement algébrique du numérateur
+    html += '<div class="step">';
+    html += '<div class="step-number">📍 Étape 3 : Développer le numérateur</div>';
+
+    // Calculer u' × v
+    const uPrimeTimesV_coeffs = multiplyPolynomials(u_deriv, v_coeffs);
+    const uPrimeTimesV = formatPolynomial(uPrimeTimesV_coeffs, false);
+    html += `<div class="step-expression">u'(x) × v(x) = (${uPrime}) × (${v}) = ${uPrimeTimesV}</div>`;
+
+    // Calculer u × v'
+    const uTimesVPrime_coeffs = multiplyPolynomials(u_coeffs, v_deriv);
+    const uTimesVPrime = formatPolynomial(uTimesVPrime_coeffs, false);
+    html += `<div class="step-expression">u(x) × v'(x) = (${u}) × (${vPrime}) = ${uTimesVPrime}</div>`;
+
+    // Soustraire
+    const numerator_coeffs = subtractPolynomials(uPrimeTimesV_coeffs, uTimesVPrime_coeffs);
+    const numerator = formatPolynomial(numerator_coeffs, false);
+    html += `<div class="step-expression">u'(x)v(x) - u(x)v'(x) = ${uPrimeTimesV} - (${uTimesVPrime})</div>`;
+    html += `<div class="step-expression">= ${numerator}</div>`;
+
+    html += '</div>';
+
+    // Calcul du dénominateur v²
+    html += '<div class="step">';
+    html += '<div class="step-number">📍 Étape 4 : Calculer le dénominateur [v(x)]²</div>';
+    const vSquared_coeffs = multiplyPolynomials(v_coeffs, v_coeffs);
+    const vSquared = formatPolynomial(vSquared_coeffs, false);
+    html += `<div class="step-expression">[v(x)]² = (${v})² = ${vSquared}</div>`;
+    html += '</div>';
+
+    // Résultat final
     html += '<div class="step">';
     html += '<div class="step-number">✨ Dérivée finale</div>';
-    html += `<div class="result-box result-value">f'(x) = [(${uPrime})(${v}) - (${u})(${vPrime})] / (${v})²</div>`;
+    html += `<div class="result-box result-value">f'(x) = (${numerator}) / (${vSquared})</div>`;
     html += '</div>';
 
     return html;
