@@ -731,47 +731,22 @@ function solveVariations(a, b, c) {
     const fX0 = a * x0 * x0 + b * x0 + c;
     html += '<div class="step">';
     html += '<div class="step-number">📊 Tableau de signes et de variations</div>';
-    html += '<div class="variations-table-container">';
-    html += '<table class="variations-table">';
 
-    // Ligne x
-    html += '<tr>';
-    html += '<th>x</th>';
-    html += '<td>-∞</td>';
-    html += `<td>${formatNumber(x0)}</td>`;
-    html += '<td>+∞</td>';
-    html += '</tr>';
+    // Utilisation de la fonction générique pour tableau dynamique
+    const liste_x = ["-∞", formatNumber(x0), "+∞"];
+    const liste_fx = a > 0
+        ? ["-∞", formatNumber(fX0), "+∞"]  // Minimum
+        : ["+∞", formatNumber(fX0), "-∞"];  // Maximum
+    const liste_nature = a > 0
+        ? ["lim_bas", "min", "lim_haut"]
+        : ["lim_haut", "max", "lim_bas"];
+    const signes_derivee = (2 * a > 0) ? ["-", "+"] : ["+", "-"];
 
-    // Ligne f'(x) = 2ax + b
-    html += '<tr>';
-    html += `<th>f'(x) = ${formatNumber(2 * a)}x + ${formatNumber(b)}</th>`;
-    if (2 * a > 0) {
-        html += '<td style="color: #e74c3c; font-weight: 700;">-</td>';
-        html += '<td style="font-weight: 700;">0</td>';
-        html += '<td style="color: #27ae60; font-weight: 700;">+</td>';
-    } else {
-        html += '<td style="color: #27ae60; font-weight: 700;">+</td>';
-        html += '<td style="font-weight: 700;">0</td>';
-        html += '<td style="color: #e74c3c; font-weight: 700;">-</td>';
-    }
-    html += '</tr>';
+    html += genererTableauVariations(liste_x, liste_fx, liste_nature, signes_derivee, {
+        afficherDerivee: true,
+        formuleDerivee: `f'(x) = ${formatNumber(2 * a)}x + ${formatNumber(b)}`
+    });
 
-    // Ligne Variations de f
-    html += '<tr>';
-    html += '<th>Variations de f</th>';
-    if (a > 0) {
-        html += '<td style="font-size: 1.4em; color: #e74c3c;">↘</td>';
-        html += `<td class="var-extremum">${formatNumber(fX0)}</td>`;
-        html += '<td style="font-size: 1.4em; color: #27ae60;">↗</td>';
-    } else {
-        html += '<td style="font-size: 1.4em; color: #27ae60;">↗</td>';
-        html += `<td class="var-extremum">${formatNumber(fX0)}</td>`;
-        html += '<td style="font-size: 1.4em; color: #e74c3c;">↘</td>';
-    }
-    html += '</tr>';
-
-    html += '</table>';
-    html += '</div>';
     html += '</div>';
 
     // Conclusion

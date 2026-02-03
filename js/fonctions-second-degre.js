@@ -600,33 +600,21 @@ function solveVariations(a, b, c) {
     // Tableau de variations
     html += '<div class="step">';
     html += '<div class="step-number">📊 Tableau de variations</div>';
-    html += '<div class="variations-table-container">';
-    html += '<table class="variations-table">';
 
-    // Ligne x
-    html += '<tr>';
-    html += '<th>x</th>';
-    html += '<td>-∞</td>';
-    html += `<td>${formatNumber(alpha)}</td>`;
-    html += '<td>+∞</td>';
-    html += '</tr>';
+    // Utilisation de la fonction générique pour tableau dynamique
+    const liste_x = ["-∞", formatNumber(alpha), "+∞"];
+    const liste_fx = a > 0
+        ? ["+∞", formatNumber(beta), "+∞"]  // Minimum (parabole vers le haut)
+        : ["-∞", formatNumber(beta), "-∞"];  // Maximum (parabole vers le bas)
+    const liste_nature = a > 0
+        ? ["lim_haut", "min", "lim_haut"]
+        : ["lim_bas", "max", "lim_bas"];
+    const signes_derivee = a > 0 ? ["-", "+"] : ["+", "-"];
 
-    // Ligne f(x)
-    html += '<tr>';
-    html += '<th>f(x)</th>';
-    if (a > 0) {
-        html += '<td class="var-up">+∞<br>↘</td>';
-        html += `<td class="var-extremum">${formatNumber(beta)}</td>`;
-        html += '<td class="var-down">↗<br>+∞</td>';
-    } else {
-        html += '<td class="var-down">-∞<br>↗</td>';
-        html += `<td class="var-extremum">${formatNumber(beta)}</td>`;
-        html += '<td class="var-up">↘<br>-∞</td>';
-    }
-    html += '</tr>';
+    html += genererTableauVariations(liste_x, liste_fx, liste_nature, signes_derivee, {
+        afficherDerivee: false  // Pas de ligne f'(x) pour cet exercice
+    });
 
-    html += '</table>';
-    html += '</div>';
     html += '</div>';
 
     // Graphique
