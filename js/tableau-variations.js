@@ -30,12 +30,12 @@ function genererTableauVariations(liste_x, liste_fx, liste_nature, signes_derive
         .variations-table-wrapper .var-content-cell {
             display: grid;
             grid-template-columns: ${gridCols};
-            align-items: center;
-            min-height: 60px;
+            align-items: stretch;
+            height: 60px;
         }
         .variations-table-wrapper .var-fx-row .var-content-cell {
             height: 180px;
-            min-height: 180px;
+            align-items: stretch;
         }
         ${Array.from({length: n_colonnes}, (_, i) =>
             `.variations-table-wrapper .var-col-${i+1} { grid-column: ${i+1}; text-align: center; }`
@@ -127,21 +127,24 @@ function genererTableauVariations(liste_x, liste_fx, liste_nature, signes_derive
 
     for (let i = 0; i < n_points; i++) {
         const col_index = (i * 2) + 1; // Colonnes impaires
-        const nature = liste_nature[i];
 
-        // Déterminer l'alignement vertical
-        let v_align, fx_class;
-        if (nature === 'max' || nature === 'maximum' || nature === 'lim_haut' || liste_fx[i] === '+∞') {
-            v_align = 'var-v-align-top';
-            fx_class = 'var-fx-top';
+        // Déterminer l'alignement vertical selon la direction de la flèche
+        let v_align;
+        if (i < n_points - 1) {
+            // Pas le dernier point : regarder la flèche qui PART de ce point
+            // Si ↗ (monte), le point de départ est EN BAS
+            // Si ↘ (descend), le point de départ est EN HAUT
+            v_align = signes_derivee[i] === '+' ? 'var-v-align-bottom' : 'var-v-align-top';
         } else {
-            v_align = 'var-v-align-bottom';
-            fx_class = 'var-fx-bottom';
+            // Dernier point : regarder la flèche qui ARRIVE à ce point
+            // Si on arrive en montant ↗, le point final est EN HAUT
+            // Si on arrive en descendant ↘, le point final est EN BAS
+            v_align = signes_derivee[i - 1] === '+' ? 'var-v-align-top' : 'var-v-align-bottom';
         }
 
         // Valeur de f(x)
         html += `<div class="var-col-${col_index} ${v_align}">`;
-        html += `<span class="var-fx-value ${fx_class}">${liste_fx[i]}</span>`;
+        html += `<span class="var-fx-value">${liste_fx[i]}</span>`;
         html += '</div>';
 
         // Flèche dans la colonne paire suivante
