@@ -18,6 +18,10 @@ const DeriveesState = {
     typeQuotient: 'poly_linear',
     quotient_u: [1, 0, -1], // u = x² - 1
     quotient_v: [1, 2], // v = x + 2
+    // Composition
+    typeComposition: 'linear_power',
+    composition_u: [2, 1], // u = 2x + 1
+    composition_power: 3, // n = 3 pour (2x + 1)³
     // Tangente
     a_tang: 1,
     b_tang: -4,
@@ -77,6 +81,12 @@ function setupInputHandlers() {
         generateExercise();
     });
 
+    // Composition
+    $('type_composition').addEventListener('change', () => {
+        DeriveesState.typeComposition = $('type_composition').value;
+        generateExercise();
+    });
+
     // Tangente
     $('a_tang').addEventListener('input', () => {
         DeriveesState.a_tang = parseFloat($('a_tang').value) || 1;
@@ -128,6 +138,7 @@ function updateExerciseDisplay() {
     $('polynomialeSection').style.display = 'none';
     $('produitSection').style.display = 'none';
     $('quotientSection').style.display = 'none';
+    $('compositionSection').style.display = 'none';
     $('tangenteSection').style.display = 'none';
     $('variationsSection').style.display = 'none';
 
@@ -141,6 +152,9 @@ function updateExerciseDisplay() {
             break;
         case 'quotient':
             $('quotientSection').style.display = 'block';
+            break;
+        case 'composition':
+            $('compositionSection').style.display = 'block';
             break;
         case 'tangente':
             $('tangenteSection').style.display = 'block';
@@ -161,6 +175,9 @@ function updateExerciseDisplay() {
             break;
         case 'quotient':
             display = generateQuotientDisplay();
+            break;
+        case 'composition':
+            display = generateCompositionDisplay();
             break;
         case 'tangente':
             display = `Tangente à f(x) = ${formatQuadratic(DeriveesState.a_tang, DeriveesState.b_tang, DeriveesState.c_tang)} en x₀ = ${formatNumber(DeriveesState.x0_tang)}`;
@@ -285,6 +302,26 @@ function generateQuotientDisplay() {
 }
 
 /**
+ * Génère l'affichage pour une composition
+ */
+function generateCompositionDisplay() {
+    const type = DeriveesState.typeComposition;
+    const u = formatPolynomial(DeriveesState.composition_u, false);
+    const n = DeriveesState.composition_power;
+
+    switch (type) {
+        case 'linear_power':
+            return `f(x) = (${u})${getSuperscript(n)}`;
+        case 'linear_sqrt':
+            return `f(x) = √(${u})`;
+        case 'quadratic_power':
+            return `f(x) = (${u})${getSuperscript(n)}`;
+        default:
+            return `f(x) = (${u})${getSuperscript(n)}`;
+    }
+}
+
+/**
  * Génère un exercice aléatoire
  */
 function generateExercise() {
@@ -340,6 +377,24 @@ function generateExercise() {
             }
             break;
 
+        case 'composition':
+            // Générer u et n selon le type
+            const typeComp = DeriveesState.typeComposition;
+            if (typeComp === 'linear_power') {
+                // u = ax + b avec n entre 2 et 5
+                DeriveesState.composition_u = [randCoef(-3, 3, false, true), randCoef(-5, 5, false, false)];
+                DeriveesState.composition_power = Math.floor(Math.random() * 4) + 2; // 2, 3, 4 ou 5
+            } else if (typeComp === 'linear_sqrt') {
+                // u = ax + b pour √(ax + b)
+                DeriveesState.composition_u = [randCoef(-3, 3, false, true), randCoef(1, 8, false, true)]; // b > 0 pour éviter racine négative
+                DeriveesState.composition_power = 0.5; // Racine carrée = puissance 1/2
+            } else if (typeComp === 'quadratic_power') {
+                // u = ax² + bx + c avec n = 2 ou 3
+                DeriveesState.composition_u = [randCoef(-2, 2, false, true), randCoef(-5, 5, false, false), randCoef(-5, 5, false, false)];
+                DeriveesState.composition_power = Math.random() < 0.5 ? 2 : 3;
+            }
+            break;
+
         case 'tangente':
             DeriveesState.a_tang = randCoef(1, 3, false, true);
             if (Math.random() < 0.5) DeriveesState.a_tang = -DeriveesState.a_tang;
@@ -383,6 +438,9 @@ function solveExercise() {
             break;
         case 'quotient':
             html = solveQuotient(DeriveesState.typeQuotient);
+            break;
+        case 'composition':
+            html = solveComposition(DeriveesState.typeComposition);
             break;
         case 'tangente':
             html = solveTangente(DeriveesState.a_tang, DeriveesState.b_tang, DeriveesState.c_tang, DeriveesState.x0_tang);
@@ -723,6 +781,151 @@ function solveQuotient(typeQuotient) {
     html += '</span>';
     html += '</div>';
     html += '</div>';
+
+    return html;
+}
+
+// ============================================================
+// Résolution : Règle de la chaîne (composition)
+// ============================================================
+function solveComposition(typeComposition) {
+    let html = '';
+
+    const u_coeffs = DeriveesState.composition_u;
+    const n = DeriveesState.composition_power;
+
+    // Calculer u et u'
+    const u = formatPolynomial(u_coeffs, false);
+    const u_deriv = derivePolynomial(u_coeffs);
+    const uPrime = formatPolynomial(u_deriv, false);
+
+    // Fonction
+    html += '<div class="formula-box">';
+    html += '<div class="formula-title">📐 Dérivée d\'une fonction composée</div>';
+
+    if (typeComposition === 'linear_sqrt') {
+        html += `<div class="formula-content">f(x) = √(${u})</div>`;
+        html += '<div class="formula-subtitle">avec u(x) = ' + u + '</div>';
+    } else {
+        html += `<div class="formula-content">f(x) = [${u}]${getSuperscript(n)}</div>`;
+        html += '<div class="formula-subtitle">avec u(x) = ' + u + ' et n = ' + n + '</div>';
+    }
+    html += '</div>';
+
+    // Formule
+    html += '<div class="step">';
+    html += '<div class="step-number">📚 Formule de dérivation (règle de la chaîne)</div>';
+
+    if (typeComposition === 'linear_sqrt') {
+        html += '<div class="step-explanation">Pour f(x) = √u(x) :</div>';
+        html += '<div class="step-expression">f\'(x) = u\'(x) / (2√u(x))</div>';
+    } else {
+        html += '<div class="step-explanation">Pour f(x) = [u(x)]ⁿ :</div>';
+        html += '<div class="step-expression">f\'(x) = n × u\'(x) × [u(x)]ⁿ⁻¹</div>';
+    }
+    html += '</div>';
+
+    // Calcul de u'
+    html += '<div class="step">';
+    html += '<div class="step-number">📍 Étape 1 : Calculer u\'(x)</div>';
+    html += `<div class="step-expression">u(x) = ${u}</div>`;
+    html += `<div class="step-expression">u'(x) = ${uPrime}</div>`;
+    html += '</div>';
+
+    // Application de la formule
+    html += '<div class="step">';
+    html += '<div class="step-number">📍 Étape 2 : Appliquer la formule</div>';
+
+    if (typeComposition === 'linear_sqrt') {
+        html += '<div class="step-expression">f\'(x) = u\'(x) / (2√u(x))</div>';
+        html += `<div class="step-expression">f'(x) = (${uPrime}) / (2√(${u}))</div>`;
+    } else {
+        html += `<div class="step-expression">f\'(x) = ${n} × u\'(x) × [u(x)]${getSuperscript(n-1)}</div>`;
+        html += `<div class="step-expression">f'(x) = ${n} × (${uPrime}) × (${u})${getSuperscript(n-1)}</div>`;
+    }
+    html += '</div>';
+
+    // Développement algébrique (pour linear_power et quadratic_power)
+    if (typeComposition !== 'linear_sqrt' && n >= 2 && n <= 5) {
+        html += '<div class="step">';
+        html += '<div class="step-number">📍 Étape 3 : Développer</div>';
+
+        // Calculer n × u'(x)
+        const n_times_uPrime_coeffs = u_deriv.map(c => c * n);
+        const n_times_uPrime = formatPolynomial(n_times_uPrime_coeffs, false);
+        html += `<div class="step-expression">${n} × u'(x) = ${n} × (${uPrime}) = ${n_times_uPrime}</div>`;
+
+        // Si u est linéaire et n est petit, on peut développer [u(x)]^(n-1)
+        if (u_coeffs.length === 2 && n <= 4) {
+            // Calculer [u(x)]^(n-1)
+            let u_power_coeffs = u_coeffs.slice();
+            for (let i = 1; i < n - 1; i++) {
+                u_power_coeffs = multiplyPolynomials(u_power_coeffs, u_coeffs);
+            }
+
+            if (n > 2) {
+                const u_power = formatPolynomial(u_power_coeffs, false);
+                html += `<div class="step-expression">(${u})${getSuperscript(n-1)} = ${u_power}</div>`;
+
+                // Multiplier n × u'(x) par [u(x)]^(n-1)
+                const final_coeffs = multiplyPolynomials(n_times_uPrime_coeffs, u_power_coeffs);
+                const finalResult = formatPolynomial(final_coeffs, false);
+                html += `<div class="step-expression">f'(x) = (${n_times_uPrime}) × (${u_power})</div>`;
+                html += `<div class="step-expression">f'(x) = ${finalResult}</div>`;
+
+                html += '</div>';
+
+                // Résultat final
+                html += '<div class="step">';
+                html += '<div class="step-number">✨ Dérivée finale</div>';
+                html += `<div class="result-box result-value">f'(x) = ${finalResult}</div>`;
+                html += '</div>';
+            } else {
+                // n = 2, donc n-1 = 1, pas besoin de développer
+                html += `<div class="step-expression">f'(x) = (${n_times_uPrime}) × (${u})</div>`;
+
+                const final_coeffs = multiplyPolynomials(n_times_uPrime_coeffs, u_coeffs);
+                const finalResult = formatPolynomial(final_coeffs, false);
+                html += `<div class="step-expression">f'(x) = ${finalResult}</div>`;
+
+                html += '</div>';
+
+                // Résultat final
+                html += '<div class="step">';
+                html += '<div class="step-number">✨ Dérivée finale</div>';
+                html += `<div class="result-box result-value">f'(x) = ${finalResult}</div>`;
+                html += '</div>';
+            }
+        } else {
+            // Polynôme quadratique ou puissances élevées : trop complexe à développer
+            html += `<div class="step-expression">f'(x) = (${n_times_uPrime}) × (${u})${getSuperscript(n-1)}</div>`;
+            html += '</div>';
+
+            html += '<div class="step">';
+            html += '<div class="step-number">✨ Dérivée finale</div>';
+            html += `<div class="result-box result-value">f'(x) = ${n_times_uPrime} × (${u})${getSuperscript(n-1)}</div>`;
+            html += '</div>';
+        }
+    } else if (typeComposition === 'linear_sqrt') {
+        // Pour la racine carrée, pas de développement supplémentaire
+        html += '<div class="step">';
+        html += '<div class="step-number">✨ Dérivée finale</div>';
+        html += '<div class="result-box result-value" style="font-size: 1.3em;">';
+        html += 'f\'(x) = ';
+        html += '<span class="frac" style="font-size: 1.2em; margin-left: 8px;">';
+        html += `<span class="num">${uPrime}</span>`;
+        html += `<span class="den">2√(${u})</span>`;
+        html += '</span>';
+        html += '</div>';
+        html += '</div>';
+    } else {
+        // Puissance élevée : pas de développement
+        html += '<div class="step">';
+        html += '<div class="step-number">✨ Dérivée finale</div>';
+        const n_times_uPrime = formatPolynomial(u_deriv.map(c => c * n), false);
+        html += `<div class="result-box result-value">f'(x) = ${n_times_uPrime} × (${u})${getSuperscript(n-1)}</div>`;
+        html += '</div>';
+    }
 
     return html;
 }

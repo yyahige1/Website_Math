@@ -100,6 +100,10 @@
                     <div class="example">(u/v)' = (u'v - uv')/v²</div>
                     <div class="label">Règle du quotient</div>
                 </button>
+                <button class="type-btn" data-type="composition">
+                    <div class="example">[u(x)]ⁿ → n·u'·uⁿ⁻¹</div>
+                    <div class="label">Règle de la chaîne</div>
+                </button>
                 <button class="type-btn" data-type="tangente">
                     <div class="example">y = f'(a)(x - a) + f(a)</div>
                     <div class="label">Équation de tangente</div>
@@ -151,6 +155,19 @@
                     <option value="poly_linear">Polynôme / (ax + b)</option>
                     <option value="linear_poly">Constante ou Linéaire / Polynôme</option>
                     <option value="poly_poly">Polynôme / Polynôme</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Section Composition -->
+        <div id="compositionSection" class="card" style="display: none;">
+            <h3>📐 Composition de fonctions (règle de la chaîne)</h3>
+            <div class="param-row">
+                <label>Type de composition:</label>
+                <select id="type_composition">
+                    <option value="linear_power">(ax + b)ⁿ</option>
+                    <option value="linear_sqrt">√(ax + b)</option>
+                    <option value="quadratic_power">(ax² + bx + c)ⁿ</option>
                 </select>
             </div>
         </div>
