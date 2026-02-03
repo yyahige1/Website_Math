@@ -267,6 +267,13 @@ function formatQuadratic(a, b, c) {
 }
 
 /**
+ * Formate une racine carrée avec le style CSS approprié
+ */
+function formatSqrt(content) {
+    return `<span class="sqrt"><span class="sqrt-content">${content}</span></span>`;
+}
+
+/**
  * Génère l'affichage pour un produit
  */
 function generateProduitDisplay() {
@@ -313,7 +320,7 @@ function generateCompositionDisplay() {
         case 'linear_power':
             return `f(x) = (${u})${getSuperscript(n)}`;
         case 'linear_sqrt':
-            return `f(x) = √(${u})`;
+            return `f(x) = ${formatSqrt(u)}`;
         case 'quadratic_power':
             return `f(x) = (${u})${getSuperscript(n)}`;
         default:
@@ -804,7 +811,7 @@ function solveComposition(typeComposition) {
     html += '<div class="formula-title">📐 Dérivée d\'une fonction composée</div>';
 
     if (typeComposition === 'linear_sqrt') {
-        html += `<div class="formula-content">f(x) = √(${u})</div>`;
+        html += `<div class="formula-content">f(x) = ${formatSqrt(u)}</div>`;
         html += '<div class="formula-subtitle">avec u(x) = ' + u + '</div>';
     } else {
         html += `<div class="formula-content">f(x) = [${u}]${getSuperscript(n)}</div>`;
@@ -817,8 +824,8 @@ function solveComposition(typeComposition) {
     html += '<div class="step-number">📚 Formule de dérivation (règle de la chaîne)</div>';
 
     if (typeComposition === 'linear_sqrt') {
-        html += '<div class="step-explanation">Pour f(x) = √u(x) :</div>';
-        html += '<div class="step-expression">f\'(x) = u\'(x) / (2√u(x))</div>';
+        html += `<div class="step-explanation">Pour f(x) = ${formatSqrt('u(x)')} :</div>`;
+        html += `<div class="step-expression">f'(x) = u'(x) / (2${formatSqrt('u(x)')})</div>`;
     } else {
         html += '<div class="step-explanation">Pour f(x) = [u(x)]ⁿ :</div>';
         html += '<div class="step-expression">f\'(x) = n × u\'(x) × [u(x)]ⁿ⁻¹</div>';
@@ -837,16 +844,16 @@ function solveComposition(typeComposition) {
     html += '<div class="step-number">📍 Étape 2 : Appliquer la formule</div>';
 
     if (typeComposition === 'linear_sqrt') {
-        html += '<div class="step-expression">f\'(x) = u\'(x) / (2√u(x))</div>';
-        html += `<div class="step-expression">f'(x) = (${uPrime}) / (2√(${u}))</div>`;
+        html += `<div class="step-expression">f'(x) = u'(x) / (2${formatSqrt('u(x)')})</div>`;
+        html += `<div class="step-expression">f'(x) = (${uPrime}) / (2${formatSqrt(u)})</div>`;
     } else {
         html += `<div class="step-expression">f\'(x) = ${n} × u\'(x) × [u(x)]${getSuperscript(n-1)}</div>`;
         html += `<div class="step-expression">f'(x) = ${n} × (${uPrime}) × (${u})${getSuperscript(n-1)}</div>`;
     }
     html += '</div>';
 
-    // Développement algébrique (pour linear_power et quadratic_power)
-    if (typeComposition !== 'linear_sqrt' && n >= 2 && n <= 5) {
+    // Développement algébrique (uniquement pour linear_power avec n pas trop grand)
+    if (typeComposition === 'linear_power' && n >= 2 && n <= 4) {
         html += '<div class="step">';
         html += '<div class="step-number">📍 Étape 3 : Développer</div>';
 
@@ -855,8 +862,8 @@ function solveComposition(typeComposition) {
         const n_times_uPrime = formatPolynomial(n_times_uPrime_coeffs, false);
         html += `<div class="step-expression">${n} × u'(x) = ${n} × (${uPrime}) = ${n_times_uPrime}</div>`;
 
-        // Si u est linéaire et n est petit, on peut développer [u(x)]^(n-1)
-        if (u_coeffs.length === 2 && n <= 4) {
+        // Développer [u(x)]^(n-1) seulement si u est linéaire
+        if (u_coeffs.length === 2) {
             // Calculer [u(x)]^(n-1)
             let u_power_coeffs = u_coeffs.slice();
             for (let i = 1; i < n - 1; i++) {
@@ -896,34 +903,32 @@ function solveComposition(typeComposition) {
                 html += `<div class="result-box result-value">f'(x) = ${finalResult}</div>`;
                 html += '</div>';
             }
-        } else {
-            // Polynôme quadratique ou puissances élevées : trop complexe à développer
-            html += `<div class="step-expression">f'(x) = (${n_times_uPrime}) × (${u})${getSuperscript(n-1)}</div>`;
-            html += '</div>';
-
-            html += '<div class="step">';
-            html += '<div class="step-number">✨ Dérivée finale</div>';
-            html += `<div class="result-box result-value">f'(x) = ${n_times_uPrime} × (${u})${getSuperscript(n-1)}</div>`;
-            html += '</div>';
         }
     } else if (typeComposition === 'linear_sqrt') {
-        // Pour la racine carrée, pas de développement supplémentaire
+        // Pour la racine carrée, afficher avec une vraie fraction
         html += '<div class="step">';
         html += '<div class="step-number">✨ Dérivée finale</div>';
         html += '<div class="result-box result-value" style="font-size: 1.3em;">';
         html += 'f\'(x) = ';
         html += '<span class="frac" style="font-size: 1.2em; margin-left: 8px;">';
         html += `<span class="num">${uPrime}</span>`;
-        html += `<span class="den">2√(${u})</span>`;
+        html += `<span class="den">2${formatSqrt(u)}</span>`;
         html += '</span>';
         html += '</div>';
         html += '</div>';
     } else {
-        // Puissance élevée : pas de développement
+        // quadratic_power ou puissances élevées : pas de développement complet (trop long)
+        html += '<div class="step">';
+        html += '<div class="step-number">📍 Étape 3 : Simplifier</div>';
+        const n_times_uPrime_coeffs = u_deriv.map(c => c * n);
+        const n_times_uPrime = formatPolynomial(n_times_uPrime_coeffs, false);
+        html += `<div class="step-expression">${n} × u'(x) = ${n_times_uPrime}</div>`;
+        html += '</div>';
+
         html += '<div class="step">';
         html += '<div class="step-number">✨ Dérivée finale</div>';
-        const n_times_uPrime = formatPolynomial(u_deriv.map(c => c * n), false);
         html += `<div class="result-box result-value">f'(x) = ${n_times_uPrime} × (${u})${getSuperscript(n-1)}</div>`;
+        html += '<div class="step-explanation">💡 Le développement complet serait trop long pour ce cas</div>';
         html += '</div>';
     }
 

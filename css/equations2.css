@@ -133,8 +133,37 @@
 
 /* Racine carrée stylée */
 .sqrt {
-    font-size: 1.2em;
+    display: inline-block;
+    position: relative;
+    font-size: 1em;
+    font-weight: 600;
+    padding: 0 8px 0 4px;
+    margin: 0 4px;
+}
+
+.sqrt::before {
+    content: '√';
+    font-size: 1.4em;
     font-weight: 700;
+    vertical-align: middle;
+    margin-right: 2px;
+}
+
+.sqrt-content {
+    display: inline-block;
+    border-top: 2px solid var(--gray-800);
+    padding: 4px 6px 2px 6px;
+    min-width: 30px;
+}
+
+/* Pour les racines dans les fractions */
+.frac .den .sqrt::before {
+    font-size: 1.2em;
+}
+
+.frac .den .sqrt-content {
+    border-top: 1.5px solid var(--gray-800);
+    padding: 2px 4px 1px 4px;
 }
 
 /* Puissance (exposant) */
