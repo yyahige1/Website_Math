@@ -113,7 +113,8 @@
     top: 100%;
     left: 0;
     background: white;
-    min-width: 280px;
+    width: max-content;
+    min-width: 200px;
     white-space: nowrap;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     border-radius: 0 0 8px 8px;
