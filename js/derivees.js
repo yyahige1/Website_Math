@@ -267,10 +267,25 @@ function formatQuadratic(a, b, c) {
 }
 
 /**
- * Formate une racine carrée avec le style CSS approprié
+ * Formate une racine carrée avec KaTeX
  */
 function formatSqrt(content) {
-    return `<span class="sqrt"><span class="sqrt-content">${content}</span></span>`;
+    try {
+        return katex.renderToString(`\\sqrt{${content}}`, { throwOnError: false });
+    } catch(e) {
+        return `√(${content})`;
+    }
+}
+
+/**
+ * Formate une fraction avec KaTeX
+ */
+function formatFraction(numerator, denominator) {
+    try {
+        return katex.renderToString(`\\frac{${numerator}}{${denominator}}`, { throwOnError: false });
+    } catch(e) {
+        return `(${numerator}) / (${denominator})`;
+    }
 }
 
 /**
@@ -781,11 +796,7 @@ function solveQuotient(typeQuotient) {
     html += '<div class="step">';
     html += '<div class="step-number">✨ Dérivée finale</div>';
     html += '<div class="result-box result-value" style="font-size: 1.3em;">';
-    html += 'f\'(x) = ';
-    html += '<span class="frac" style="font-size: 1.2em; margin-left: 8px;">';
-    html += `<span class="num">${numerator}</span>`;
-    html += `<span class="den">(${v})²</span>`;
-    html += '</span>';
+    html += `f'(x) = ${formatFraction(numerator, `(${v})^2`)}`;
     html += '</div>';
     html += '</div>';
 
@@ -825,7 +836,7 @@ function solveComposition(typeComposition) {
 
     if (typeComposition === 'linear_sqrt') {
         html += `<div class="step-explanation">Pour f(x) = ${formatSqrt('u(x)')} :</div>`;
-        html += `<div class="step-expression">f'(x) = u'(x) / (2${formatSqrt('u(x)')})</div>`;
+        html += `<div class="step-expression">f'(x) = ${formatFraction("u'(x)", "2\\sqrt{u(x)}")}</div>`;
     } else {
         html += '<div class="step-explanation">Pour f(x) = [u(x)]ⁿ :</div>';
         html += '<div class="step-expression">f\'(x) = n × u\'(x) × [u(x)]ⁿ⁻¹</div>';
@@ -844,8 +855,8 @@ function solveComposition(typeComposition) {
     html += '<div class="step-number">📍 Étape 2 : Appliquer la formule</div>';
 
     if (typeComposition === 'linear_sqrt') {
-        html += `<div class="step-expression">f'(x) = u'(x) / (2${formatSqrt('u(x)')})</div>`;
-        html += `<div class="step-expression">f'(x) = (${uPrime}) / (2${formatSqrt(u)})</div>`;
+        html += `<div class="step-expression">f'(x) = ${formatFraction("u'(x)", "2\\sqrt{u(x)}")}</div>`;
+        html += `<div class="step-expression">f'(x) = ${formatFraction(uPrime, `2\\sqrt{${u}}`)}</div>`;
     } else {
         html += `<div class="step-expression">f\'(x) = ${n} × u\'(x) × [u(x)]${getSuperscript(n-1)}</div>`;
         html += `<div class="step-expression">f'(x) = ${n} × (${uPrime}) × (${u})${getSuperscript(n-1)}</div>`;
@@ -909,11 +920,7 @@ function solveComposition(typeComposition) {
         html += '<div class="step">';
         html += '<div class="step-number">✨ Dérivée finale</div>';
         html += '<div class="result-box result-value" style="font-size: 1.3em;">';
-        html += 'f\'(x) = ';
-        html += '<span class="frac" style="font-size: 1.2em; margin-left: 8px;">';
-        html += `<span class="num">${uPrime}</span>`;
-        html += `<span class="den">2${formatSqrt(u)}</span>`;
-        html += '</span>';
+        html += `f'(x) = ${formatFraction(uPrime, `2\\sqrt{${u}}`)}`;
         html += '</div>';
         html += '</div>';
     } else {
