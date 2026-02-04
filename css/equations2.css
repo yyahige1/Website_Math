@@ -17,13 +17,11 @@
 .frac .num {
     border-bottom: 2px solid var(--gray-800);
     padding: 2px 8px;
-    min-width: 30px;
     text-align: center;
 }
 
 .frac .den {
     padding: 2px 8px;
-    min-width: 30px;
     text-align: center;
 }
 
@@ -133,37 +131,44 @@
 
 /* Racine carrée stylée */
 .sqrt {
-    display: inline-block;
+    display: inline-flex;
+    align-items: flex-end;
     position: relative;
     font-size: 1em;
     font-weight: 600;
-    padding: 0 8px 0 4px;
-    margin: 0 4px;
+    margin: 0 2px;
+    vertical-align: middle;
 }
 
 .sqrt::before {
     content: '√';
-    font-size: 1.4em;
+    font-size: 1.5em;
     font-weight: 700;
-    vertical-align: middle;
-    margin-right: 2px;
+    line-height: 1;
+    margin-right: -1px; /* Connexion parfaite avec la barre */
+    position: relative;
+    bottom: -2px;
 }
 
 .sqrt-content {
     display: inline-block;
     border-top: 2px solid var(--gray-800);
-    padding: 4px 6px 2px 6px;
-    min-width: 30px;
+    padding: 4px 8px 2px 8px;
+    line-height: 1.4;
 }
 
 /* Pour les racines dans les fractions */
+.frac .den .sqrt {
+    font-size: 0.95em;
+}
+
 .frac .den .sqrt::before {
-    font-size: 1.2em;
+    font-size: 1.3em;
 }
 
 .frac .den .sqrt-content {
-    border-top: 1.5px solid var(--gray-800);
-    padding: 2px 4px 1px 4px;
+    border-top: 1.8px solid var(--gray-800);
+    padding: 3px 6px 1px 6px;
 }
 
 /* Puissance (exposant) */

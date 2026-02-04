@@ -187,7 +187,7 @@ function updateExerciseDisplay() {
             break;
     }
 
-    $('expressionDisplay').textContent = display;
+    $('expressionDisplay').innerHTML = display;
 }
 
 /**
