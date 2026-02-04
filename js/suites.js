@@ -169,7 +169,9 @@ function updateExerciseDisplay() {
     switch (type) {
         case 'arithmetique':
             $('arithmetiqueSection').style.display = 'block';
-            display = `u<sub>n</sub> = ${formatNumber(SuitesState.u0_arith)} + ${formatNumber(SuitesState.r_arith)}n`;
+            const r_arith = SuitesState.r_arith;
+            const sign_arith = r_arith >= 0 ? '+' : '-';
+            display = `u<sub>n</sub> = ${formatNumber(SuitesState.u0_arith)} ${sign_arith} ${formatNumber(Math.abs(r_arith))}n`;
             break;
         case 'geometrique':
             $('geometriqueSection').style.display = 'block';
@@ -177,18 +179,18 @@ function updateExerciseDisplay() {
             break;
         case 'somme_arith':
             $('sommeArithSection').style.display = 'block';
-            display = `Somme des ${SuitesState.n_sarith + 1} premiers termes (u<sub>0</sub> à u<sub>${SuitesState.n_sarith}</sub>)`;
+            display = `Somme de ${SuitesState.n_sarith + 1} termes : u<sub>0</sub> + u<sub>1</sub> + ... + u<sub>${SuitesState.n_sarith}</sub>`;
             break;
         case 'somme_geo':
             $('sommeGeoSection').style.display = 'block';
-            display = `Somme des ${SuitesState.n_sgeo + 1} premiers termes (u<sub>0</sub> à u<sub>${SuitesState.n_sgeo}</sub>)`;
+            display = `Somme de ${SuitesState.n_sgeo + 1} termes : u<sub>0</sub> + u<sub>1</sub> + ... + u<sub>${SuitesState.n_sgeo}</sub>`;
             break;
         case 'variation':
             $('variationSection').style.display = 'block';
             if (SuitesState.type_variation === 'arithmetique') {
-                display = `Suite arithmétique : u<sub>n+1</sub> - u<sub>n</sub> = ${formatNumber(SuitesState.r_var)}`;
+                display = `Déterminer le sens de variation de la suite arithmétique`;
             } else {
-                display = `Suite géométrique : u<sub>n+1</sub> / u<sub>n</sub> = ${formatNumber(SuitesState.q_var)}`;
+                display = `Déterminer le sens de variation de la suite géométrique`;
             }
             break;
     }
@@ -589,6 +591,14 @@ function solveVariation(type, u0, r, q) {
         html += '<div class="step-explanation">• Si q > 1 : la suite est <strong>strictement croissante</strong></div>';
         html += '<div class="step-explanation">• Si 0 < q < 1 : la suite est <strong>strictement décroissante</strong></div>';
         html += '<div class="step-explanation">• Si q = 1 : la suite est <strong>constante</strong></div>';
+        html += '</div>';
+
+        html += '<div class="step">';
+        html += '<div class="step-number">📍 Calcul de u<sub>n+1</sub> / u<sub>n</sub></div>';
+        html += '<div class="step-expression">u<sub>n+1</sub> / u<sub>n</sub> = (u<sub>0</sub> × q<sup>n+1</sup>) / (u<sub>0</sub> × q<sup>n</sup>)</div>';
+        html += '<div class="step-expression">u<sub>n+1</sub> / u<sub>n</sub> = q<sup>n+1-n</sup></div>';
+        html += '<div class="step-expression">u<sub>n+1</sub> / u<sub>n</sub> = q</div>';
+        html += `<div class="step-expression">u<sub>n+1</sub> / u<sub>n</sub> = ${formatNumber(q)}</div>`;
         html += '</div>';
 
         html += '<div class="step">';
