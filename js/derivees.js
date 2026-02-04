@@ -320,7 +320,7 @@ function generateProduitDisplay() {
 function generateQuotientDisplay() {
     const u = formatPolynomial(DeriveesState.quotient_u, false);
     const v = formatPolynomial(DeriveesState.quotient_v, false);
-    return `f(x) = (${u}) / (${v})`;
+    return `f(x) = ${formatFraction(u, v)}`;
 }
 
 /**
@@ -743,15 +743,15 @@ function solveQuotient(typeQuotient) {
     // Fonction
     html += '<div class="formula-box">';
     html += '<div class="formula-title">📐 Dérivée d\'un quotient</div>';
-    html += `<div class="formula-content">f(x) = (${u}) / (${v})</div>`;
+    html += `<div class="formula-content">f(x) = ${formatFraction(u, v)}</div>`;
     html += '<div class="formula-subtitle">avec u(x) = ' + u + ' et v(x) = ' + v + '</div>';
     html += '</div>';
 
     // Formule
     html += '<div class="step">';
     html += '<div class="step-number">📚 Formule de dérivation</div>';
-    html += '<div class="step-explanation">Pour f(x) = u(x) / v(x) :</div>';
-    html += '<div class="step-expression">f\'(x) = (u\'(x) × v(x) - u(x) × v\'(x)) / [v(x)]²</div>';
+    html += `<div class="step-explanation">Pour f(x) = ${formatFraction("u(x)", "v(x)")} :</div>`;
+    html += `<div class="step-expression">f'(x) = ${formatFraction("u'(x) \\times v(x) - u(x) \\times v'(x)", "[v(x)]^2")}</div>`;
     html += '</div>';
 
     // Calcul de u' et v'
@@ -766,8 +766,7 @@ function solveQuotient(typeQuotient) {
     // Application de la formule
     html += '<div class="step">';
     html += '<div class="step-number">📍 Étape 2 : Appliquer la formule</div>';
-    html += '<div class="step-expression">f\'(x) = [u\'(x) × v(x) - u(x) × v\'(x)] / [v(x)]²</div>';
-    html += `<div class="step-expression">f'(x) = [(${uPrime}) × (${v}) - (${u}) × (${vPrime})] / (${v})²</div>`;
+    html += `<div class="step-expression">f'(x) = ${formatFraction(`(${uPrime}) \\times (${v}) - (${u}) \\times (${vPrime})`, `(${v})^2`)}</div>`;
     html += '</div>';
 
     // Développement algébrique du numérateur

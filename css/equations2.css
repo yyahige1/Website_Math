@@ -129,7 +129,9 @@
     font-weight: 600;
 }
 
-/* Racine carrée stylée */
+/* Racine carrée stylée - DÉSACTIVÉ car on utilise KaTeX maintenant */
+/* Les styles ci-dessous causaient des affichages doubles avec KaTeX */
+/*
 .sqrt {
     display: inline-flex;
     align-items: flex-start;
@@ -157,8 +159,10 @@
     line-height: 1.3;
     min-width: 40px;
 }
+*/
 
-/* Pour les racines dans les fractions */
+/* Pour les racines dans les fractions - aussi désactivé */
+/*
 .frac .den {
     display: flex;
     align-items: center;
@@ -181,6 +185,7 @@
     padding: 2px 6px 1px 6px;
     min-width: 35px;
 }
+*/
 
 /* Puissance (exposant) */
 sup {
