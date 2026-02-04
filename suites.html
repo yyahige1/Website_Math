@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MathsFacile - Suites Numériques</title>
+
+    <!-- KaTeX pour le rendu mathématique -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous"></script>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/exercices.css">
+    <link rel="stylesheet" href="css/systemes.css">
+    <link rel="stylesheet" href="css/equations2.css">
+    <link rel="stylesheet" href="css/navigation.css">
+</head>
+<body>
+    <div class="container">
+        <!-- NAVIGATION -->
+        <nav class="nav">
+            <div class="nav-container">
+                <!-- Logo -->
+                <a href="index.html" class="nav-brand">MathsFacile</a>
+
+                <!-- Hamburger (mobile uniquement) -->
+                <button class="nav-hamburger" aria-label="Menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+
+                <!-- Menu principal -->
+                <ul class="nav-menu">
+                    <!-- Catégorie : Algèbre -->
+                    <li class="nav-item has-dropdown">
+                        <a href="#" class="nav-link">Algèbre<span class="arrow">▾</span></a>
+                        <ul class="nav-dropdown">
+                            <li><a href="index.html">Équations 1er degré</a></li>
+                            <li><a href="developpement.html">Développement</a></li>
+                            <li><a href="reduction.html">Réduction</a></li>
+                            <li><a href="factorisation.html">Factorisation</a></li>
+                            <li><a href="inequations.html">Inéquations 1er degré</a></li>
+                            <li><a href="equations2.html">Équations 2nd degré</a></li>
+                            <li><a href="inequations2.html">Inéquations 2nd degré</a></li>
+                            <li><a href="systemes.html">Systèmes d'équations</a></li>
+                        </ul>
+                    </li>
+
+                    <!-- Catégorie : Calculs -->
+                    <li class="nav-item has-dropdown">
+                        <a href="#" class="nav-link">Calculs<span class="arrow">▾</span></a>
+                        <ul class="nav-dropdown">
+                            <li><a href="fractions.html">Fractions</a></li>
+                            <li><a href="pourcentages.html">Pourcentages</a></li>
+                            <li><a href="puissances.html">Puissances</a></li>
+                            <li><a href="racines.html">Racines carrées</a></li>
+                        </ul>
+                    </li>
+
+                    <!-- Catégorie : Fonctions -->
+                    <li class="nav-item has-dropdown">
+                        <a href="#" class="nav-link">Fonctions<span class="arrow">▾</span></a>
+                        <ul class="nav-dropdown">
+                            <li><a href="fonctions-affines.html">Fonctions Affines</a></li>
+                            <li><a href="fonctions-second-degre.html">Fonctions du 2nd Degré</a></li>
+                            <li><a href="derivees.html">Dérivées</a></li>
+                        </ul>
+                    </li>
+
+                    <!-- Catégorie : Suites -->
+                    <li class="nav-item has-dropdown">
+                        <a href="#" class="nav-link">Suites<span class="arrow">▾</span></a>
+                        <ul class="nav-dropdown">
+                            <li><a href="suites.html" class="active">Suites Numériques</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- TITRE -->
+        <header class="page-header">
+            <h1>🔢 Suites Numériques</h1>
+            <p>Suites arithmétiques et géométriques</p>
+        </header>
+
+        <!-- TYPES D'EXERCICES -->
+        <div class="card">
+            <h2>Type d'exercice</h2>
+            <div class="type-buttons">
+                <button class="type-btn active" data-type="arithmetique">
+                    <div class="example">u<sub>n</sub> = u<sub>0</sub> + n×r</div>
+                    <div class="label">Suite Arithmétique</div>
+                </button>
+                <button class="type-btn" data-type="geometrique">
+                    <div class="example">u<sub>n</sub> = u<sub>0</sub> × q<sup>n</sup></div>
+                    <div class="label">Suite Géométrique</div>
+                </button>
+                <button class="type-btn" data-type="somme_arith">
+                    <div class="example">S<sub>n</sub> = n(u<sub>0</sub>+u<sub>n</sub>)/2</div>
+                    <div class="label">Somme Arithmétique</div>
+                </button>
+                <button class="type-btn" data-type="somme_geo">
+                    <div class="example">S<sub>n</sub> = u<sub>0</sub>(1-q<sup>n</sup>)/(1-q)</div>
+                    <div class="label">Somme Géométrique</div>
+                </button>
+                <button class="type-btn" data-type="variation">
+                    <div class="example">u<sub>n+1</sub> - u<sub>n</sub></div>
+                    <div class="label">Sens de variation</div>
+                </button>
+            </div>
+        </div>
+
+        <!-- Expression affichée -->
+        <div id="expressionContainer" class="card">
+            <div class="expression" id="expressionDisplay">u<sub>n</sub> = 3 + 5n</div>
+        </div>
+
+        <!-- Section Suite Arithmétique -->
+        <div id="arithmetiqueSection" class="card">
+            <h3>📐 Suite Arithmétique</h3>
+            <div class="param-row">
+                <label>Premier terme u<sub>0</sub> :</label>
+                <input type="number" id="u0_arith" value="3" step="1">
+            </div>
+            <div class="param-row">
+                <label>Raison r :</label>
+                <input type="number" id="r_arith" value="5" step="1">
+            </div>
+            <div class="param-row">
+                <label>Rang n à calculer :</label>
+                <input type="number" id="n_arith" value="10" min="1" max="100" step="1">
+            </div>
+        </div>
+
+        <!-- Section Suite Géométrique -->
+        <div id="geometriqueSection" class="card" style="display: none;">
+            <h3>📐 Suite Géométrique</h3>
+            <div class="param-row">
+                <label>Premier terme u<sub>0</sub> :</label>
+                <input type="number" id="u0_geo" value="2" step="1">
+            </div>
+            <div class="param-row">
+                <label>Raison q :</label>
+                <input type="number" id="q_geo" value="3" step="0.5">
+            </div>
+            <div class="param-row">
+                <label>Rang n à calculer :</label>
+                <input type="number" id="n_geo" value="5" min="1" max="20" step="1">
+            </div>
+        </div>
+
+        <!-- Section Somme Arithmétique -->
+        <div id="sommeArithSection" class="card" style="display: none;">
+            <h3>📐 Somme d'une Suite Arithmétique</h3>
+            <div class="param-row">
+                <label>Premier terme u<sub>0</sub> :</label>
+                <input type="number" id="u0_sarith" value="5" step="1">
+            </div>
+            <div class="param-row">
+                <label>Raison r :</label>
+                <input type="number" id="r_sarith" value="3" step="1">
+            </div>
+            <div class="param-row">
+                <label>Nombre de termes (jusqu'à u<sub>n</sub>) :</label>
+                <input type="number" id="n_sarith" value="10" min="1" max="100" step="1">
+            </div>
+        </div>
+
+        <!-- Section Somme Géométrique -->
+        <div id="sommeGeoSection" class="card" style="display: none;">
+            <h3>📐 Somme d'une Suite Géométrique</h3>
+            <div class="param-row">
+                <label>Premier terme u<sub>0</sub> :</label>
+                <input type="number" id="u0_sgeo" value="1" step="1">
+            </div>
+            <div class="param-row">
+                <label>Raison q :</label>
+                <input type="number" id="q_sgeo" value="2" step="0.5">
+            </div>
+            <div class="param-row">
+                <label>Nombre de termes (jusqu'à u<sub>n</sub>) :</label>
+                <input type="number" id="n_sgeo" value="8" min="1" max="30" step="1">
+            </div>
+        </div>
+
+        <!-- Section Variation -->
+        <div id="variationSection" class="card" style="display: none;">
+            <h3>📐 Sens de variation</h3>
+            <div class="param-row">
+                <label>Type de suite :</label>
+                <select id="type_variation">
+                    <option value="arithmetique">Arithmétique</option>
+                    <option value="geometrique">Géométrique</option>
+                </select>
+            </div>
+            <div class="param-row">
+                <label>Premier terme u<sub>0</sub> :</label>
+                <input type="number" id="u0_var" value="10" step="1">
+            </div>
+            <div class="param-row" id="param_r_var">
+                <label>Raison r :</label>
+                <input type="number" id="r_var" value="-2" step="1">
+            </div>
+            <div class="param-row" id="param_q_var" style="display: none;">
+                <label>Raison q :</label>
+                <input type="number" id="q_var" value="0.5" step="0.1">
+            </div>
+        </div>
+
+        <!-- Boutons d'action -->
+        <div class="card action-buttons">
+            <button id="newExerciseBtn" class="btn btn-secondary">🔄 Nouvel exercice</button>
+            <button id="solveBtn" class="btn btn-primary">✨ Correction</button>
+        </div>
+
+        <!-- Solution -->
+        <div id="solutionDiv" class="card solution">
+            <h2>📝 Solution</h2>
+            <div id="solutionContent"></div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="js/utils.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/suites.js"></script>
+    <script src="js/navigation.js"></script>
+</body>
+</html>
