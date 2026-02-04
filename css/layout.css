@@ -135,6 +135,27 @@ header h1 {
     padding: 10px;
 }
 
+/* ========== PARAM ROW ========== */
+.param-row {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+    flex-wrap: wrap;
+}
+
+.param-row label {
+    font-weight: 600;
+    color: var(--gray-700);
+    min-width: 180px;
+}
+
+.param-row input,
+.param-row select {
+    flex: 1;
+    min-width: 150px;
+}
+
 /* ========== BOUTONS D'ACTION ========== */
 .action-buttons {
     display: flex;

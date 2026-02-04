@@ -188,9 +188,11 @@ function updateExerciseDisplay() {
         case 'variation':
             $('variationSection').style.display = 'block';
             if (SuitesState.type_variation === 'arithmetique') {
-                display = `Déterminer le sens de variation de la suite arithmétique`;
+                const r_var = SuitesState.r_var;
+                const sign_var = r_var >= 0 ? '+' : '-';
+                display = `u<sub>n</sub> = ${formatNumber(SuitesState.u0_var)} ${sign_var} ${formatNumber(Math.abs(r_var))}n`;
             } else {
-                display = `Déterminer le sens de variation de la suite géométrique`;
+                display = `u<sub>n</sub> = ${formatNumber(SuitesState.u0_var)} × ${formatNumber(SuitesState.q_var)}<sup>n</sup>`;
             }
             break;
     }
