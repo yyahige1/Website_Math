@@ -53,6 +53,30 @@ function generateNavigation(currentPage = '') {
                         <li><a href="racines.html" ${currentPage === 'racines' ? 'class="active"' : ''}>Racines carrées</a></li>
                     </ul>
                 </li>
+
+                <!-- Catégorie : Fonctions -->
+                <li class="nav-item has-dropdown">
+                    <a href="#" class="nav-link">
+                        Fonctions
+                        <span class="arrow">▾</span>
+                    </a>
+                    <ul class="nav-dropdown">
+                        <li><a href="fonctions-affines.html" ${currentPage === 'fonctions-affines' ? 'class="active"' : ''}>Fonctions Affines</a></li>
+                        <li><a href="fonctions-second-degre.html" ${currentPage === 'fonctions-second-degre' ? 'class="active"' : ''}>Fonctions 2nd degré</a></li>
+                        <li><a href="derivees.html" ${currentPage === 'derivees' ? 'class="active"' : ''}>Dérivées</a></li>
+                    </ul>
+                </li>
+
+                <!-- Catégorie : Suites -->
+                <li class="nav-item has-dropdown">
+                    <a href="#" class="nav-link">
+                        Suites
+                        <span class="arrow">▾</span>
+                    </a>
+                    <ul class="nav-dropdown">
+                        <li><a href="suites.html" ${currentPage === 'suites' ? 'class="active"' : ''}>Suites Numériques</a></li>
+                    </ul>
+                </li>
             </ul>
         </div>
     </nav>`;
@@ -76,9 +100,8 @@ function injectNavigation() {
     if (placeholder) {
         placeholder.outerHTML = navHTML;
     } else {
-        // Insérer au début du body si pas de placeholder
-        const container = document.querySelector('.container') || document.body;
-        container.insertAdjacentHTML('afterbegin', navHTML);
+        // Insérer au début du body (AVANT .container, pas dedans)
+        document.body.insertAdjacentHTML('afterbegin', navHTML);
     }
 
     // Initialiser les événements de navigation
