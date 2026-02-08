@@ -127,6 +127,12 @@
     margin: 0;
 }
 
+/* Dropdown pour les derniers items (évite débordement à droite) */
+.nav-item:nth-last-child(-n+2) .nav-dropdown {
+    left: auto;
+    right: 0;
+}
+
 .nav-item:hover .nav-dropdown {
     opacity: 1;
     visibility: visible;
