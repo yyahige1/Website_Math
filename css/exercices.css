@@ -67,7 +67,7 @@
 .expression-display {
     background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf0 100%);
     padding: var(--spacing-xl);
-    border-radius: var(--radius-lg);
+    border-radius: 0;
     text-align: center;
     margin-bottom: var(--spacing-lg);
     box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.06);
