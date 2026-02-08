@@ -77,6 +77,17 @@ function generateNavigation(currentPage = '') {
                         <li><a href="suites.html" ${currentPage === 'suites' ? 'class="active"' : ''}>Suites Numériques</a></li>
                     </ul>
                 </li>
+
+                <!-- Catégorie : Analyse -->
+                <li class="nav-item has-dropdown">
+                    <a href="#" class="nav-link">
+                        Analyse
+                        <span class="arrow">▾</span>
+                    </a>
+                    <ul class="nav-dropdown">
+                        <li><a href="limites.html" ${currentPage === 'limites' ? 'class="active"' : ''}>Limites</a></li>
+                    </ul>
+                </li>
             </ul>
         </div>
     </nav>`;

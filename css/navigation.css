@@ -128,7 +128,7 @@
 }
 
 /* Dropdown pour les derniers items (évite débordement à droite) */
-.nav-item:nth-last-child(-n+2) .nav-dropdown {
+.nav-item:nth-last-child(-n+3) .nav-dropdown {
     left: auto;
     right: 0;
 }
