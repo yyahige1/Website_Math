@@ -11,29 +11,34 @@ const LimitesState = {
     // Paramètres polynôme en l'infini
     degre_poly: 2,
     vers_poly: '+inf',
-    coeffs_poly: [3, -5, 2], // [a, b, c] pour ax² + bx + c
+    coeffs_poly: [3, -5, 2],
 
     // Paramètres rationnelle en l'infini
     type_rat: 'meme_degre',
     vers_rat: '+inf',
-    num_coeffs: [2, 1], // numérateur
-    den_coeffs: [1, -3], // dénominateur
+    num_coeffs: [2, 1],
+    den_coeffs: [1, -3],
 
     // Paramètres limite en un point
     type_point: 'continue',
     x0_point: 2,
-    func_point: { a: 1, b: -4, c: 3 }, // f(x) = ax² + bx + c
+    func_point: { a: 1, b: -4, c: 3 },
+    rat_point_num: [1, 0, -4],
+    rat_point_den: [1, -2],
 
     // Paramètres forme indéterminée
     type_ind: '0/0',
     x0_ind: 2,
-    num_ind: [1, 0, -4], // x² - 4
-    den_ind: [1, -2], // x - 2
+    fact_a: 1,
+    fact_b: 3,
 
     // Paramètres racine
     type_racine: 'sqrt_infini',
     vers_racine: '+inf',
-    sqrt_coeffs: [1, 2, 1], // √(x² + 2x + 1)
+    sqrt_a: 1,
+    sqrt_b: 2,
+    sqrt_c: 1,
+    diff_a: 5,
 
     // Paramètres asymptote
     type_asymptote: 'rationnelle',
@@ -63,12 +68,10 @@ function setupTypeButtons() {
             button.classList.add('active');
             LimitesState.currentType = button.dataset.type;
 
-            // Masquer toutes les sections
             document.querySelectorAll('[id$="Section"]').forEach(section => {
                 section.style.display = 'none';
             });
 
-            // Afficher la section correspondante
             const sectionMap = {
                 'polynome_infini': 'polynomeInfiniSection',
                 'rationnelle_infini': 'rationnelleInfiniSection',
@@ -93,7 +96,6 @@ function setupTypeButtons() {
  * Configure les gestionnaires d'événements
  */
 function setupInputHandlers() {
-    // Polynôme en l'infini
     $('degre_poly').addEventListener('change', () => {
         LimitesState.degre_poly = parseInt($('degre_poly').value);
         generateNewExercise();
@@ -105,7 +107,6 @@ function setupInputHandlers() {
         updateExerciseDisplay();
     });
 
-    // Rationnelle en l'infini
     $('type_rat').addEventListener('change', () => {
         LimitesState.type_rat = $('type_rat').value;
         generateNewExercise();
@@ -117,7 +118,6 @@ function setupInputHandlers() {
         updateExerciseDisplay();
     });
 
-    // Limite en un point
     $('type_point').addEventListener('change', () => {
         LimitesState.type_point = $('type_point').value;
         generateNewExercise();
@@ -130,14 +130,12 @@ function setupInputHandlers() {
         updateExerciseDisplay();
     });
 
-    // Forme indéterminée
     $('type_ind').addEventListener('change', () => {
         LimitesState.type_ind = $('type_ind').value;
         generateNewExercise();
         updateExerciseDisplay();
     });
 
-    // Racine
     $('type_racine').addEventListener('change', () => {
         LimitesState.type_racine = $('type_racine').value;
         generateNewExercise();
@@ -149,7 +147,6 @@ function setupInputHandlers() {
         updateExerciseDisplay();
     });
 
-    // Asymptote
     $('type_asymptote').addEventListener('change', () => {
         LimitesState.type_asymptote = $('type_asymptote').value;
         generateNewExercise();
@@ -207,42 +204,40 @@ function updateExerciseDisplay() {
  */
 function displayPolynomeInfini() {
     const coeffs = LimitesState.coeffs_poly;
-    const vers = LimitesState.vers_poly === '+inf' ? '+∞' : '-∞';
-    const poly = formatPolynomial(coeffs);
+    const vers = LimitesState.vers_poly === '+inf' ? '+\\infty' : '-\\infty';
+    const poly = toLatexPoly(coeffs);
 
-    return `lim (${poly}) = ?<br>x→${vers}`;
+    return katex.renderToString(`\\lim_{x \\to ${vers}} \\left(${poly}\\right)`, { throwOnError: false });
 }
 
 /**
  * Affiche l'exercice rationnelle en l'infini
  */
 function displayRationnelleInfini() {
-    const num = formatPolynomial(LimitesState.num_coeffs);
-    const den = formatPolynomial(LimitesState.den_coeffs);
-    const vers = LimitesState.vers_rat === '+inf' ? '+∞' : '-∞';
+    const num = toLatexPoly(LimitesState.num_coeffs);
+    const den = toLatexPoly(LimitesState.den_coeffs);
+    const vers = LimitesState.vers_rat === '+inf' ? '+\\infty' : '-\\infty';
 
-    const frac = katex.renderToString(`\\frac{${num}}{${den}}`, { throwOnError: false });
-    return `lim ${frac} = ?<br>x→${vers}`;
+    return katex.renderToString(`\\lim_{x \\to ${vers}} \\frac{${num}}{${den}}`, { throwOnError: false });
 }
 
 /**
  * Affiche l'exercice limite en un point
  */
 function displayPoint() {
-    const { a, b, c } = LimitesState.func_point;
     const x0 = LimitesState.x0_point;
-
     let func = '';
+
     if (LimitesState.type_point === 'continue') {
-        func = `${a}x² ${b >= 0 ? '+' : ''} ${b}x ${c >= 0 ? '+' : ''} ${c}`;
+        const { a, b, c } = LimitesState.func_point;
+        func = toLatexPoly([a, b, c]);
     } else {
-        // Rationnelle qui peut avoir problème en x0
-        const num = `x² ${-4 >= 0 ? '+' : ''} ${-4}`;
-        const den = `x ${-x0 >= 0 ? '+' : ''} ${-x0}`;
-        func = katex.renderToString(`\\frac{${num}}{${den}}`, { throwOnError: false });
+        const num = toLatexPoly(LimitesState.rat_point_num);
+        const den = toLatexPoly(LimitesState.rat_point_den);
+        func = `\\frac{${num}}{${den}}`;
     }
 
-    return `lim f(x) = ?<br>x→${x0}<br><br>avec f(x) = ${func}`;
+    return katex.renderToString(`\\lim_{x \\to ${x0}} \\left(${func}\\right)`, { throwOnError: false });
 }
 
 /**
@@ -250,15 +245,18 @@ function displayPoint() {
  */
 function displayIndeterminee() {
     if (LimitesState.type_ind === '0/0') {
-        const x0 = LimitesState.x0_ind;
-        const num = `x² - ${x0 * x0}`;
-        const den = `x - ${x0}`;
-        const frac = katex.renderToString(`\\frac{${num}}{${den}}`, { throwOnError: false });
-        return `lim ${frac} = ?<br>x→${x0}`;
+        const a = LimitesState.fact_a;
+        const b = LimitesState.fact_b;
+        const x0 = a * b;
+        const num = toLatexPoly([1, -(a + b), a * b]);
+        const den = toLatexPoly([1, -x0]);
+
+        return katex.renderToString(`\\lim_{x \\to ${x0}} \\frac{${num}}{${den}}`, { throwOnError: false });
     } else {
-        // Forme ∞ - ∞
-        const a = LimitesState.sqrt_coeffs[0];
-        return `lim (√(x² + ${a}x) - x) = ?<br>x→+∞`;
+        const a = LimitesState.diff_a;
+        const expr = `\\sqrt{x^2 + ${a}x} - x`;
+
+        return katex.renderToString(`\\lim_{x \\to +\\infty} \\left(${expr}\\right)`, { throwOnError: false });
     }
 }
 
@@ -266,25 +264,26 @@ function displayIndeterminee() {
  * Affiche l'exercice avec racine
  */
 function displayRacine() {
-    const vers = LimitesState.vers_racine === '+inf' ? '+∞' : '-∞';
+    const vers = LimitesState.vers_racine === '+inf' ? '+\\infty' : '-\\infty';
 
     if (LimitesState.type_racine === 'sqrt_infini') {
-        const [a, b, c] = LimitesState.sqrt_coeffs;
-        const inside = `${a}x² ${b >= 0 ? '+' : ''} ${b}x ${c >= 0 ? '+' : ''} ${c}`;
-        const sqrt = katex.renderToString(`\\sqrt{${inside}}`, { throwOnError: false });
-        return `lim ${sqrt} = ?<br>x→${vers}`;
+        const a = LimitesState.sqrt_a;
+        const b = LimitesState.sqrt_b;
+        const c = LimitesState.sqrt_c;
+        const inside = toLatexPoly([a, b, c]);
+
+        return katex.renderToString(`\\lim_{x \\to ${vers}} \\sqrt{${inside}}`, { throwOnError: false });
     } else if (LimitesState.type_racine === 'diff_sqrt') {
-        const a = Math.abs(LimitesState.sqrt_coeffs[1]);
-        const sqrt1 = katex.renderToString(`\\sqrt{x}`, { throwOnError: false });
-        const sqrt2 = katex.renderToString(`\\sqrt{x + ${a}}`, { throwOnError: false });
-        return `lim (${sqrt2} - ${sqrt1}) = ?<br>x→+∞`;
+        const a = LimitesState.diff_a;
+
+        return katex.renderToString(`\\lim_{x \\to +\\infty} \\left(\\sqrt{x + ${a}} - \\sqrt{x}\\right)`, { throwOnError: false });
     } else {
         const [a, b] = LimitesState.num_coeffs;
-        const [c, d] = LimitesState.sqrt_coeffs.slice(0, 2);
-        const num = `${a}x ${b >= 0 ? '+' : ''} ${b}`;
-        const denInside = `${c}x² ${d >= 0 ? '+' : ''} ${d}`;
-        const frac = katex.renderToString(`\\frac{${num}}{\\sqrt{${denInside}}}`, { throwOnError: false });
-        return `lim ${frac} = ?<br>x→${vers}`;
+        const [c, d] = [LimitesState.sqrt_a, LimitesState.sqrt_b];
+        const num = toLatexPoly([a, b]);
+        const denInside = toLatexPoly([c, d, 0]);
+
+        return katex.renderToString(`\\lim_{x \\to ${vers}} \\frac{${num}}{\\sqrt{${denInside}}}`, { throwOnError: false });
     }
 }
 
@@ -292,13 +291,13 @@ function displayRacine() {
  * Affiche l'exercice asymptotes
  */
 function displayAsymptote() {
-    const [a, b] = LimitesState.asymp_num;
-    const [c, d] = LimitesState.asymp_den;
-    const num = `${a}x ${b >= 0 ? '+' : ''} ${b}`;
-    const den = `${c}x ${d >= 0 ? '+' : ''} ${d}`;
-    const frac = katex.renderToString(`\\frac{${num}}{${den}}`, { throwOnError: false });
+    const num = toLatexPoly(LimitesState.asymp_num);
+    const den = toLatexPoly(LimitesState.asymp_den);
 
-    return `Déterminer les asymptotes de :<br>f(x) = ${frac}`;
+    const title = 'Déterminer les asymptotes de : ';
+    const func = katex.renderToString(`f(x) = \\frac{${num}}{${den}}`, { throwOnError: false });
+
+    return title + func;
 }
 
 /**
@@ -334,13 +333,9 @@ function generatePolynomeInfini() {
     const degre = LimitesState.degre_poly;
     const coeffs = [];
 
-    for (let i = 0; i <= degre; i++) {
-        if (i === 0) {
-            // Coefficient dominant non nul
-            coeffs.push(randInt(-5, 5, [0]));
-        } else {
-            coeffs.push(randInt(-10, 10));
-        }
+    coeffs.push(randInt(-5, 5, [0])); // Coefficient dominant
+    for (let i = 1; i <= degre; i++) {
+        coeffs.push(randInt(-10, 10));
     }
 
     LimitesState.coeffs_poly = coeffs;
@@ -377,8 +372,13 @@ function generatePoint() {
             c: randInt(-10, 10)
         };
     } else {
-        // Génère (x-a)(x-b)/(x-x0) où a ≠ x0
-        LimitesState.x0_ind = x0;
+        // Forme (x-a)(x-b)/(x-c) avec a ≠ c, b ≠ c
+        const a = randInt(-5, 5, [x0]);
+        const b = randInt(-5, 5, [x0, a]);
+
+        // Développer (x-a)(x-b) = x² - (a+b)x + ab
+        LimitesState.rat_point_num = [1, -(a + b), a * b];
+        LimitesState.rat_point_den = [1, -x0];
     }
 }
 
@@ -387,14 +387,14 @@ function generatePoint() {
  */
 function generateIndeterminee() {
     if (LimitesState.type_ind === '0/0') {
-        const x0 = randInt(1, 5);
-        LimitesState.x0_ind = x0;
-        // Forme (x²-x0²)/(x-x0) = (x-x0)(x+x0)/(x-x0)
-        LimitesState.num_ind = [1, 0, -(x0 * x0)];
-        LimitesState.den_ind = [1, -x0];
+        // Forme (x-a)(x-b)/(x-a) avec a, b différents
+        const a = randInt(1, 5);
+        const b = randInt(-5, 5, [a]);
+
+        LimitesState.fact_a = a;
+        LimitesState.fact_b = b;
     } else {
-        // Forme ∞ - ∞ avec racines
-        LimitesState.sqrt_coeffs = [randInt(1, 5), randInt(1, 10), 0];
+        LimitesState.diff_a = randInt(2, 10);
     }
 }
 
@@ -403,16 +403,15 @@ function generateIndeterminee() {
  */
 function generateRacine() {
     if (LimitesState.type_racine === 'sqrt_infini') {
-        LimitesState.sqrt_coeffs = [
-            randInt(1, 3),
-            randInt(-5, 5),
-            randInt(-5, 5)
-        ];
+        LimitesState.sqrt_a = randInt(1, 4);
+        LimitesState.sqrt_b = randInt(-8, 8);
+        LimitesState.sqrt_c = randInt(-8, 8);
     } else if (LimitesState.type_racine === 'diff_sqrt') {
-        LimitesState.sqrt_coeffs = [0, randInt(1, 10), 0];
+        LimitesState.diff_a = randInt(1, 10);
     } else {
         LimitesState.num_coeffs = [randInt(-5, 5, [0]), randInt(-10, 10)];
-        LimitesState.sqrt_coeffs = [randInt(1, 3), randInt(-5, 5)];
+        LimitesState.sqrt_a = randInt(1, 4);
+        LimitesState.sqrt_b = randInt(-8, 8);
     }
 }
 
@@ -421,33 +420,33 @@ function generateRacine() {
  */
 function generateAsymptote() {
     LimitesState.asymp_num = [randInt(-5, 5, [0]), randInt(-10, 10)];
-    LimitesState.asymp_den = [randInt(-5, 5, [0]), randInt(-10, 10)];
+    LimitesState.asymp_den = [randInt(-5, 5, [0]), randInt(-10, 10, [0])];
 }
 
 /**
  * Résout l'exercice courant
  */
 function solveLimites() {
-    let html = '<h3>✅ Correction détaillée</h3>';
+    let html = '';
 
     switch (LimitesState.currentType) {
         case 'polynome_infini':
-            html += solvePolynomeInfini();
+            html = solvePolynomeInfini();
             break;
         case 'rationnelle_infini':
-            html += solveRationnelleInfini();
+            html = solveRationnelleInfini();
             break;
         case 'point':
-            html += solvePoint();
+            html = solvePoint();
             break;
         case 'indeterminee':
-            html += solveIndeterminee();
+            html = solveIndeterminee();
             break;
         case 'racine':
-            html += solveRacine();
+            html = solveRacine();
             break;
         case 'asymptote':
-            html += solveAsymptote();
+            html = solveAsymptote();
             break;
     }
 
@@ -461,7 +460,7 @@ function solveLimites() {
 function solvePolynomeInfini() {
     const coeffs = LimitesState.coeffs_poly;
     const vers = LimitesState.vers_poly;
-    const versSymbol = vers === '+inf' ? '+∞' : '-∞';
+    const versSymbol = vers === '+inf' ? '+\\infty' : '-\\infty';
     const degre = coeffs.length - 1;
     const a = coeffs[0];
 
@@ -469,48 +468,34 @@ function solvePolynomeInfini() {
 
     html += '<div class="step">';
     html += '<div class="step-number">Étape 1 : Identifier le terme dominant</div>';
-    html += `<div class="step-explanation">Pour un polynôme de degré ${degre}, le terme dominant est ${a}x<sup>${degre}</sup>.</div>`;
-    html += `<div class="step-expression">En l'infini, les termes de plus bas degré sont négligeables.</div>`;
+    html += `<div class="step-explanation">Pour un polynôme de degré ${degre}, le terme dominant est ${formatCoeff(a)}x<sup>${degre}</sup>.</div>`;
     html += '</div>';
 
     html += '<div class="step">';
-    html += '<div class="step-number">Étape 2 : Comportement du terme dominant</div>';
-
-    let comportement = '';
-    if (degre % 2 === 0) {
-        // Degré pair
-        comportement = `x<sup>${degre}</sup> → +∞ quand x → ${versSymbol}`;
-    } else {
-        // Degré impair
-        if (vers === '+inf') {
-            comportement = `x<sup>${degre}</sup> → +∞`;
-        } else {
-            comportement = `x<sup>${degre}</sup> → -∞`;
-        }
-    }
-    html += `<div class="step-expression">${comportement}</div>`;
+    html += '<div class="step-number">Étape 2 : Comportement en l\'infini</div>';
+    html += '<div class="step-explanation">En l\'infini, les termes de plus bas degré deviennent négligeables devant le terme dominant.</div>';
     html += '</div>';
 
     html += '<div class="step">';
-    html += '<div class="step-number">Étape 3 : Conclusion</div>';
+    html += '<div class="step-number">Étape 3 : Calculer la limite</div>';
 
     let limite = '';
     if (degre % 2 === 0) {
-        limite = a > 0 ? '+∞' : '-∞';
+        limite = a > 0 ? '+\\infty' : '-\\infty';
     } else {
         if (vers === '+inf') {
-            limite = a > 0 ? '+∞' : '-∞';
+            limite = a > 0 ? '+\\infty' : '-\\infty';
         } else {
-            limite = a > 0 ? '-∞' : '+∞';
+            limite = a > 0 ? '-\\infty' : '+\\infty';
         }
     }
 
-    const poly = formatPolynomial(coeffs);
-    html += `<div class="step-expression">lim (${poly}) = ${limite}<br>x→${versSymbol}</div>`;
+    const limExpr = katex.renderToString(`\\lim_{x \\to ${versSymbol}} ${toLatexPoly(coeffs)} = ${limite}`, { throwOnError: false });
+    html += `<div class="step-expression">${limExpr}</div>`;
     html += '</div>';
 
     html += '<div class="result-highlight">';
-    html += `<div class="final">Réponse : ${limite}</div>`;
+    html += `<div class="final">Réponse : ${katex.renderToString(limite, { throwOnError: false })}</div>`;
     html += '</div>';
 
     return html;
@@ -522,7 +507,7 @@ function solvePolynomeInfini() {
 function solveRationnelleInfini() {
     const num = LimitesState.num_coeffs;
     const den = LimitesState.den_coeffs;
-    const vers = LimitesState.vers_rat === '+inf' ? '+∞' : '-∞';
+    const vers = LimitesState.vers_rat === '+inf' ? '+\\infty' : '-\\infty';
 
     const degNum = num.length - 1;
     const degDen = den.length - 1;
@@ -531,40 +516,43 @@ function solveRationnelleInfini() {
 
     html += '<div class="step">';
     html += '<div class="step-number">Étape 1 : Comparer les degrés</div>';
-    html += `<div class="step-explanation">Degré numérateur : ${degNum}<br>Degré dénominateur : ${degDen}</div>`;
+    html += `<div class="step-explanation">Degré du numérateur : ${degNum}<br>Degré du dénominateur : ${degDen}</div>`;
     html += '</div>';
 
     html += '<div class="step">';
-    html += '<div class="step-number">Étape 2 : Factoriser par le terme dominant</div>';
+    html += '<div class="step-number">Étape 2 : Factoriser par les termes dominants</div>';
 
-    let factorNum = `x<sup>${degNum}</sup>`;
-    let factorDen = `x<sup>${degDen}</sup>`;
-
-    html += `<div class="step-explanation">On factorise par ${factorNum} au numérateur et ${factorDen} au dénominateur.</div>`;
+    const factExpr = katex.renderToString(
+        `\\frac{x^{${degNum}}\\left(${num[0]} + \\frac{\\text{termes négligeables}}{x}\\right)}{x^{${degDen}}\\left(${den[0]} + \\frac{\\text{termes négligeables}}{x}\\right)}`,
+        { throwOnError: false }
+    );
+    html += `<div class="step-expression">${factExpr}</div>`;
     html += '</div>';
 
     html += '<div class="step">';
-    html += '<div class="step-number">Étape 3 : Simplifier et calculer la limite</div>';
+    html += '<div class="step-number">Étape 3 : Calculer la limite</div>';
 
     let limite = '';
+    let explication = '';
+
     if (degNum === degDen) {
-        // Limite = rapport des coefficients dominants
         const ratio = num[0] / den[0];
         limite = formatNumber(ratio);
+        explication = `Les termes de plus bas degré tendent vers 0. La limite est le rapport des coefficients dominants : ${num[0]}/${den[0]} = ${limite}`;
     } else if (degNum > degDen) {
-        // Limite = ±∞
         const sign = (num[0] / den[0]) > 0 ? '+' : '-';
-        limite = `${sign}∞`;
+        limite = `${sign}\\infty`;
+        explication = `Le degré du numérateur est supérieur : la limite est l'infini (signe déterminé par ${num[0]}/${den[0]})`;
     } else {
-        // Limite = 0
         limite = '0';
+        explication = `Le degré du dénominateur est supérieur : la limite est 0`;
     }
 
-    html += `<div class="step-expression">Les termes avec x au dénominateur tendent vers 0.</div>`;
+    html += `<div class="step-explanation">${explication}</div>`;
     html += '</div>';
 
     html += '<div class="result-highlight">';
-    html += `<div class="final">Réponse : ${limite}</div>`;
+    html += `<div class="final">Réponse : ${katex.renderToString(limite, { throwOnError: false })}</div>`;
     html += '</div>';
 
     return html;
@@ -574,26 +562,66 @@ function solveRationnelleInfini() {
  * Résout limite en un point
  */
 function solvePoint() {
-    const { a, b, c } = LimitesState.func_point;
     const x0 = LimitesState.x0_point;
-
     let html = '';
 
-    html += '<div class="step">';
-    html += '<div class="step-number">Étape 1 : Vérifier la continuité</div>';
-    html += `<div class="step-explanation">La fonction f(x) = ${a}x² ${b >= 0 ? '+' : ''} ${b}x ${c >= 0 ? '+' : ''} ${c} est continue en x = ${x0}.</div>`;
-    html += '</div>';
+    if (LimitesState.type_point === 'continue') {
+        const { a, b, c } = LimitesState.func_point;
 
-    html += '<div class="step">';
-    html += '<div class="step-number">Étape 2 : Calculer f(${x0})</div>';
-    const result = a * x0 * x0 + b * x0 + c;
-    html += `<div class="step-expression">f(${x0}) = ${a}×${x0}² ${b >= 0 ? '+' : ''} ${b}×${x0} ${c >= 0 ? '+' : ''} ${c}</div>`;
-    html += `<div class="step-expression">f(${x0}) = ${formatNumber(result)}</div>`;
-    html += '</div>';
+        html += '<div class="step">';
+        html += '<div class="step-number">Étape 1 : Vérifier la continuité</div>';
+        html += `<div class="step-explanation">La fonction polynomiale est continue sur ℝ.</div>`;
+        html += '</div>';
 
-    html += '<div class="result-highlight">';
-    html += `<div class="final">Réponse : ${formatNumber(result)}</div>`;
-    html += '</div>';
+        html += '<div class="step">';
+        html += '<div class="step-number">Étape 2 : Calculer par substitution</div>';
+        const result = a * x0 * x0 + b * x0 + c;
+
+        const calcExpr = katex.renderToString(
+            `f(${x0}) = ${formatCoeff(a)} \\cdot ${x0}^2 ${formatTerm(b, x0, 1)} ${formatConstant(c)} = ${result}`,
+            { throwOnError: false }
+        );
+        html += `<div class="step-expression">${calcExpr}</div>`;
+        html += '</div>';
+
+        html += '<div class="result-highlight">';
+        html += `<div class="final">Réponse : ${result}</div>`;
+        html += '</div>';
+    } else {
+        // Fonction rationnelle
+        const num = LimitesState.rat_point_num;
+        const den = LimitesState.rat_point_den;
+
+        const numVal = num[0] * x0 * x0 + num[1] * x0 + num[2];
+        const denVal = den[0] * x0 + den[1];
+
+        html += '<div class="step">';
+        html += '<div class="step-number">Étape 1 : Vérifier si le dénominateur s\'annule</div>';
+        html += `<div class="step-explanation">Dénominateur en x = ${x0} : ${denVal}</div>`;
+        html += '</div>';
+
+        if (denVal !== 0) {
+            html += '<div class="step">';
+            html += '<div class="step-number">Étape 2 : Calculer par substitution</div>';
+            const result = numVal / denVal;
+            html += `<div class="step-expression">Numérateur : ${numVal}<br>Dénominateur : ${denVal}<br>Limite : ${formatNumber(result)}</div>`;
+            html += '</div>';
+
+            html += '<div class="result-highlight">';
+            html += `<div class="final">Réponse : ${formatNumber(result)}</div>`;
+            html += '</div>';
+        } else {
+            html += '<div class="step">';
+            html += '<div class="step-number">Étape 2 : Limite infinie</div>';
+            html += `<div class="step-explanation">Le dénominateur s'annule mais pas le numérateur (${numVal}). La limite est infinie.</div>`;
+            html += '</div>';
+
+            html += '<div class="result-highlight">';
+            const signe = numVal > 0 ? '+' : '-';
+            html += `<div class="final">Réponse : ${signe}∞</div>`;
+            html += '</div>';
+        }
+    }
 
     return html;
 }
@@ -602,37 +630,121 @@ function solvePoint() {
  * Résout forme indéterminée
  */
 function solveIndeterminee() {
-    const x0 = LimitesState.x0_ind;
-
     let html = '';
 
-    html += '<div class="step">';
-    html += '<div class="step-number">Étape 1 : Identifier la forme indéterminée</div>';
-    html += `<div class="step-explanation">En x = ${x0}, le numérateur et le dénominateur s'annulent : forme 0/0.</div>`;
-    html += '</div>';
+    if (LimitesState.type_ind === '0/0') {
+        const a = LimitesState.fact_a;
+        const b = LimitesState.fact_b;
+        const x0 = a * b;
 
-    html += '<div class="step">';
-    html += '<div class="step-number">Étape 2 : Factoriser</div>';
-    html += `<div class="step-expression">x² - ${x0 * x0} = (x - ${x0})(x + ${x0})</div>`;
-    const frac = katex.renderToString(`\\frac{(x - ${x0})(x + ${x0})}{x - ${x0}}`, { throwOnError: false });
-    html += `<div class="step-expression">${frac}</div>`;
-    html += '</div>';
+        html += '<div class="step">';
+        html += '<div class="step-number">Étape 1 : Identifier la forme indéterminée</div>';
+        html += `<div class="step-explanation">En x = ${x0}, le numérateur et le dénominateur s'annulent : forme 0/0.</div>`;
+        html += '</div>';
 
-    html += '<div class="step">';
-    html += '<div class="step-number">Étape 3 : Simplifier</div>';
-    html += `<div class="step-expression">On simplifie par (x - ${x0}) :</div>`;
-    html += `<div class="step-expression">x + ${x0}</div>`;
-    html += '</div>';
+        html += '<div class="step">';
+        html += '<div class="step-number">Étape 2 : Factoriser le numérateur</div>';
 
-    html += '<div class="step">';
-    html += '<div class="step-number">Étape 4 : Calculer la limite</div>';
-    const result = x0 + x0;
-    html += `<div class="step-expression">lim (x + ${x0}) = ${x0} + ${x0} = ${result}<br>x→${x0}</div>`;
-    html += '</div>';
+        const numFactored = katex.renderToString(
+            `(x - ${a})(x - ${b})`,
+            { throwOnError: false }
+        );
+        const denExpr = katex.renderToString(`x - ${x0}`, { throwOnError: false });
 
-    html += '<div class="result-highlight">';
-    html += `<div class="final">Réponse : ${result}</div>`;
-    html += '</div>';
+        html += `<div class="step-explanation">Le numérateur se factorise en ${numFactored}</div>`;
+        html += '</div>';
+
+        html += '<div class="step">';
+        html += '<div class="step-number">Étape 3 : Simplifier</div>';
+
+        if (a === x0) {
+            html += `<div class="step-explanation">On simplifie par (x - ${a}) :</div>`;
+            const simplified = katex.renderToString(`\\frac{(x - ${a})(x - ${b})}{x - ${x0}} = x - ${b}`, { throwOnError: false });
+            html += `<div class="step-expression">${simplified}</div>`;
+
+            html += '</div>';
+
+            html += '<div class="step">';
+            html += '<div class="step-number">Étape 4 : Calculer la limite</div>';
+            const result = x0 - b;
+            const limExpr = katex.renderToString(`\\lim_{x \\to ${x0}} (x - ${b}) = ${x0} - ${b} = ${result}`, { throwOnError: false });
+            html += `<div class="step-expression">${limExpr}</div>`;
+            html += '</div>';
+
+            html += '<div class="result-highlight">';
+            html += `<div class="final">Réponse : ${result}</div>`;
+            html += '</div>';
+        } else if (b === x0) {
+            html += `<div class="step-explanation">On simplifie par (x - ${b}) :</div>`;
+            const simplified = katex.renderToString(`\\frac{(x - ${a})(x - ${b})}{x - ${x0}} = x - ${a}`, { throwOnError: false });
+            html += `<div class="step-expression">${simplified}</div>`;
+
+            html += '</div>';
+
+            html += '<div class="step">';
+            html += '<div class="step-number">Étape 4 : Calculer la limite</div>';
+            const result = x0 - a;
+            const limExpr = katex.renderToString(`\\lim_{x \\to ${x0}} (x - ${a}) = ${x0} - ${a} = ${result}`, { throwOnError: false });
+            html += `<div class="step-expression">${limExpr}</div>`;
+            html += '</div>';
+
+            html += '<div class="result-highlight">';
+            html += `<div class="final">Réponse : ${result}</div>`;
+            html += '</div>';
+        }
+    } else {
+        // Forme ∞ - ∞ avec racines
+        const a = LimitesState.diff_a;
+
+        html += '<div class="step">';
+        html += '<div class="step-number">Étape 1 : Identifier la forme indéterminée</div>';
+        html += `<div class="step-explanation">Forme ∞ - ∞</div>`;
+        html += '</div>';
+
+        html += '<div class="step">';
+        html += '<div class="step-number">Étape 2 : Multiplier par la quantité conjuguée</div>';
+
+        const conjugate = katex.renderToString(
+            `\\frac{\\sqrt{x^2 + ${a}x} - x}{1} \\times \\frac{\\sqrt{x^2 + ${a}x} + x}{\\sqrt{x^2 + ${a}x} + x}`,
+            { throwOnError: false }
+        );
+        html += `<div class="step-expression">${conjugate}</div>`;
+        html += '</div>';
+
+        html += '<div class="step">';
+        html += '<div class="step-number">Étape 3 : Simplifier</div>';
+
+        const simplified = katex.renderToString(
+            `= \\frac{x^2 + ${a}x - x^2}{\\sqrt{x^2 + ${a}x} + x} = \\frac{${a}x}{\\sqrt{x^2 + ${a}x} + x}`,
+            { throwOnError: false }
+        );
+        html += `<div class="step-expression">${simplified}</div>`;
+        html += '</div>';
+
+        html += '<div class="step">';
+        html += '<div class="step-number">Étape 4 : Factoriser par x</div>';
+
+        const factored = katex.renderToString(
+            `= \\frac{${a}x}{x\\left(\\sqrt{1 + \\frac{${a}}{x}} + 1\\right)} = \\frac{${a}}{\\sqrt{1 + \\frac{${a}}{x}} + 1}`,
+            { throwOnError: false }
+        );
+        html += `<div class="step-expression">${factored}</div>`;
+        html += '</div>';
+
+        html += '<div class="step">';
+        html += '<div class="step-number">Étape 5 : Calculer la limite</div>';
+        const result = a / 2;
+        const limExpr = katex.renderToString(
+            `\\lim_{x \\to +\\infty} \\frac{${a}}{\\sqrt{1 + 0} + 1} = \\frac{${a}}{2} = ${formatNumber(result)}`,
+            { throwOnError: false }
+        );
+        html += `<div class="step-expression">${limExpr}</div>`;
+        html += '</div>';
+
+        html += '<div class="result-highlight">';
+        html += `<div class="final">Réponse : ${formatNumber(result)}</div>`;
+        html += '</div>';
+    }
 
     return html;
 }
@@ -644,30 +756,89 @@ function solveRacine() {
     let html = '';
 
     if (LimitesState.type_racine === 'sqrt_infini') {
-        const [a, b, c] = LimitesState.sqrt_coeffs;
-        const vers = LimitesState.vers_racine === '+inf' ? '+∞' : '-∞';
+        const a = LimitesState.sqrt_a;
+        const b = LimitesState.sqrt_b;
+        const c = LimitesState.sqrt_c;
+        const vers = LimitesState.vers_racine === '+inf' ? '+\\infty' : '-\\infty';
 
         html += '<div class="step">';
         html += '<div class="step-number">Étape 1 : Factoriser sous la racine</div>';
-        const inside = `${a}x² ${b >= 0 ? '+' : ''} ${b}x ${c >= 0 ? '+' : ''} ${c}`;
-        const sqrt = katex.renderToString(`\\sqrt{${inside}}`, { throwOnError: false });
-        html += `<div class="step-expression">${sqrt} = ${katex.renderToString(`\\sqrt{x^2(${a} + \\frac{${b}}{x} + \\frac{${c}}{x^2})}`, { throwOnError: false })}</div>`;
+
+        const factored = katex.renderToString(
+            `\\sqrt{${toLatexPoly([a, b, c])}} = \\sqrt{x^2\\left(${a} + \\frac{${b}}{x} + \\frac{${c}}{x^2}\\right)}`,
+            { throwOnError: false }
+        );
+        html += `<div class="step-expression">${factored}</div>`;
         html += '</div>';
 
         html += '<div class="step">';
         html += '<div class="step-number">Étape 2 : Simplifier</div>';
-        html += `<div class="step-expression">= |x| × ${katex.renderToString(`\\sqrt{${a} + \\frac{${b}}{x} + \\frac{${c}}{x^2}}`, { throwOnError: false })}</div>`;
+
+        const simplified = katex.renderToString(
+            `= |x| \\cdot \\sqrt{${a} + \\frac{${b}}{x} + \\frac{${c}}{x^2}}`,
+            { throwOnError: false }
+        );
+        html += `<div class="step-expression">${simplified}</div>`;
         html += '</div>';
 
         html += '<div class="step">';
         html += '<div class="step-number">Étape 3 : Calculer la limite</div>';
+
         const sqrtA = Math.sqrt(Math.abs(a));
-        const limite = vers === '+∞' ? `+∞` : `-∞`;
-        html += `<div class="step-expression">Quand x → ${vers}, |x| → +∞ et ${katex.renderToString(`\\sqrt{${a}}`, { throwOnError: false })} = ${formatNumber(sqrtA)}</div>`;
+        let limite = '';
+
+        if (vers === '+\\infty') {
+            limite = a > 0 ? '+\\infty' : '0';
+        } else {
+            limite = a > 0 ? '+\\infty' : '0';
+        }
+
+        html += `<div class="step-explanation">Quand x → ${vers === '+\\infty' ? '+∞' : '-∞'}, les termes avec x au dénominateur tendent vers 0.</div>`;
+        const limExpr = katex.renderToString(
+            `\\lim_{x \\to ${vers}} \\sqrt{${toLatexPoly([a, b, c])}} = ${limite}`,
+            { throwOnError: false }
+        );
+        html += `<div class="step-expression">${limExpr}</div>`;
         html += '</div>';
 
         html += '<div class="result-highlight">';
-        html += `<div class="final">Réponse : ${limite}</div>`;
+        html += `<div class="final">Réponse : ${katex.renderToString(limite, { throwOnError: false })}</div>`;
+        html += '</div>';
+    } else if (LimitesState.type_racine === 'diff_sqrt') {
+        const a = LimitesState.diff_a;
+
+        html += '<div class="step">';
+        html += '<div class="step-number">Étape 1 : Multiplier par la quantité conjuguée</div>';
+
+        const conjugate = katex.renderToString(
+            `\\frac{\\sqrt{x + ${a}} - \\sqrt{x}}{1} \\times \\frac{\\sqrt{x + ${a}} + \\sqrt{x}}{\\sqrt{x + ${a}} + \\sqrt{x}}`,
+            { throwOnError: false }
+        );
+        html += `<div class="step-expression">${conjugate}</div>`;
+        html += '</div>';
+
+        html += '<div class="step">';
+        html += '<div class="step-number">Étape 2 : Simplifier</div>';
+
+        const simplified = katex.renderToString(
+            `= \\frac{(x + ${a}) - x}{\\sqrt{x + ${a}} + \\sqrt{x}} = \\frac{${a}}{\\sqrt{x + ${a}} + \\sqrt{x}}`,
+            { throwOnError: false }
+        );
+        html += `<div class="step-expression">${simplified}</div>`;
+        html += '</div>';
+
+        html += '<div class="step">';
+        html += '<div class="step-number">Étape 3 : Calculer la limite</div>';
+        html += `<div class="step-explanation">Quand x → +∞, le dénominateur tend vers +∞.</div>`;
+        const limExpr = katex.renderToString(
+            `\\lim_{x \\to +\\infty} \\frac{${a}}{\\sqrt{x + ${a}} + \\sqrt{x}} = 0`,
+            { throwOnError: false }
+        );
+        html += `<div class="step-expression">${limExpr}</div>`;
+        html += '</div>';
+
+        html += '<div class="result-highlight">';
+        html += `<div class="final">Réponse : 0</div>`;
         html += '</div>';
     }
 
@@ -686,15 +857,17 @@ function solveAsymptote() {
     html += '<div class="step">';
     html += '<div class="step-number">Étape 1 : Asymptote verticale</div>';
     const x_av = -d / c;
-    html += `<div class="step-explanation">Le dénominateur s'annule en x = ${formatNumber(x_av)}</div>`;
-    html += `<div class="step-expression">Asymptote verticale : x = ${formatNumber(x_av)}</div>`;
+    html += `<div class="step-explanation">Le dénominateur s'annule quand ${c}x + ${d} = 0, soit x = ${formatNumber(x_av)}</div>`;
+    const avExpr = katex.renderToString(`x = ${formatNumber(x_av)}`, { throwOnError: false });
+    html += `<div class="step-expression">Asymptote verticale : ${avExpr}</div>`;
     html += '</div>';
 
     html += '<div class="step">';
     html += '<div class="step-number">Étape 2 : Asymptote horizontale</div>';
-    html += `<div class="step-explanation">Limite en ±∞ : même degré au numérateur et dénominateur.</div>`;
+    html += `<div class="step-explanation">Même degré au numérateur et dénominateur : la limite en ±∞ est le rapport des coefficients dominants.</div>`;
     const y_ah = a / c;
-    html += `<div class="step-expression">Asymptote horizontale : y = ${formatNumber(y_ah)}</div>`;
+    const ahExpr = katex.renderToString(`y = ${formatNumber(y_ah)}`, { throwOnError: false });
+    html += `<div class="step-expression">Asymptote horizontale : ${ahExpr}</div>`;
     html += '</div>';
 
     html += '<div class="result-highlight">';
@@ -709,10 +882,10 @@ function solveAsymptote() {
 // ========================================
 
 /**
- * Formate un polynôme à partir de ses coefficients
+ * Convertit un polynôme en LaTeX
  * @param {Array} coeffs - Coefficients [a, b, c, ...] pour ax^n + bx^(n-1) + ...
  */
-function formatPolynomial(coeffs) {
+function toLatexPoly(coeffs) {
     const degre = coeffs.length - 1;
     let terms = [];
 
@@ -724,36 +897,28 @@ function formatPolynomial(coeffs) {
 
         let term = '';
 
-        // Coefficient
-        if (i === 0) {
+        // Signe
+        if (terms.length === 0) {
             // Premier terme
-            if (coeff === 1 && power > 0) {
-                term = '';
-            } else if (coeff === -1 && power > 0) {
-                term = '-';
-            } else {
-                term = String(coeff);
-            }
+            if (coeff < 0) term = '-';
         } else {
-            // Termes suivants
-            if (coeff > 0) {
-                if (coeff === 1 && power > 0) {
-                    term = ' + ';
-                } else {
-                    term = ` + ${coeff}`;
-                }
-            } else {
-                if (coeff === -1 && power > 0) {
-                    term = ' - ';
-                } else {
-                    term = ` - ${Math.abs(coeff)}`;
-                }
-            }
+            term = coeff > 0 ? ' + ' : ' - ';
+        }
+
+        // Coefficient absolu
+        const absCoeff = Math.abs(coeff);
+        if (power === 0) {
+            // Terme constant
+            term += absCoeff;
+        } else if (absCoeff === 1) {
+            // Ne rien ajouter (on mettra juste x)
+        } else {
+            term += absCoeff;
         }
 
         // Variable avec exposant
         if (power > 1) {
-            term += `x<sup>${power}</sup>`;
+            term += `x^{${power}}`;
         } else if (power === 1) {
             term += 'x';
         }
@@ -761,14 +926,48 @@ function formatPolynomial(coeffs) {
         terms.push(term);
     }
 
-    return terms.join('');
+    return terms.length > 0 ? terms.join('') : '0';
+}
+
+/**
+ * Formate un coefficient (évite 1x, affiche juste x)
+ */
+function formatCoeff(c) {
+    if (c === 1) return '';
+    if (c === -1) return '-';
+    return c;
+}
+
+/**
+ * Formate un terme avec signe
+ */
+function formatTerm(coeff, x, power) {
+    if (coeff === 0) return '';
+
+    const sign = coeff > 0 ? '+' : '-';
+    const absCoeff = Math.abs(coeff);
+
+    if (power === 0) {
+        return ` ${sign} ${absCoeff}`;
+    }
+
+    const coeffStr = absCoeff === 1 ? '' : absCoeff;
+    const powerStr = power === 1 ? '' : `^${power}`;
+
+    return ` ${sign} ${coeffStr} \\cdot ${x}${powerStr}`;
+}
+
+/**
+ * Formate une constante
+ */
+function formatConstant(c) {
+    if (c === 0) return '';
+    if (c > 0) return ` + ${c}`;
+    return ` - ${Math.abs(c)}`;
 }
 
 /**
  * Génère un entier aléatoire entre min et max (inclus)
- * @param {number} min - Minimum
- * @param {number} max - Maximum
- * @param {Array} exclude - Valeurs à exclure (optionnel)
  */
 function randInt(min, max, exclude = []) {
     let val;
