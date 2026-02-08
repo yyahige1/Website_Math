@@ -753,24 +753,64 @@ function solvePoint() {
     if (LimitesState.type_point === 'continue') {
         const { a, b, c } = LimitesState.func_point;
 
+        // Rappel
         html += '<div class="step">';
-        html += '<div class="step-number">Étape 1 : Vérifier la continuité</div>';
-        html += `<div class="step-explanation">La fonction polynomiale est continue sur ℝ.</div>`;
+        html += '<div class="step-number">📚 Rappel de cours - Limite d\'une fonction continue</div>';
+        html += '<div class="step-explanation">';
+        html += 'Pour une fonction continue en un point x₀ :<br>';
+        html += '• La <strong>limite</strong> quand x → x₀ est égale à <strong>f(x₀)</strong><br>';
+        html += '• On peut calculer directement en <strong>substituant</strong> x par x₀<br>';
+        html += '• Les fonctions polynomiales sont continues partout sur ℝ';
+        html += '</div>';
         html += '</div>';
 
+        // Étape 1 : Vérifier la continuité
         html += '<div class="step">';
-        html += '<div class="step-number">Étape 2 : Calculer par substitution</div>';
-        const result = a * x0 * x0 + b * x0 + c;
+        html += '<div class="step-number">Étape 1 : Vérifier la continuité</div>';
+        const polyLatex = katex.renderToString(toLatexPoly([a, b, c]), { throwOnError: false });
+        html += `<div class="step-explanation">La fonction f(x) = ${polyLatex} est une fonction polynomiale de degré 2.</div>`;
+        html += `<div class="step-expression">Les fonctions polynomiales sont continues sur ℝ, donc f est continue en x = ${x0}</div>`;
+        html += '</div>';
 
-        const calcExpr = katex.renderToString(
-            `f(${x0}) = ${formatCoeff(a)} \\cdot ${x0}^2 ${formatTerm(b, x0, 1)} ${formatConstant(c)} = ${result}`,
-            { throwOnError: false }
-        );
-        html += `<div class="step-expression">${calcExpr}</div>`;
+        // Étape 2 : Appliquer le théorème
+        html += '<div class="step">';
+        html += '<div class="step-number">Étape 2 : Appliquer le théorème</div>';
+        html += `<div class="step-explanation">Puisque f est continue en x = ${x0}, on a :</div>`;
+        const limTheo = katex.renderToString(`\\lim_{x \\to ${x0}} f(x) = f(${x0})`, { throwOnError: false });
+        html += `<div class="step-expression">${limTheo}</div>`;
+        html += '</div>';
+
+        // Étape 3 : Calculer f(x0)
+        html += '<div class="step">';
+        html += '<div class="step-number">Étape 3 : Calculer f(${x0})</div>';
+        html += `<div class="step-explanation">On remplace x par ${x0} dans l'expression :</div>`;
+
+        const step1 = a * x0 * x0;
+        const step2 = b * x0;
+        const step3 = step1 + step2 + c;
+
+        const calc1 = katex.renderToString(`f(${x0}) = ${a} \\times ${x0}^2 + ${b} \\times ${x0} + ${c}`, { throwOnError: false });
+        html += `<div class="step-expression">${calc1}</div>`;
+
+        const calc2 = katex.renderToString(`= ${a} \\times ${x0 * x0} + ${b * x0} + ${c}`, { throwOnError: false });
+        html += `<div class="step-expression">${calc2}</div>`;
+
+        const calc3 = katex.renderToString(`= ${step1} + ${step2} + ${c}`, { throwOnError: false });
+        html += `<div class="step-expression">${calc3}</div>`;
+
+        const calc4 = katex.renderToString(`= ${step3}`, { throwOnError: false });
+        html += `<div class="step-expression">${calc4}</div>`;
+        html += '</div>';
+
+        // Conclusion
+        html += '<div class="step">';
+        html += '<div class="step-number">Étape 4 : Conclusion</div>';
+        const limFinal = katex.renderToString(`\\lim_{x \\to ${x0}} f(x) = ${step3}`, { throwOnError: false });
+        html += `<div class="step-expression">${limFinal}</div>`;
         html += '</div>';
 
         html += '<div class="result-highlight">';
-        html += `<div class="final">Réponse : ${result}</div>`;
+        html += `<div class="final">Réponse : ${step3}</div>`;
         html += '</div>';
     } else {
         // Fonction rationnelle
@@ -780,16 +820,56 @@ function solvePoint() {
         const numVal = num[0] * x0 * x0 + num[1] * x0 + num[2];
         const denVal = den[0] * x0 + den[1];
 
+        // Rappel
         html += '<div class="step">';
-        html += '<div class="step-number">Étape 1 : Vérifier si le dénominateur s\'annule</div>';
-        html += `<div class="step-explanation">Dénominateur en x = ${x0} : ${denVal}</div>`;
+        html += '<div class="step-number">📚 Rappel de cours - Limite d\'une fonction rationnelle</div>';
+        html += '<div class="step-explanation">';
+        html += 'Pour une fonction rationnelle f(x) = N(x)/D(x) :<br>';
+        html += '• Si D(x₀) ≠ 0 : la fonction est continue, limite = f(x₀)<br>';
+        html += '• Si D(x₀) = 0 et N(x₀) ≠ 0 : limite infinie (asymptote verticale)<br>';
+        html += '• Si D(x₀) = 0 et N(x₀) = 0 : forme indéterminée 0/0';
+        html += '</div>';
         html += '</div>';
 
+        // Étape 1 : Évaluer numérateur et dénominateur
+        html += '<div class="step">';
+        html += '<div class="step-number">Étape 1 : Évaluer le numérateur et le dénominateur en x = ${x0}</div>';
+
+        const numLatex = katex.renderToString(toLatexPoly(num), { throwOnError: false });
+        const denLatex = katex.renderToString(toLatexPoly(den), { throwOnError: false });
+
+        html += `<div class="step-explanation">Fonction : f(x) = ${katex.renderToString(`\\frac{${toLatexPoly(num)}}{${toLatexPoly(den)}}`, { throwOnError: false })}</div>`;
+
+        html += `<div class="step-expression">Numérateur en x = ${x0} :</div>`;
+        const numCalc = katex.renderToString(
+            `N(${x0}) = ${num[0]} \\times ${x0}^2 + ${num[1]} \\times ${x0} + ${num[2]} = ${numVal}`,
+            { throwOnError: false }
+        );
+        html += `<div class="step-expression">${numCalc}</div>`;
+
+        html += `<div class="step-expression">Dénominateur en x = ${x0} :</div>`;
+        const denCalc = katex.renderToString(
+            `D(${x0}) = ${den[0]} \\times ${x0} + ${den[1]} = ${denVal}`,
+            { throwOnError: false }
+        );
+        html += `<div class="step-expression">${denCalc}</div>`;
+        html += '</div>';
+
+        // Étape 2 : Analyser le cas
         if (denVal !== 0) {
             html += '<div class="step">';
-            html += '<div class="step-number">Étape 2 : Calculer par substitution</div>';
+            html += '<div class="step-number">Étape 2 : Cas où D(x₀) ≠ 0</div>';
+            html += `<div class="step-explanation">Le dénominateur ne s'annule pas (D(${x0}) = ${denVal} ≠ 0).<br>La fonction est donc continue en x = ${x0}.</div>`;
+            html += '</div>';
+
+            html += '<div class="step">';
+            html += '<div class="step-number">Étape 3 : Calculer la limite</div>';
             const result = numVal / denVal;
-            html += `<div class="step-expression">Numérateur : ${numVal}<br>Dénominateur : ${denVal}<br>Limite : ${formatNumber(result)}</div>`;
+            const limCalc = katex.renderToString(
+                `\\lim_{x \\to ${x0}} f(x) = f(${x0}) = \\frac{${numVal}}{${denVal}} = ${formatNumber(result)}`,
+                { throwOnError: false }
+            );
+            html += `<div class="step-expression">${limCalc}</div>`;
             html += '</div>';
 
             html += '<div class="result-highlight">';
@@ -797,14 +877,44 @@ function solvePoint() {
             html += '</div>';
         } else {
             html += '<div class="step">';
-            html += '<div class="step-number">Étape 2 : Limite infinie</div>';
-            html += `<div class="step-explanation">Le dénominateur s'annule mais pas le numérateur (${numVal}). La limite est infinie.</div>`;
+            html += '<div class="step-number">Étape 2 : Cas où D(x₀) = 0</div>';
+            html += `<div class="step-explanation">Le dénominateur s'annule (D(${x0}) = 0).<br>`;
+            if (numVal !== 0) {
+                html += `Mais le numérateur ne s'annule pas (N(${x0}) = ${numVal} ≠ 0).<br>`;
+                html += `On a donc une <strong>asymptote verticale</strong> en x = ${x0}.`;
+            } else {
+                html += `Le numérateur s'annule aussi (N(${x0}) = 0).<br>`;
+                html += `C'est une forme indéterminée 0/0 (il faudrait factoriser).`;
+            }
+            html += '</div>';
             html += '</div>';
 
-            html += '<div class="result-highlight">';
-            const signe = numVal > 0 ? '+' : '-';
-            html += `<div class="final">Réponse : ${signe}∞</div>`;
-            html += '</div>';
+            if (numVal !== 0) {
+                html += '<div class="step">';
+                html += '<div class="step-number">Étape 3 : Déterminer le signe de la limite</div>';
+                html += `<div class="step-explanation">`;
+                html += `Au voisinage de x = ${x0} :<br>`;
+                html += `• Numérateur : N(x) → ${numVal} (${numVal > 0 ? 'positif' : 'négatif'})<br>`;
+                html += `• Dénominateur : D(x) → 0`;
+                html += `</div>`;
+
+                const signe = numVal > 0 ? '+' : '-';
+                const limInf = katex.renderToString(
+                    `\\lim_{x \\to ${x0}} f(x) = ${signe}\\infty`,
+                    { throwOnError: false }
+                );
+                html += `<div class="step-expression">${limInf}</div>`;
+                html += `<div class="step-explanation">La limite est ${signe}∞ car on divise une quantité ${numVal > 0 ? 'positive' : 'négative'} par une quantité qui tend vers 0.</div>`;
+                html += '</div>';
+
+                html += '<div class="result-highlight">';
+                html += `<div class="final">Réponse : ${signe}∞ (asymptote verticale en x = ${x0})</div>`;
+                html += '</div>';
+            } else {
+                html += '<div class="result-highlight">';
+                html += `<div class="final">Forme indéterminée 0/0 - Il faut factoriser pour lever l'indétermination</div>`;
+                html += '</div>';
+            }
         }
     }
 
@@ -1033,80 +1143,196 @@ function solveRacine() {
         const c = LimitesState.sqrt_c;
         const vers = LimitesState.vers_racine === '+inf' ? '+\\infty' : '-\\infty';
 
+        // Rappel
         html += '<div class="step">';
-        html += '<div class="step-number">Étape 1 : Factoriser sous la racine</div>';
-
-        const factored = katex.renderToString(
-            `\\sqrt{${toLatexPoly([a, b, c])}} = \\sqrt{x^2\\left(${a} + \\frac{${b}}{x} + \\frac{${c}}{x^2}\\right)}`,
-            { throwOnError: false }
-        );
-        html += `<div class="step-expression">${factored}</div>`;
+        html += '<div class="step-number">📚 Rappel de cours - Limite de √P(x)</div>';
+        html += '<div class="step-explanation">';
+        html += 'Pour calculer la limite d\'une racine carrée de polynôme :<br>';
+        html += '• On <strong>factorise</strong> par le terme de plus haut degré sous la racine<br>';
+        html += '• On utilise : √(x²) = |x|<br>';
+        html += '• Attention : √(x²) = x si x > 0, et √(x²) = -x si x < 0<br>';
+        html += '• Les termes en 1/x tendent vers 0';
+        html += '</div>';
         html += '</div>';
 
+        // Étape 1 : Factoriser sous la racine
         html += '<div class="step">';
-        html += '<div class="step-number">Étape 2 : Simplifier</div>';
+        html += '<div class="step-number">Étape 1 : Factoriser par x² sous la racine</div>';
 
-        const simplified = katex.renderToString(
-            `= |x| \\cdot \\sqrt{${a} + \\frac{${b}}{x} + \\frac{${c}}{x^2}}`,
+        html += '<div class="step-explanation">On met x² en facteur sous la racine :</div>';
+
+        const polyLatex = toLatexPoly([a, b, c]);
+        const factorize = katex.renderToString(
+            `${polyLatex} = x^2\\left(${a} + \\frac{${b}}{x} + \\frac{${c}}{x^2}\\right)`,
             { throwOnError: false }
         );
-        html += `<div class="step-expression">${simplified}</div>`;
+        html += `<div class="step-expression">${factorize}</div>`;
+
+        const underSqrt = katex.renderToString(
+            `\\sqrt{${polyLatex}} = \\sqrt{x^2\\left(${a} + \\frac{${b}}{x} + \\frac{${c}}{x^2}\\right)}`,
+            { throwOnError: false }
+        );
+        html += `<div class="step-expression">${underSqrt}</div>`;
         html += '</div>';
 
+        // Étape 2 : Sortir x² de la racine
         html += '<div class="step">';
-        html += '<div class="step-number">Étape 3 : Calculer la limite</div>';
+        html += '<div class="step-number">Étape 2 : Sortir x² de la racine</div>';
 
-        const sqrtA = Math.sqrt(Math.abs(a));
+        html += '<div class="step-explanation">On utilise la propriété : √(a×b) = √a × √b</div>';
+
+        const extract = katex.renderToString(
+            `= \\sqrt{x^2} \\times \\sqrt{${a} + \\frac{${b}}{x} + \\frac{${c}}{x^2}}`,
+            { throwOnError: false }
+        );
+        html += `<div class="step-expression">${extract}</div>`;
+
+        html += `<div class="step-explanation">Or √(x²) = |x|${vers === '+\\infty' ? ' = x (car x > 0 quand x → +∞)' : ' = -x (car x < 0 quand x → -∞)'}</div>`;
+
+        const withAbs = katex.renderToString(
+            `= ${vers === '+\\infty' ? 'x' : '(-x)'} \\times \\sqrt{${a} + \\frac{${b}}{x} + \\frac{${c}}{x^2}}`,
+            { throwOnError: false }
+        );
+        html += `<div class="step-expression">${withAbs}</div>`;
+        html += '</div>';
+
+        // Étape 3 : Limite des termes en 1/x
+        html += '<div class="step">';
+        html += '<div class="step-number">Étape 3 : Limite des termes en 1/x</div>';
+        html += `<div class="step-explanation">Quand x → ${vers === '+\\infty' ? '+∞' : '-∞'} :</div>`;
+
+        const limTerms = katex.renderToString(
+            `\\frac{${b}}{x} \\to 0 \\text{ et } \\frac{${c}}{x^2} \\to 0`,
+            { throwOnError: false }
+        );
+        html += `<div class="step-expression">${limTerms}</div>`;
+
+        const limUnderSqrt = katex.renderToString(
+            `\\sqrt{${a} + \\frac{${b}}{x} + \\frac{${c}}{x^2}} \\to \\sqrt{${a} + 0 + 0} = \\sqrt{${a}}${a > 0 ? ' = ' + formatNumber(Math.sqrt(a)) : ''}`,
+            { throwOnError: false }
+        );
+        html += `<div class="step-expression">${limUnderSqrt}</div>`;
+        html += '</div>';
+
+        // Étape 4 : Conclusion
+        html += '<div class="step">';
+        html += '<div class="step-number">Étape 4 : Conclusion</div>';
+
         let limite = '';
+        let explication = '';
 
-        if (vers === '+\\infty') {
-            limite = a > 0 ? '+\\infty' : '0';
+        if (a > 0) {
+            const sqrtA = Math.sqrt(a);
+            if (vers === '+\\infty') {
+                limite = '+\\infty';
+                explication = `x → +∞ et √${a} = ${formatNumber(sqrtA)}, donc x × ${formatNumber(sqrtA)} → +∞`;
+            } else {
+                limite = '+\\infty';
+                explication = `x → -∞ donc (-x) → +∞, et √${a} = ${formatNumber(sqrtA)}, donc (-x) × ${formatNumber(sqrtA)} → +∞`;
+            }
         } else {
-            limite = a > 0 ? '+\\infty' : '0';
+            limite = '\\text{pas défini sur } \\mathbb{R}';
+            explication = `Le discriminant ${a} < 0, donc la racine n'est pas définie sur ℝ`;
         }
 
-        html += `<div class="step-explanation">Quand x → ${vers === '+\\infty' ? '+∞' : '-∞'}, les termes avec x au dénominateur tendent vers 0.</div>`;
-        const limExpr = katex.renderToString(
-            `\\lim_{x \\to ${vers}} \\sqrt{${toLatexPoly([a, b, c])}} = ${limite}`,
+        html += `<div class="step-explanation">${explication}</div>`;
+
+        const limFinal = katex.renderToString(
+            `\\lim_{x \\to ${vers}} \\sqrt{${polyLatex}} = ${limite}`,
             { throwOnError: false }
         );
-        html += `<div class="step-expression">${limExpr}</div>`;
+        html += `<div class="step-expression">${limFinal}</div>`;
         html += '</div>';
 
         html += '<div class="result-highlight">';
-        html += `<div class="final">Réponse : ${katex.renderToString(limite, { throwOnError: false })}</div>`;
+        html += `<div class="final">Réponse : ${a > 0 ? '+∞' : 'Non défini sur ℝ'}</div>`;
         html += '</div>';
     } else if (LimitesState.type_racine === 'diff_sqrt') {
         const a = LimitesState.diff_a;
 
+        // Rappel
         html += '<div class="step">';
-        html += '<div class="step-number">Étape 1 : Multiplier par la quantité conjuguée</div>';
+        html += '<div class="step-number">📚 Rappel de cours - Différence de racines</div>';
+        html += '<div class="step-explanation">';
+        html += 'Pour lever l\'indétermination ∞ - ∞ avec des racines :<br>';
+        html += '• On multiplie par la <strong>quantité conjuguée</strong><br>';
+        html += '• On utilise : (a - b)(a + b) = a² - b²<br>';
+        html += '• Quantité conjuguée de (√A - √B) est (√A + √B)';
+        html += '</div>';
+        html += '</div>';
+
+        // Étape 1 : Identifier la forme
+        html += '<div class="step">';
+        html += '<div class="step-number">Étape 1 : Identifier la forme indéterminée</div>';
+        html += `<div class="step-explanation">Quand x → +∞ :</div>`;
+
+        const sqrtXa = katex.renderToString(`\\sqrt{x + ${a}} \\sim \\sqrt{x} \\to +\\infty`, { throwOnError: false });
+        const sqrtX = katex.renderToString(`\\sqrt{x} \\to +\\infty`, { throwOnError: false });
+
+        html += `<div class="step-expression">${sqrtXa}</div>`;
+        html += `<div class="step-expression">${sqrtX}</div>`;
+        html += `<div class="step-explanation">On a la forme <strong>∞ - ∞</strong> (indéterminée)</div>`;
+        html += '</div>';
+
+        // Étape 2 : Multiplier par la quantité conjuguée
+        html += '<div class="step">';
+        html += '<div class="step-number">Étape 2 : Multiplier par la quantité conjuguée</div>';
+
+        const conjugeeForm = katex.renderToString(`\\sqrt{x + ${a}} + \\sqrt{x}`, { throwOnError: false });
+        html += `<div class="step-explanation">La quantité conjuguée est : ${conjugeeForm}</div>`;
+        html += `<div class="step-explanation">On multiplie et divise par cette quantité :</div>`;
 
         const conjugate = katex.renderToString(
-            `\\frac{\\sqrt{x + ${a}} - \\sqrt{x}}{1} \\times \\frac{\\sqrt{x + ${a}} + \\sqrt{x}}{\\sqrt{x + ${a}} + \\sqrt{x}}`,
+            `\\sqrt{x + ${a}} - \\sqrt{x} = \\frac{(\\sqrt{x + ${a}} - \\sqrt{x})(\\sqrt{x + ${a}} + \\sqrt{x})}{\\sqrt{x + ${a}} + \\sqrt{x}}`,
             { throwOnError: false }
         );
         html += `<div class="step-expression">${conjugate}</div>`;
         html += '</div>';
 
+        // Étape 3 : Développer le numérateur
         html += '<div class="step">';
-        html += '<div class="step-number">Étape 2 : Simplifier</div>';
+        html += '<div class="step-number">Étape 3 : Développer avec (a-b)(a+b) = a² - b²</div>';
+
+        html += '<div class="step-explanation">Au numérateur, on applique l\'identité remarquable :</div>';
+
+        const identity = katex.renderToString(
+            `(\\sqrt{x + ${a}})^2 - (\\sqrt{x})^2 = (x + ${a}) - x = ${a}`,
+            { throwOnError: false }
+        );
+        html += `<div class="step-expression">${identity}</div>`;
 
         const simplified = katex.renderToString(
-            `= \\frac{(x + ${a}) - x}{\\sqrt{x + ${a}} + \\sqrt{x}} = \\frac{${a}}{\\sqrt{x + ${a}} + \\sqrt{x}}`,
+            `= \\frac{${a}}{\\sqrt{x + ${a}} + \\sqrt{x}}`,
             { throwOnError: false }
         );
         html += `<div class="step-expression">${simplified}</div>`;
         html += '</div>';
 
+        // Étape 4 : Limite du dénominateur
         html += '<div class="step">';
-        html += '<div class="step-number">Étape 3 : Calculer la limite</div>';
-        html += `<div class="step-explanation">Quand x → +∞, le dénominateur tend vers +∞.</div>`;
-        const limExpr = katex.renderToString(
-            `\\lim_{x \\to +\\infty} \\frac{${a}}{\\sqrt{x + ${a}} + \\sqrt{x}} = 0`,
+        html += '<div class="step-number">Étape 4 : Étudier le dénominateur</div>';
+        html += `<div class="step-explanation">Quand x → +∞ :</div>`;
+
+        const limDen1 = katex.renderToString(`\\sqrt{x + ${a}} \\to +\\infty`, { throwOnError: false });
+        const limDen2 = katex.renderToString(`\\sqrt{x} \\to +\\infty`, { throwOnError: false });
+        const limDenTotal = katex.renderToString(`\\sqrt{x + ${a}} + \\sqrt{x} \\to +\\infty`, { throwOnError: false });
+
+        html += `<div class="step-expression">${limDen1}</div>`;
+        html += `<div class="step-expression">${limDen2}</div>`;
+        html += `<div class="step-expression">Donc ${limDenTotal}</div>`;
+        html += '</div>';
+
+        // Étape 5 : Conclusion
+        html += '<div class="step">';
+        html += '<div class="step-number">Étape 5 : Calculer la limite</div>';
+
+        html += `<div class="step-explanation">On a une <strong>constante ${a} divisée par +∞</strong> :</div>`;
+
+        const limFinal = katex.renderToString(
+            `\\lim_{x \\to +\\infty} \\frac{${a}}{\\sqrt{x + ${a}} + \\sqrt{x}} = \\frac{${a}}{+\\infty} = 0`,
             { throwOnError: false }
         );
-        html += `<div class="step-expression">${limExpr}</div>`;
+        html += `<div class="step-expression">${limFinal}</div>`;
         html += '</div>';
 
         html += '<div class="result-highlight">';
@@ -1126,24 +1352,122 @@ function solveAsymptote() {
 
     let html = '';
 
+    // Rappel
     html += '<div class="step">';
-    html += '<div class="step-number">Étape 1 : Asymptote verticale</div>';
+    html += '<div class="step-number">📚 Rappel de cours - Asymptotes d\'une fonction rationnelle</div>';
+    html += '<div class="step-explanation">';
+    html += 'Pour une fonction f(x) = (ax+b)/(cx+d) :<br>';
+    html += '<strong>Asymptote verticale :</strong><br>';
+    html += '• Valeur qui annule le dénominateur<br>';
+    html += '• Résoudre : cx + d = 0<br>';
+    html += '<strong>Asymptote horizontale :</strong><br>';
+    html += '• Limite de f(x) quand x → ±∞<br>';
+    html += '• Pour une rationnelle de degré 1/1 : y = a/c (rapport des coefficients dominants)';
+    html += '</div>';
+    html += '</div>';
+
+    // Étape 1 : Chercher l'asymptote verticale
+    html += '<div class="step">';
+    html += '<div class="step-number">Étape 1 : Recherche de l\'asymptote verticale</div>';
+
+    html += '<div class="step-explanation">On cherche les valeurs qui annulent le dénominateur :</div>';
+
+    const denLatex = katex.renderToString(toLatexPoly([c, d]), { throwOnError: false });
+    html += `<div class="step-expression">Dénominateur : ${denLatex} = 0</div>`;
+
+    const eqDen = katex.renderToString(`${c}x + ${d} = 0`, { throwOnError: false });
+    html += `<div class="step-expression">${eqDen}</div>`;
+
+    const solDen = katex.renderToString(`${c}x = ${-d}`, { throwOnError: false });
+    html += `<div class="step-expression">${solDen}</div>`;
+
     const x_av = -d / c;
-    html += `<div class="step-explanation">Le dénominateur s'annule quand ${c}x + ${d} = 0, soit x = ${formatNumber(x_av)}</div>`;
-    const avExpr = katex.renderToString(`x = ${formatNumber(x_av)}`, { throwOnError: false });
-    html += `<div class="step-expression">Asymptote verticale : ${avExpr}</div>`;
+    const finalDen = katex.renderToString(`x = \\frac{${-d}}{${c}} = ${formatNumber(x_av)}`, { throwOnError: false });
+    html += `<div class="step-expression">${finalDen}</div>`;
     html += '</div>';
 
+    // Étape 2 : Vérifier que le numérateur ne s'annule pas
     html += '<div class="step">';
-    html += '<div class="step-number">Étape 2 : Asymptote horizontale</div>';
-    html += `<div class="step-explanation">Même degré au numérateur et dénominateur : la limite en ±∞ est le rapport des coefficients dominants.</div>`;
-    const y_ah = a / c;
-    const ahExpr = katex.renderToString(`y = ${formatNumber(y_ah)}`, { throwOnError: false });
-    html += `<div class="step-expression">Asymptote horizontale : ${ahExpr}</div>`;
+    html += '<div class="step-number">Étape 2 : Vérifier le numérateur en x = ${formatNumber(x_av)}</div>';
+
+    const numVal = a * x_av + b;
+    const numCheck = katex.renderToString(
+        `${a} \\times ${formatNumber(x_av)} + ${b} = ${formatNumber(numVal)}`,
+        { throwOnError: false }
+    );
+    html += `<div class="step-expression">Numérateur : ${numCheck}</div>`;
+
+    if (Math.abs(numVal) > 0.0001) {
+        html += `<div class="step-explanation">Le numérateur ne s'annule pas (≠ 0), donc x = ${formatNumber(x_av)} est bien une asymptote verticale.</div>`;
+    } else {
+        html += `<div class="step-explanation">Le numérateur s'annule aussi ! Il y aurait une simplification possible.</div>`;
+    }
     html += '</div>';
 
+    // Étape 3 : Asymptote verticale confirmée
+    html += '<div class="step">';
+    html += '<div class="step-number">Étape 3 : Asymptote verticale</div>';
+    const avExpr = katex.renderToString(`x = ${formatNumber(x_av)}`, { throwOnError: false });
+    html += `<div class="step-expression">\\text{Asymptote verticale : } ${avExpr}</div>`;
+    html += '</div>';
+
+    // Étape 4 : Chercher l'asymptote horizontale
+    html += '<div class="step">';
+    html += '<div class="step-number">Étape 4 : Recherche de l\'asymptote horizontale</div>';
+
+    html += '<div class="step-explanation">On calcule les limites en +∞ et -∞ :</div>';
+
+    const numLatex = katex.renderToString(toLatexPoly([a, b]), { throwOnError: false });
+    const funcLatex = katex.renderToString(`\\frac{${numLatex}}{${denLatex}}`, { throwOnError: false });
+
+    html += `<div class="step-expression">f(x) = ${funcLatex}</div>`;
+    html += '</div>';
+
+    // Étape 5 : Factoriser
+    html += '<div class="step">';
+    html += '<div class="step-number">Étape 5 : Factoriser par x</div>';
+
+    html += '<div class="step-explanation">On factorise par x au numérateur et au dénominateur :</div>';
+
+    const factored = katex.renderToString(
+        `f(x) = \\frac{x(${a} + \\frac{${b}}{x})}{x(${c} + \\frac{${d}}{x})} = \\frac{${a} + \\frac{${b}}{x}}{${c} + \\frac{${d}}{x}}`,
+        { throwOnError: false }
+    );
+    html += `<div class="step-expression">${factored}</div>`;
+    html += '</div>';
+
+    // Étape 6 : Limite
+    html += '<div class="step">';
+    html += '<div class="step-number">Étape 6 : Calculer la limite en ±∞</div>';
+
+    html += '<div class="step-explanation">Quand x → ±∞, les termes en 1/x tendent vers 0 :</div>';
+
+    const limTerms = katex.renderToString(`\\frac{${b}}{x} \\to 0 \\text{ et } \\frac{${d}}{x} \\to 0`, { throwOnError: false });
+    html += `<div class="step-expression">${limTerms}</div>`;
+
+    const y_ah = a / c;
+    const limInf = katex.renderToString(
+        `\\lim_{x \\to \\pm\\infty} f(x) = \\frac{${a} + 0}{${c} + 0} = \\frac{${a}}{${c}} = ${formatNumber(y_ah)}`,
+        { throwOnError: false }
+    );
+    html += `<div class="step-expression">${limInf}</div>`;
+    html += '</div>';
+
+    // Étape 7 : Asymptote horizontale
+    html += '<div class="step">';
+    html += '<div class="step-number">Étape 7 : Asymptote horizontale</div>';
+
+    const ahExpr = katex.renderToString(`y = ${formatNumber(y_ah)}`, { throwOnError: false });
+    html += `<div class="step-expression">\\text{Asymptote horizontale : } ${ahExpr}</div>`;
+    html += '<div class="step-explanation">Cette asymptote est valable en +∞ ET en -∞.</div>';
+    html += '</div>';
+
+    // Résultat final
     html += '<div class="result-highlight">';
-    html += `<div class="final">Asymptote verticale : x = ${formatNumber(x_av)}<br>Asymptote horizontale : y = ${formatNumber(y_ah)}</div>`;
+    html += `<div class="final">`;
+    html += `<strong>Asymptote verticale :</strong> x = ${formatNumber(x_av)}<br>`;
+    html += `<strong>Asymptote horizontale :</strong> y = ${formatNumber(y_ah)}`;
+    html += `</div>`;
     html += '</div>';
 
     return html;
