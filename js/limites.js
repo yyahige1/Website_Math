@@ -522,16 +522,18 @@ function solvePolynomeInfini() {
 
     // Étape 5 : Comportement de x^n
     html += '<div class="step">';
-    html += '<div class="step-number">Étape 4 : Comportement de x<sup>' + degre + '</sup></div>';
+    const xPowerTitle = katex.renderToString(`x^{${degre}}`, { throwOnError: false });
+    html += `<div class="step-number">Étape 4 : Comportement de ${xPowerTitle}</div>`;
 
     let comportement = '';
+    const xPower = katex.renderToString(`x^{${degre}}`, { throwOnError: false });
     if (degre % 2 === 0) {
-        comportement = `Degré pair (${degre}) : x<sup>${degre}</sup> → +∞ que x tende vers +∞ ou -∞`;
+        comportement = `Degré pair (${degre}) : ${xPower} → +∞ que x tende vers +∞ ou -∞`;
     } else {
         if (vers === '+inf') {
-            comportement = `Degré impair (${degre}) : quand x → +∞, x<sup>${degre}</sup> → +∞`;
+            comportement = `Degré impair (${degre}) : quand x → +∞, ${xPower} → +∞`;
         } else {
-            comportement = `Degré impair (${degre}) : quand x → -∞, x<sup>${degre}</sup> → -∞`;
+            comportement = `Degré impair (${degre}) : quand x → -∞, ${xPower} → -∞`;
         }
     }
     html += `<div class="step-explanation">${comportement}</div>`;
@@ -543,30 +545,31 @@ function solvePolynomeInfini() {
 
     let limite = '';
     let explication = '';
+    const xPowerKatex = katex.renderToString(`x^{${degre}}`, { throwOnError: false });
     if (degre % 2 === 0) {
         if (a > 0) {
             limite = '+\\infty';
-            explication = `${a} > 0 et x<sup>${degre}</sup> → +∞, donc ${a} × (+∞) = +∞`;
+            explication = `${a} > 0 et ${xPowerKatex} → +∞, donc ${a} × (+∞) = +∞`;
         } else {
             limite = '-\\infty';
-            explication = `${a} < 0 et x<sup>${degre}</sup> → +∞, donc ${a} × (+∞) = -∞`;
+            explication = `${a} < 0 et ${xPowerKatex} → +∞, donc ${a} × (+∞) = -∞`;
         }
     } else {
         if (vers === '+inf') {
             if (a > 0) {
                 limite = '+\\infty';
-                explication = `${a} > 0 et x<sup>${degre}</sup> → +∞, donc ${a} × (+∞) = +∞`;
+                explication = `${a} > 0 et ${xPowerKatex} → +∞, donc ${a} × (+∞) = +∞`;
             } else {
                 limite = '-\\infty';
-                explication = `${a} < 0 et x<sup>${degre}</sup> → +∞, donc ${a} × (+∞) = -∞`;
+                explication = `${a} < 0 et ${xPowerKatex} → +∞, donc ${a} × (+∞) = -∞`;
             }
         } else {
             if (a > 0) {
                 limite = '-\\infty';
-                explication = `${a} > 0 et x<sup>${degre}</sup> → -∞, donc ${a} × (-∞) = -∞`;
+                explication = `${a} > 0 et ${xPowerKatex} → -∞, donc ${a} × (-∞) = -∞`;
             } else {
                 limite = '+\\infty';
-                explication = `${a} < 0 et x<sup>${degre}</sup> → -∞, donc ${a} × (-∞) = +∞`;
+                explication = `${a} < 0 et ${xPowerKatex} → -∞, donc ${a} × (-∞) = +∞`;
             }
         }
     }
@@ -663,7 +666,8 @@ function solveRationnelleInfini() {
             { throwOnError: false }
         );
         html += `<div class="step-expression">${simplified}</div>`;
-        html += `<div class="step-explanation">On simplifie par x<sup>${degNum}</sup> (même degré).</div>`;
+        const xPowerDeg = katex.renderToString(`x^{${degNum}}`, { throwOnError: false });
+        html += `<div class="step-explanation">On simplifie par ${xPowerDeg} (même degré).</div>`;
     } else if (degNum > degDen) {
         const diff = degNum - degDen;
         const simplified = katex.renderToString(
@@ -671,7 +675,8 @@ function solveRationnelleInfini() {
             { throwOnError: false }
         );
         html += `<div class="step-expression">${simplified}</div>`;
-        html += `<div class="step-explanation">Après simplification, il reste x<sup>${diff}</sup> au numérateur.</div>`;
+        const xPowerDiff = katex.renderToString(`x^{${diff}}`, { throwOnError: false });
+        html += `<div class="step-explanation">Après simplification, il reste ${xPowerDiff} au numérateur.</div>`;
     } else {
         const diff = degDen - degNum;
         const simplified = katex.renderToString(
@@ -679,7 +684,8 @@ function solveRationnelleInfini() {
             { throwOnError: false }
         );
         html += `<div class="step-expression">${simplified}</div>`;
-        html += `<div class="step-explanation">Après simplification, il reste 1/x<sup>${diff}</sup>.</div>`;
+        const invXPower = katex.renderToString(`\\frac{1}{x^{${diff}}}`, { throwOnError: false });
+        html += `<div class="step-explanation">Après simplification, il reste ${invXPower}.</div>`;
     }
     html += '</div>';
 
