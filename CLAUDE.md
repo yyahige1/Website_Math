@@ -136,23 +136,29 @@ Chaque module suit cette structure standardisée:
             </div>
         </div>
 
-        <!-- PARAMÈTRES (sections conditionnelles) -->
-        <div id="section1" class="card">
-            <h3>📊 [Titre Section]</h3>
-            <div class="param-row">
-                <label>Paramètre :</label>
-                <input type="number" id="param1" value="5">
-            </div>
-            <!-- ... autres params -->
-        </div>
-
-        <!-- AFFICHAGE EXERCICE -->
-        <div class="card expression-display">
-            <div class="expression" id="exerciseDisplay"></div>
-        </div>
-
-        <!-- BOUTONS D'ACTION -->
+        <!-- ⚠️ IMPORTANT: TOUT dans UNE SEULE card dans l'ordre suivant -->
         <div class="card">
+            <!-- 1. Type selector TOUJOURS en premier -->
+            <!-- 2. Paramètres conditionnels EN DESSOUS -->
+            <!-- 3. Expression display EN BAS (centré avec fond gris) -->
+            <!-- 4. Boutons d'action TOUT EN BAS -->
+
+            <!-- PARAMÈTRES (sections conditionnelles) -->
+            <div id="section1">
+                <h3>📊 [Titre Section]</h3>
+                <div class="param-row">
+                    <label>Paramètre :</label>
+                    <input type="number" id="param1" value="5">
+                </div>
+                <!-- ... autres params -->
+            </div>
+
+            <!-- AFFICHAGE EXERCICE (avec fond gris, centré) -->
+            <div class="expression-display">
+                <div class="expression" id="exerciseDisplay"></div>
+            </div>
+
+            <!-- BOUTONS D'ACTION -->
             <div class="action-buttons">
                 <button id="generateBtn" class="btn-generate">Nouvel exercice</button>
                 <button id="solveBtn" class="btn-solve">Voir la solution</button>
@@ -456,6 +462,52 @@ $('solutionDiv').innerHTML = html;
 const v_align = signes_derivee[i] === '+' ? 'var-v-align-bottom' : 'var-v-align-top';
 ```
 
+### 5. Structure HTML Incohérente ⚠️ CRITIQUE
+
+**Symptôme**: Paramètres placés APRÈS l'expression display au lieu d'AVANT
+
+**Pourquoi c'est important**:
+- Cohérence visuelle entre TOUS les modules
+- Ordre logique: choisir type → régler paramètres → voir expression → résoudre
+- Utilisateur s'attend à même UX partout
+
+**Règle ABSOLUE** (à ne JAMAIS modifier):
+```html
+<!-- ✅ STRUCTURE CORRECTE - UNE SEULE card -->
+<div class="card">
+    <!-- 1️⃣ Type selector EN PREMIER -->
+    <div class="type-selector grid-2">
+        <button class="type-btn active" data-type="type1">...</button>
+    </div>
+
+    <!-- 2️⃣ Paramètres conditionnels EN DESSOUS -->
+    <div id="section1">
+        <h3>📊 Titre</h3>
+        <div class="param-row">...</div>
+    </div>
+
+    <!-- 3️⃣ Expression display APRÈS paramètres -->
+    <div class="expression-display">
+        <div class="expression" id="exerciseDisplay">...</div>
+    </div>
+
+    <!-- 4️⃣ Boutons action TOUT EN BAS -->
+    <div class="action-buttons">
+        <button id="generateBtn">...</button>
+        <button id="solveBtn">...</button>
+    </div>
+</div>
+
+<!-- ❌ JAMAIS faire des cards séparées pour chaque section -->
+<!-- ❌ JAMAIS mettre expression display AVANT les paramètres -->
+```
+
+**Notes importantes**:
+- Sections de paramètres: `<div id="sectionX">` (PAS `class="card"`)
+- Expression display: utilise classe `.expression-display` (fond gris, centré)
+- Boutons: `<div class="action-buttons">` (PAS `class="card action-buttons"`)
+- Tout dans **UNE SEULE card** parent
+
 ---
 
 ## 🔧 Comment Ajouter un Nouveau Module
@@ -559,6 +611,11 @@ const v_align = signes_derivee[i] === '+' ? 'var-v-align-bottom' : 'var-v-align-
 - ✅ Pas de duplication de code
 - ✅ GraphCanvas réutilisable pour graphiques
 - ✅ CSS modulaire (theme, base, layout, navigation, exercices)
+- ⚠️ **JAMAIS prendre de libertés de design sans vérifier les modules existants**
+  - Toujours COMPARER avec index.html, equations2.html ou fonctions-affines.html
+  - Structure HTML doit être IDENTIQUE entre tous les modules
+  - Ordre: type-selector → paramètres → expression-display → boutons
+  - Si incertain, DEMANDER avant de créer une nouvelle structure
 
 ---
 
