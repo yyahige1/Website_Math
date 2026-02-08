@@ -47,106 +47,104 @@
                     <div class="label">Sens de variation</div>
                 </button>
             </div>
-        </div>
 
-        <div class="expression-display">
-            <div class="expression" id="expressionDisplay">u<sub>n</sub> = 3 + 5n</div>
-        </div>
+            <!-- Section Suite Arithmétique -->
+            <div id="arithmetiqueSection">
+                <h3>📐 Suite Arithmétique</h3>
+                <div class="param-row">
+                    <label>Premier terme u<sub>0</sub> :</label>
+                    <input type="number" id="u0_arith" value="3" step="1">
+                </div>
+                <div class="param-row">
+                    <label>Raison r :</label>
+                    <input type="number" id="r_arith" value="5" step="1">
+                </div>
+                <div class="param-row">
+                    <label>Rang n à calculer :</label>
+                    <input type="number" id="n_arith" value="10" min="1" max="100" step="1">
+                </div>
+            </div>
 
-        <!-- Section Suite Arithmétique -->
-        <div id="arithmetiqueSection" class="card">
-            <h3>📐 Suite Arithmétique</h3>
-            <div class="param-row">
-                <label>Premier terme u<sub>0</sub> :</label>
-                <input type="number" id="u0_arith" value="3" step="1">
+            <!-- Section Suite Géométrique -->
+            <div id="geometriqueSection" style="display: none;">
+                <h3>📐 Suite Géométrique</h3>
+                <div class="param-row">
+                    <label>Premier terme u<sub>0</sub> :</label>
+                    <input type="number" id="u0_geo" value="2" step="1">
+                </div>
+                <div class="param-row">
+                    <label>Raison q :</label>
+                    <input type="number" id="q_geo" value="3" step="0.5">
+                </div>
+                <div class="param-row">
+                    <label>Rang n à calculer :</label>
+                    <input type="number" id="n_geo" value="5" min="1" max="20" step="1">
+                </div>
             </div>
-            <div class="param-row">
-                <label>Raison r :</label>
-                <input type="number" id="r_arith" value="5" step="1">
-            </div>
-            <div class="param-row">
-                <label>Rang n à calculer :</label>
-                <input type="number" id="n_arith" value="10" min="1" max="100" step="1">
-            </div>
-        </div>
 
-        <!-- Section Suite Géométrique -->
-        <div id="geometriqueSection" class="card" style="display: none;">
-            <h3>📐 Suite Géométrique</h3>
-            <div class="param-row">
-                <label>Premier terme u<sub>0</sub> :</label>
-                <input type="number" id="u0_geo" value="2" step="1">
+            <!-- Section Somme Arithmétique -->
+            <div id="sommeArithSection" style="display: none;">
+                <h3>📐 Somme d'une Suite Arithmétique</h3>
+                <div class="param-row">
+                    <label>Premier terme u<sub>0</sub> :</label>
+                    <input type="number" id="u0_sarith" value="5" step="1">
+                </div>
+                <div class="param-row">
+                    <label>Raison r :</label>
+                    <input type="number" id="r_sarith" value="3" step="1">
+                </div>
+                <div class="param-row">
+                    <label>Nombre de termes (jusqu'à u<sub>n</sub>) :</label>
+                    <input type="number" id="n_sarith" value="10" min="1" max="100" step="1">
+                </div>
             </div>
-            <div class="param-row">
-                <label>Raison q :</label>
-                <input type="number" id="q_geo" value="3" step="0.5">
-            </div>
-            <div class="param-row">
-                <label>Rang n à calculer :</label>
-                <input type="number" id="n_geo" value="5" min="1" max="20" step="1">
-            </div>
-        </div>
 
-        <!-- Section Somme Arithmétique -->
-        <div id="sommeArithSection" class="card" style="display: none;">
-            <h3>📐 Somme d'une Suite Arithmétique</h3>
-            <div class="param-row">
-                <label>Premier terme u<sub>0</sub> :</label>
-                <input type="number" id="u0_sarith" value="5" step="1">
+            <!-- Section Somme Géométrique -->
+            <div id="sommeGeoSection" style="display: none;">
+                <h3>📐 Somme d'une Suite Géométrique</h3>
+                <div class="param-row">
+                    <label>Premier terme u<sub>0</sub> :</label>
+                    <input type="number" id="u0_sgeo" value="1" step="1">
+                </div>
+                <div class="param-row">
+                    <label>Raison q :</label>
+                    <input type="number" id="q_sgeo" value="2" step="0.5">
+                </div>
+                <div class="param-row">
+                    <label>Nombre de termes (jusqu'à u<sub>n</sub>) :</label>
+                    <input type="number" id="n_sgeo" value="8" min="1" max="30" step="1">
+                </div>
             </div>
-            <div class="param-row">
-                <label>Raison r :</label>
-                <input type="number" id="r_sarith" value="3" step="1">
-            </div>
-            <div class="param-row">
-                <label>Nombre de termes (jusqu'à u<sub>n</sub>) :</label>
-                <input type="number" id="n_sarith" value="10" min="1" max="100" step="1">
-            </div>
-        </div>
 
-        <!-- Section Somme Géométrique -->
-        <div id="sommeGeoSection" class="card" style="display: none;">
-            <h3>📐 Somme d'une Suite Géométrique</h3>
-            <div class="param-row">
-                <label>Premier terme u<sub>0</sub> :</label>
-                <input type="number" id="u0_sgeo" value="1" step="1">
+            <!-- Section Variation -->
+            <div id="variationSection" style="display: none;">
+                <h3>📐 Sens de variation</h3>
+                <div class="param-row">
+                    <label>Type de suite :</label>
+                    <select id="type_variation">
+                        <option value="arithmetique">Arithmétique</option>
+                        <option value="geometrique">Géométrique</option>
+                    </select>
+                </div>
+                <div class="param-row">
+                    <label>Premier terme u<sub>0</sub> :</label>
+                    <input type="number" id="u0_var" value="10" step="1">
+                </div>
+                <div class="param-row" id="param_r_var">
+                    <label>Raison r :</label>
+                    <input type="number" id="r_var" value="-2" step="1">
+                </div>
+                <div class="param-row" id="param_q_var" style="display: none;">
+                    <label>Raison q :</label>
+                    <input type="number" id="q_var" value="0.5" step="0.1">
+                </div>
             </div>
-            <div class="param-row">
-                <label>Raison q :</label>
-                <input type="number" id="q_sgeo" value="2" step="0.5">
-            </div>
-            <div class="param-row">
-                <label>Nombre de termes (jusqu'à u<sub>n</sub>) :</label>
-                <input type="number" id="n_sgeo" value="8" min="1" max="30" step="1">
-            </div>
-        </div>
 
-        <!-- Section Variation -->
-        <div id="variationSection" class="card" style="display: none;">
-            <h3>📐 Sens de variation</h3>
-            <div class="param-row">
-                <label>Type de suite :</label>
-                <select id="type_variation">
-                    <option value="arithmetique">Arithmétique</option>
-                    <option value="geometrique">Géométrique</option>
-                </select>
+            <div class="expression-display">
+                <div class="expression" id="expressionDisplay">u<sub>n</sub> = 3 + 5n</div>
             </div>
-            <div class="param-row">
-                <label>Premier terme u<sub>0</sub> :</label>
-                <input type="number" id="u0_var" value="10" step="1">
-            </div>
-            <div class="param-row" id="param_r_var">
-                <label>Raison r :</label>
-                <input type="number" id="r_var" value="-2" step="1">
-            </div>
-            <div class="param-row" id="param_q_var" style="display: none;">
-                <label>Raison q :</label>
-                <input type="number" id="q_var" value="0.5" step="0.1">
-            </div>
-        </div>
 
-        <!-- Boutons d'action -->
-        <div class="card action-buttons">
+            <div class="action-buttons">
             <button id="newExerciseBtn" class="btn btn-secondary">🔄 Nouvel exercice</button>
             <button id="solveBtn" class="btn btn-primary">✨ Correction</button>
         </div>

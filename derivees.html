@@ -125,105 +125,104 @@
                     <div class="label">Étude de variations</div>
                 </button>
             </div>
-        </div>
 
-        <!-- Expression affichée -->
-        <div class="expression-display">
-            <div class="expression" id="expressionDisplay">f(x) = 3x² - 5x + 2</div>
-        </div>
+            <!-- Section Polynomiale -->
+            <div id="polynomialeSection">
+                <h3>📐 Fonction polynomiale</h3>
+                <div class="param-row">
+                    <label>Degré du polynôme:</label>
+                    <select id="degre_poly">
+                        <option value="2">Degré 2 (ax² + bx + c)</option>
+                        <option value="3">Degré 3 (ax³ + bx² + cx + d)</option>
+                        <option value="4">Degré 4 (ax⁴ + bx³ + cx² + dx + e)</option>
+                    </select>
+                </div>
+            </div>
 
-        <!-- Section Polynomiale -->
-        <div id="polynomialeSection" class="card">
-            <h3>📐 Fonction polynomiale</h3>
-            <div class="param-row">
-                <label>Degré du polynôme:</label>
-                <select id="degre_poly">
-                    <option value="2">Degré 2 (ax² + bx + c)</option>
-                    <option value="3">Degré 3 (ax³ + bx² + cx + d)</option>
-                    <option value="4">Degré 4 (ax⁴ + bx³ + cx² + dx + e)</option>
-                </select>
+            <!-- Section Produit -->
+            <div id="produitSection" style="display: none;">
+                <h3>📐 Produit de fonctions</h3>
+                <div class="param-row">
+                    <label>Type de produit:</label>
+                    <select id="type_produit">
+                        <option value="poly_poly">Polynôme × Polynôme</option>
+                        <option value="poly_sqrt">Polynôme × √x</option>
+                        <option value="poly_exp">Polynôme × (ax + b)ⁿ</option>
+                    </select>
+                </div>
             </div>
-        </div>
 
-        <!-- Section Produit -->
-        <div id="produitSection" class="card" style="display: none;">
-            <h3>📐 Produit de fonctions</h3>
-            <div class="param-row">
-                <label>Type de produit:</label>
-                <select id="type_produit">
-                    <option value="poly_poly">Polynôme × Polynôme</option>
-                    <option value="poly_sqrt">Polynôme × √x</option>
-                    <option value="poly_exp">Polynôme × (ax + b)ⁿ</option>
-                </select>
+            <!-- Section Quotient -->
+            <div id="quotientSection" style="display: none;">
+                <h3>📐 Quotient de fonctions</h3>
+                <div class="param-row">
+                    <label>Type de quotient:</label>
+                    <select id="type_quotient">
+                        <option value="poly_linear">Polynôme / (ax + b)</option>
+                        <option value="linear_poly">Constante ou Linéaire / Polynôme</option>
+                        <option value="poly_poly">Polynôme / Polynôme</option>
+                    </select>
+                </div>
             </div>
-        </div>
 
-        <!-- Section Quotient -->
-        <div id="quotientSection" class="card" style="display: none;">
-            <h3>📐 Quotient de fonctions</h3>
-            <div class="param-row">
-                <label>Type de quotient:</label>
-                <select id="type_quotient">
-                    <option value="poly_linear">Polynôme / (ax + b)</option>
-                    <option value="linear_poly">Constante ou Linéaire / Polynôme</option>
-                    <option value="poly_poly">Polynôme / Polynôme</option>
-                </select>
+            <!-- Section Composition -->
+            <div id="compositionSection" style="display: none;">
+                <h3>📐 Composition de fonctions (règle de la chaîne)</h3>
+                <div class="param-row">
+                    <label>Type de composition:</label>
+                    <select id="type_composition">
+                        <option value="linear_power">(ax + b)ⁿ</option>
+                        <option value="linear_sqrt">√(ax + b)</option>
+                        <option value="quadratic_power">(ax² + bx + c)ⁿ</option>
+                    </select>
+                </div>
             </div>
-        </div>
 
-        <!-- Section Composition -->
-        <div id="compositionSection" class="card" style="display: none;">
-            <h3>📐 Composition de fonctions (règle de la chaîne)</h3>
-            <div class="param-row">
-                <label>Type de composition:</label>
-                <select id="type_composition">
-                    <option value="linear_power">(ax + b)ⁿ</option>
-                    <option value="linear_sqrt">√(ax + b)</option>
-                    <option value="quadratic_power">(ax² + bx + c)ⁿ</option>
-                </select>
+            <!-- Section Tangente -->
+            <div id="tangenteSection" style="display: none;">
+                <h3>📐 Équation de tangente</h3>
+                <div class="param-row">
+                    <label>a (coefficient de x²):</label>
+                    <input type="number" id="a_tang" value="1" step="0.5">
+                </div>
+                <div class="param-row">
+                    <label>b (coefficient de x):</label>
+                    <input type="number" id="b_tang" value="-4" step="0.5">
+                </div>
+                <div class="param-row">
+                    <label>c (constante):</label>
+                    <input type="number" id="c_tang" value="3" step="0.5">
+                </div>
+                <div class="param-row">
+                    <label>x₀ (point de tangence):</label>
+                    <input type="number" id="x0_tang" value="2" step="0.5">
+                </div>
             </div>
-        </div>
 
-        <!-- Section Tangente -->
-        <div id="tangenteSection" class="card" style="display: none;">
-            <h3>📐 Équation de tangente</h3>
-            <div class="param-row">
-                <label>a (coefficient de x²):</label>
-                <input type="number" id="a_tang" value="1" step="0.5">
+            <!-- Section Variations -->
+            <div id="variationsSection" style="display: none;">
+                <h3>📐 Étude de variations</h3>
+                <div class="param-row">
+                    <label>a (coefficient de x²):</label>
+                    <input type="number" id="a_var" value="1" step="0.5">
+                </div>
+                <div class="param-row">
+                    <label>b (coefficient de x):</label>
+                    <input type="number" id="b_var" value="-6" step="0.5">
+                </div>
+                <div class="param-row">
+                    <label>c (constante):</label>
+                    <input type="number" id="c_var" value="5" step="0.5">
+                </div>
             </div>
-            <div class="param-row">
-                <label>b (coefficient de x):</label>
-                <input type="number" id="b_tang" value="-4" step="0.5">
-            </div>
-            <div class="param-row">
-                <label>c (constante):</label>
-                <input type="number" id="c_tang" value="3" step="0.5">
-            </div>
-            <div class="param-row">
-                <label>x₀ (point de tangence):</label>
-                <input type="number" id="x0_tang" value="2" step="0.5">
-            </div>
-        </div>
 
-        <!-- Section Variations -->
-        <div id="variationsSection" class="card" style="display: none;">
-            <h3>📐 Étude de variations</h3>
-            <div class="param-row">
-                <label>a (coefficient de x²):</label>
-                <input type="number" id="a_var" value="1" step="0.5">
+            <!-- Expression affichée -->
+            <div class="expression-display">
+                <div class="expression" id="expressionDisplay">f(x) = 3x² - 5x + 2</div>
             </div>
-            <div class="param-row">
-                <label>b (coefficient de x):</label>
-                <input type="number" id="b_var" value="-6" step="0.5">
-            </div>
-            <div class="param-row">
-                <label>c (constante):</label>
-                <input type="number" id="c_var" value="5" step="0.5">
-            </div>
-        </div>
 
-        <!-- Boutons d'action -->
-        <div class="card action-buttons">
+            <!-- Boutons d'action -->
+            <div class="action-buttons">
             <button id="newExerciseBtn" class="btn btn-secondary">🔄 Nouvel exercice</button>
             <button id="solveBtn" class="btn btn-primary">✨ Correction</button>
         </div>

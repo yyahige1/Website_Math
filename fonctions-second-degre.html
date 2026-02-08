@@ -117,100 +117,99 @@
                     <div class="label">Trouver l'extremum</div>
                 </button>
             </div>
-        </div>
 
-        <!-- Expression affichée -->
-        <div class="expression-display">
-            <div class="expression" id="expressionDisplay">f(x) = x² - 4x + 3</div>
-        </div>
+            <!-- Section Graphique (type graphique uniquement) -->
+            <div id="graphiqueSection" style="display: none;">
+                <h3>📐 Paramètres de la fonction</h3>
+                <div class="param-row">
+                    <label>a (coefficient de x²):</label>
+                    <input type="number" id="a_graph" value="1" step="0.1">
+                </div>
+                <div class="param-row">
+                    <label>b (coefficient de x):</label>
+                    <input type="number" id="b_graph" value="-4" step="0.1">
+                </div>
+                <div class="param-row">
+                    <label>c (constante):</label>
+                    <input type="number" id="c_graph" value="3" step="0.1">
+                </div>
+            </div>
 
-        <!-- Section Graphique (type graphique uniquement) -->
-        <div id="graphiqueSection" class="card" style="display: none;">
-            <h3>📐 Paramètres de la fonction</h3>
-            <div class="param-row">
-                <label>a (coefficient de x²):</label>
-                <input type="number" id="a_graph" value="1" step="0.1">
+            <!-- Section Forme canonique -->
+            <div id="canoniqueSection" style="display: none;">
+                <h3>📐 Paramètres de la fonction</h3>
+                <div class="param-row">
+                    <label>a (coefficient de x²):</label>
+                    <input type="number" id="a_canon" value="1" step="0.1">
+                </div>
+                <div class="param-row">
+                    <label>b (coefficient de x):</label>
+                    <input type="number" id="b_canon" value="-4" step="0.1">
+                </div>
+                <div class="param-row">
+                    <label>c (constante):</label>
+                    <input type="number" id="c_canon" value="3" step="0.1">
+                </div>
             </div>
-            <div class="param-row">
-                <label>b (coefficient de x):</label>
-                <input type="number" id="b_graph" value="-4" step="0.1">
-            </div>
-            <div class="param-row">
-                <label>c (constante):</label>
-                <input type="number" id="c_graph" value="3" step="0.1">
-            </div>
-        </div>
 
-        <!-- Section Forme canonique -->
-        <div id="canoniqueSection" class="card" style="display: none;">
-            <h3>📐 Paramètres de la fonction</h3>
-            <div class="param-row">
-                <label>a (coefficient de x²):</label>
-                <input type="number" id="a_canon" value="1" step="0.1">
+            <!-- Section Sommet -->
+            <div id="sommetSection" style="display: none;">
+                <h3>📐 Paramètres de la fonction</h3>
+                <div class="param-row">
+                    <label>a (coefficient de x²):</label>
+                    <input type="number" id="a_sommet" value="1" step="0.1">
+                </div>
+                <div class="param-row">
+                    <label>b (coefficient de x):</label>
+                    <input type="number" id="b_sommet" value="-4" step="0.1">
+                </div>
+                <div class="param-row">
+                    <label>c (constante):</label>
+                    <input type="number" id="c_sommet" value="3" step="0.1">
+                </div>
             </div>
-            <div class="param-row">
-                <label>b (coefficient de x):</label>
-                <input type="number" id="b_canon" value="-4" step="0.1">
-            </div>
-            <div class="param-row">
-                <label>c (constante):</label>
-                <input type="number" id="c_canon" value="3" step="0.1">
-            </div>
-        </div>
 
-        <!-- Section Sommet -->
-        <div id="sommetSection" class="card" style="display: none;">
-            <h3>📐 Paramètres de la fonction</h3>
-            <div class="param-row">
-                <label>a (coefficient de x²):</label>
-                <input type="number" id="a_sommet" value="1" step="0.1">
+            <!-- Section Variations -->
+            <div id="variationsSection" style="display: none;">
+                <h3>📐 Paramètres de la fonction</h3>
+                <div class="param-row">
+                    <label>a (coefficient de x²):</label>
+                    <input type="number" id="a_var" value="1" step="0.1">
+                </div>
+                <div class="param-row">
+                    <label>b (coefficient de x):</label>
+                    <input type="number" id="b_var" value="-4" step="0.1">
+                </div>
+                <div class="param-row">
+                    <label>c (constante):</label>
+                    <input type="number" id="c_var" value="3" step="0.1">
+                </div>
             </div>
-            <div class="param-row">
-                <label>b (coefficient de x):</label>
-                <input type="number" id="b_sommet" value="-4" step="0.1">
-            </div>
-            <div class="param-row">
-                <label>c (constante):</label>
-                <input type="number" id="c_sommet" value="3" step="0.1">
-            </div>
-        </div>
 
-        <!-- Section Variations -->
-        <div id="variationsSection" class="card" style="display: none;">
-            <h3>📐 Paramètres de la fonction</h3>
-            <div class="param-row">
-                <label>a (coefficient de x²):</label>
-                <input type="number" id="a_var" value="1" step="0.1">
+            <!-- Section Extremum -->
+            <div id="extremumSection" style="display: none;">
+                <h3>📐 Paramètres de la fonction</h3>
+                <div class="param-row">
+                    <label>a (coefficient de x²):</label>
+                    <input type="number" id="a_ext" value="-2" step="0.1">
+                </div>
+                <div class="param-row">
+                    <label>b (coefficient de x):</label>
+                    <input type="number" id="b_ext" value="4" step="0.1">
+                </div>
+                <div class="param-row">
+                    <label>c (constante):</label>
+                    <input type="number" id="c_ext" value="1" step="0.1">
+                </div>
             </div>
-            <div class="param-row">
-                <label>b (coefficient de x):</label>
-                <input type="number" id="b_var" value="-4" step="0.1">
-            </div>
-            <div class="param-row">
-                <label>c (constante):</label>
-                <input type="number" id="c_var" value="3" step="0.1">
-            </div>
-        </div>
 
-        <!-- Section Extremum -->
-        <div id="extremumSection" class="card" style="display: none;">
-            <h3>📐 Paramètres de la fonction</h3>
-            <div class="param-row">
-                <label>a (coefficient de x²):</label>
-                <input type="number" id="a_ext" value="-2" step="0.1">
+            <!-- Expression affichée -->
+            <div class="expression-display">
+                <div class="expression" id="expressionDisplay">f(x) = x² - 4x + 3</div>
             </div>
-            <div class="param-row">
-                <label>b (coefficient de x):</label>
-                <input type="number" id="b_ext" value="4" step="0.1">
-            </div>
-            <div class="param-row">
-                <label>c (constante):</label>
-                <input type="number" id="c_ext" value="1" step="0.1">
-            </div>
-        </div>
 
-        <!-- Boutons d'action -->
-        <div class="card action-buttons">
+            <!-- Boutons d'action -->
+            <div class="action-buttons">
             <button id="newExerciseBtn" class="btn btn-secondary">🔄 Nouvel exercice</button>
             <button id="solveBtn" class="btn btn-primary">✨ Correction</button>
         </div>
