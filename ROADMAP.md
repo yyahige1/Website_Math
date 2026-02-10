@@ -23,6 +23,7 @@
 ### Niveau Terminale
 - ✅ Dérivées (polynomiale, produit, quotient, composition, tangente, variations)
 - ✅ Suites Numériques (arithmétique, géométrique, sommes, variation)
+- ✅ Limites (polynôme, rationnelle, point, formes indéterminées, racines, asymptotes)
 
 ### Infrastructure Technique
 - ✅ Module de graphiques Canvas réutilisable (`js/graphing.js`)
@@ -34,7 +35,7 @@
 
 ## 📁 Structure du Projet
 
-### Fichiers HTML (16)
+### Fichiers HTML (17)
 1. `index.html` - Équations 1er degré
 2. `developpement.html` - Développement d'expressions
 3. `reduction.html` - Réduction d'expressions
@@ -51,8 +52,9 @@
 14. `fonctions-second-degre.html` - Fonctions du 2nd degré
 15. `derivees.html` - Dérivées
 16. `suites.html` - Suites Numériques
+17. `limites.html` - Limites de fonctions
 
-### Modules JavaScript (22 fichiers)
+### Modules JavaScript (23 fichiers)
 - `js/utils.js` - Fonctions utilitaires (PGCD, formatage, etc.)
 - `js/ui.js` - Manipulation DOM (show, hide, $)
 - `js/main.js` - Initialisation globale
@@ -75,6 +77,7 @@
 - `js/fonctions-second-degre.js` - Logique fonctions du 2nd degré
 - `js/derivees.js` - Logique dérivées
 - `js/suites.js` - Logique suites numériques
+- `js/limites.js` - Logique limites de fonctions
 
 ### Feuilles de Style CSS
 - `css/theme.css` - Variables CSS (couleurs, espacements)
@@ -89,19 +92,10 @@
 
 ## 🚀 Prochaines Étapes Recommandées
 
-### 1. 📉 Limites (Priorité Haute)
-**Niveau**: Terminale
+### ~~1. 📉 Limites~~ ✅ Complété
+> Module implémenté avec 6 types d'exercices : polynôme en ±∞, rationnelle en ±∞, limite en un point, formes indéterminées (0/0, ∞-∞), racines carrées, asymptotes. Corrections avec couleurs KaTeX (bleu/rouge/vert).
 
-**Types d'exercices suggérés**:
-- Limites en l'infini (polynômes, rationnelles)
-- Limites en un point (continuité, levée indétermination)
-- Formes indéterminées (∞-∞, 0/0, ∞/∞)
-- Limites avec exponentielles/logarithmes
-- Asymptotes (verticales, horizontales, obliques)
-
-**Justification**: Suite logique après Dérivées et Suites. Fondamental pour Terminale.
-
-### 2. 🧮 Primitives & Intégrales (Priorité Haute)
+### 1. 🧮 Primitives & Intégrales (Priorité Haute)
 **Niveau**: Terminale
 
 **Types d'exercices suggérés**:
@@ -113,7 +107,7 @@
 
 **Justification**: Complète le triptyque Dérivées-Limites-Intégrales.
 
-### 3. 📈 Exponentielles et Logarithmes (Priorité Moyenne)
+### 2. 📈 Exponentielles et Logarithmes (Priorité Moyenne)
 **Niveau**: Terminale
 
 **Types d'exercices suggérés**:
@@ -124,7 +118,7 @@
 - Croissance exponentielle (applications)
 - Logarithme décimal (pH, décibels)
 
-### 4. 🎲 Probabilités (Priorité Moyenne)
+### 3. 🎲 Probabilités (Priorité Moyenne)
 **Niveau**: Seconde / Première / Terminale
 
 **Types d'exercices suggérés**:
@@ -135,7 +129,7 @@
 - Variables aléatoires
 - Espérance, variance, écart-type
 
-### 5. 📊 Statistiques (Priorité Moyenne)
+### 4. 📊 Statistiques (Priorité Moyenne)
 **Niveau**: Seconde / Première
 
 **Types d'exercices suggérés**:
@@ -145,7 +139,7 @@
 - Régression linéaire
 - Coefficient de corrélation
 
-### 6. 📐 Trigonométrie (Priorité Basse)
+### 5. 📐 Trigonométrie (Priorité Basse)
 **Niveau**: Seconde / Première
 
 **Types d'exercices suggérés**:
@@ -155,7 +149,7 @@
 - Formules d'addition
 - Résolution triangles
 
-### 7. ➡️ Vecteurs (Priorité Basse)
+### 6. ➡️ Vecteurs (Priorité Basse)
 **Niveau**: Seconde / Première
 
 **Types d'exercices suggérés**:
@@ -169,22 +163,21 @@
 
 ## 🎯 Prochaine Étape Immédiate
 
-**Recommandation forte**: **Limites** 📉
+**Recommandation forte**: **Primitives & Intégrales** 🧮
 
-**Pourquoi Limites en priorité ?**
-- ✅ Complète naturellement Dérivées et Suites
+**Pourquoi Primitives en priorité ?**
+- ✅ Complète le triptyque Dérivées-Limites-Intégrales
 - ✅ Essentiel pour le programme Terminale
-- ✅ Permet d'introduire les asymptotes
-- ✅ Base pour Intégrales ensuite
-- ✅ Peut réutiliser GraphCanvas pour visualisation
+- ✅ Peut réutiliser GraphCanvas pour aires sous courbe
+- ✅ Liens directs avec le module Dérivées existant
 - ✅ Niveau Terminale cohérent avec modules récents
 
-**Plan d'implémentation Limites**:
-1. 5-6 types d'exercices (voir liste ci-dessus)
-2. Utilisation GraphCanvas pour représentation graphique
-3. Explications pédagogiques des formes indéterminées
-4. Tableau récapitulatif des opérations sur limites
-5. Visualisation asymptotes sur graphiques
+**Plan d'implémentation Primitives & Intégrales**:
+1. 5-6 types d'exercices (primitives usuelles, intégrales définies, aires)
+2. Utilisation GraphCanvas pour visualisation des aires
+3. Explications pédagogiques des règles de primitivation
+4. Lien avec les dérivées (vérification par dérivation)
+5. Calcul d'aires entre courbes
 
 ---
 
@@ -244,6 +237,12 @@
   - Développement algébrique complet (multiplication polynômes)
   - Utilitaires : multiplyPolynomials(), addPolynomials(), subtractPolynomials()
 
+- ✅ **Module Limites** (`limites.html` + `limites.js`)
+  - 6 types d'exercices : polynôme en ±∞, rationnelle en ±∞, limite en un point, formes indéterminées (0/0, ∞-∞), racines carrées (3 sous-types), asymptotes
+  - Corrections colorées avec KaTeX : bleu (termes dominants), rouge (termes → 0), vert (résultats)
+  - Résultats encadrés avec \boxed{}
+  - Rappels de cours pédagogiques pour chaque type
+
 - ✅ **Corrections Navigation**
   - Fix injection navigation (AVANT .container, pas dedans)
   - Ajout catégories Fonctions et Suites dans navigation.js
@@ -274,14 +273,14 @@
 
 ## 📊 Statistiques
 
-**Dernière mise à jour**: 5 Février 2026
-**Modules d'exercices**: 16 ✅
-**Fichiers HTML**: 16
-**Fichiers JavaScript**: 22
-  - 16 modules d'exercices
+**Dernière mise à jour**: 10 Février 2026
+**Modules d'exercices**: 17 ✅
+**Fichiers HTML**: 17
+**Fichiers JavaScript**: 23
+  - 17 modules d'exercices
   - 6 utilitaires (utils, ui, main, navigation, graphing, tableau-variations)
 **Fichiers CSS**: 9
-**Lignes de code**: ~11 000
+**Lignes de code**: ~12 500
 **Dépendances externes**: 1 (KaTeX CDN)
 
-**Prochaine étape prioritaire**: Limites 📉
+**Prochaine étape prioritaire**: Primitives & Intégrales 🧮
