@@ -788,7 +788,7 @@ function solvePoint() {
 
         // Étape 3 : Calculer f(x0)
         html += '<div class="step">';
-        html += '<div class="step-number">Étape 3 : Calculer f(${x0})</div>';
+        html += `<div class="step-number">Étape 3 : Calculer f(${x0})</div>`;
         html += `<div class="step-explanation">On remplace x par ${x0} dans l'expression :</div>`;
 
         const step1 = a * x0 * x0;
@@ -839,7 +839,7 @@ function solvePoint() {
 
         // Étape 1 : Évaluer numérateur et dénominateur
         html += '<div class="step">';
-        html += '<div class="step-number">Étape 1 : Évaluer le numérateur et le dénominateur en x = ${x0}</div>';
+        html += `<div class="step-number">Étape 1 : Évaluer le numérateur et le dénominateur en x = ${x0}</div>`;
 
         const numLatex = katex.renderToString(toLatexPoly(num), { throwOnError: false });
         const denLatex = katex.renderToString(toLatexPoly(den), { throwOnError: false });
@@ -1046,10 +1046,11 @@ function solveIndeterminee() {
         html += '<div class="step">';
         html += '<div class="step-number">Étape 1 : Identifier la forme indéterminée</div>';
 
-        const sqrt1 = katex.renderToString(`\\sqrt{x^2 + ${a}x}`, { throwOnError: false });
         html += `<div class="step-explanation">Quand x → +∞ :</div>`;
-        html += `<div class="step-expression">${sqrt1} \\sim \\sqrt{x^2} = |x| = x → +∞</div>`;
-        html += `<div class="step-expression">x → +∞</div>`;
+        const sqrt1Full = katex.renderToString(`\\sqrt{x^2 + ${a}x} \\sim \\sqrt{x^2} = |x| = x \\to +\\infty`, { throwOnError: false });
+        html += `<div class="step-expression">${sqrt1Full}</div>`;
+        const xInf = katex.renderToString(`x \\to +\\infty`, { throwOnError: false });
+        html += `<div class="step-expression">${xInf}</div>`;
         html += `<div class="step-explanation">Donc on a bien la forme ∞ - ∞</div>`;
         html += '</div>';
 
@@ -1394,7 +1395,7 @@ function solveAsymptote() {
 
     // Étape 2 : Vérifier que le numérateur ne s'annule pas
     html += '<div class="step">';
-    html += '<div class="step-number">Étape 2 : Vérifier le numérateur en x = ${formatNumber(x_av)}</div>';
+    html += `<div class="step-number">Étape 2 : Vérifier le numérateur en x = ${formatNumber(x_av)}</div>`;
 
     const numVal = a * x_av + b;
     const numCheck = katex.renderToString(
@@ -1413,8 +1414,8 @@ function solveAsymptote() {
     // Étape 3 : Asymptote verticale confirmée
     html += '<div class="step">';
     html += '<div class="step-number">Étape 3 : Asymptote verticale</div>';
-    const avExpr = katex.renderToString(`x = ${formatNumber(x_av)}`, { throwOnError: false });
-    html += `<div class="step-expression">\\text{Asymptote verticale : } ${avExpr}</div>`;
+    const avFull = katex.renderToString(`\\text{Asymptote verticale : } x = ${formatNumber(x_av)}`, { throwOnError: false });
+    html += `<div class="step-expression">${avFull}</div>`;
     html += '</div>';
 
     // Étape 4 : Chercher l'asymptote horizontale
@@ -1423,10 +1424,11 @@ function solveAsymptote() {
 
     html += '<div class="step-explanation">On calcule les limites en +∞ et -∞ :</div>';
 
-    const numLatex = katex.renderToString(toLatexPoly([a, b]), { throwOnError: false });
-    const funcLatex = katex.renderToString(`\\frac{${numLatex}}{${denLatex}}`, { throwOnError: false });
+    const numLatexRaw = toLatexPoly([a, b]);
+    const denLatexRaw = toLatexPoly([c, d]);
+    const funcLatex = katex.renderToString(`f(x) = \\frac{${numLatexRaw}}{${denLatexRaw}}`, { throwOnError: false });
 
-    html += `<div class="step-expression">f(x) = ${funcLatex}</div>`;
+    html += `<div class="step-expression">${funcLatex}</div>`;
     html += '</div>';
 
     // Étape 5 : Factoriser
@@ -1463,8 +1465,8 @@ function solveAsymptote() {
     html += '<div class="step">';
     html += '<div class="step-number">Étape 7 : Asymptote horizontale</div>';
 
-    const ahExpr = katex.renderToString(`y = ${formatNumber(y_ah)}`, { throwOnError: false });
-    html += `<div class="step-expression">\\text{Asymptote horizontale : } ${ahExpr}</div>`;
+    const ahFull = katex.renderToString(`\\text{Asymptote horizontale : } y = ${formatNumber(y_ah)}`, { throwOnError: false });
+    html += `<div class="step-expression">${ahFull}</div>`;
     html += '<div class="step-explanation">Cette asymptote est valable en +∞ ET en -∞.</div>';
     html += '</div>';
 
