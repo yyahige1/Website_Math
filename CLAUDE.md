@@ -3,7 +3,7 @@
 > Documentation pour les sessions futures avec Claude ou autres assistants IA
 
 **Dernière mise à jour**: 11 Février 2026
-**Version projet**: v1.6 (Primitives & Intégrales)
+**Version projet**: v1.7 (Exponentielles & Logarithmes)
 
 ---
 
@@ -57,7 +57,7 @@ Website_Math/
 │   ├── graphing.js             # GraphCanvas (paraboles, droites)
 │   ├── tableau-variations.js   # Tableaux de variations dynamiques
 │   │
-│   └── [MODULE].js (18 fichiers) # Logique de chaque module
+│   └── [MODULE].js (19 fichiers) # Logique de chaque module
 │       ├── equations.js
 │       ├── developpement.js
 │       ├── reduction.js
@@ -75,7 +75,8 @@ Website_Math/
 │       ├── derivees.js
 │       ├── suites.js
 │       ├── limites.js
-│       └── primitives.js
+│       ├── primitives.js
+│       └── exponentielles.js
 │
 ├── README.md
 ├── ROADMAP.md
@@ -560,7 +561,7 @@ const v_align = signes_derivee[i] === '+' ? 'var-v-align-bottom' : 'var-v-align-
 
 ---
 
-## 📊 Modules Actuels (18)
+## 📊 Modules Actuels (19)
 
 ### Algèbre (8 modules)
 1. **Équations** (`index.html`) - 1er degré
@@ -586,9 +587,10 @@ const v_align = signes_derivee[i] === '+' ? 'var-v-align-bottom' : 'var-v-align-
 ### Suites (1 module)
 16. **Suites Numériques** - 5 types (arithmétique, géométrique, somme arith, somme géo, variation)
 
-### Analyse (2 modules)
+### Analyse (3 modules)
 17. **Limites** - 6 types (polynôme, rationnelle, point, formes indéterminées, racines, asymptotes)
 18. **Primitives & Intégrales** - 6 types (polynomiale, usuelles, condition initiale, intégrale définie, aire, valeur moyenne)
+19. **Exponentielles & Logarithmes** - 6 types (équations exp, équations ln, dérivées exp/ln, étude de fonctions, croissance exponentielle, log décimal)
 
 ---
 
@@ -686,8 +688,8 @@ const tableau = createTableauVariations(containerId, {
 
 ## 🚀 Roadmap Actuelle
 
-### ✅ Complété (v1.6)
-- 18 modules fonctionnels
+### ✅ Complété (v1.7)
+- 19 modules fonctionnels
 - Navigation responsive
 - KaTeX intégré
 - GraphCanvas
@@ -695,14 +697,14 @@ const tableau = createTableauVariations(containerId, {
 - Module Suites Numériques
 - Module Limites (6 types, corrections colorées KaTeX)
 - Module Primitives & Intégrales (6 types, visualisation aires Canvas)
+- Module Exponentielles & Logarithmes (6 types, équations exp/ln, dérivées, études, applications)
 
 ### 🔜 Prochaines Étapes Prioritaires
 
-1. **Exponentielles/Logarithmes** (Terminale) - 6-8 types
-2. **Probabilités** (Seconde/Première) - 5-6 types
-3. **Statistiques** (Seconde/Première) - 4-5 types
-4. **Trigonométrie** (Seconde/Première) - 5-6 types
-5. **Vecteurs** (Seconde/Première) - 4-5 types
+1. **Probabilités** (Seconde/Première/Terminale) - 5-6 types
+2. **Statistiques** (Seconde/Première) - 4-5 types
+3. **Trigonométrie** (Seconde/Première) - 5-6 types
+4. **Vecteurs** (Seconde/Première) - 4-5 types
 
 ### 🔧 Améliorations Techniques Futures
 - Tests automatisés (Jest)
