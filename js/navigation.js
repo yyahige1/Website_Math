@@ -87,6 +87,7 @@ function generateNavigation(currentPage = '') {
                     <ul class="nav-dropdown">
                         <li><a href="limites.html" ${currentPage === 'limites' ? 'class="active"' : ''}>Limites</a></li>
                         <li><a href="primitives.html" ${currentPage === 'primitives' ? 'class="active"' : ''}>Primitives & Intégrales</a></li>
+                        <li><a href="exponentielles.html" ${currentPage === 'exponentielles' ? 'class="active"' : ''}>Exponentielles & Logarithmes</a></li>
                     </ul>
                 </li>
             </ul>
