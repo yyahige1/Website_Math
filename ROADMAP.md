@@ -27,6 +27,9 @@
 - ✅ Primitives & Intégrales (polynomiale, usuelles, condition initiale, intégrale définie, aire, valeur moyenne)
 - ✅ Exponentielles & Logarithmes (équations exp/ln, dérivées, études de fonctions, croissance, log décimal)
 
+### Probabilités & Statistiques
+- ✅ Probabilités (simples, conditionnelles, arbres, loi binomiale, variables aléatoires, fluctuation)
+
 ### Infrastructure Technique
 - ✅ Module de graphiques Canvas réutilisable (`js/graphing.js`)
 - ✅ Architecture responsive (mobile, tablette, desktop)
@@ -37,7 +40,7 @@
 
 ## 📁 Structure du Projet
 
-### Fichiers HTML (19)
+### Fichiers HTML (20)
 1. `index.html` - Équations 1er degré
 2. `developpement.html` - Développement d'expressions
 3. `reduction.html` - Réduction d'expressions
@@ -57,8 +60,9 @@
 17. `limites.html` - Limites de fonctions
 18. `primitives.html` - Primitives & Intégrales
 19. `exponentielles.html` - Exponentielles & Logarithmes
+20. `probabilites.html` - Probabilités
 
-### Modules JavaScript (25 fichiers)
+### Modules JavaScript (26 fichiers)
 - `js/utils.js` - Fonctions utilitaires (PGCD, formatage, etc.)
 - `js/ui.js` - Manipulation DOM (show, hide, $)
 - `js/main.js` - Initialisation globale
@@ -84,6 +88,7 @@
 - `js/limites.js` - Logique limites de fonctions
 - `js/primitives.js` - Logique primitives et intégrales
 - `js/exponentielles.js` - Logique exponentielles et logarithmes
+- `js/probabilites.js` - Logique probabilités
 
 ### Feuilles de Style CSS
 - `css/theme.css` - Variables CSS (couleurs, espacements)
@@ -107,18 +112,10 @@
 ### ~~3. 📈 Exponentielles & Logarithmes~~ ✅ Complété
 > Module implémenté avec 6 types d'exercices : équations exponentielles (3 sous-types), équations logarithmiques (3 sous-types), dérivées exp/ln (6 sous-types), étude de fonctions, croissance exponentielle (population, décroissance radioactive, temps de doublement), logarithme décimal (pH, décibels, magnitude). Corrections détaillées avec KaTeX.
 
-### 1. 🎲 Probabilités (Priorité Haute)
-**Niveau**: Seconde / Première / Terminale
+### ~~1. 🎲 Probabilités~~ ✅ Complété
+> Module implémenté avec 6 types d'exercices : probabilités simples (dé, cartes, urne), probabilités conditionnelles (tableau croisé, formule, Bayes), arbres de probabilités (deux épreuves, probabilités totales), loi binomiale (P(X=k), espérance/écart-type, probabilités cumulées), variables aléatoires (loi de probabilité, espérance/variance), intervalle de fluctuation (calcul, prise de décision). Corrections détaillées avec KaTeX.
 
-**Types d'exercices suggérés**:
-- Probabilités simples (lancer dé, pièce)
-- Probabilités conditionnelles (P(A|B))
-- Arbres de probabilités
-- Loi binomiale
-- Variables aléatoires
-- Espérance, variance, écart-type
-
-### 3. 📊 Statistiques (Priorité Moyenne)
+### 1. 📊 Statistiques (Priorité Haute)
 **Niveau**: Seconde / Première
 
 **Types d'exercices suggérés**:
@@ -262,13 +259,13 @@
 ## 📊 Statistiques
 
 **Dernière mise à jour**: 11 Février 2026
-**Modules d'exercices**: 19 ✅
-**Fichiers HTML**: 19
-**Fichiers JavaScript**: 25
-  - 19 modules d'exercices
+**Modules d'exercices**: 20 ✅
+**Fichiers HTML**: 20
+**Fichiers JavaScript**: 26
+  - 20 modules d'exercices
   - 6 utilitaires (utils, ui, main, navigation, graphing, tableau-variations)
 **Fichiers CSS**: 9
 **Lignes de code**: ~15 000
 **Dépendances externes**: 1 (KaTeX CDN)
 
-**Prochaine étape prioritaire**: Probabilités 🎲
+**Prochaine étape prioritaire**: Statistiques 📊

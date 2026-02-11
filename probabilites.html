@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MathsFacile - Probabilites (Lycee)</title>
+    <meta name="description" content="Exercices interactifs sur les probabilites. Programme Seconde, Premiere, Terminale. Loi binomiale, conditionnelles, arbres, variables aleatoires.">
+    <meta name="keywords" content="probabilites, loi binomiale, conditionnelles, arbres, esperance, variance, lycee, mathematiques, exercices">
+
+    <!-- KaTeX pour le rendu mathematique -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"
+          integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV"
+          crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"
+            integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8"
+            crossorigin="anonymous"></script>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/exercices.css">
+    <link rel="stylesheet" href="css/navigation.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎲 Probabilites</h1>
+            <p class="subtitle">Niveau : Seconde / Premiere / Terminale</p>
+            <p class="intro">Entraine-toi sur les probabilites.<br>Choisis un type d'exercice, puis clique sur <strong>Correction</strong>.</p>
+        </header>
+
+        <div class="card">
+            <div class="type-selector grid-3">
+                <button class="type-btn active" data-type="simple">
+                    <div class="example">P(A) = 3/6</div>
+                    <div class="label">Proba simples</div>
+                </button>
+                <button class="type-btn" data-type="conditionnelle">
+                    <div class="example">P(A|B) = ?</div>
+                    <div class="label">Conditionnelles</div>
+                </button>
+                <button class="type-btn" data-type="arbre">
+                    <div class="example">Arbre pondere</div>
+                    <div class="label">Arbres</div>
+                </button>
+                <button class="type-btn" data-type="binomiale">
+                    <div class="example">X ~ B(n, p)</div>
+                    <div class="label">Loi binomiale</div>
+                </button>
+                <button class="type-btn" data-type="variable">
+                    <div class="example">E(X) = ?</div>
+                    <div class="label">Variables aleatoires</div>
+                </button>
+                <button class="type-btn" data-type="fluctuation">
+                    <div class="example">I = [p-1/n ; ...]</div>
+                    <div class="label">Fluctuation</div>
+                </button>
+            </div>
+
+            <!-- Section Probabilites simples -->
+            <div id="simpleSection">
+                <h3>Probabilites simples</h3>
+                <div class="param-row">
+                    <label>Type d'experience :</label>
+                    <select id="subtype_simple">
+                        <option value="de">Lancer de de(s)</option>
+                        <option value="cartes">Tirage de cartes</option>
+                        <option value="urne">Tirage dans une urne</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Section Probabilites conditionnelles -->
+            <div id="conditionnelleSection" style="display: none;">
+                <h3>Probabilites conditionnelles</h3>
+                <div class="param-row">
+                    <label>Type de probleme :</label>
+                    <select id="subtype_conditionnelle">
+                        <option value="tableau">Tableau croise</option>
+                        <option value="formule">Formule directe P(A inter B)/P(B)</option>
+                        <option value="bayes">Formule de Bayes</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Section Arbres -->
+            <div id="arbreSection" style="display: none;">
+                <h3>Arbres de probabilites</h3>
+                <div class="param-row">
+                    <label>Type de probleme :</label>
+                    <select id="subtype_arbre">
+                        <option value="deux_epreuves">Deux epreuves successives</option>
+                        <option value="totales">Probabilites totales</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Section Loi binomiale -->
+            <div id="binomialeSection" style="display: none;">
+                <h3>Loi binomiale</h3>
+                <div class="param-row">
+                    <label>Type de calcul :</label>
+                    <select id="subtype_binomiale">
+                        <option value="proba_exacte">P(X = k)</option>
+                        <option value="esperance">Esperance et ecart-type</option>
+                        <option value="proba_cumul">P(X &le; k) ou P(X &ge; k)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Section Variables aleatoires -->
+            <div id="variableSection" style="display: none;">
+                <h3>Variables aleatoires</h3>
+                <div class="param-row">
+                    <label>Type de calcul :</label>
+                    <select id="subtype_variable">
+                        <option value="loi">Loi de probabilite</option>
+                        <option value="esperance_var">Esperance et variance</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Section Fluctuation -->
+            <div id="fluctuationSection" style="display: none;">
+                <h3>Intervalle de fluctuation</h3>
+                <div class="param-row">
+                    <label>Type de probleme :</label>
+                    <select id="subtype_fluctuation">
+                        <option value="intervalle">Calculer l'intervalle</option>
+                        <option value="decision">Prise de decision</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="expression-display">
+                <div class="expression" id="expressionDisplay"></div>
+            </div>
+
+            <div class="action-buttons">
+                <button id="newExerciseBtn" class="btn btn-secondary">Nouvel exercice</button>
+                <button id="solveBtn" class="btn btn-primary">Correction</button>
+            </div>
+        </div>
+
+        <!-- Zone de solution -->
+        <div id="solutionDiv" class="card solution">
+            <h3>Correction detaillee</h3>
+            <div id="stepsContainer"></div>
+        </div>
+
+        <footer>
+            <p>MathsFacile - Probabilites</p>
+        </footer>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="js/utils.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/navigation.js"></script>
+    <script src="js/probabilites.js"></script>
+</body>
+</html>

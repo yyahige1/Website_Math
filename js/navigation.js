@@ -90,6 +90,17 @@ function generateNavigation(currentPage = '') {
                         <li><a href="exponentielles.html" ${currentPage === 'exponentielles' ? 'class="active"' : ''}>Exponentielles & Logarithmes</a></li>
                     </ul>
                 </li>
+
+                <!-- Catégorie : Probabilités -->
+                <li class="nav-item has-dropdown">
+                    <a href="#" class="nav-link">
+                        Probabilités
+                        <span class="arrow">▾</span>
+                    </a>
+                    <ul class="nav-dropdown">
+                        <li><a href="probabilites.html" ${currentPage === 'probabilites' ? 'class="active"' : ''}>Probabilités</a></li>
+                    </ul>
+                </li>
             </ul>
         </div>
     </nav>`;
