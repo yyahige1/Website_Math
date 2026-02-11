@@ -107,7 +107,7 @@ function rint(min, max, exclude) {
     return val;
 }
 
-function kx(tex) {
+function K(tex) {
     return katex.renderToString(tex, { throwOnError: false });
 }
 
@@ -152,6 +152,15 @@ function roundDec(x, d) {
     return Math.round(x * f) / f;
 }
 
+// Genere le HTML d'un tableau avec style inline
+function tableCell(content, options) {
+    const style = 'border:1px solid var(--gray-300); padding:8px;'
+        + (options && options.bold ? ' font-weight:bold;' : '')
+        + (options && options.color ? ` color:${options.color};` : '');
+    const tag = (options && options.header) ? 'th' : 'td';
+    return `<${tag} style="${style}">${content}</${tag}>`;
+}
+
 // ========================================
 // Generation des exercices
 // ========================================
@@ -177,8 +186,7 @@ function generateSimple() {
         const nbDes = rint(1, 2);
         ex.nbDes = nbDes;
         if (nbDes === 1) {
-            const faces = 6;
-            ex.faces = faces;
+            ex.faces = 6;
             const types = ['pair', 'impair', 'superieur', 'multiple'];
             const choix = types[rint(0, types.length - 1)];
             ex.question = choix;
@@ -203,13 +211,12 @@ function generateSimple() {
                 }
                 ex.texte = `Obtenir un multiple de ${m}`;
             }
-            ex.total = faces;
+            ex.total = 6;
         } else {
             ex.faces = 6;
             const somme = rint(4, 9);
             ex.somme = somme;
             ex.texte = `Obtenir une somme egale a ${somme} avec deux des`;
-            // Compter les cas favorables
             let fav = 0;
             const details = [];
             for (let i = 1; i <= 6; i++) {
@@ -248,10 +255,10 @@ function generateSimple() {
         ex.vertes = nVertes;
         ex.total = nRouges + nBleues + nVertes;
         const questions = [
-            { texte: `Tirer une boule rouge`, favorables: nRouges, detail: `${nRouges} boules rouges` },
-            { texte: `Tirer une boule bleue`, favorables: nBleues, detail: `${nBleues} boules bleues` },
-            { texte: `Tirer une boule qui n'est pas verte`, favorables: nRouges + nBleues, detail: `${nRouges} rouges + ${nBleues} bleues = ${nRouges + nBleues}` },
-            { texte: `Tirer une boule rouge ou verte`, favorables: nRouges + nVertes, detail: `${nRouges} rouges + ${nVertes} vertes = ${nRouges + nVertes}` }
+            { texte: 'Tirer une boule rouge', favorables: nRouges, detail: `${nRouges} boules rouges` },
+            { texte: 'Tirer une boule bleue', favorables: nBleues, detail: `${nBleues} boules bleues` },
+            { texte: 'Tirer une boule qui n\'est pas verte', favorables: nRouges + nBleues, detail: `${nRouges} rouges + ${nBleues} bleues = ${nRouges + nBleues}` },
+            { texte: 'Tirer une boule rouge ou verte', favorables: nRouges + nVertes, detail: `${nRouges} rouges + ${nVertes} vertes = ${nRouges + nVertes}` }
         ];
         const q = questions[rint(0, questions.length - 1)];
         ex.texte = q.texte;
@@ -268,7 +275,6 @@ function generateConditionnelle() {
     const ex = {};
 
     if (sub === 'tableau') {
-        // Tableau croise 2x2
         const total = rint(80, 200);
         const pA = (rint(30, 70)) / 100;
         const pBsachantA = (rint(20, 80)) / 100;
@@ -285,8 +291,8 @@ function generateConditionnelle() {
 
         const contextes = [
             { A: 'Femme', Abar: 'Homme', B: 'Sportif', Bbar: 'Non sportif', lieu: 'Dans une entreprise' },
-            { A: 'Eleve de Terminale', Abar: 'Eleve de Premiere', B: 'A la cantine', Bbar: 'Pas a la cantine', lieu: 'Dans un lycee' },
-            { A: 'Adulte', Abar: 'Enfant', B: 'Vaccin', Bbar: 'Non vaccine', lieu: 'Dans un centre medical' }
+            { A: 'Terminale', Abar: 'Premiere', B: 'Cantine', Bbar: 'Pas cantine', lieu: 'Dans un lycee' },
+            { A: 'Adulte', Abar: 'Enfant', B: 'Vaccine', Bbar: 'Non vaccine', lieu: 'Dans un centre medical' }
         ];
         const ctx = contextes[rint(0, contextes.length - 1)];
 
@@ -296,21 +302,15 @@ function generateConditionnelle() {
         ex.nAetB = nAetB; ex.nAetBbar = nAetBbar;
         ex.nAbarEtB = nAbarEtB; ex.nAbarEtBbar = nAbarEtBbar;
         ex.total = total;
-        ex.texte = `${ctx.lieu}, on interroge ${total} personnes.`;
-        ex.questionTex = `P(\\text{${ctx.B}} | \\text{${ctx.A}})`;
         ex.reponseNum = nAetB;
         ex.reponseDen = nA;
     } else if (sub === 'formule') {
         const pA = rint(2, 8) / 10;
         const pB = rint(2, 8) / 10;
-        // P(A inter B) <= min(pA, pB)
         const maxInter = Math.min(pA, pB);
         const pAinterB = rint(1, Math.floor(maxInter * 10)) / 10;
 
         ex.pA = pA; ex.pB = pB; ex.pAinterB = pAinterB;
-        ex.texte = `On donne P(A) = ${pA}, P(B) = ${pB} et P(A \\cap B) = ${pAinterB}.`;
-        ex.questionTex = `P(A|B)`;
-        // P(A|B) = P(A inter B) / P(B)
         ex.reponseNum = Math.round(pAinterB * 10);
         ex.reponseDen = Math.round(pB * 10);
     } else {
@@ -323,10 +323,7 @@ function generateConditionnelle() {
         ex.pA = pA; ex.pAbar = pAbar;
         ex.pBsachantA = pBsachantA;
         ex.pBsachantAbar = pBsachantAbar;
-
-        // P(B) = P(B|A)P(A) + P(B|Abar)P(Abar)
         ex.pB = roundDec(pBsachantA * pA + pBsachantAbar * pAbar, 4);
-        // P(A|B) = P(B|A)P(A) / P(B)
         ex.pAsachantB = roundDec((pBsachantA * pA) / ex.pB, 4);
 
         const contextes = [
@@ -334,9 +331,7 @@ function generateConditionnelle() {
             { A: 'defectueux', B: 'detecte' },
             { A: 'spam', B: 'mot-cle present' }
         ];
-        const ctx = contextes[rint(0, contextes.length - 1)];
-        ex.ctx = ctx;
-        ex.texte = `P(${ctx.A}) = ${pA}, P(${ctx.B}|${ctx.A}) = ${pBsachantA}, P(${ctx.B}|non ${ctx.A}) = ${pBsachantAbar}`;
+        ex.ctx = contextes[rint(0, contextes.length - 1)];
     }
 
     ProbaState.exercise = ex;
@@ -348,24 +343,18 @@ function generateArbre() {
     const ex = {};
 
     if (sub === 'deux_epreuves') {
-        // Deux tirages successifs
         const pRouge1 = rint(1, 5);
         const total1 = rint(pRouge1 + 2, 10);
-        const pRouge2sachantRouge = rint(1, 4);
-        const total2 = total1; // meme urne (avec remise)
-        const pRouge2sachantBleu = rint(1, 4);
 
         ex.pR1_num = pRouge1; ex.pR1_den = total1;
         ex.pB1_num = total1 - pRouge1; ex.pB1_den = total1;
-        ex.pR2sachantR_num = pRouge2sachantRouge; ex.pR2sachantR_den = total2;
-        ex.pR2sachantB_num = pRouge2sachantBleu; ex.pR2sachantB_den = total2;
+        // Avec remise : memes probas au 2e tirage
+        ex.pR2sachantR_num = pRouge1; ex.pR2sachantR_den = total1;
+        ex.pR2sachantB_num = pRouge1; ex.pR2sachantB_den = total1;
 
-        ex.texte = `Une urne contient ${pRouge1} boules rouges et ${total1 - pRouge1} boules bleues (${total1} au total). On tire une boule, on la remet, puis on tire a nouveau.`;
-        ex.question = `Quelle est la probabilite d'obtenir deux boules rouges ?`;
-
-        // P(R1 et R2) = P(R1) * P(R2|R1) = pRouge1/total1 * pRouge2sachantRouge/total2
-        ex.pDeuxRouges_num = pRouge1 * pRouge2sachantRouge;
-        ex.pDeuxRouges_den = total1 * total2;
+        ex.total = total1;
+        ex.pDeuxRouges_num = pRouge1 * pRouge1;
+        ex.pDeuxRouges_den = total1 * total1;
     } else {
         // Probabilites totales
         const pA = rint(2, 7);
@@ -379,7 +368,6 @@ function generateArbre() {
         ex.pBsachantA_num = pBsachantA; ex.pBsachantA_den = denB;
         ex.pBsachantAbar_num = pBsachantAbar; ex.pBsachantAbar_den = denB;
 
-        // P(B) = P(B|A)*P(A) + P(B|Abar)*P(Abar)
         ex.pB_num = pA * pBsachantA + (denA - pA) * pBsachantAbar;
         ex.pB_den = denA * denB;
 
@@ -387,9 +375,7 @@ function generateArbre() {
             { A: 'Machine A', Abar: 'Machine B', B: 'piece defectueuse' },
             { A: 'Fournisseur 1', Abar: 'Fournisseur 2', B: 'produit conforme' }
         ];
-        const ctx = contextes[rint(0, contextes.length - 1)];
-        ex.ctx = ctx;
-        ex.texte = `${ctx.A} produit ${pA * 10}% de la production. ${ctx.Abar} produit le reste.`;
+        ex.ctx = contextes[rint(0, contextes.length - 1)];
     }
 
     ProbaState.exercise = ex;
@@ -414,14 +400,10 @@ function generateBinomiale() {
         ex.k = k;
         ex.coeff = binomCoeff(n, k);
         ex.resultat = binomProba(n, k, p);
-        ex.texte = `X suit une loi binomiale B(${n} ; ${fracTeX(pNum, pDen)}).`;
-        ex.question = `Calculer P(X = ${k}).`;
     } else if (sub === 'esperance') {
         ex.esperance = n * p;
         ex.variance = n * p * q;
         ex.ecartType = Math.sqrt(ex.variance);
-        ex.texte = `X suit une loi binomiale B(${n} ; ${fracTeX(pNum, pDen)}).`;
-        ex.question = `Calculer E(X), V(X) et l'ecart-type de X.`;
     } else {
         // proba_cumul
         const k = rint(1, n - 2);
@@ -430,21 +412,11 @@ function generateBinomiale() {
         let cumul = 0;
         if (sens === 'inf') {
             for (let i = 0; i <= k; i++) cumul += binomProba(n, i, p);
-            ex.question = `Calculer P(X \\leq ${k}).`;
         } else {
             for (let i = k; i <= n; i++) cumul += binomProba(n, i, p);
-            ex.question = `Calculer P(X \\geq ${k}).`;
         }
         ex.cumul = cumul;
-        ex.texte = `X suit une loi binomiale B(${n} ; ${fracTeX(pNum, pDen)}).`;
     }
-
-    const contextes = [
-        `On lance ${n} fois une piece truquee (probabilite de succes ${fracTeX(pNum, pDen)}).`,
-        `Un QCM comporte ${n} questions avec ${pDen} choix chacune, dont 1 bonne reponse.`,
-        `Un controle qualite teste ${n} pieces. Chaque piece a une probabilite ${fracTeX(pNum, pDen)} d'etre defectueuse.`
-    ];
-    ex.contexte = contextes[rint(0, contextes.length - 1)];
 
     ProbaState.exercise = ex;
 }
@@ -454,18 +426,15 @@ function generateVariable() {
     const sub = ProbaState.subtype_variable;
     const ex = {};
 
-    // Generer une loi de probabilite avec 3 a 5 valeurs
     const nbValeurs = rint(3, 5);
     const valeurs = [];
     const probas = [];
 
-    // Generer des valeurs distinctes
     const startVal = rint(-2, 0);
     for (let i = 0; i < nbValeurs; i++) {
         valeurs.push(startVal + i);
     }
 
-    // Generer des probabilites (numerateurs sur un denominateur commun)
     const den = rint(6, 12);
     let resteNum = den;
     for (let i = 0; i < nbValeurs - 1; i++) {
@@ -481,14 +450,14 @@ function generateVariable() {
     ex.den = den;
     ex.nbValeurs = nbValeurs;
 
-    // Calculer esperance
+    // Esperance
     let esp = 0;
     for (let i = 0; i < nbValeurs; i++) {
         esp += valeurs[i] * probas[i] / den;
     }
     ex.esperance = esp;
 
-    // Calculer variance
+    // Variance
     let variance = 0;
     for (let i = 0; i < nbValeurs; i++) {
         variance += probas[i] / den * Math.pow(valeurs[i] - esp, 2);
@@ -497,13 +466,7 @@ function generateVariable() {
     ex.ecartType = Math.sqrt(variance);
 
     if (sub === 'loi') {
-        ex.texte = `On donne la loi de probabilite de X (une probabilite manquante).`;
-        // Cacher une proba
         ex.cachee = rint(0, nbValeurs - 1);
-        ex.question = `Determiner la probabilite manquante et verifier que la somme vaut 1.`;
-    } else {
-        ex.texte = `On donne la loi de probabilite de X.`;
-        ex.question = `Calculer E(X), V(X) et l'ecart-type de X.`;
     }
 
     ProbaState.exercise = ex;
@@ -520,22 +483,15 @@ function generateFluctuation() {
 
     ex.n = n; ex.p = p; ex.pPercent = pPercent;
 
-    // Intervalle de fluctuation au seuil 95% : [p - 1/sqrt(n) ; p + 1/sqrt(n)]
     const marge = 1 / Math.sqrt(n);
     ex.borneInf = roundDec(p - marge, 4);
     ex.borneSup = roundDec(p + marge, 4);
     ex.marge = marge;
 
-    if (sub === 'intervalle') {
-        ex.texte = `On considere un caractere de proportion p = ${fracTeX(pPercent, 100)} dans la population.`;
-        ex.question = `Determiner l'intervalle de fluctuation au seuil de 95% pour un echantillon de taille n = ${n}.`;
-    } else {
-        // Decision
+    if (sub === 'decision') {
         const fObs = roundDec(p + (rint(0, 1) === 0 ? 1 : -1) * rint(5, 20) / 100, 4);
         ex.fObs = fObs;
         ex.dansIntervalle = (fObs >= ex.borneInf && fObs <= ex.borneSup);
-        ex.texte = `Dans un echantillon de taille n = ${n}, on observe une frequence f = ${roundDec(fObs, 2)}.`;
-        ex.question = `La proportion theorique est p = ${fracTeX(pPercent, 100)}. Peut-on accepter cette hypothese au seuil de 95% ?`;
     }
 
     ProbaState.exercise = ex;
@@ -551,102 +507,161 @@ function updateExerciseDisplay() {
     let html = '';
 
     switch (type) {
-        case 'simple': {
-            const sub = ProbaState.subtype_simple;
-            if (sub === 'de') {
-                if (ex.nbDes === 1) {
-                    html = `<p>On lance un de equilibre a 6 faces.</p>`;
-                    html += `<p><strong>Evenement :</strong> ${ex.texte}</p>`;
-                    html += `<p>Calculer la probabilite de cet evenement.</p>`;
-                } else {
-                    html = `<p>On lance deux des equilibres a 6 faces.</p>`;
-                    html += `<p><strong>Evenement :</strong> ${ex.texte}</p>`;
-                    html += `<p>Calculer la probabilite de cet evenement.</p>`;
-                }
-            } else if (sub === 'cartes') {
-                html = `<p>On tire une carte au hasard dans un jeu de 52 cartes.</p>`;
-                html += `<p><strong>Evenement :</strong> ${ex.texte}</p>`;
-                html += `<p>Calculer la probabilite de cet evenement.</p>`;
-            } else {
-                html = `<p>Une urne contient ${ex.rouges} boules rouges, ${ex.bleues} boules bleues et ${ex.vertes} boules vertes.</p>`;
-                html += `<p>On tire une boule au hasard.</p>`;
-                html += `<p><strong>Evenement :</strong> ${ex.texte}</p>`;
-                html += `<p>Calculer la probabilite de cet evenement.</p>`;
-            }
+        case 'simple':
+            html = displaySimple(ex);
             break;
-        }
-        case 'conditionnelle': {
-            const sub = ProbaState.subtype_conditionnelle;
-            if (sub === 'tableau') {
-                html = `<p>${ex.texte}</p>`;
-                html += `<table style="border-collapse: collapse; margin: 10px auto; text-align: center;">`;
-                html += `<tr style="background: var(--gray-100);"><th style="border:1px solid var(--gray-300); padding:8px;"></th><th style="border:1px solid var(--gray-300); padding:8px;">${ex.ctx.B}</th><th style="border:1px solid var(--gray-300); padding:8px;">${ex.ctx.Bbar}</th><th style="border:1px solid var(--gray-300); padding:8px;">Total</th></tr>`;
-                html += `<tr><td style="border:1px solid var(--gray-300); padding:8px; font-weight:bold;">${ex.ctx.A}</td><td style="border:1px solid var(--gray-300); padding:8px;">${ex.nAetB}</td><td style="border:1px solid var(--gray-300); padding:8px;">${ex.nAetBbar}</td><td style="border:1px solid var(--gray-300); padding:8px; font-weight:bold;">${ex.nA}</td></tr>`;
-                html += `<tr><td style="border:1px solid var(--gray-300); padding:8px; font-weight:bold;">${ex.ctx.Abar}</td><td style="border:1px solid var(--gray-300); padding:8px;">${ex.nAbarEtB}</td><td style="border:1px solid var(--gray-300); padding:8px;">${ex.nAbarEtBbar}</td><td style="border:1px solid var(--gray-300); padding:8px; font-weight:bold;">${ex.nAbar}</td></tr>`;
-                html += `<tr style="background: var(--gray-100);"><td style="border:1px solid var(--gray-300); padding:8px; font-weight:bold;">Total</td><td style="border:1px solid var(--gray-300); padding:8px; font-weight:bold;">${ex.nB}</td><td style="border:1px solid var(--gray-300); padding:8px; font-weight:bold;">${ex.nBbar}</td><td style="border:1px solid var(--gray-300); padding:8px; font-weight:bold;">${ex.total}</td></tr>`;
-                html += `</table>`;
-                html += `<p>Calculer ${kx(ex.questionTex)}</p>`;
-            } else if (sub === 'formule') {
-                html = `<p>${kx(ex.texte)}</p>`;
-                html += `<p>Calculer ${kx(ex.questionTex)}.</p>`;
-            } else {
-                html = `<p>On donne :</p>`;
-                html += `<p>${kx(`P(\\text{${ex.ctx.A}}) = ${ex.pA}`)}</p>`;
-                html += `<p>${kx(`P(\\text{${ex.ctx.B}} | \\text{${ex.ctx.A}}) = ${ex.pBsachantA}`)}</p>`;
-                html += `<p>${kx(`P(\\text{${ex.ctx.B}} | \\overline{\\text{${ex.ctx.A}}}) = ${ex.pBsachantAbar}`)}</p>`;
-                html += `<p>Calculer ${kx(`P(\\text{${ex.ctx.A}} | \\text{${ex.ctx.B}})`)} (formule de Bayes).</p>`;
-            }
+        case 'conditionnelle':
+            html = displayConditionnelle(ex);
             break;
-        }
-        case 'arbre': {
-            const sub = ProbaState.subtype_arbre;
-            if (sub === 'deux_epreuves') {
-                html = `<p>${ex.texte}</p>`;
-                html += `<p>${ex.question}</p>`;
-            } else {
-                html = `<p>${ex.texte}</p>`;
-                html += `<p>${kx(`P(\\text{${ex.ctx.A}}) = ${fracTeX(ex.pA_num, ex.pA_den)}`)}</p>`;
-                html += `<p>${kx(`P(\\text{${ex.ctx.B}} | \\text{${ex.ctx.A}}) = ${fracTeX(ex.pBsachantA_num, ex.pBsachantA_den)}`)}</p>`;
-                html += `<p>${kx(`P(\\text{${ex.ctx.B}} | \\text{${ex.ctx.Abar}}) = ${fracTeX(ex.pBsachantAbar_num, ex.pBsachantAbar_den)}`)}</p>`;
-                html += `<p>Calculer ${kx(`P(\\text{${ex.ctx.B}})`)} par la formule des probabilites totales.</p>`;
-            }
+        case 'arbre':
+            html = displayArbre(ex);
             break;
-        }
-        case 'binomiale': {
-            html = `<p>${ex.contexte}</p>`;
-            html += `<p>${kx(ex.texte)}</p>`;
-            html += `<p>${kx(ex.question)}</p>`;
+        case 'binomiale':
+            html = displayBinomiale(ex);
             break;
-        }
-        case 'variable': {
-            html = `<p>${ex.texte}</p>`;
-            // Afficher le tableau de loi
-            html += `<table style="border-collapse: collapse; margin: 10px auto; text-align: center;">`;
-            html += `<tr style="background: var(--gray-100);"><td style="border:1px solid var(--gray-300); padding:8px; font-weight:bold;">${kx('x_i')}</td>`;
-            for (let i = 0; i < ex.nbValeurs; i++) {
-                html += `<td style="border:1px solid var(--gray-300); padding:8px;">${ex.valeurs[i]}</td>`;
-            }
-            html += `</tr>`;
-            html += `<tr><td style="border:1px solid var(--gray-300); padding:8px; font-weight:bold;">${kx('P(X = x_i)')}</td>`;
-            for (let i = 0; i < ex.nbValeurs; i++) {
-                if (ProbaState.subtype_variable === 'loi' && i === ex.cachee) {
-                    html += `<td style="border:1px solid var(--gray-300); padding:8px; color: var(--primary); font-weight:bold;">?</td>`;
-                } else {
-                    html += `<td style="border:1px solid var(--gray-300); padding:8px;">${kx(fracTeX(ex.probas[i], ex.den))}</td>`;
-                }
-            }
-            html += `</tr></table>`;
-            html += `<p>${ex.question}</p>`;
+        case 'variable':
+            html = displayVariable(ex);
             break;
-        }
-        case 'fluctuation': {
-            html = `<p>${ex.texte}</p>`;
-            html += `<p>${kx(ex.question)}</p>`;
+        case 'fluctuation':
+            html = displayFluctuation(ex);
             break;
-        }
     }
 
     $('expressionDisplay').innerHTML = html;
+}
+
+function displaySimple(ex) {
+    const sub = ProbaState.subtype_simple;
+    let html = '';
+    if (sub === 'de') {
+        if (ex.nbDes === 1) {
+            html = `<p>On lance un de equilibre a 6 faces.</p>`;
+        } else {
+            html = `<p>On lance deux des equilibres a 6 faces.</p>`;
+        }
+    } else if (sub === 'cartes') {
+        html = `<p>On tire une carte au hasard dans un jeu de 52 cartes.</p>`;
+    } else {
+        html = `<p>Une urne contient ${ex.rouges} boules rouges, ${ex.bleues} boules bleues et ${ex.vertes} boules vertes.</p>`;
+        html += `<p>On tire une boule au hasard.</p>`;
+    }
+    html += `<p><strong>Evenement :</strong> ${ex.texte}</p>`;
+    html += `<p>Calculer la probabilite de cet evenement.</p>`;
+    return html;
+}
+
+function displayConditionnelle(ex) {
+    const sub = ProbaState.subtype_conditionnelle;
+    let html = '';
+
+    if (sub === 'tableau') {
+        html = `<p>${ex.ctx.lieu}, on interroge ${ex.total} personnes.</p>`;
+        html += `<table style="border-collapse: collapse; margin: 10px auto; text-align: center;">`;
+        html += `<tr style="background: var(--gray-100);">`;
+        html += tableCell('', {header: true}) + tableCell(ex.ctx.B, {header: true}) + tableCell(ex.ctx.Bbar, {header: true}) + tableCell('Total', {header: true});
+        html += `</tr><tr>`;
+        html += tableCell(ex.ctx.A, {bold: true}) + tableCell(ex.nAetB) + tableCell(ex.nAetBbar) + tableCell(ex.nA, {bold: true});
+        html += `</tr><tr>`;
+        html += tableCell(ex.ctx.Abar, {bold: true}) + tableCell(ex.nAbarEtB) + tableCell(ex.nAbarEtBbar) + tableCell(ex.nAbar, {bold: true});
+        html += `</tr><tr style="background: var(--gray-100);">`;
+        html += tableCell('Total', {bold: true}) + tableCell(ex.nB, {bold: true}) + tableCell(ex.nBbar, {bold: true}) + tableCell(ex.total, {bold: true});
+        html += `</tr></table>`;
+        html += `<p>Calculer ` + K(`P_{${ex.ctx.A}}(${ex.ctx.B})`) + `</p>`;
+    } else if (sub === 'formule') {
+        html = `<p>On donne ` + K(`P(A) = ${ex.pA}`) + `, ` + K(`P(B) = ${ex.pB}`) + ` et ` + K(`P(A \\cap B) = ${ex.pAinterB}`) + `.</p>`;
+        html += `<p>Calculer ` + K(`P(A|B)`) + `.</p>`;
+    } else {
+        html = `<p>On donne :</p>`;
+        html += `<p>` + K(`P(\\text{${ex.ctx.A}}) = ${ex.pA}`) + `</p>`;
+        html += `<p>` + K(`P(\\text{${ex.ctx.B}} | \\text{${ex.ctx.A}}) = ${ex.pBsachantA}`) + `</p>`;
+        html += `<p>` + K(`P(\\text{${ex.ctx.B}} | \\overline{\\text{${ex.ctx.A}}}) = ${ex.pBsachantAbar}`) + `</p>`;
+        html += `<p>Calculer ` + K(`P(\\text{${ex.ctx.A}} | \\text{${ex.ctx.B}})`) + ` (formule de Bayes).</p>`;
+    }
+    return html;
+}
+
+function displayArbre(ex) {
+    const sub = ProbaState.subtype_arbre;
+    let html = '';
+
+    if (sub === 'deux_epreuves') {
+        html = `<p>Une urne contient ${ex.pR1_num} boules rouges et ${ex.pB1_num} boules bleues (${ex.total} au total).</p>`;
+        html += `<p>On tire une boule, on la remet, puis on tire a nouveau.</p>`;
+        html += `<p>Quelle est la probabilite d'obtenir deux boules rouges ?</p>`;
+    } else {
+        html = `<p>${ex.ctx.A} produit ${ex.pA_num * 10}% de la production. ${ex.ctx.Abar} produit le reste.</p>`;
+        html += `<p>` + K(`P(\\text{${ex.ctx.B}} | \\text{${ex.ctx.A}}) = ${fracTeX(ex.pBsachantA_num, ex.pBsachantA_den)}`) + `</p>`;
+        html += `<p>` + K(`P(\\text{${ex.ctx.B}} | \\text{${ex.ctx.Abar}}) = ${fracTeX(ex.pBsachantAbar_num, ex.pBsachantAbar_den)}`) + `</p>`;
+        html += `<p>Calculer ` + K(`P(\\text{${ex.ctx.B}})`) + ` par la formule des probabilites totales.</p>`;
+    }
+    return html;
+}
+
+function displayBinomiale(ex) {
+    const sub = ProbaState.subtype_binomiale;
+    let html = '';
+
+    html = `<p>` + K(`X \\sim B\\left(${ex.n}\\,,\\; ${fracTeX(ex.pNum, ex.pDen)}\\right)`) + `</p>`;
+
+    if (sub === 'proba_exacte') {
+        html += `<p>Calculer ` + K(`P(X = ${ex.k})`) + `.</p>`;
+    } else if (sub === 'esperance') {
+        html += `<p>Calculer ` + K(`E(X)`) + `, ` + K(`V(X)`) + ` et ` + K(`\\sigma(X)`) + `.</p>`;
+    } else {
+        const symbole = ex.sens === 'inf' ? `\\leq` : `\\geq`;
+        html += `<p>Calculer ` + K(`P(X ${symbole} ${ex.k})`) + `.</p>`;
+    }
+    return html;
+}
+
+function displayVariable(ex) {
+    const sub = ProbaState.subtype_variable;
+    let html = '';
+
+    if (sub === 'loi') {
+        html = `<p>On donne la loi de probabilite de X (une probabilite manquante).</p>`;
+    } else {
+        html = `<p>On donne la loi de probabilite de X.</p>`;
+    }
+
+    // Tableau de loi
+    html += `<table style="border-collapse: collapse; margin: 10px auto; text-align: center;">`;
+    html += `<tr style="background: var(--gray-100);">`;
+    html += tableCell(K('x_i'), {bold: true});
+    for (let i = 0; i < ex.nbValeurs; i++) {
+        html += tableCell(ex.valeurs[i]);
+    }
+    html += `</tr><tr>`;
+    html += tableCell(K('P(X = x_i)'), {bold: true});
+    for (let i = 0; i < ex.nbValeurs; i++) {
+        if (sub === 'loi' && i === ex.cachee) {
+            html += tableCell('<strong style="color: var(--primary);">?</strong>');
+        } else {
+            html += tableCell(K(fracTeX(ex.probas[i], ex.den)));
+        }
+    }
+    html += `</tr></table>`;
+
+    if (sub === 'loi') {
+        html += `<p>Determiner la probabilite manquante et verifier que la somme vaut 1.</p>`;
+    } else {
+        html += `<p>Calculer ` + K('E(X)') + `, ` + K('V(X)') + ` et ` + K('\\sigma(X)') + `.</p>`;
+    }
+    return html;
+}
+
+function displayFluctuation(ex) {
+    const sub = ProbaState.subtype_fluctuation;
+    let html = '';
+
+    if (sub === 'intervalle') {
+        html = `<p>On considere un caractere de proportion ` + K(`p = ${fracTeX(ex.pPercent, 100)}`) + ` dans la population.</p>`;
+        html += `<p>Determiner l'intervalle de fluctuation au seuil de 95% pour un echantillon de taille ` + K(`n = ${ex.n}`) + `.</p>`;
+    } else {
+        html = `<p>Dans un echantillon de taille ` + K(`n = ${ex.n}`) + `, on observe une frequence ` + K(`f = ${roundDec(ex.fObs, 2)}`) + `.</p>`;
+        html += `<p>La proportion theorique est ` + K(`p = ${fracTeX(ex.pPercent, 100)}`) + `. Peut-on accepter cette hypothese au seuil de 95% ?</p>`;
+    }
+    return html;
 }
 
 // ========================================
@@ -676,79 +691,71 @@ function solveSimple() {
     const sub = ProbaState.subtype_simple;
     let html = '';
 
+    // Etape 1 : Univers
     html += '<div class="step">';
     html += '<div class="step-number">1. Identifier l\'univers</div>';
-
     if (sub === 'de') {
         if (ex.nbDes === 1) {
-            html += `<div class="step-expression">${kx('\\Omega = \\{1, 2, 3, 4, 5, 6\\}')}</div>`;
-            html += `<div class="step-explanation">Un de a 6 faces : ${kx('\\text{card}(\\Omega) = 6')}</div>`;
+            html += `<div class="step-expression">` + K('\\Omega = \\{1, 2, 3, 4, 5, 6\\}') + `</div>`;
+            html += `<div class="step-explanation">Un de a 6 faces : ` + K('\\text{card}(\\Omega) = 6') + `</div>`;
         } else {
-            html += `<div class="step-expression">${kx('\\Omega = \\{(i,j) \\mid 1 \\leq i,j \\leq 6\\}')}</div>`;
-            html += `<div class="step-explanation">Deux des : ${kx('\\text{card}(\\Omega) = 6 \\times 6 = 36')}</div>`;
+            html += `<div class="step-expression">` + K('\\Omega = \\{(i,j) \\mid 1 \\leq i,j \\leq 6\\}') + `</div>`;
+            html += `<div class="step-explanation">Deux des : ` + K('\\text{card}(\\Omega) = 6 \\times 6 = 36') + `</div>`;
         }
     } else if (sub === 'cartes') {
-        html += `<div class="step-expression">${kx('\\text{card}(\\Omega) = 52')}</div>`;
+        html += `<div class="step-expression">` + K('\\text{card}(\\Omega) = 52') + `</div>`;
         html += `<div class="step-explanation">Jeu de 52 cartes (4 couleurs x 13 valeurs)</div>`;
     } else {
-        html += `<div class="step-expression">${kx(`\\text{card}(\\Omega) = ${ex.rouges} + ${ex.bleues} + ${ex.vertes} = ${ex.total}`)}</div>`;
+        html += `<div class="step-expression">` + K(`\\text{card}(\\Omega) = ${ex.rouges} + ${ex.bleues} + ${ex.vertes} = ${ex.total}`) + `</div>`;
         html += `<div class="step-explanation">Total de boules dans l'urne</div>`;
     }
     html += '</div>';
 
+    // Etape 2 : Cas favorables
     html += '<div class="step">';
     html += '<div class="step-number">2. Compter les cas favorables</div>';
-
+    let numFav, denFav;
     if (sub === 'de' && ex.nbDes === 1) {
         html += `<div class="step-expression">Cas favorables : {${ex.favorables.join(', ')}}</div>`;
         html += `<div class="step-explanation">${ex.texte} : ${ex.favorables.length} cas favorables</div>`;
-    } else if (sub === 'de' && ex.nbDes === 2) {
-        html += `<div class="step-expression">Cas favorables : ${ex.favorables.join(', ')}</div>`;
-        html += `<div class="step-explanation">${ex.nbFavorables} couples donnent une somme de ${ex.somme}</div>`;
-    } else if (sub === 'cartes') {
-        html += `<div class="step-expression">${ex.detail}</div>`;
-        html += `<div class="step-explanation">${ex.favorables} cas favorables</div>`;
-    } else {
-        html += `<div class="step-expression">${ex.detail}</div>`;
-        html += `<div class="step-explanation">${ex.favorables} cas favorables</div>`;
-    }
-    html += '</div>';
-
-    html += '<div class="step">';
-    html += '<div class="step-number">3. Calculer la probabilite</div>';
-
-    let numFav, denFav;
-    if (sub === 'de' && ex.nbDes === 1) {
         numFav = ex.favorables.length;
         denFav = ex.total;
     } else if (sub === 'de' && ex.nbDes === 2) {
+        html += `<div class="step-expression">Cas favorables : ${ex.favorables.join(', ')}</div>`;
+        html += `<div class="step-explanation">${ex.nbFavorables} couples donnent une somme de ${ex.somme}</div>`;
         numFav = ex.nbFavorables;
         denFav = ex.total;
     } else if (sub === 'cartes') {
+        html += `<div class="step-expression">${ex.detail}</div>`;
+        html += `<div class="step-explanation">${ex.favorables} cas favorables</div>`;
         numFav = ex.favorables;
         denFav = ex.total;
     } else {
+        html += `<div class="step-expression">${ex.detail}</div>`;
+        html += `<div class="step-explanation">${ex.favorables} cas favorables</div>`;
         numFav = ex.favorables;
         denFav = ex.total;
     }
+    html += '</div>';
 
+    // Etape 3 : Calcul
+    html += '<div class="step">';
+    html += '<div class="step-number">3. Calculer la probabilite</div>';
     const fr = fracReduite(numFav, denFav);
     const valeur = roundDec(numFav / denFav, 4);
-
-    html += `<div class="step-expression">${kx(`P = \\frac{\\text{cas favorables}}{\\text{cas possibles}} = \\frac{${numFav}}{${denFav}}`)}</div>`;
-
+    html += `<div class="step-expression">` + K(`P = \\frac{\\text{cas favorables}}{\\text{cas possibles}} = ${fracTeX(numFav, denFav)}`) + `</div>`;
     if (fr.num !== numFav || fr.den !== denFav) {
-        html += `<div class="step-explanation">Fraction simplifiee : ${kx(fracTeX(fr.num, fr.den))} ${kx(`\\approx ${valeur}`)}</div>`;
+        html += `<div class="step-explanation">Fraction simplifiee : ` + K(fracTeX(fr.num, fr.den)) + ` soit environ ${valeur}</div>`;
     } else {
-        html += `<div class="step-explanation">${kx(`\\approx ${valeur}`)}</div>`;
+        html += `<div class="step-explanation">Soit environ ${valeur}</div>`;
     }
     html += '</div>';
 
+    // Resultat
     html += '<div class="result-highlight">';
-    html += `<div class="final">${kx(`P(\\text{evenement}) = ${fracTeX(fr.num, fr.den)}`)}`;
+    html += `<div class="final">` + K(`P = ${fracTeX(fr.num, fr.den)}`);
     if (fr.den !== 1) html += ` soit environ ${roundDec(valeur * 100, 1)}%`;
-    html += `</div>`;
-    html += '</div>';
+    html += `</div></div>`;
 
     return html;
 }
@@ -762,38 +769,36 @@ function solveConditionnelle() {
     if (sub === 'tableau') {
         html += '<div class="step">';
         html += '<div class="step-number">1. Rappeler la formule</div>';
-        html += `<div class="step-expression">${kx(`P(B|A) = \\frac{\\text{Nombre dans } A \\cap B}{\\text{Nombre dans } A}`)}</div>`;
-        html += `<div class="step-explanation">On cherche ${kx(ex.questionTex)}</div>`;
+        html += `<div class="step-expression">` + K(`P_A(B) = \\frac{\\text{Nombre dans } A \\cap B}{\\text{Nombre dans } A}`) + `</div>`;
         html += '</div>';
 
         html += '<div class="step">';
         html += '<div class="step-number">2. Lire le tableau</div>';
-        html += `<div class="step-expression">${kx(`\\text{${ex.ctx.A} et ${ex.ctx.B}} = ${ex.nAetB}`)}, ${kx(`\\text{Total ${ex.ctx.A}} = ${ex.nA}`)}</div>`;
-        html += `<div class="step-explanation">On lit ces valeurs dans le tableau croise.</div>`;
+        html += `<div class="step-expression">${ex.ctx.A} et ${ex.ctx.B} : ${ex.nAetB} personnes</div>`;
+        html += `<div class="step-explanation">Total ${ex.ctx.A} : ${ex.nA} personnes</div>`;
         html += '</div>';
 
         html += '<div class="step">';
         html += '<div class="step-number">3. Calculer</div>';
         const fr = fracReduite(ex.reponseNum, ex.reponseDen);
-        html += `<div class="step-expression">${kx(`${ex.questionTex} = \\frac{${ex.reponseNum}}{${ex.reponseDen}} = ${fracTeX(fr.num, fr.den)}`)}</div>`;
-        html += `<div class="step-explanation">${kx(`\\approx ${roundDec(ex.reponseNum / ex.reponseDen, 4)}`)}</div>`;
+        const val = roundDec(ex.reponseNum / ex.reponseDen, 4);
+        html += `<div class="step-expression">` + K(`P_{${ex.ctx.A}}(${ex.ctx.B}) = \\frac{${ex.reponseNum}}{${ex.reponseDen}} = ${fracTeX(fr.num, fr.den)}`) + `</div>`;
+        html += `<div class="step-explanation">Soit environ ${val}</div>`;
         html += '</div>';
 
         html += '<div class="result-highlight">';
-        html += `<div class="final">${kx(`${ex.questionTex} = ${fracTeX(fr.num, fr.den)}`)} soit environ ${roundDec(ex.reponseNum / ex.reponseDen * 100, 1)}%</div>`;
+        html += `<div class="final">` + K(`P_{${ex.ctx.A}}(${ex.ctx.B}) = ${fracTeX(fr.num, fr.den)}`) + ` soit environ ${roundDec(val * 100, 1)}%</div>`;
         html += '</div>';
 
     } else if (sub === 'formule') {
         html += '<div class="step">';
         html += '<div class="step-number">1. Rappeler la formule</div>';
-        html += `<div class="step-expression">${kx(`P(A|B) = \\frac{P(A \\cap B)}{P(B)}`)}</div>`;
-        html += `<div class="step-explanation">Formule de la probabilite conditionnelle</div>`;
+        html += `<div class="step-expression">` + K(`P(A|B) = \\frac{P(A \\cap B)}{P(B)}`) + `</div>`;
         html += '</div>';
 
         html += '<div class="step">';
         html += '<div class="step-number">2. Remplacer les valeurs</div>';
-        html += `<div class="step-expression">${kx(`P(A|B) = \\frac{${ex.pAinterB}}{${ex.pB}}`)}</div>`;
-        html += `<div class="step-explanation">${kx(`P(A \\cap B) = ${ex.pAinterB}`)} et ${kx(`P(B) = ${ex.pB}`)}</div>`;
+        html += `<div class="step-expression">` + K(`P(A|B) = \\frac{${ex.pAinterB}}{${ex.pB}}`) + `</div>`;
         html += '</div>';
 
         const fr = fracReduite(ex.reponseNum, ex.reponseDen);
@@ -801,38 +806,38 @@ function solveConditionnelle() {
 
         html += '<div class="step">';
         html += '<div class="step-number">3. Calculer</div>';
-        html += `<div class="step-expression">${kx(`P(A|B) = ${fracTeX(fr.num, fr.den)} \\approx ${val}`)}</div>`;
+        html += `<div class="step-expression">` + K(`P(A|B) = ${fracTeX(fr.num, fr.den)}`) + ` soit environ ${val}</div>`;
         html += '</div>';
 
         html += '<div class="result-highlight">';
-        html += `<div class="final">${kx(`P(A|B) = ${fracTeX(fr.num, fr.den)}`)} soit environ ${roundDec(val * 100, 1)}%</div>`;
+        html += `<div class="final">` + K(`P(A|B) = ${fracTeX(fr.num, fr.den)}`) + ` soit environ ${roundDec(val * 100, 1)}%</div>`;
         html += '</div>';
 
     } else {
         // Bayes
         html += '<div class="step">';
         html += '<div class="step-number">1. Rappeler la formule de Bayes</div>';
-        html += `<div class="step-expression">${kx(`P(A|B) = \\frac{P(B|A) \\times P(A)}{P(B)}`)}</div>`;
+        html += `<div class="step-expression">` + K(`P(A|B) = \\frac{P(B|A) \\times P(A)}{P(B)}`) + `</div>`;
         html += '</div>';
 
         html += '<div class="step">';
         html += '<div class="step-number">2. Calculer P(B) par les probabilites totales</div>';
         const pBval = roundDec(ex.pBsachantA * ex.pA + ex.pBsachantAbar * ex.pAbar, 4);
-        html += `<div class="step-expression">${kx(`P(B) = P(B|A) \\times P(A) + P(B|\\bar{A}) \\times P(\\bar{A})`)}</div>`;
-        html += `<div class="step-expression">${kx(`P(B) = ${ex.pBsachantA} \\times ${ex.pA} + ${ex.pBsachantAbar} \\times ${ex.pAbar}`)}</div>`;
-        html += `<div class="step-expression">${kx(`P(B) = ${roundDec(ex.pBsachantA * ex.pA, 4)} + ${roundDec(ex.pBsachantAbar * ex.pAbar, 4)} = ${pBval}`)}</div>`;
+        html += `<div class="step-expression">` + K(`P(B) = P(B|A) \\times P(A) + P(B|\\bar{A}) \\times P(\\bar{A})`) + `</div>`;
+        html += `<div class="step-expression">` + K(`P(B) = ${ex.pBsachantA} \\times ${ex.pA} + ${ex.pBsachantAbar} \\times ${ex.pAbar}`) + `</div>`;
+        html += `<div class="step-expression">` + K(`P(B) = ${roundDec(ex.pBsachantA * ex.pA, 4)} + ${roundDec(ex.pBsachantAbar * ex.pAbar, 4)} = ${pBval}`) + `</div>`;
         html += '</div>';
 
         html += '<div class="step">';
         html += '<div class="step-number">3. Appliquer Bayes</div>';
         const numerateur = roundDec(ex.pBsachantA * ex.pA, 4);
         const resultat = roundDec(numerateur / pBval, 4);
-        html += `<div class="step-expression">${kx(`P(A|B) = \\frac{${ex.pBsachantA} \\times ${ex.pA}}{${pBval}} = \\frac{${numerateur}}{${pBval}}`)}</div>`;
-        html += `<div class="step-expression">${kx(`P(A|B) \\approx ${resultat}`)}</div>`;
+        html += `<div class="step-expression">` + K(`P(A|B) = \\frac{${ex.pBsachantA} \\times ${ex.pA}}{${pBval}} = \\frac{${numerateur}}{${pBval}}`) + `</div>`;
+        html += `<div class="step-expression">` + K(`P(A|B) \\approx ${resultat}`) + `</div>`;
         html += '</div>';
 
         html += '<div class="result-highlight">';
-        html += `<div class="final">${kx(`P(\\text{${ex.ctx.A}} | \\text{${ex.ctx.B}}) \\approx ${resultat}`)} soit environ ${roundDec(resultat * 100, 1)}%</div>`;
+        html += `<div class="final">` + K(`P(\\text{${ex.ctx.A}} | \\text{${ex.ctx.B}}) \\approx ${resultat}`) + ` soit environ ${roundDec(resultat * 100, 1)}%</div>`;
         html += '</div>';
     }
 
@@ -847,65 +852,57 @@ function solveArbre() {
 
     if (sub === 'deux_epreuves') {
         html += '<div class="step">';
-        html += '<div class="step-number">1. Construire l\'arbre</div>';
-        html += `<div class="step-expression">`;
-        html += `<div style="font-family: monospace; line-height: 1.8; padding: 10px;">`;
-        html += `&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;┌── R2 (${kx(fracTeX(ex.pR2sachantR_num, ex.pR2sachantR_den))})<br>`;
-        html += `&nbsp;&nbsp;┌── R1 (${kx(fracTeX(ex.pR1_num, ex.pR1_den))}) ─┤<br>`;
-        html += `&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── B2<br>`;
-        html += `──┤<br>`;
-        html += `&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;┌── R2 (${kx(fracTeX(ex.pR2sachantB_num, ex.pR2sachantB_den))})<br>`;
-        html += `&nbsp;&nbsp;└── B1 (${kx(fracTeX(ex.pB1_num, ex.pB1_den))}) ─┤<br>`;
-        html += `&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── B2<br>`;
-        html += `</div></div>`;
-        html += `<div class="step-explanation">Arbre pondere avec remise</div>`;
+        html += '<div class="step-number">1. Identifier les probabilites</div>';
+        html += `<div class="step-expression">Probabilite de tirer Rouge : ` + K(fracTeX(ex.pR1_num, ex.pR1_den)) + `</div>`;
+        html += `<div class="step-expression">Probabilite de tirer Bleu : ` + K(fracTeX(ex.pB1_num, ex.pB1_den)) + `</div>`;
+        html += `<div class="step-explanation">Tirage avec remise : memes probabilites a chaque tirage.</div>`;
         html += '</div>';
 
         html += '<div class="step">';
         html += '<div class="step-number">2. Appliquer la regle du produit</div>';
-        html += `<div class="step-expression">${kx(`P(R_1 \\cap R_2) = P(R_1) \\times P(R_2|R_1)`)}</div>`;
-        html += `<div class="step-expression">${kx(`= ${fracTeX(ex.pR1_num, ex.pR1_den)} \\times ${fracTeX(ex.pR2sachantR_num, ex.pR2sachantR_den)}`)}</div>`;
-        html += `<div class="step-expression">${kx(`= ${fracTeX(ex.pDeuxRouges_num, ex.pDeuxRouges_den)}`)}</div>`;
+        html += `<div class="step-expression">` + K(`P(R_1 \\cap R_2) = P(R_1) \\times P(R_2)`) + `</div>`;
+        html += `<div class="step-expression">` + K(`= ${fracTeX(ex.pR1_num, ex.pR1_den)} \\times ${fracTeX(ex.pR2sachantR_num, ex.pR2sachantR_den)}`) + `</div>`;
+        html += `<div class="step-expression">` + K(`= ${fracTeX(ex.pDeuxRouges_num, ex.pDeuxRouges_den)}`) + `</div>`;
         html += '</div>';
 
         const fr = fracReduite(ex.pDeuxRouges_num, ex.pDeuxRouges_den);
         const val = roundDec(ex.pDeuxRouges_num / ex.pDeuxRouges_den, 4);
 
         html += '<div class="result-highlight">';
-        html += `<div class="final">${kx(`P(R_1 \\cap R_2) = ${fracTeX(fr.num, fr.den)}`)} soit environ ${roundDec(val * 100, 1)}%</div>`;
+        html += `<div class="final">` + K(`P(R_1 \\cap R_2) = ${fracTeX(fr.num, fr.den)}`) + ` soit environ ${roundDec(val * 100, 1)}%</div>`;
         html += '</div>';
 
     } else {
         // Probabilites totales
         html += '<div class="step">';
         html += '<div class="step-number">1. Identifier les donnees</div>';
-        html += `<div class="step-expression">${kx(`P(${ex.ctx.A}) = ${fracTeX(ex.pA_num, ex.pA_den)}`)}, ${kx(`P(${ex.ctx.Abar}) = ${fracTeX(ex.pAbar_num, ex.pAbar_den)}`)}</div>`;
-        html += `<div class="step-expression">${kx(`P(${ex.ctx.B}|${ex.ctx.A}) = ${fracTeX(ex.pBsachantA_num, ex.pBsachantA_den)}`)}, ${kx(`P(${ex.ctx.B}|${ex.ctx.Abar}) = ${fracTeX(ex.pBsachantAbar_num, ex.pBsachantAbar_den)}`)}</div>`;
+        html += `<div class="step-expression">` + K(`P(A) = ${fracTeX(ex.pA_num, ex.pA_den)}`) + `, ` + K(`P(\\bar{A}) = ${fracTeX(ex.pAbar_num, ex.pAbar_den)}`) + `</div>`;
+        html += `<div class="step-expression">` + K(`P(B|A) = ${fracTeX(ex.pBsachantA_num, ex.pBsachantA_den)}`) + `, ` + K(`P(B|\\bar{A}) = ${fracTeX(ex.pBsachantAbar_num, ex.pBsachantAbar_den)}`) + `</div>`;
         html += '</div>';
 
         html += '<div class="step">';
         html += '<div class="step-number">2. Appliquer la formule des probabilites totales</div>';
-        html += `<div class="step-expression">${kx(`P(B) = P(B|A) \\times P(A) + P(B|\\bar{A}) \\times P(\\bar{A})`)}</div>`;
-        html += `<div class="step-expression">${kx(`= ${fracTeX(ex.pBsachantA_num, ex.pBsachantA_den)} \\times ${fracTeX(ex.pA_num, ex.pA_den)} + ${fracTeX(ex.pBsachantAbar_num, ex.pBsachantAbar_den)} \\times ${fracTeX(ex.pAbar_num, ex.pAbar_den)}`)}</div>`;
+        html += `<div class="step-expression">` + K(`P(B) = P(B|A) \\times P(A) + P(B|\\bar{A}) \\times P(\\bar{A})`) + `</div>`;
+        html += `<div class="step-expression">` + K(`= ${fracTeX(ex.pBsachantA_num, ex.pBsachantA_den)} \\times ${fracTeX(ex.pA_num, ex.pA_den)} + ${fracTeX(ex.pBsachantAbar_num, ex.pBsachantAbar_den)} \\times ${fracTeX(ex.pAbar_num, ex.pAbar_den)}`) + `</div>`;
 
         const t1_num = ex.pBsachantA_num * ex.pA_num;
         const t1_den = ex.pBsachantA_den * ex.pA_den;
         const t2_num = ex.pBsachantAbar_num * ex.pAbar_num;
         const t2_den = ex.pBsachantAbar_den * ex.pAbar_den;
 
-        html += `<div class="step-expression">${kx(`= ${fracTeX(t1_num, t1_den)} + ${fracTeX(t2_num, t2_den)}`)}</div>`;
+        html += `<div class="step-expression">` + K(`= ${fracTeX(t1_num, t1_den)} + ${fracTeX(t2_num, t2_den)}`) + `</div>`;
         html += '</div>';
 
         html += '<div class="step">';
         html += '<div class="step-number">3. Calculer</div>';
         const fr = fracReduite(ex.pB_num, ex.pB_den);
         const val = roundDec(ex.pB_num / ex.pB_den, 4);
-        html += `<div class="step-expression">${kx(`P(B) = ${fracTeX(ex.pB_num, ex.pB_den)} = ${fracTeX(fr.num, fr.den)}`)}</div>`;
-        html += `<div class="step-explanation">${kx(`\\approx ${val}`)}</div>`;
+        html += `<div class="step-expression">` + K(`P(B) = ${fracTeX(ex.pB_num, ex.pB_den)} = ${fracTeX(fr.num, fr.den)}`) + `</div>`;
+        html += `<div class="step-explanation">Soit environ ${val}</div>`;
         html += '</div>';
 
         html += '<div class="result-highlight">';
-        html += `<div class="final">${kx(`P(\\text{${ex.ctx.B}}) = ${fracTeX(fr.num, fr.den)}`)} soit environ ${roundDec(val * 100, 1)}%</div>`;
+        html += `<div class="final">` + K(`P(\\text{${ex.ctx.B}}) = ${fracTeX(fr.num, fr.den)}`) + ` soit environ ${roundDec(val * 100, 1)}%</div>`;
         html += '</div>';
     }
 
@@ -918,87 +915,80 @@ function solveBinomiale() {
     const sub = ProbaState.subtype_binomiale;
     let html = '';
 
+    // Etape 1 commune
     html += '<div class="step">';
     html += '<div class="step-number">1. Identifier les parametres</div>';
-    html += `<div class="step-expression">${kx(`X \\sim B(n = ${ex.n},\\; p = ${fracTeX(ex.pNum, ex.pDen)})`)}</div>`;
-    html += `<div class="step-explanation">Schema de Bernoulli : ${ex.n} epreuves independantes, probabilite de succes ${kx(`p = ${fracTeX(ex.pNum, ex.pDen)}`)}</div>`;
+    html += `<div class="step-expression">` + K(`X \\sim B\\left(n = ${ex.n},\\; p = ${fracTeX(ex.pNum, ex.pDen)}\\right)`) + `</div>`;
+    html += `<div class="step-explanation">Schema de Bernoulli : ${ex.n} epreuves independantes, probabilite de succes ` + K(`p = ${fracTeX(ex.pNum, ex.pDen)}`) + `</div>`;
     html += '</div>';
 
     if (sub === 'proba_exacte') {
         html += '<div class="step">';
         html += '<div class="step-number">2. Rappeler la formule</div>';
-        html += `<div class="step-expression">${kx(`P(X = k) = \\binom{n}{k} \\, p^k \\, (1-p)^{n-k}`)}</div>`;
+        html += `<div class="step-expression">` + K(`P(X = k) = \\binom{n}{k} \\, p^k \\, (1-p)^{n-k}`) + `</div>`;
         html += '</div>';
 
         html += '<div class="step">';
-        html += '<div class="step-number">3. Calculer le coefficient binomial</div>';
-        html += `<div class="step-expression">${kx(`\\binom{${ex.n}}{${ex.k}} = \\frac{${ex.n}!}{${ex.k}! \\times ${ex.n - ex.k}!} = ${ex.coeff}`)}</div>`;
+        html += '<div class="step-number">3. Coefficient binomial</div>';
+        html += `<div class="step-expression">` + K(`\\binom{${ex.n}}{${ex.k}} = \\frac{${ex.n}!}{${ex.k}! \\times ${ex.n - ex.k}!} = ${ex.coeff}`) + `</div>`;
         html += '</div>';
 
         html += '<div class="step">';
-        html += '<div class="step-number">4. Appliquer la formule</div>';
+        html += '<div class="step-number">4. Appliquer</div>';
         const pVal = roundDec(ex.p, 2);
         const qVal = roundDec(ex.q, 2);
-        html += `<div class="step-expression">${kx(`P(X = ${ex.k}) = ${ex.coeff} \\times ${pVal}^{${ex.k}} \\times ${qVal}^{${ex.n - ex.k}}`)}</div>`;
-        html += `<div class="step-expression">${kx(`= ${ex.coeff} \\times ${roundDec(Math.pow(ex.p, ex.k), 6)} \\times ${roundDec(Math.pow(ex.q, ex.n - ex.k), 6)}`)}</div>`;
+        html += `<div class="step-expression">` + K(`P(X = ${ex.k}) = ${ex.coeff} \\times ${pVal}^{${ex.k}} \\times ${qVal}^{${ex.n - ex.k}}`) + `</div>`;
+        html += `<div class="step-expression">` + K(`= ${ex.coeff} \\times ${roundDec(Math.pow(ex.p, ex.k), 6)} \\times ${roundDec(Math.pow(ex.q, ex.n - ex.k), 6)}`) + `</div>`;
         html += '</div>';
 
         html += '<div class="result-highlight">';
-        html += `<div class="final">${kx(`P(X = ${ex.k}) \\approx ${roundDec(ex.resultat, 4)}`)} soit environ ${roundDec(ex.resultat * 100, 2)}%</div>`;
+        html += `<div class="final">` + K(`P(X = ${ex.k}) \\approx ${roundDec(ex.resultat, 4)}`) + ` soit environ ${roundDec(ex.resultat * 100, 2)}%</div>`;
         html += '</div>';
 
     } else if (sub === 'esperance') {
         html += '<div class="step">';
-        html += '<div class="step-number">2. Calculer l\'esperance</div>';
-        html += `<div class="step-expression">${kx(`E(X) = n \\times p = ${ex.n} \\times ${roundDec(ex.p, 2)} = ${roundDec(ex.esperance, 4)}`)}</div>`;
+        html += '<div class="step-number">2. Esperance</div>';
+        html += `<div class="step-expression">` + K(`E(X) = n \\times p = ${ex.n} \\times ${roundDec(ex.p, 2)} = ${roundDec(ex.esperance, 4)}`) + `</div>`;
         html += `<div class="step-explanation">L'esperance represente le nombre moyen de succes.</div>`;
         html += '</div>';
 
         html += '<div class="step">';
-        html += '<div class="step-number">3. Calculer la variance</div>';
-        html += `<div class="step-expression">${kx(`V(X) = n \\times p \\times (1-p) = ${ex.n} \\times ${roundDec(ex.p, 2)} \\times ${roundDec(ex.q, 2)} = ${roundDec(ex.variance, 4)}`)}</div>`;
+        html += '<div class="step-number">3. Variance</div>';
+        html += `<div class="step-expression">` + K(`V(X) = n \\times p \\times (1-p) = ${ex.n} \\times ${roundDec(ex.p, 2)} \\times ${roundDec(ex.q, 2)} = ${roundDec(ex.variance, 4)}`) + `</div>`;
         html += '</div>';
 
         html += '<div class="step">';
-        html += '<div class="step-number">4. Calculer l\'ecart-type</div>';
-        html += `<div class="step-expression">${kx(`\\sigma(X) = \\sqrt{V(X)} = \\sqrt{${roundDec(ex.variance, 4)}} \\approx ${roundDec(ex.ecartType, 4)}`)}</div>`;
+        html += '<div class="step-number">4. Ecart-type</div>';
+        html += `<div class="step-expression">` + K(`\\sigma(X) = \\sqrt{V(X)} = \\sqrt{${roundDec(ex.variance, 4)}} \\approx ${roundDec(ex.ecartType, 4)}`) + `</div>`;
         html += '</div>';
 
         html += '<div class="result-highlight">';
-        html += `<div class="final">${kx(`E(X) = ${roundDec(ex.esperance, 4)}`)}, ${kx(`V(X) = ${roundDec(ex.variance, 4)}`)}, ${kx(`\\sigma(X) \\approx ${roundDec(ex.ecartType, 4)}`)}</div>`;
+        html += `<div class="final">` + K(`E(X) = ${roundDec(ex.esperance, 4)}`) + ` , ` + K(`V(X) = ${roundDec(ex.variance, 4)}`) + ` , ` + K(`\\sigma(X) \\approx ${roundDec(ex.ecartType, 4)}`) + `</div>`;
         html += '</div>';
 
     } else {
         // Cumul
         html += '<div class="step">';
         html += '<div class="step-number">2. Decomposer la probabilite cumulee</div>';
-        if (ex.sens === 'inf') {
-            html += `<div class="step-expression">${kx(`P(X \\leq ${ex.k}) = \\sum_{i=0}^{${ex.k}} P(X = i)`)}</div>`;
-            let detail = '';
-            for (let i = 0; i <= ex.k; i++) {
-                const pi = binomProba(ex.n, i, ex.p);
-                detail += `<div class="step-expression">${kx(`P(X = ${i}) = \\binom{${ex.n}}{${i}} \\times ${roundDec(ex.p, 2)}^{${i}} \\times ${roundDec(ex.q, 2)}^{${ex.n - i}} \\approx ${roundDec(pi, 4)}`)}</div>`;
-            }
-            html += detail;
-        } else {
-            html += `<div class="step-expression">${kx(`P(X \\geq ${ex.k}) = \\sum_{i=${ex.k}}^{${ex.n}} P(X = i)`)}</div>`;
-            let detail = '';
-            for (let i = ex.k; i <= ex.n; i++) {
-                const pi = binomProba(ex.n, i, ex.p);
-                detail += `<div class="step-expression">${kx(`P(X = ${i}) = \\binom{${ex.n}}{${i}} \\times ${roundDec(ex.p, 2)}^{${i}} \\times ${roundDec(ex.q, 2)}^{${ex.n - i}} \\approx ${roundDec(pi, 4)}`)}</div>`;
-            }
-            html += detail;
+        const symbole = ex.sens === 'inf' ? `\\leq` : `\\geq`;
+        const iStart = ex.sens === 'inf' ? 0 : ex.k;
+        const iEnd = ex.sens === 'inf' ? ex.k : ex.n;
+
+        html += `<div class="step-expression">` + K(`P(X ${symbole} ${ex.k}) = \\sum_{i=${iStart}}^{${iEnd}} P(X = i)`) + `</div>`;
+
+        for (let i = iStart; i <= iEnd; i++) {
+            const pi = binomProba(ex.n, i, ex.p);
+            html += `<div class="step-expression">` + K(`P(X = ${i}) = \\binom{${ex.n}}{${i}} \\times ${roundDec(ex.p, 2)}^{${i}} \\times ${roundDec(ex.q, 2)}^{${ex.n - i}} \\approx ${roundDec(pi, 4)}`) + `</div>`;
         }
         html += '</div>';
 
         html += '<div class="step">';
         html += '<div class="step-number">3. Sommer</div>';
-        const symbole = ex.sens === 'inf' ? `\\leq` : `\\geq`;
-        html += `<div class="step-expression">${kx(`P(X ${symbole} ${ex.k}) \\approx ${roundDec(ex.cumul, 4)}`)}</div>`;
+        html += `<div class="step-expression">` + K(`P(X ${symbole} ${ex.k}) \\approx ${roundDec(ex.cumul, 4)}`) + `</div>`;
         html += '</div>';
 
         html += '<div class="result-highlight">';
-        html += `<div class="final">${kx(`P(X ${symbole} ${ex.k}) \\approx ${roundDec(ex.cumul, 4)}`)} soit environ ${roundDec(ex.cumul * 100, 2)}%</div>`;
+        html += `<div class="final">` + K(`P(X ${symbole} ${ex.k}) \\approx ${roundDec(ex.cumul, 4)}`) + ` soit environ ${roundDec(ex.cumul * 100, 2)}%</div>`;
         html += '</div>';
     }
 
@@ -1013,103 +1003,94 @@ function solveVariable() {
 
     if (sub === 'loi') {
         html += '<div class="step">';
-        html += '<div class="step-number">1. Utiliser la propriete fondamentale</div>';
-        html += `<div class="step-expression">${kx(`\\sum_{i} P(X = x_i) = 1`)}</div>`;
+        html += '<div class="step-number">1. Propriete fondamentale</div>';
+        html += `<div class="step-expression">` + K(`\\sum_{i} P(X = x_i) = 1`) + `</div>`;
         html += `<div class="step-explanation">La somme de toutes les probabilites vaut 1.</div>`;
         html += '</div>';
 
         html += '<div class="step">';
         html += '<div class="step-number">2. Calculer la probabilite manquante</div>';
-        let somme = 0;
-        let detail = '';
+        let sommeConnue = 0;
+        let termes = [];
         for (let i = 0; i < ex.nbValeurs; i++) {
             if (i !== ex.cachee) {
-                somme += ex.probas[i];
-                detail += `${fracTeX(ex.probas[i], ex.den)}`;
-                if (i < ex.nbValeurs - 1 && !(i === ex.nbValeurs - 2 && ex.cachee === ex.nbValeurs - 1)) {
-                    detail += ' + ';
-                }
+                sommeConnue += ex.probas[i];
+                termes.push(fracTeX(ex.probas[i], ex.den));
             }
         }
-        html += `<div class="step-expression">${kx(`P(X = ${ex.valeurs[ex.cachee]}) = 1 - \\left(${detail.replace(/ \+ $/, '')}\\right)`)}</div>`;
-        html += `<div class="step-expression">${kx(`= 1 - ${fracTeX(somme, ex.den)} = ${fracTeX(ex.den - somme, ex.den)}`)}</div>`;
-
+        html += `<div class="step-expression">` + K(`P(X = ${ex.valeurs[ex.cachee]}) = 1 - \\left(${termes.join(' + ')}\\right)`) + `</div>`;
+        html += `<div class="step-expression">` + K(`= 1 - ${fracTeX(sommeConnue, ex.den)} = ${fracTeX(ex.den - sommeConnue, ex.den)}`) + `</div>`;
         const fr = fracReduite(ex.probas[ex.cachee], ex.den);
-        html += `<div class="step-expression">${kx(`= ${fracTeX(fr.num, fr.den)}`)}</div>`;
+        html += `<div class="step-expression">` + K(`= ${fracTeX(fr.num, fr.den)}`) + `</div>`;
         html += '</div>';
 
         html += '<div class="step">';
-        html += '<div class="step-number">3. Verifier</div>';
-        html += `<div class="step-expression">Somme : `;
-        let verif = [];
+        html += '<div class="step-number">3. Verification</div>';
+        let verifTermes = [];
         for (let i = 0; i < ex.nbValeurs; i++) {
-            verif.push(fracTeX(ex.probas[i], ex.den));
+            verifTermes.push(fracTeX(ex.probas[i], ex.den));
         }
-        html += `${kx(verif.join(' + '))} = ${kx(fracTeX(ex.den, ex.den))} = 1 \\; \\checkmark</div>`;
+        html += `<div class="step-expression">` + K(verifTermes.join(' + ') + ` = ${fracTeX(ex.den, ex.den)} = 1 \\; \\checkmark`) + `</div>`;
         html += '</div>';
 
         html += '<div class="result-highlight">';
-        html += `<div class="final">${kx(`P(X = ${ex.valeurs[ex.cachee]}) = ${fracTeX(fr.num, fr.den)}`)}</div>`;
+        html += `<div class="final">` + K(`P(X = ${ex.valeurs[ex.cachee]}) = ${fracTeX(fr.num, fr.den)}`) + `</div>`;
         html += '</div>';
 
     } else {
         // Esperance et variance
+        // Tableau complet
         html += '<div class="step">';
-        html += '<div class="step-number">1. Rappeler la loi de X</div>';
+        html += '<div class="step-number">1. Loi de X</div>';
         html += `<table style="border-collapse: collapse; margin: 10px auto; text-align: center;">`;
-        html += `<tr style="background: var(--gray-100);"><td style="border:1px solid var(--gray-300); padding:8px; font-weight:bold;">${kx('x_i')}</td>`;
+        html += `<tr style="background: var(--gray-100);">`;
+        html += tableCell(K('x_i'), {bold: true});
         for (let i = 0; i < ex.nbValeurs; i++) {
-            html += `<td style="border:1px solid var(--gray-300); padding:8px;">${ex.valeurs[i]}</td>`;
+            html += tableCell(ex.valeurs[i]);
         }
-        html += `</tr><tr><td style="border:1px solid var(--gray-300); padding:8px; font-weight:bold;">${kx('P(X=x_i)')}</td>`;
+        html += `</tr><tr>`;
+        html += tableCell(K('P(X=x_i)'), {bold: true});
         for (let i = 0; i < ex.nbValeurs; i++) {
-            html += `<td style="border:1px solid var(--gray-300); padding:8px;">${kx(fracTeX(ex.probas[i], ex.den))}</td>`;
+            html += tableCell(K(fracTeX(ex.probas[i], ex.den)));
         }
         html += `</tr></table>`;
         html += '</div>';
 
+        // E(X)
         html += '<div class="step">';
         html += '<div class="step-number">2. Calculer E(X)</div>';
-        html += `<div class="step-expression">${kx(`E(X) = \\sum x_i \\times P(X = x_i)`)}</div>`;
-        let espDetail = [];
-        for (let i = 0; i < ex.nbValeurs; i++) {
-            espDetail.push(`${ex.valeurs[i]} \\times ${fracTeX(ex.probas[i], ex.den)}`);
-        }
-        html += `<div class="step-expression">${kx(`= ${espDetail.join(' + ')}`)}</div>`;
-
-        let espNumDetail = [];
+        html += `<div class="step-expression">` + K(`E(X) = \\sum x_i \\times P(X = x_i)`) + `</div>`;
+        let espTermes = [];
         let espNum = 0;
         for (let i = 0; i < ex.nbValeurs; i++) {
-            const val = ex.valeurs[i] * ex.probas[i];
-            espNum += val;
-            espNumDetail.push(fracTeX(val, ex.den));
+            espTermes.push(`${ex.valeurs[i]} \\times ${fracTeX(ex.probas[i], ex.den)}`);
+            espNum += ex.valeurs[i] * ex.probas[i];
         }
-        html += `<div class="step-expression">${kx(`= ${espNumDetail.join(' + ')} = ${fracTeX(espNum, ex.den)}`)}</div>`;
-
-        const espFr = fracReduite(espNum, ex.den);
-        html += `<div class="step-expression">${kx(`E(X) = ${fracTeX(espFr.num, espFr.den)} \\approx ${roundDec(ex.esperance, 4)}`)}</div>`;
+        html += `<div class="step-expression">` + K(`= ${espTermes.join(' + ')}`) + `</div>`;
+        html += `<div class="step-expression">` + K(`= ${fracTeX(espNum, ex.den)} \\approx ${roundDec(ex.esperance, 4)}`) + `</div>`;
         html += '</div>';
 
+        // V(X) = E(X^2) - [E(X)]^2
         html += '<div class="step">';
         html += '<div class="step-number">3. Calculer V(X)</div>';
-        html += `<div class="step-expression">${kx(`V(X) = E(X^2) - [E(X)]^2`)}</div>`;
+        html += `<div class="step-expression">` + K(`V(X) = E(X^2) - [E(X)]^2`) + `</div>`;
 
-        // E(X^2)
         let ex2 = 0;
         for (let i = 0; i < ex.nbValeurs; i++) {
             ex2 += ex.valeurs[i] * ex.valeurs[i] * ex.probas[i] / ex.den;
         }
-        html += `<div class="step-expression">${kx(`E(X^2) = ${roundDec(ex2, 4)}`)}</div>`;
-        html += `<div class="step-expression">${kx(`V(X) = ${roundDec(ex2, 4)} - (${roundDec(ex.esperance, 4)})^2 = ${roundDec(ex2, 4)} - ${roundDec(ex.esperance * ex.esperance, 4)} = ${roundDec(ex.variance, 4)}`)}</div>`;
+        html += `<div class="step-expression">` + K(`E(X^2) = ${roundDec(ex2, 4)}`) + `</div>`;
+        html += `<div class="step-expression">` + K(`V(X) = ${roundDec(ex2, 4)} - (${roundDec(ex.esperance, 4)})^2 = ${roundDec(ex.variance, 4)}`) + `</div>`;
         html += '</div>';
 
+        // Ecart-type
         html += '<div class="step">';
-        html += '<div class="step-number">4. Calculer l\'ecart-type</div>';
-        html += `<div class="step-expression">${kx(`\\sigma(X) = \\sqrt{V(X)} = \\sqrt{${roundDec(ex.variance, 4)}} \\approx ${roundDec(ex.ecartType, 4)}`)}</div>`;
+        html += '<div class="step-number">4. Ecart-type</div>';
+        html += `<div class="step-expression">` + K(`\\sigma(X) = \\sqrt{V(X)} = \\sqrt{${roundDec(ex.variance, 4)}} \\approx ${roundDec(ex.ecartType, 4)}`) + `</div>`;
         html += '</div>';
 
         html += '<div class="result-highlight">';
-        html += `<div class="final">${kx(`E(X) \\approx ${roundDec(ex.esperance, 4)}`)}, ${kx(`V(X) \\approx ${roundDec(ex.variance, 4)}`)}, ${kx(`\\sigma(X) \\approx ${roundDec(ex.ecartType, 4)}`)}</div>`;
+        html += `<div class="final">` + K(`E(X) \\approx ${roundDec(ex.esperance, 4)}`) + ` , ` + K(`V(X) \\approx ${roundDec(ex.variance, 4)}`) + ` , ` + K(`\\sigma(X) \\approx ${roundDec(ex.ecartType, 4)}`) + `</div>`;
         html += '</div>';
     }
 
@@ -1122,44 +1103,46 @@ function solveFluctuation() {
     const sub = ProbaState.subtype_fluctuation;
     let html = '';
 
+    // Conditions
     html += '<div class="step">';
     html += '<div class="step-number">1. Verifier les conditions</div>';
-    html += `<div class="step-expression">${kx(`n = ${ex.n} \\geq 25`)} ${kx('\\checkmark')}</div>`;
-    html += `<div class="step-expression">${kx(`n \\times p = ${ex.n} \\times ${ex.p} = ${roundDec(ex.n * ex.p, 2)} \\geq 5`)} ${ex.n * ex.p >= 5 ? kx('\\checkmark') : kx('\\text{(condition limite)}')}</div>`;
-    html += `<div class="step-expression">${kx(`n \\times (1-p) = ${ex.n} \\times ${roundDec(1 - ex.p, 2)} = ${roundDec(ex.n * (1 - ex.p), 2)} \\geq 5`)} ${ex.n * (1 - ex.p) >= 5 ? kx('\\checkmark') : kx('\\text{(condition limite)}')}</div>`;
+    html += `<div class="step-expression">` + K(`n = ${ex.n} \\geq 25`) + ` ` + K('\\checkmark') + `</div>`;
+    html += `<div class="step-expression">` + K(`n \\times p = ${ex.n} \\times ${ex.p} = ${roundDec(ex.n * ex.p, 2)} \\geq 5`) + ` ` + (ex.n * ex.p >= 5 ? K('\\checkmark') : '(limite)') + `</div>`;
+    html += `<div class="step-expression">` + K(`n(1-p) = ${ex.n} \\times ${roundDec(1 - ex.p, 2)} = ${roundDec(ex.n * (1 - ex.p), 2)} \\geq 5`) + ` ` + (ex.n * (1 - ex.p) >= 5 ? K('\\checkmark') : '(limite)') + `</div>`;
     html += '</div>';
 
+    // Calcul intervalle
     html += '<div class="step">';
-    html += '<div class="step-number">2. Calculer l\'intervalle de fluctuation</div>';
-    html += `<div class="step-expression">${kx(`I = \\left[ p - \\frac{1}{\\sqrt{n}} \\;; \\; p + \\frac{1}{\\sqrt{n}} \\right]`)}</div>`;
-    html += `<div class="step-expression">${kx(`\\frac{1}{\\sqrt{${ex.n}}} = \\frac{1}{${roundDec(Math.sqrt(ex.n), 4)}} \\approx ${roundDec(ex.marge, 4)}`)}</div>`;
-    html += `<div class="step-expression">${kx(`I = \\left[ ${ex.p} - ${roundDec(ex.marge, 4)} \\;; \\; ${ex.p} + ${roundDec(ex.marge, 4)} \\right]`)}</div>`;
-    html += `<div class="step-expression">${kx(`I \\approx \\left[ ${roundDec(ex.borneInf, 4)} \\;; \\; ${roundDec(ex.borneSup, 4)} \\right]`)}</div>`;
+    html += '<div class="step-number">2. Intervalle de fluctuation</div>';
+    html += `<div class="step-expression">` + K(`I = \\left[ p - \\frac{1}{\\sqrt{n}} \\;; \\; p + \\frac{1}{\\sqrt{n}} \\right]`) + `</div>`;
+    html += `<div class="step-expression">` + K(`\\frac{1}{\\sqrt{${ex.n}}} \\approx ${roundDec(ex.marge, 4)}`) + `</div>`;
+    html += `<div class="step-expression">` + K(`I = \\left[ ${ex.p} - ${roundDec(ex.marge, 4)} \\;; \\; ${ex.p} + ${roundDec(ex.marge, 4)} \\right]`) + `</div>`;
+    html += `<div class="step-expression">` + K(`I \\approx \\left[ ${roundDec(ex.borneInf, 4)} \\;; \\; ${roundDec(ex.borneSup, 4)} \\right]`) + `</div>`;
     html += '</div>';
 
     if (sub === 'decision') {
         html += '<div class="step">';
         html += '<div class="step-number">3. Comparer la frequence observee</div>';
-        html += `<div class="step-expression">${kx(`f_{obs} = ${ex.fObs}`)}</div>`;
+        html += `<div class="step-expression">` + K(`f_{obs} = ${ex.fObs}`) + `</div>`;
         if (ex.dansIntervalle) {
-            html += `<div class="step-expression">${kx(`${roundDec(ex.borneInf, 4)} \\leq ${ex.fObs} \\leq ${roundDec(ex.borneSup, 4)}`)} ${kx('\\checkmark')}</div>`;
-            html += `<div class="step-explanation">La frequence observee appartient a l'intervalle de fluctuation.</div>`;
+            html += `<div class="step-expression">` + K(`${roundDec(ex.borneInf, 4)} \\leq ${ex.fObs} \\leq ${roundDec(ex.borneSup, 4)}`) + ` ` + K('\\checkmark') + `</div>`;
+            html += `<div class="step-explanation">La frequence observee appartient a l'intervalle.</div>`;
         } else {
-            html += `<div class="step-expression">${kx(`${ex.fObs} \\notin \\left[ ${roundDec(ex.borneInf, 4)} \\;; \\; ${roundDec(ex.borneSup, 4)} \\right]`)}</div>`;
-            html += `<div class="step-explanation">La frequence observee n'appartient pas a l'intervalle de fluctuation.</div>`;
+            html += `<div class="step-expression">` + K(`${ex.fObs} \\notin \\left[ ${roundDec(ex.borneInf, 4)} \\;; \\; ${roundDec(ex.borneSup, 4)} \\right]`) + `</div>`;
+            html += `<div class="step-explanation">La frequence observee n'appartient pas a l'intervalle.</div>`;
         }
         html += '</div>';
 
         html += '<div class="result-highlight">';
         if (ex.dansIntervalle) {
-            html += `<div class="final">On accepte l'hypothese ${kx(`p = ${ex.p}`)} au seuil de 95%.<br>La frequence observee est compatible avec la proportion theorique.</div>`;
+            html += `<div class="final">On <strong>accepte</strong> l'hypothese ` + K(`p = ${ex.p}`) + ` au seuil de 95%.</div>`;
         } else {
-            html += `<div class="final">On rejette l'hypothese ${kx(`p = ${ex.p}`)} au seuil de 95%.<br>La frequence observee n'est pas compatible avec la proportion theorique.</div>`;
+            html += `<div class="final">On <strong>rejette</strong> l'hypothese ` + K(`p = ${ex.p}`) + ` au seuil de 95%.</div>`;
         }
         html += '</div>';
     } else {
         html += '<div class="result-highlight">';
-        html += `<div class="final">Intervalle de fluctuation au seuil de 95% :<br>${kx(`I = \\left[ ${roundDec(ex.borneInf, 4)} \\;; \\; ${roundDec(ex.borneSup, 4)} \\right]`)}</div>`;
+        html += `<div class="final">Intervalle de fluctuation au seuil de 95% :<br>` + K(`I = \\left[ ${roundDec(ex.borneInf, 4)} \\;; \\; ${roundDec(ex.borneSup, 4)} \\right]`) + `</div>`;
         html += '</div>';
     }
 
