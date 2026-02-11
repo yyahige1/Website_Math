@@ -669,16 +669,22 @@ function displayFluctuation(ex) {
 // ========================================
 
 function solveProbabilites() {
-    let html = '';
     const type = ProbaState.currentType;
+    let html = '';
 
-    switch (type) {
-        case 'simple': html = solveSimple(); break;
-        case 'conditionnelle': html = solveConditionnelle(); break;
-        case 'arbre': html = solveArbre(); break;
-        case 'binomiale': html = solveBinomiale(); break;
-        case 'variable': html = solveVariable(); break;
-        case 'fluctuation': html = solveFluctuation(); break;
+    try {
+        switch (type) {
+            case 'simple': html = solveSimple(); break;
+            case 'conditionnelle': html = solveConditionnelle(); break;
+            case 'arbre': html = solveArbre(); break;
+            case 'binomiale': html = solveBinomiale(); break;
+            case 'variable': html = solveVariable(); break;
+            case 'fluctuation': html = solveFluctuation(); break;
+            default: html = '<p>Type inconnu : ' + type + '</p>';
+        }
+    } catch (e) {
+        html = '<div class="step"><div class="step-number">Erreur</div>';
+        html += '<div class="step-explanation">' + e.message + '</div></div>';
     }
 
     $('stepsContainer').innerHTML = html;
