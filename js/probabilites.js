@@ -152,6 +152,45 @@ function roundDec(x, d) {
     return Math.round(x * f) / f;
 }
 
+// Genere un arbre de probabilites en HTML/CSS
+// branches: tableau de { label, proba, children: [{ label, proba }] }
+function buildTree(branches) {
+    let html = '<div style="display:flex; align-items:center; justify-content:center; margin:15px 0; font-size:0.95em;">';
+    html += '<div style="display:flex; flex-direction:column; gap:40px;">';
+
+    for (let i = 0; i < branches.length; i++) {
+        const b = branches[i];
+        const isTop = (i === 0);
+
+        html += '<div style="display:flex; align-items:center;">';
+
+        // Branche niveau 1 : ligne + proba + noeud
+        html += '<div style="position:relative; width:120px; height:2px; background:var(--gray-400);">';
+        html += `<span style="position:absolute; top:-20px; left:50%; transform:translateX(-50%); font-size:0.85em; color:var(--primary);">${K(b.proba)}</span>`;
+        html += '</div>';
+        html += `<div style="background:${b.color || 'var(--primary)'}; color:white; padding:6px 14px; border-radius:var(--radius-md); font-weight:600; white-space:nowrap;">${b.label}</div>`;
+
+        if (b.children && b.children.length > 0) {
+            html += '<div style="display:flex; flex-direction:column; gap:30px; margin-left:5px;">';
+            for (let j = 0; j < b.children.length; j++) {
+                const c = b.children[j];
+                html += '<div style="display:flex; align-items:center;">';
+                html += '<div style="position:relative; width:100px; height:2px; background:var(--gray-400);">';
+                html += `<span style="position:absolute; top:-20px; left:50%; transform:translateX(-50%); font-size:0.85em; color:var(--secondary);">${K(c.proba)}</span>`;
+                html += '</div>';
+                html += `<div style="background:${c.color || 'var(--secondary)'}; color:white; padding:5px 12px; border-radius:var(--radius-md); font-weight:600; white-space:nowrap;">${c.label}</div>`;
+                html += '</div>';
+            }
+            html += '</div>';
+        }
+
+        html += '</div>';
+    }
+
+    html += '</div></div>';
+    return html;
+}
+
 // Genere le HTML d'un tableau avec style inline
 function tableCell(content, options) {
     const style = 'border:1px solid var(--gray-300); padding:8px;'
@@ -857,13 +896,32 @@ function solveArbre() {
     let html = '';
 
     if (sub === 'deux_epreuves') {
+        // Etape 1 : Arbre pondere
         html += '<div class="step">';
-        html += '<div class="step-number">1. Identifier les probabilites</div>';
-        html += `<div class="step-expression">Probabilite de tirer Rouge : ` + K(fracTeX(ex.pR1_num, ex.pR1_den)) + `</div>`;
-        html += `<div class="step-expression">Probabilite de tirer Bleu : ` + K(fracTeX(ex.pB1_num, ex.pB1_den)) + `</div>`;
-        html += `<div class="step-explanation">Tirage avec remise : memes probabilites a chaque tirage.</div>`;
+        html += '<div class="step-number">1. Construire l\'arbre pondere</div>';
+        html += '<div class="step-explanation">Tirage avec remise : memes probabilites a chaque tirage.</div>';
+
+        const pR = fracTeX(ex.pR1_num, ex.pR1_den);
+        const pB = fracTeX(ex.pB1_num, ex.pB1_den);
+        html += buildTree([
+            {
+                label: 'R<sub>1</sub>', proba: pR, color: '#e53e3e',
+                children: [
+                    { label: 'R<sub>2</sub>', proba: pR, color: '#e53e3e' },
+                    { label: 'B<sub>2</sub>', proba: pB, color: '#3182ce' }
+                ]
+            },
+            {
+                label: 'B<sub>1</sub>', proba: pB, color: '#3182ce',
+                children: [
+                    { label: 'R<sub>2</sub>', proba: pR, color: '#e53e3e' },
+                    { label: 'B<sub>2</sub>', proba: pB, color: '#3182ce' }
+                ]
+            }
+        ]);
         html += '</div>';
 
+        // Etape 2 : Calcul
         html += '<div class="step">';
         html += '<div class="step-number">2. Appliquer la regle du produit</div>';
         html += `<div class="step-expression">` + K(`P(R_1 \\cap R_2) = P(R_1) \\times P(R_2)`) + `</div>`;
@@ -880,12 +938,31 @@ function solveArbre() {
 
     } else {
         // Probabilites totales
+        const pBbarSachantA = fracTeX(ex.pBsachantA_den - ex.pBsachantA_num, ex.pBsachantA_den);
+        const pBbarSachantAbar = fracTeX(ex.pBsachantAbar_den - ex.pBsachantAbar_num, ex.pBsachantAbar_den);
+
+        // Etape 1 : Arbre pondere
         html += '<div class="step">';
-        html += '<div class="step-number">1. Identifier les donnees</div>';
-        html += `<div class="step-expression">` + K(`P(A) = ${fracTeX(ex.pA_num, ex.pA_den)}`) + `, ` + K(`P(\\bar{A}) = ${fracTeX(ex.pAbar_num, ex.pAbar_den)}`) + `</div>`;
-        html += `<div class="step-expression">` + K(`P(B|A) = ${fracTeX(ex.pBsachantA_num, ex.pBsachantA_den)}`) + `, ` + K(`P(B|\\bar{A}) = ${fracTeX(ex.pBsachantAbar_num, ex.pBsachantAbar_den)}`) + `</div>`;
+        html += '<div class="step-number">1. Construire l\'arbre pondere</div>';
+        html += buildTree([
+            {
+                label: ex.ctx.A, proba: fracTeX(ex.pA_num, ex.pA_den), color: '#667eea',
+                children: [
+                    { label: ex.ctx.B, proba: fracTeX(ex.pBsachantA_num, ex.pBsachantA_den), color: '#e53e3e' },
+                    { label: 'non ' + ex.ctx.B, proba: pBbarSachantA, color: '#48bb78' }
+                ]
+            },
+            {
+                label: ex.ctx.Abar, proba: fracTeX(ex.pAbar_num, ex.pAbar_den), color: '#764ba2',
+                children: [
+                    { label: ex.ctx.B, proba: fracTeX(ex.pBsachantAbar_num, ex.pBsachantAbar_den), color: '#e53e3e' },
+                    { label: 'non ' + ex.ctx.B, proba: pBbarSachantAbar, color: '#48bb78' }
+                ]
+            }
+        ]);
         html += '</div>';
 
+        // Etape 2 : Formule
         html += '<div class="step">';
         html += '<div class="step-number">2. Appliquer la formule des probabilites totales</div>';
         html += `<div class="step-expression">` + K(`P(B) = P(B|A) \\times P(A) + P(B|\\bar{A}) \\times P(\\bar{A})`) + `</div>`;
@@ -899,6 +976,7 @@ function solveArbre() {
         html += `<div class="step-expression">` + K(`= ${fracTeX(t1_num, t1_den)} + ${fracTeX(t2_num, t2_den)}`) + `</div>`;
         html += '</div>';
 
+        // Etape 3 : Resultat
         html += '<div class="step">';
         html += '<div class="step-number">3. Calculer</div>';
         const fr = fracReduite(ex.pB_num, ex.pB_den);
