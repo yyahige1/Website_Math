@@ -116,7 +116,7 @@ function fracReduite(num, den) {
     const s = den < 0 ? -1 : 1;
     num *= s;
     den *= s;
-    const g = pgcd(Math.abs(num), Math.abs(den));
+    const g = gcd(Math.abs(num), Math.abs(den));
     return { num: num / g, den: den / g };
 }
 
