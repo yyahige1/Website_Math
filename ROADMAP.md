@@ -25,6 +25,7 @@
 - ✅ Suites Numériques (arithmétique, géométrique, sommes, variation)
 - ✅ Limites (polynôme, rationnelle, point, formes indéterminées, racines, asymptotes)
 - ✅ Primitives & Intégrales (polynomiale, usuelles, condition initiale, intégrale définie, aire, valeur moyenne)
+- ✅ Exponentielles & Logarithmes (équations exp/ln, dérivées, études de fonctions, croissance, log décimal)
 
 ### Infrastructure Technique
 - ✅ Module de graphiques Canvas réutilisable (`js/graphing.js`)
@@ -36,7 +37,7 @@
 
 ## 📁 Structure du Projet
 
-### Fichiers HTML (18)
+### Fichiers HTML (19)
 1. `index.html` - Équations 1er degré
 2. `developpement.html` - Développement d'expressions
 3. `reduction.html` - Réduction d'expressions
@@ -55,8 +56,9 @@
 16. `suites.html` - Suites Numériques
 17. `limites.html` - Limites de fonctions
 18. `primitives.html` - Primitives & Intégrales
+19. `exponentielles.html` - Exponentielles & Logarithmes
 
-### Modules JavaScript (24 fichiers)
+### Modules JavaScript (25 fichiers)
 - `js/utils.js` - Fonctions utilitaires (PGCD, formatage, etc.)
 - `js/ui.js` - Manipulation DOM (show, hide, $)
 - `js/main.js` - Initialisation globale
@@ -81,6 +83,7 @@
 - `js/suites.js` - Logique suites numériques
 - `js/limites.js` - Logique limites de fonctions
 - `js/primitives.js` - Logique primitives et intégrales
+- `js/exponentielles.js` - Logique exponentielles et logarithmes
 
 ### Feuilles de Style CSS
 - `css/theme.css` - Variables CSS (couleurs, espacements)
@@ -101,18 +104,10 @@
 ### ~~2. 🧮 Primitives & Intégrales~~ ✅ Complété
 > Module implémenté avec 6 types d'exercices : primitive polynomiale, primitives usuelles (exp, inverse, puissance, racine), condition initiale, intégrale définie, aire sous courbe (avec graphique Canvas), valeur moyenne. Corrections colorées KaTeX, visualisation graphique des aires.
 
-### 1. 📈 Exponentielles et Logarithmes (Priorité Haute)
-**Niveau**: Terminale
+### ~~3. 📈 Exponentielles & Logarithmes~~ ✅ Complété
+> Module implémenté avec 6 types d'exercices : équations exponentielles (3 sous-types), équations logarithmiques (3 sous-types), dérivées exp/ln (6 sous-types), étude de fonctions, croissance exponentielle (population, décroissance radioactive, temps de doublement), logarithme décimal (pH, décibels, magnitude). Corrections détaillées avec KaTeX.
 
-**Types d'exercices suggérés**:
-- Équations exponentielles (e^x = k, e^ax = e^bx)
-- Équations logarithmiques (ln(x) = k, ln(ax) = ln(bx))
-- Dérivées avec exp/ln
-- Étude de fonctions exp/ln
-- Croissance exponentielle (applications)
-- Logarithme décimal (pH, décibels)
-
-### 2. 🎲 Probabilités (Priorité Moyenne)
+### 1. 🎲 Probabilités (Priorité Haute)
 **Niveau**: Seconde / Première / Terminale
 
 **Types d'exercices suggérés**:
@@ -157,14 +152,13 @@
 
 ## 🎯 Prochaine Étape Immédiate
 
-**Recommandation forte**: **Exponentielles & Logarithmes** 📈
+**Recommandation forte**: **Probabilités** 🎲
 
-**Pourquoi Exp/Ln en priorité ?**
-- ✅ Complète les outils d'analyse Terminale
-- ✅ Déjà utilisé dans Primitives et Limites
-- ✅ Essentiel pour le Bac
-- ✅ Peut réutiliser GraphCanvas pour tracer les courbes
-- ✅ Liens directs avec Dérivées et Primitives
+**Pourquoi Probabilités en priorité ?**
+- ✅ Présent à tous les niveaux (Seconde, Première, Terminale)
+- ✅ Sujet majeur au Bac
+- ✅ Diversité de types d'exercices
+- ✅ Complète le programme de mathématiques
 
 ---
 
@@ -268,13 +262,13 @@
 ## 📊 Statistiques
 
 **Dernière mise à jour**: 11 Février 2026
-**Modules d'exercices**: 18 ✅
-**Fichiers HTML**: 18
-**Fichiers JavaScript**: 24
-  - 18 modules d'exercices
+**Modules d'exercices**: 19 ✅
+**Fichiers HTML**: 19
+**Fichiers JavaScript**: 25
+  - 19 modules d'exercices
   - 6 utilitaires (utils, ui, main, navigation, graphing, tableau-variations)
 **Fichiers CSS**: 9
-**Lignes de code**: ~13 500
+**Lignes de code**: ~15 000
 **Dépendances externes**: 1 (KaTeX CDN)
 
-**Prochaine étape prioritaire**: Exponentielles & Logarithmes 📈
+**Prochaine étape prioritaire**: Probabilités 🎲
