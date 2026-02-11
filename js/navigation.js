@@ -86,6 +86,7 @@ function generateNavigation(currentPage = '') {
                     </a>
                     <ul class="nav-dropdown">
                         <li><a href="limites.html" ${currentPage === 'limites' ? 'class="active"' : ''}>Limites</a></li>
+                        <li><a href="primitives.html" ${currentPage === 'primitives' ? 'class="active"' : ''}>Primitives & Intégrales</a></li>
                     </ul>
                 </li>
             </ul>

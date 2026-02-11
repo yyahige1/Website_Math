@@ -24,6 +24,7 @@
 - ✅ Dérivées (polynomiale, produit, quotient, composition, tangente, variations)
 - ✅ Suites Numériques (arithmétique, géométrique, sommes, variation)
 - ✅ Limites (polynôme, rationnelle, point, formes indéterminées, racines, asymptotes)
+- ✅ Primitives & Intégrales (polynomiale, usuelles, condition initiale, intégrale définie, aire, valeur moyenne)
 
 ### Infrastructure Technique
 - ✅ Module de graphiques Canvas réutilisable (`js/graphing.js`)
@@ -35,7 +36,7 @@
 
 ## 📁 Structure du Projet
 
-### Fichiers HTML (17)
+### Fichiers HTML (18)
 1. `index.html` - Équations 1er degré
 2. `developpement.html` - Développement d'expressions
 3. `reduction.html` - Réduction d'expressions
@@ -53,8 +54,9 @@
 15. `derivees.html` - Dérivées
 16. `suites.html` - Suites Numériques
 17. `limites.html` - Limites de fonctions
+18. `primitives.html` - Primitives & Intégrales
 
-### Modules JavaScript (23 fichiers)
+### Modules JavaScript (24 fichiers)
 - `js/utils.js` - Fonctions utilitaires (PGCD, formatage, etc.)
 - `js/ui.js` - Manipulation DOM (show, hide, $)
 - `js/main.js` - Initialisation globale
@@ -78,6 +80,7 @@
 - `js/derivees.js` - Logique dérivées
 - `js/suites.js` - Logique suites numériques
 - `js/limites.js` - Logique limites de fonctions
+- `js/primitives.js` - Logique primitives et intégrales
 
 ### Feuilles de Style CSS
 - `css/theme.css` - Variables CSS (couleurs, espacements)
@@ -95,19 +98,10 @@
 ### ~~1. 📉 Limites~~ ✅ Complété
 > Module implémenté avec 6 types d'exercices : polynôme en ±∞, rationnelle en ±∞, limite en un point, formes indéterminées (0/0, ∞-∞), racines carrées, asymptotes. Corrections avec couleurs KaTeX (bleu/rouge/vert).
 
-### 1. 🧮 Primitives & Intégrales (Priorité Haute)
-**Niveau**: Terminale
+### ~~2. 🧮 Primitives & Intégrales~~ ✅ Complété
+> Module implémenté avec 6 types d'exercices : primitive polynomiale, primitives usuelles (exp, inverse, puissance, racine), condition initiale, intégrale définie, aire sous courbe (avec graphique Canvas), valeur moyenne. Corrections colorées KaTeX, visualisation graphique des aires.
 
-**Types d'exercices suggérés**:
-- Primitives usuelles (polynômes, exp, ln, 1/x)
-- Primitives avec changement de variable
-- Intégrales définies (calcul d'aires)
-- Intégration par parties
-- Valeur moyenne d'une fonction
-
-**Justification**: Complète le triptyque Dérivées-Limites-Intégrales.
-
-### 2. 📈 Exponentielles et Logarithmes (Priorité Moyenne)
+### 1. 📈 Exponentielles et Logarithmes (Priorité Haute)
 **Niveau**: Terminale
 
 **Types d'exercices suggérés**:
@@ -118,7 +112,7 @@
 - Croissance exponentielle (applications)
 - Logarithme décimal (pH, décibels)
 
-### 3. 🎲 Probabilités (Priorité Moyenne)
+### 2. 🎲 Probabilités (Priorité Moyenne)
 **Niveau**: Seconde / Première / Terminale
 
 **Types d'exercices suggérés**:
@@ -129,7 +123,7 @@
 - Variables aléatoires
 - Espérance, variance, écart-type
 
-### 4. 📊 Statistiques (Priorité Moyenne)
+### 3. 📊 Statistiques (Priorité Moyenne)
 **Niveau**: Seconde / Première
 
 **Types d'exercices suggérés**:
@@ -139,7 +133,7 @@
 - Régression linéaire
 - Coefficient de corrélation
 
-### 5. 📐 Trigonométrie (Priorité Basse)
+### 4. 📐 Trigonométrie (Priorité Basse)
 **Niveau**: Seconde / Première
 
 **Types d'exercices suggérés**:
@@ -149,7 +143,7 @@
 - Formules d'addition
 - Résolution triangles
 
-### 6. ➡️ Vecteurs (Priorité Basse)
+### 5. ➡️ Vecteurs (Priorité Basse)
 **Niveau**: Seconde / Première
 
 **Types d'exercices suggérés**:
@@ -163,21 +157,14 @@
 
 ## 🎯 Prochaine Étape Immédiate
 
-**Recommandation forte**: **Primitives & Intégrales** 🧮
+**Recommandation forte**: **Exponentielles & Logarithmes** 📈
 
-**Pourquoi Primitives en priorité ?**
-- ✅ Complète le triptyque Dérivées-Limites-Intégrales
-- ✅ Essentiel pour le programme Terminale
-- ✅ Peut réutiliser GraphCanvas pour aires sous courbe
-- ✅ Liens directs avec le module Dérivées existant
-- ✅ Niveau Terminale cohérent avec modules récents
-
-**Plan d'implémentation Primitives & Intégrales**:
-1. 5-6 types d'exercices (primitives usuelles, intégrales définies, aires)
-2. Utilisation GraphCanvas pour visualisation des aires
-3. Explications pédagogiques des règles de primitivation
-4. Lien avec les dérivées (vérification par dérivation)
-5. Calcul d'aires entre courbes
+**Pourquoi Exp/Ln en priorité ?**
+- ✅ Complète les outils d'analyse Terminale
+- ✅ Déjà utilisé dans Primitives et Limites
+- ✅ Essentiel pour le Bac
+- ✅ Peut réutiliser GraphCanvas pour tracer les courbes
+- ✅ Liens directs avec Dérivées et Primitives
 
 ---
 
@@ -243,6 +230,13 @@
   - Résultats encadrés avec \boxed{}
   - Rappels de cours pédagogiques pour chaque type
 
+- ✅ **Module Primitives & Intégrales** (`primitives.html` + `primitives.js`)
+  - 6 types d'exercices : primitive polynomiale, primitives usuelles (exp, inverse, puissance, racine), condition initiale (F(x₀)=y₀), intégrale définie, aire sous courbe, valeur moyenne
+  - Visualisation graphique des aires avec Canvas (aire positive en bleu, aire négative en rouge)
+  - Gestion du changement de signe (découpage automatique des intégrales)
+  - Corrections colorées KaTeX et résultats encadrés
+  - Vérification par dérivation pour les primitives
+
 - ✅ **Corrections Navigation**
   - Fix injection navigation (AVANT .container, pas dedans)
   - Ajout catégories Fonctions et Suites dans navigation.js
@@ -273,14 +267,14 @@
 
 ## 📊 Statistiques
 
-**Dernière mise à jour**: 10 Février 2026
-**Modules d'exercices**: 17 ✅
-**Fichiers HTML**: 17
-**Fichiers JavaScript**: 23
-  - 17 modules d'exercices
+**Dernière mise à jour**: 11 Février 2026
+**Modules d'exercices**: 18 ✅
+**Fichiers HTML**: 18
+**Fichiers JavaScript**: 24
+  - 18 modules d'exercices
   - 6 utilitaires (utils, ui, main, navigation, graphing, tableau-variations)
 **Fichiers CSS**: 9
-**Lignes de code**: ~12 500
+**Lignes de code**: ~13 500
 **Dépendances externes**: 1 (KaTeX CDN)
 
-**Prochaine étape prioritaire**: Primitives & Intégrales 🧮
+**Prochaine étape prioritaire**: Exponentielles & Logarithmes 📈
