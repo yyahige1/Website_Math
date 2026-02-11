@@ -2,8 +2,8 @@
 
 > Documentation pour les sessions futures avec Claude ou autres assistants IA
 
-**Dernière mise à jour**: 5 Février 2026
-**Version projet**: v1.4 (Suites Numériques)
+**Dernière mise à jour**: 11 Février 2026
+**Version projet**: v1.6 (Primitives & Intégrales)
 
 ---
 
@@ -37,7 +37,7 @@
 
 ```
 Website_Math/
-├── *.html (18 fichiers)        # Pages des modules
+├── *.html (18 fichiers)         # Pages des modules
 ├── css/
 │   ├── theme.css               # Variables CSS (couleurs, espacements)
 │   ├── base.css                # Reset, typographie, formulaires
@@ -57,7 +57,7 @@ Website_Math/
 │   ├── graphing.js             # GraphCanvas (paraboles, droites)
 │   ├── tableau-variations.js   # Tableaux de variations dynamiques
 │   │
-│   └── [MODULE].js (16 fichiers) # Logique de chaque module
+│   └── [MODULE].js (18 fichiers) # Logique de chaque module
 │       ├── equations.js
 │       ├── developpement.js
 │       ├── reduction.js
@@ -73,7 +73,9 @@ Website_Math/
 │       ├── fonctions-affines.js
 │       ├── fonctions-second-degre.js
 │       ├── derivees.js
-│       └── suites.js
+│       ├── suites.js
+│       ├── limites.js
+│       └── primitives.js
 │
 ├── README.md
 ├── ROADMAP.md
@@ -558,7 +560,7 @@ const v_align = signes_derivee[i] === '+' ? 'var-v-align-bottom' : 'var-v-align-
 
 ---
 
-## 📊 Modules Actuels (16)
+## 📊 Modules Actuels (18)
 
 ### Algèbre (8 modules)
 1. **Équations** (`index.html`) - 1er degré
@@ -583,6 +585,10 @@ const v_align = signes_derivee[i] === '+' ? 'var-v-align-bottom' : 'var-v-align-
 
 ### Suites (1 module)
 16. **Suites Numériques** - 5 types (arithmétique, géométrique, somme arith, somme géo, variation)
+
+### Analyse (2 modules)
+17. **Limites** - 6 types (polynôme, rationnelle, point, formes indéterminées, racines, asymptotes)
+18. **Primitives & Intégrales** - 6 types (polynomiale, usuelles, condition initiale, intégrale définie, aire, valeur moyenne)
 
 ---
 
@@ -680,23 +686,23 @@ const tableau = createTableauVariations(containerId, {
 
 ## 🚀 Roadmap Actuelle
 
-### ✅ Complété (v1.4)
-- 16 modules fonctionnels
+### ✅ Complété (v1.6)
+- 18 modules fonctionnels
 - Navigation responsive
 - KaTeX intégré
 - GraphCanvas
 - Tableaux variations
 - Module Suites Numériques
+- Module Limites (6 types, corrections colorées KaTeX)
+- Module Primitives & Intégrales (6 types, visualisation aires Canvas)
 
 ### 🔜 Prochaines Étapes Prioritaires
 
-1. **Limites** (Terminale) - 4-5 types
-2. **Primitives** (Terminale) - 4-5 types
-3. **Exponentielles/Logarithmes** (Terminale) - 6-8 types
-4. **Probabilités** (Seconde/Première) - 5-6 types
-5. **Statistiques** (Seconde/Première) - 4-5 types
-6. **Trigonométrie** (Seconde/Première) - 5-6 types
-7. **Vecteurs** (Seconde/Première) - 4-5 types
+1. **Exponentielles/Logarithmes** (Terminale) - 6-8 types
+2. **Probabilités** (Seconde/Première) - 5-6 types
+3. **Statistiques** (Seconde/Première) - 4-5 types
+4. **Trigonométrie** (Seconde/Première) - 5-6 types
+5. **Vecteurs** (Seconde/Première) - 4-5 types
 
 ### 🔧 Améliorations Techniques Futures
 - Tests automatisés (Jest)
