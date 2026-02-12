@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MathsFacile - Trigonometrie</title>
+    <meta name="description" content="Exercices interactifs sur la trigonometrie. Programme Seconde, Premiere, Terminale. Valeurs remarquables, equations, formules d'addition, cercle trigonometrique.">
+    <meta name="keywords" content="trigonometrie, sinus, cosinus, tangente, cercle trigonometrique, radians, equations trigonometriques, lycee, mathematiques, exercices">
+
+    <!-- KaTeX pour le rendu mathematique -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"
+          integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV"
+          crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"
+            integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8"
+            crossorigin="anonymous"></script>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/exercices.css">
+    <link rel="stylesheet" href="css/navigation.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📐 Trigonometrie</h1>
+            <p class="subtitle">Niveau : Seconde / Premiere / Terminale</p>
+            <p class="intro">Entraine-toi sur la trigonometrie : valeurs remarquables, equations, formules d'addition et cercle trigonometrique.<br>Choisis un type d'exercice, puis clique sur <strong>Correction</strong>.</p>
+        </header>
+
+        <div class="card">
+            <div class="type-selector grid-3">
+                <button class="type-btn active" data-type="valeurs">
+                    <div class="example">sin(30&deg;) = ?</div>
+                    <div class="label">Valeurs remarquables</div>
+                </button>
+                <button class="type-btn" data-type="conversion">
+                    <div class="example">60&deg; &rarr; rad</div>
+                    <div class="label">Degres / Radians</div>
+                </button>
+                <button class="type-btn" data-type="equations">
+                    <div class="example">cos(x) = &frac12;</div>
+                    <div class="label">Equations trigo</div>
+                </button>
+                <button class="type-btn" data-type="addition">
+                    <div class="example">cos(a + b)</div>
+                    <div class="label">Formules d'addition</div>
+                </button>
+                <button class="type-btn" data-type="identites">
+                    <div class="example">cos&sup2; + sin&sup2; = 1</div>
+                    <div class="label">Identites trigo</div>
+                </button>
+                <button class="type-btn" data-type="triangle">
+                    <div class="example">a / sin(A)</div>
+                    <div class="label">Triangles</div>
+                </button>
+            </div>
+
+            <!-- Section Valeurs remarquables -->
+            <div id="valeursSection">
+                <h3>Valeurs remarquables</h3>
+                <div class="param-row">
+                    <label>Fonction :</label>
+                    <select id="subtype_valeurs">
+                        <option value="aleatoire">Aleatoire (sin, cos, tan)</option>
+                        <option value="sin">Sinus uniquement</option>
+                        <option value="cos">Cosinus uniquement</option>
+                        <option value="tan">Tangente uniquement</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Section Conversion degres/radians -->
+            <div id="conversionSection" style="display: none;">
+                <h3>Conversion degres / radians</h3>
+                <div class="param-row">
+                    <label>Sens de conversion :</label>
+                    <select id="subtype_conversion">
+                        <option value="deg2rad">Degres vers radians</option>
+                        <option value="rad2deg">Radians vers degres</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Section Equations trigonometriques -->
+            <div id="equationsSection" style="display: none;">
+                <h3>Equations trigonometriques</h3>
+                <div class="param-row">
+                    <label>Type d'equation :</label>
+                    <select id="subtype_equations">
+                        <option value="cos">cos(x) = a</option>
+                        <option value="sin">sin(x) = a</option>
+                        <option value="tan">tan(x) = a</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Section Formules d'addition -->
+            <div id="additionSection" style="display: none;">
+                <h3>Formules d'addition</h3>
+                <div class="param-row">
+                    <label>Type de calcul :</label>
+                    <select id="subtype_addition">
+                        <option value="calcul">Calculer cos(a+b), sin(a-b)...</option>
+                        <option value="developper">Developper une expression</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Section Identites trigonometriques -->
+            <div id="identitesSection" style="display: none;">
+                <h3>Identites trigonometriques</h3>
+                <div class="param-row">
+                    <label>Type d'exercice :</label>
+                    <select id="subtype_identites">
+                        <option value="simplifier">Simplifier une expression</option>
+                        <option value="trouver">Trouver cos(x) sachant sin(x)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Section Triangles -->
+            <div id="triangleSection" style="display: none;">
+                <h3>Triangles</h3>
+                <div class="param-row">
+                    <label>Type d'exercice :</label>
+                    <select id="subtype_triangle">
+                        <option value="rectangle">Triangle rectangle (SOH-CAH-TOA)</option>
+                        <option value="quelconque">Triangle quelconque (loi des sinus/cosinus)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="expression-display">
+                <div class="expression" id="expressionDisplay"></div>
+            </div>
+
+            <div class="action-buttons">
+                <button id="newExerciseBtn" class="btn btn-secondary">Nouvel exercice</button>
+                <button id="solveBtn" class="btn btn-primary">Correction</button>
+            </div>
+        </div>
+
+        <!-- Zone de solution -->
+        <div id="solutionDiv" class="card solution">
+            <h3>Correction detaillee</h3>
+            <div id="stepsContainer"></div>
+        </div>
+
+        <footer>
+            <p>MathsFacile - Trigonometrie</p>
+        </footer>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="js/utils.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/navigation.js"></script>
+    <script src="js/trigonometrie.js"></script>
+</body>
+</html>

@@ -102,6 +102,17 @@ function generateNavigation(currentPage = '') {
                         <li><a href="statistiques.html" ${currentPage === 'statistiques' ? 'class="active"' : ''}>Statistiques</a></li>
                     </ul>
                 </li>
+
+                <!-- Catégorie : Géométrie & Trigonométrie -->
+                <li class="nav-item has-dropdown">
+                    <a href="#" class="nav-link">
+                        Géométrie & Trigo
+                        <span class="arrow">▾</span>
+                    </a>
+                    <ul class="nav-dropdown">
+                        <li><a href="trigonometrie.html" ${currentPage === 'trigonometrie' ? 'class="active"' : ''}>Trigonométrie</a></li>
+                    </ul>
+                </li>
             </ul>
         </div>
     </nav>`;
