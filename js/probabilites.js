@@ -152,43 +152,127 @@ function roundDec(x, d) {
     return Math.round(x * f) / f;
 }
 
-// Genere un arbre de probabilites en HTML/CSS
-// branches: tableau de { label, proba, children: [{ label, proba }] }
+// Genere un arbre de probabilites classique avec SVG
+// branches: tableau de { label, proba, color, children: [{ label, proba, color }] }
 function buildTree(branches) {
-    let html = '<div style="display:flex; align-items:center; justify-content:center; margin:15px 0; font-size:0.95em;">';
-    html += '<div style="display:flex; flex-direction:column; gap:40px;">';
+    // Dimensions
+    const nB = branches.length;           // nombre de branches niveau 1
+    const maxChildren = Math.max(...branches.map(b => (b.children || []).length));
+    const totalLeaves = branches.reduce((s, b) => s + (b.children ? b.children.length : 1), 0);
 
-    for (let i = 0; i < branches.length; i++) {
-        const b = branches[i];
-        const isTop = (i === 0);
+    const leafGap = 52;       // espace vertical entre feuilles
+    const groupGap = 28;      // espace supplementaire entre groupes
+    const branchLen1 = 130;   // longueur branche niveau 1
+    const branchLen2 = 120;   // longueur branche niveau 2
+    const nodeR = 4;          // rayon du point noeud
+    const padX = 20;
+    const padY = 30;
 
-        html += '<div style="display:flex; align-items:center;">';
-
-        // Branche niveau 1 : ligne + proba + noeud
-        html += '<div style="position:relative; width:120px; height:2px; background:var(--gray-400);">';
-        html += `<span style="position:absolute; top:-20px; left:50%; transform:translateX(-50%); font-size:0.85em; color:var(--primary);">${K(b.proba)}</span>`;
-        html += '</div>';
-        html += `<div style="background:${b.color || 'var(--primary)'}; color:white; padding:6px 14px; border-radius:var(--radius-md); font-weight:600; white-space:nowrap;">${b.label}</div>`;
-
-        if (b.children && b.children.length > 0) {
-            html += '<div style="display:flex; flex-direction:column; gap:30px; margin-left:5px;">';
-            for (let j = 0; j < b.children.length; j++) {
-                const c = b.children[j];
-                html += '<div style="display:flex; align-items:center;">';
-                html += '<div style="position:relative; width:100px; height:2px; background:var(--gray-400);">';
-                html += `<span style="position:absolute; top:-20px; left:50%; transform:translateX(-50%); font-size:0.85em; color:var(--secondary);">${K(c.proba)}</span>`;
-                html += '</div>';
-                html += `<div style="background:${c.color || 'var(--secondary)'}; color:white; padding:5px 12px; border-radius:var(--radius-md); font-weight:600; white-space:nowrap;">${c.label}</div>`;
-                html += '</div>';
-            }
-            html += '</div>';
+    // Calculer les positions Y de chaque feuille
+    const leafYs = [];
+    let yy = padY;
+    for (let i = 0; i < nB; i++) {
+        const ch = branches[i].children || [];
+        const count = Math.max(ch.length, 1);
+        for (let j = 0; j < count; j++) {
+            leafYs.push(yy);
+            yy += leafGap;
         }
-
-        html += '</div>';
+        if (i < nB - 1) yy += groupGap;
     }
 
-    html += '</div></div>';
-    return html;
+    // Positions X
+    const x0 = padX;                        // racine
+    const x1 = x0 + branchLen1;             // noeuds niveau 1
+    const x2 = x1 + branchLen2;             // feuilles
+
+    // Position Y racine = milieu global
+    const totalH = yy - leafGap + padY;
+    const rootY = totalH / 2;
+
+    // Positions Y des noeuds niveau 1 = milieu de leurs enfants
+    const node1Ys = [];
+    let leafIdx = 0;
+    for (let i = 0; i < nB; i++) {
+        const ch = branches[i].children || [];
+        const count = Math.max(ch.length, 1);
+        const firstY = leafYs[leafIdx];
+        const lastY = leafYs[leafIdx + count - 1];
+        node1Ys.push((firstY + lastY) / 2);
+        leafIdx += count;
+    }
+
+    const svgW = x2 + 110;
+    const svgH = totalH;
+
+    let svg = `<div style="overflow-x:auto; margin:12px 0;">`;
+    svg += `<svg width="${svgW}" height="${svgH}" viewBox="0 0 ${svgW} ${svgH}" style="display:block; margin:auto; font-family:system-ui,sans-serif; font-size:13px;">`;
+
+    // Point racine
+    svg += `<circle cx="${x0}" cy="${rootY}" r="${nodeR + 1}" fill="#555"/>`;
+
+    // Branches niveau 1
+    leafIdx = 0;
+    for (let i = 0; i < nB; i++) {
+        const b = branches[i];
+        const ny = node1Ys[i];
+        const col = b.color || '#667eea';
+
+        // Ligne racine -> noeud 1
+        svg += `<line x1="${x0}" y1="${rootY}" x2="${x1}" y2="${ny}" stroke="${col}" stroke-width="2"/>`;
+
+        // Proba sur la branche (au milieu, decalee)
+        const mx = (x0 + x1) / 2;
+        const my = (rootY + ny) / 2;
+        const angle = Math.atan2(ny - rootY, x1 - x0);
+        const offX = -Math.sin(angle) * 16;
+        const offY = Math.cos(angle) * 16;
+        svg += `<foreignObject x="${mx + offX - 40}" y="${my + offY - 14}" width="80" height="30">`;
+        svg += `<div xmlns="http://www.w3.org/1999/xhtml" style="text-align:center;font-size:12px;color:${col};">${K(b.proba)}</div>`;
+        svg += `</foreignObject>`;
+
+        // Point noeud niveau 1
+        svg += `<circle cx="${x1}" cy="${ny}" r="${nodeR}" fill="${col}"/>`;
+
+        // Label noeud niveau 1
+        svg += `<foreignObject x="${x1 - 30}" y="${ny + 6}" width="60" height="24">`;
+        svg += `<div xmlns="http://www.w3.org/1999/xhtml" style="text-align:center;font-weight:700;font-size:13px;color:${col};">${b.label}</div>`;
+        svg += `</foreignObject>`;
+
+        // Branches niveau 2
+        const ch = b.children || [];
+        for (let j = 0; j < ch.length; j++) {
+            const c = ch[j];
+            const ly = leafYs[leafIdx];
+            const cc = c.color || '#764ba2';
+
+            // Ligne noeud1 -> feuille
+            svg += `<line x1="${x1}" y1="${ny}" x2="${x2}" y2="${ly}" stroke="${cc}" stroke-width="1.5"/>`;
+
+            // Proba sur la branche niveau 2
+            const mx2 = (x1 + x2) / 2;
+            const my2 = (ny + ly) / 2;
+            const angle2 = Math.atan2(ly - ny, x2 - x1);
+            const offX2 = -Math.sin(angle2) * 15;
+            const offY2 = Math.cos(angle2) * 15;
+            svg += `<foreignObject x="${mx2 + offX2 - 40}" y="${my2 + offY2 - 14}" width="80" height="30">`;
+            svg += `<div xmlns="http://www.w3.org/1999/xhtml" style="text-align:center;font-size:11px;color:${cc};">${K(c.proba)}</div>`;
+            svg += `</foreignObject>`;
+
+            // Point feuille
+            svg += `<circle cx="${x2}" cy="${ly}" r="${nodeR}" fill="${cc}"/>`;
+
+            // Label feuille
+            svg += `<foreignObject x="${x2 + 8}" y="${ly - 12}" width="100" height="24">`;
+            svg += `<div xmlns="http://www.w3.org/1999/xhtml" style="font-weight:600;font-size:13px;color:${cc};white-space:nowrap;">${c.label}</div>`;
+            svg += `</foreignObject>`;
+
+            leafIdx++;
+        }
+    }
+
+    svg += `</svg></div>`;
+    return svg;
 }
 
 // Genere le HTML d'un tableau avec style inline
