@@ -114,6 +114,17 @@ function generateNavigation(currentPage = '') {
                         <li><a href="vecteurs.html" ${currentPage === 'vecteurs' ? 'class="active"' : ''}>Vecteurs</a></li>
                     </ul>
                 </li>
+
+                <!-- Catégorie : Terminale Spécialité -->
+                <li class="nav-item has-dropdown">
+                    <a href="#" class="nav-link">
+                        Terminale Spé
+                        <span class="arrow">▾</span>
+                    </a>
+                    <ul class="nav-dropdown">
+                        <li><a href="arithmetique.html" ${currentPage === 'arithmetique' ? 'class="active"' : ''}>Arithmétique</a></li>
+                    </ul>
+                </li>
             </ul>
         </div>
     </nav>`;

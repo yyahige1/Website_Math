@@ -121,28 +121,16 @@
 ### ~~1. 📊 Statistiques~~ ✅ Complété
 > Module implémenté avec 5 types d'exercices : moyenne (simple, pondérée, classes), médiane & quartiles, variance & écart-type, diagramme en boîte (construire, lire), régression linéaire (équation droite, coefficient de corrélation). Visualisations SVG (box plot, nuage de points). Corrections détaillées avec KaTeX.
 
-### 1. 📐 Trigonométrie (Priorité Haute)
-**Niveau**: Seconde / Première / Terminale
+### ~~1. 📐 Trigonométrie~~ ✅ Complété
+> Module implémenté avec 6 types d'exercices : valeurs remarquables, conversion degrés/radians, équations trigonométriques, formules d'addition, identités trigonométriques, triangles (rectangle et quelconque).
 
-**Types d'exercices suggérés**:
-- Cercle trigonométrique (placement d'angles, lecture de cos/sin)
-- Valeurs remarquables (sin, cos, tan de 0, pi/6, pi/4, pi/3, pi/2)
-- Équations trigonométriques (cos x = a, sin x = a, tan x = a)
-- Formules d'addition et duplication (cos(a+b), sin(2a), etc.)
-- Résolution de triangles (loi des sinus, loi des cosinus)
-- Simplification d'expressions trigonométriques
+### ~~2. ➡️ Vecteurs~~ ✅ Complété
+> Module implémenté avec 5 types d'exercices : coordonnées de vecteurs, norme & distance, colinéarité, produit scalaire, opérations sur les vecteurs. Visualisation graphique avec Canvas.
 
-### 2. ➡️ Vecteurs (Priorité Haute)
-**Niveau**: Seconde / Première
+### ~~3. 🔢 Arithmétique~~ ✅ Complété
+> Module implémenté avec 5 types d'exercices : divisibilité (division euclidienne, critères, diviseurs), PGCD & algorithme d'Euclide (PGCD, PPCM, simplification), nombres premiers (test, décomposition, crible d'Ératosthène), congruences (calcul, opérations, puissance modulaire), théorème de Bézout (coefficients, équations diophantiennes). Corrections détaillées avec KaTeX.
 
-**Types d'exercices suggérés**:
-- Opérations sur vecteurs (somme, différence, multiplication par scalaire)
-- Coordonnées dans le plan (composantes, norme)
-- Colinéarité (déterminant, alignement de points)
-- Produit scalaire (formules, angle entre vecteurs)
-- Équations de droites (cartésienne, paramétrique, vecteur directeur/normal)
-
-### 3. 🔢 Arithmétique (Priorité Moyenne)
+### 4. 🔮 Nombres Complexes (Priorité Moyenne)
 **Niveau**: Terminale Spécialité Maths
 
 **Types d'exercices suggérés**:
@@ -193,19 +181,19 @@
 
 ## 🎯 Phases de Développement Futures
 
-### Phase 5 : Géométrie & Trigonométrie (prioritaire)
-| # | Module | Types | Priorité |
-|---|--------|-------|----------|
-| 22 | **Trigonométrie** | 6 types | Haute |
-| 23 | **Vecteurs** | 5 types | Haute |
-| 24 | **Géométrie analytique plane** | 4 types | Basse |
+### Phase 5 : Géométrie & Trigonométrie ✅ (Trigo + Vecteurs)
+| # | Module | Types | Priorité | Statut |
+|---|--------|-------|----------|--------|
+| 22 | **Trigonométrie** | 6 types | Haute | ✅ |
+| 23 | **Vecteurs** | 5 types | Haute | ✅ |
+| 24 | **Géométrie analytique plane** | 4 types | Basse | |
 
-### Phase 6 : Terminale Spécialité
-| # | Module | Types | Priorité |
-|---|--------|-------|----------|
-| 25 | **Arithmétique** | 5 types | Moyenne |
-| 26 | **Nombres Complexes** | 5 types | Moyenne |
-| 27 | **Géométrie dans l'espace** | 5 types | Moyenne |
+### Phase 6 : Terminale Spécialité (en cours)
+| # | Module | Types | Priorité | Statut |
+|---|--------|-------|----------|--------|
+| 25 | **Arithmétique** | 5 types | Moyenne | ✅ |
+| 26 | **Nombres Complexes** | 5 types | Moyenne | |
+| 27 | **Géométrie dans l'espace** | 5 types | Moyenne | |
 
 ### Phase 7 : Compléments
 | # | Module | Types | Priorité |
@@ -316,14 +304,14 @@
 ## 📊 Statistiques
 
 **Dernière mise à jour**: 12 Février 2026
-**Modules d'exercices**: 21 ✅
-**Fichiers HTML**: 21
-**Fichiers JavaScript**: 27
-  - 21 modules d'exercices
+**Modules d'exercices**: 24 ✅
+**Fichiers HTML**: 24
+**Fichiers JavaScript**: 30
+  - 24 modules d'exercices
   - 6 utilitaires (utils, ui, main, navigation, graphing, tableau-variations)
 **Fichiers CSS**: 9
-**Lignes de code**: ~16 000
+**Lignes de code**: ~19 000
 **Dépendances externes**: 1 (KaTeX CDN)
 
-**Prochaine étape prioritaire**: Phase 5 - Trigonométrie 📐 puis Vecteurs ➡️
+**Prochaine étape prioritaire**: Phase 6 - Nombres Complexes 🔮
 **Objectif final**: ~28 modules (programme complet Seconde → Terminale Spé Maths)

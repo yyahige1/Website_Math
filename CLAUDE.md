@@ -3,7 +3,7 @@
 > Documentation pour les sessions futures avec Claude ou autres assistants IA
 
 **Dernière mise à jour**: 12 Février 2026
-**Version projet**: v1.9 (Statistiques)
+**Version projet**: v2.0 (Arithmetique)
 
 ---
 
@@ -37,7 +37,7 @@
 
 ```
 Website_Math/
-├── *.html (21 fichiers)         # Pages des modules
+├── *.html (24 fichiers)         # Pages des modules
 ├── css/
 │   ├── theme.css               # Variables CSS (couleurs, espacements)
 │   ├── base.css                # Reset, typographie, formulaires
@@ -57,7 +57,7 @@ Website_Math/
 │   ├── graphing.js             # GraphCanvas (paraboles, droites)
 │   ├── tableau-variations.js   # Tableaux de variations dynamiques
 │   │
-│   └── [MODULE].js (21 fichiers) # Logique de chaque module
+│   └── [MODULE].js (24 fichiers) # Logique de chaque module
 │       ├── equations.js
 │       ├── developpement.js
 │       ├── reduction.js
@@ -78,7 +78,10 @@ Website_Math/
 │       ├── primitives.js
 │       ├── exponentielles.js
 │       ├── probabilites.js
-│       └── statistiques.js
+│       ├── statistiques.js
+│       ├── trigonometrie.js
+│       ├── vecteurs.js
+│       └── arithmetique.js
 │
 ├── README.md
 ├── ROADMAP.md
@@ -563,7 +566,7 @@ const v_align = signes_derivee[i] === '+' ? 'var-v-align-bottom' : 'var-v-align-
 
 ---
 
-## 📊 Modules Actuels (21)
+## 📊 Modules Actuels (24)
 
 ### Algèbre (8 modules)
 1. **Équations** (`index.html`) - 1er degré
@@ -597,6 +600,13 @@ const v_align = signes_derivee[i] === '+' ? 'var-v-align-bottom' : 'var-v-align-
 ### Probabilités & Statistiques (2 modules)
 20. **Probabilités** - 6 types (simples, conditionnelles, arbres, loi binomiale, variables aléatoires, fluctuation)
 21. **Statistiques** - 5 types (moyenne, médiane & quartiles, variance & écart-type, diagramme en boîte, régression linéaire)
+
+### Géométrie & Trigonométrie (2 modules)
+22. **Trigonométrie** - 6 types (valeurs remarquables, conversion deg/rad, équations trigo, formules d'addition, identités, triangles)
+23. **Vecteurs** - 5 types (coordonnées, norme & distance, colinéarité, produit scalaire, opérations)
+
+### Terminale Spécialité (1 module)
+24. **Arithmétique** - 5 types (divisibilité, PGCD & Euclide, nombres premiers, congruences, Bézout)
 
 ---
 
@@ -694,8 +704,8 @@ const tableau = createTableauVariations(containerId, {
 
 ## 🚀 Roadmap Actuelle
 
-### ✅ Complété (v1.9)
-- 21 modules fonctionnels
+### ✅ Complété (v2.0)
+- 24 modules fonctionnels
 - Navigation responsive
 - KaTeX intégré
 - GraphCanvas
@@ -706,21 +716,21 @@ const tableau = createTableauVariations(containerId, {
 - Module Exponentielles & Logarithmes (6 types, équations exp/ln, dérivées, études, applications)
 - Module Probabilités (6 types, simples, conditionnelles, arbres, binomiale, variables aléatoires, fluctuation)
 - Module Statistiques (5 types, moyenne, médiane & quartiles, variance & écart-type, diagramme en boîte, régression linéaire)
+- Module Trigonométrie (6 types, valeurs remarquables, conversion, équations, formules d'addition, identités, triangles)
+- Module Vecteurs (5 types, coordonnées, norme, colinéarité, produit scalaire, opérations)
+- Module Arithmétique (5 types, divisibilité, PGCD & Euclide, nombres premiers, congruences, Bézout)
 
 ### 🔜 Prochaines Étapes Prioritaires
 
-**Phase 5 - Géométrie & Trigonométrie**:
-1. **Trigonométrie** (Seconde/Première/Terminale) - 6 types
-2. **Vecteurs** (Seconde/Première) - 5 types
-3. **Géométrie analytique plane** (Seconde/Première) - 4 types
+**Phase 5 - Géométrie & Trigonométrie** (restant):
+1. **Géométrie analytique plane** (Seconde/Première) - 4 types
 
-**Phase 6 - Terminale Spécialité**:
-4. **Arithmétique** (Terminale Spé) - 5 types
-5. **Nombres Complexes** (Terminale Spé) - 5 types
-6. **Géométrie dans l'espace** (Terminale) - 5 types
+**Phase 6 - Terminale Spécialité** (restant):
+2. **Nombres Complexes** (Terminale Spé) - 5 types
+3. **Géométrie dans l'espace** (Terminale) - 5 types
 
 **Phase 7 - Compléments**:
-7. **Logique et Dénombrement** (Terminale) - 3 types
+4. **Logique et Dénombrement** (Terminale) - 3 types
 
 ### 🔧 Améliorations Techniques Futures
 - Tests automatisés (Jest)

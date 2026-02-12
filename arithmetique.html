@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MathsFacile - Arithmetique</title>
+    <meta name="description" content="Exercices interactifs sur l'arithmetique. Programme Terminale Specialite Maths. Divisibilite, PGCD, algorithme d'Euclide, nombres premiers, congruences, Bezout.">
+    <meta name="keywords" content="arithmetique, divisibilite, PGCD, Euclide, nombres premiers, congruences, Bezout, terminale, specialite, mathematiques, exercices">
+
+    <!-- KaTeX pour le rendu mathematique -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"
+          integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV"
+          crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"
+            integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8"
+            crossorigin="anonymous"></script>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/exercices.css">
+    <link rel="stylesheet" href="css/navigation.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔢 Arithmetique</h1>
+            <p class="subtitle">Niveau : Terminale Specialite Maths</p>
+            <p class="intro">Entraine-toi sur l'arithmetique : divisibilite, PGCD, nombres premiers, congruences et theoreme de Bezout.<br>Choisis un type d'exercice, puis clique sur <strong>Correction</strong>.</p>
+        </header>
+
+        <div class="card">
+            <div class="type-selector grid-3">
+                <button class="type-btn active" data-type="divisibilite">
+                    <div class="example">a | b ?</div>
+                    <div class="label">Divisibilite</div>
+                </button>
+                <button class="type-btn" data-type="pgcd">
+                    <div class="example">PGCD(a, b)</div>
+                    <div class="label">PGCD & Euclide</div>
+                </button>
+                <button class="type-btn" data-type="premiers">
+                    <div class="example">n = p &times; q</div>
+                    <div class="label">Nombres premiers</div>
+                </button>
+                <button class="type-btn" data-type="congruences">
+                    <div class="example">a &equiv; b [n]</div>
+                    <div class="label">Congruences</div>
+                </button>
+                <button class="type-btn" data-type="bezout">
+                    <div class="example">au + bv = 1</div>
+                    <div class="label">Bezout</div>
+                </button>
+            </div>
+
+            <!-- Section Divisibilite -->
+            <div id="divisibiliteSection">
+                <h3>Divisibilite</h3>
+                <div class="param-row">
+                    <label>Type d'exercice :</label>
+                    <select id="subtype_divisibilite">
+                        <option value="division_euclidienne">Division euclidienne</option>
+                        <option value="criteres">Criteres de divisibilite</option>
+                        <option value="multiples">Multiples et diviseurs</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Section PGCD & Euclide -->
+            <div id="pgcdSection" style="display: none;">
+                <h3>PGCD & Algorithme d'Euclide</h3>
+                <div class="param-row">
+                    <label>Type d'exercice :</label>
+                    <select id="subtype_pgcd">
+                        <option value="euclide">Algorithme d'Euclide</option>
+                        <option value="ppcm">Calcul du PPCM</option>
+                        <option value="simplification">Simplification de fraction</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Section Nombres premiers -->
+            <div id="premiersSection" style="display: none;">
+                <h3>Nombres premiers</h3>
+                <div class="param-row">
+                    <label>Type d'exercice :</label>
+                    <select id="subtype_premiers">
+                        <option value="test">Tester si un nombre est premier</option>
+                        <option value="decomposition">Decomposition en facteurs premiers</option>
+                        <option value="crible">Crible d'Eratosthene</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Section Congruences -->
+            <div id="congruencesSection" style="display: none;">
+                <h3>Congruences</h3>
+                <div class="param-row">
+                    <label>Type d'exercice :</label>
+                    <select id="subtype_congruences">
+                        <option value="calcul">Calcul de reste</option>
+                        <option value="operations">Operations sur les congruences</option>
+                        <option value="puissance">Puissance modulo n</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Section Bezout -->
+            <div id="bezoutSection" style="display: none;">
+                <h3>Theoreme de Bezout</h3>
+                <div class="param-row">
+                    <label>Type d'exercice :</label>
+                    <select id="subtype_bezout">
+                        <option value="coefficients">Trouver les coefficients de Bezout</option>
+                        <option value="equation_diophantienne">Equation diophantienne</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="expression-display">
+                <div class="expression" id="expressionDisplay"></div>
+            </div>
+
+            <div class="action-buttons">
+                <button id="newExerciseBtn" class="btn btn-secondary">Nouvel exercice</button>
+                <button id="solveBtn" class="btn btn-primary">Correction</button>
+            </div>
+        </div>
+
+        <!-- Zone de solution -->
+        <div id="solutionDiv" class="card solution">
+            <h3>Correction detaillee</h3>
+            <div id="stepsContainer"></div>
+        </div>
+
+        <footer>
+            <p>MathsFacile - Arithmetique</p>
+        </footer>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="js/utils.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/navigation.js"></script>
+    <script src="js/arithmetique.js"></script>
+</body>
+</html>
