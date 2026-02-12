@@ -615,6 +615,18 @@ function updateExerciseDisplay() {
     }
 
     $('expressionDisplay').innerHTML = html;
+
+    // Afficher/masquer les graphiques
+    const graphContainer = $('trigoGraphContainer');
+    if (type === 'triangle') {
+        graphContainer.style.display = 'block';
+        drawTriangleSVG(ex);
+    } else if (type === 'valeurs' || type === 'equations') {
+        graphContainer.style.display = 'block';
+        drawCercleTrigSVG(ex, type);
+    } else {
+        graphContainer.style.display = 'none';
+    }
 }
 
 function displayValeurs(ex) {
@@ -690,6 +702,298 @@ function displayTriangle(ex) {
                 + `<p style="text-align:center;">` + K(`a = ${ex.a} \\quad b = ${ex.b} \\quad c = ${ex.c}`) + `</p>`
                 + `<p>Calculer l'angle ` + K('\\hat{A}') + ` en utilisant la loi des cosinus.</p>`;
         }
+    }
+}
+
+// ========================================
+// Dessin SVG du cercle trigonometrique
+// ========================================
+
+function drawCercleTrigSVG(ex, type) {
+    const container = $('trigoSvgContainer');
+    const W = 320, H = 320;
+    const cx = W / 2, cy = H / 2;
+    const R = 120;
+
+    let svg = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="display:block; margin:auto; font-family:system-ui,sans-serif;">`;
+
+    // Fond
+    svg += `<rect width="${W}" height="${H}" fill="white" rx="8"/>`;
+
+    // Grille legere
+    svg += `<line x1="${cx}" y1="20" x2="${cx}" y2="${H - 20}" stroke="#e0e0e0" stroke-width="1"/>`;
+    svg += `<line x1="20" y1="${cy}" x2="${W - 20}" y2="${cy}" stroke="#e0e0e0" stroke-width="1"/>`;
+
+    // Axes
+    svg += `<line x1="20" y1="${cy}" x2="${W - 20}" y2="${cy}" stroke="#333" stroke-width="1.5"/>`;
+    svg += `<line x1="${cx}" y1="20" x2="${cx}" y2="${H - 20}" stroke="#333" stroke-width="1.5"/>`;
+
+    // Fleches des axes
+    svg += `<polygon points="${W - 20},${cy} ${W - 28},${cy - 4} ${W - 28},${cy + 4}" fill="#333"/>`;
+    svg += `<polygon points="${cx},20 ${cx - 4},28 ${cx + 4},28" fill="#333"/>`;
+    svg += `<text x="${W - 18}" y="${cy - 8}" fill="#333" font-size="12">x</text>`;
+    svg += `<text x="${cx + 8}" y="22" fill="#333" font-size="12">y</text>`;
+
+    // Cercle
+    svg += `<circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="#667eea" stroke-width="2"/>`;
+
+    // Graduations 1 et -1
+    svg += `<text x="${cx + R + 5}" y="${cy + 15}" fill="#666" font-size="11">1</text>`;
+    svg += `<text x="${cx - R - 14}" y="${cy + 15}" fill="#666" font-size="11">-1</text>`;
+    svg += `<text x="${cx + 5}" y="${cy - R - 5}" fill="#666" font-size="11">1</text>`;
+    svg += `<text x="${cx + 5}" y="${cy + R + 15}" fill="#666" font-size="11">-1</text>`;
+
+    // Determiner l'angle a afficher
+    let angleDeg;
+    if (type === 'valeurs') {
+        angleDeg = ex.angle.deg;
+    } else {
+        // Equations : montrer l'angle de reference
+        angleDeg = ex.refAngle.deg;
+    }
+
+    const angleRad = angleDeg * Math.PI / 180;
+
+    // Point M sur le cercle
+    const mx = cx + R * Math.cos(angleRad);
+    const my = cy - R * Math.sin(angleRad);
+
+    // Rayon OM
+    svg += `<line x1="${cx}" y1="${cy}" x2="${mx.toFixed(1)}" y2="${my.toFixed(1)}" stroke="#e53e3e" stroke-width="2"/>`;
+
+    // Point M
+    svg += `<circle cx="${mx.toFixed(1)}" cy="${my.toFixed(1)}" r="4" fill="#e53e3e"/>`;
+    svg += `<text x="${(mx + 8).toFixed(1)}" y="${(my - 8).toFixed(1)}" fill="#e53e3e" font-size="12" font-weight="bold">M</text>`;
+
+    // Projection cos (horizontal)
+    svg += `<line x1="${mx.toFixed(1)}" y1="${my.toFixed(1)}" x2="${mx.toFixed(1)}" y2="${cy}" stroke="#2196F3" stroke-width="1.5" stroke-dasharray="4,3"/>`;
+    svg += `<line x1="${cx}" y1="${cy}" x2="${mx.toFixed(1)}" y2="${cy}" stroke="#2196F3" stroke-width="2.5"/>`;
+
+    // Projection sin (vertical)
+    svg += `<line x1="${mx.toFixed(1)}" y1="${my.toFixed(1)}" x2="${cx}" y2="${my.toFixed(1)}" stroke="#48bb78" stroke-width="1.5" stroke-dasharray="4,3"/>`;
+    svg += `<line x1="${cx}" y1="${cy}" x2="${cx}" y2="${my.toFixed(1)}" stroke="#48bb78" stroke-width="2.5"/>`;
+
+    // Labels cos et sin
+    const cosVal = Math.cos(angleRad);
+    const sinVal = Math.sin(angleRad);
+    if (Math.abs(cosVal) > 0.1) {
+        svg += `<text x="${((cx + mx) / 2).toFixed(1)}" y="${cy + 15}" fill="#2196F3" font-size="11" font-weight="bold" text-anchor="middle">cos</text>`;
+    }
+    if (Math.abs(sinVal) > 0.1) {
+        svg += `<text x="${cx - 18}" y="${((cy + my) / 2).toFixed(1)}" fill="#48bb78" font-size="11" font-weight="bold" text-anchor="middle">sin</text>`;
+    }
+
+    // Arc d'angle
+    const arcR = 25;
+    const arcEndX = cx + arcR;
+    const arcEndY = cy;
+    const arcMX = cx + arcR * Math.cos(angleRad);
+    const arcMY = cy - arcR * Math.sin(angleRad);
+    const largeArc = angleDeg > 180 ? 1 : 0;
+    if (angleDeg > 0) {
+        svg += `<path d="M ${arcEndX} ${arcEndY} A ${arcR} ${arcR} 0 ${largeArc} 0 ${arcMX.toFixed(1)} ${arcMY.toFixed(1)}" fill="none" stroke="#ff9800" stroke-width="1.5"/>`;
+        const labelAngle = angleRad / 2;
+        const lx = cx + (arcR + 14) * Math.cos(labelAngle);
+        const ly = cy - (arcR + 14) * Math.sin(labelAngle);
+        svg += `<text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" fill="#ff9800" font-size="11" text-anchor="middle" dominant-baseline="middle">${angleDeg}&deg;</text>`;
+    }
+
+    // Pour les equations, montrer aussi les solutions
+    if (type === 'equations') {
+        const sol1Rad = ex.sol1Rad || 0;
+        const sol2Rad = ex.sol2Rad || 0;
+
+        // Solution 1
+        const s1x = cx + R * Math.cos(sol1Rad);
+        const s1y = cy - R * Math.sin(sol1Rad);
+        svg += `<circle cx="${s1x.toFixed(1)}" cy="${s1y.toFixed(1)}" r="5" fill="#48bb78" stroke="white" stroke-width="1.5"/>`;
+        svg += `<text x="${(s1x + 10).toFixed(1)}" y="${(s1y - 8).toFixed(1)}" fill="#48bb78" font-size="11" font-weight="bold">x&#8321;</text>`;
+
+        // Solution 2
+        if (Math.abs(sol1Rad - sol2Rad) > 0.01) {
+            const s2x = cx + R * Math.cos(sol2Rad);
+            const s2y = cy - R * Math.sin(sol2Rad);
+            svg += `<circle cx="${s2x.toFixed(1)}" cy="${s2y.toFixed(1)}" r="5" fill="#ff9800" stroke="white" stroke-width="1.5"/>`;
+            svg += `<text x="${(s2x + 10).toFixed(1)}" y="${(s2y - 8).toFixed(1)}" fill="#ff9800" font-size="11" font-weight="bold">x&#8322;</text>`;
+        }
+    }
+
+    svg += `</svg>`;
+    container.innerHTML = svg;
+}
+
+// ========================================
+// Dessin SVG des triangles
+// ========================================
+
+function drawTriangleSVG(ex) {
+    const container = $('trigoSvgContainer');
+    const sub = TrigoState.subtype_triangle;
+
+    const W = 400, H = 280;
+    const pad = 50;
+
+    if (sub === 'rectangle') {
+        // Triangle rectangle : angle droit en bas a droite
+        // C = angle droit (en bas a droite)
+        // B = en bas a gauche
+        // A = en haut a droite
+        const baseLen = 200;
+        const heightLen = 140;
+
+        const Bx = pad;
+        const By = H - pad;
+        const Cx = pad + baseLen;
+        const Cy = H - pad;
+        const Ax = pad + baseLen;
+        const Ay = H - pad - heightLen;
+
+        let svg = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="display:block; margin:auto; font-family:system-ui,sans-serif;">`;
+
+        // Triangle
+        svg += `<polygon points="${Bx},${By} ${Cx},${Cy} ${Ax},${Ay}" fill="rgba(102,126,234,0.08)" stroke="#667eea" stroke-width="2.5"/>`;
+
+        // Angle droit en C
+        const sq = 15;
+        svg += `<polyline points="${Cx - sq},${Cy} ${Cx - sq},${Cy - sq} ${Cx},${Cy - sq}" fill="none" stroke="#333" stroke-width="1.5"/>`;
+
+        // Arc pour l'angle en B
+        const arcR = 30;
+        const endAngleX = Bx + arcR;
+        const endAngleY = By;
+        const angleRad = ex.angle * Math.PI / 180;
+        const arcEndX = Bx + arcR * Math.cos(-angleRad);
+        const arcEndY = By + arcR * Math.sin(-angleRad);
+        svg += `<path d="M ${endAngleX} ${endAngleY} A ${arcR} ${arcR} 0 0 0 ${arcEndX.toFixed(1)} ${arcEndY.toFixed(1)}" fill="none" stroke="#e53e3e" stroke-width="1.5"/>`;
+        svg += `<text x="${Bx + 38}" y="${By - 8}" fill="#e53e3e" font-size="14" font-weight="bold">${ex.angle}&deg;</text>`;
+
+        // Labels des sommets
+        svg += `<text x="${Bx - 10}" y="${By + 18}" fill="#333" font-size="13" font-weight="bold">B</text>`;
+        svg += `<text x="${Cx + 8}" y="${Cy + 18}" fill="#333" font-size="13" font-weight="bold">C</text>`;
+        svg += `<text x="${Ax + 8}" y="${Ay - 5}" fill="#333" font-size="13" font-weight="bold">A</text>`;
+
+        // Labels des cotes
+        const sideNames = { hypotenuse: 'hyp', adjacent: 'adj', oppose: 'opp' };
+        const givenLabel = ex.givenSide === 'hypotenuse' ? `${ex.givenValue}` : `${ex.givenValue}`;
+        const findLabel = '?';
+
+        // Hypotenuse = BA (diagonale)
+        const hypMx = (Bx + Ax) / 2 - 20;
+        const hypMy = (By + Ay) / 2;
+        // Adjacent = BC (base)
+        const adjMx = (Bx + Cx) / 2;
+        const adjMy = By + 18;
+        // Oppose = CA (vertical)
+        const oppMx = Cx + 12;
+        const oppMy = (Cy + Ay) / 2;
+
+        function sideLabel(side) {
+            if (side === ex.givenSide) return `${sideNames[side]} = ${ex.givenValue}`;
+            if (side === ex.findSide) return `${sideNames[side]} = ?`;
+            return sideNames[side];
+        }
+
+        function sideColor(side) {
+            if (side === ex.givenSide) return '#2196F3';
+            if (side === ex.findSide) return '#e53e3e';
+            return '#666';
+        }
+
+        // Hypotenuse (diagonale B -> A)
+        svg += `<text x="${hypMx}" y="${hypMy}" fill="${sideColor('hypotenuse')}" font-size="13" font-weight="bold" transform="rotate(-35, ${hypMx}, ${hypMy})">${sideLabel('hypotenuse')}</text>`;
+        // Adjacent (base B -> C)
+        svg += `<text x="${adjMx}" y="${adjMy}" fill="${sideColor('adjacent')}" font-size="13" font-weight="bold" text-anchor="middle">${sideLabel('adjacent')}</text>`;
+        // Oppose (vertical C -> A)
+        svg += `<text x="${oppMx}" y="${oppMy}" fill="${sideColor('oppose')}" font-size="13" font-weight="bold">${sideLabel('oppose')}</text>`;
+
+        svg += `</svg>`;
+        container.innerHTML = svg;
+
+    } else {
+        // Triangle quelconque
+        // Placer les sommets a partir des angles et cotes
+        const A_angle = ex.A;
+        const B_angle = ex.B;
+        const C_angle = ex.C;
+
+        // Placer B en bas a gauche, C en bas a droite
+        // cote a (BC) = oppose a A
+        // On normalise pour que le plus grand cote fasse ~200px
+        const maxSide = Math.max(ex.a, ex.b, ex.c);
+        const scale = 200 / maxSide;
+
+        const Bx = pad + 20;
+        const By = H - pad;
+        const Cx = Bx + ex.a * scale;
+        const Cy = By;
+
+        // A par calcul trigonometrique depuis B
+        const angB_rad = B_angle * Math.PI / 180;
+        const sideC = ex.c * scale; // cote BA
+        const Ax = Bx + sideC * Math.cos(angB_rad);
+        const Ay = By - sideC * Math.sin(angB_rad);
+
+        let svg = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="display:block; margin:auto; font-family:system-ui,sans-serif;">`;
+
+        // Triangle
+        svg += `<polygon points="${Bx.toFixed(1)},${By.toFixed(1)} ${Cx.toFixed(1)},${Cy.toFixed(1)} ${Ax.toFixed(1)},${Ay.toFixed(1)}" fill="rgba(102,126,234,0.08)" stroke="#667eea" stroke-width="2.5"/>`;
+
+        // Arcs d'angles
+        function drawAngleArc(px, py, angle, startAngle, label, color) {
+            const r = 22;
+            const sa = startAngle;
+            const ea = startAngle + angle * Math.PI / 180;
+            const sx = px + r * Math.cos(-sa);
+            const sy = py + r * Math.sin(-sa);
+            const ex_x = px + r * Math.cos(-ea);
+            const ex_y = py + r * Math.sin(-ea);
+            const largeArc = angle > 180 ? 1 : 0;
+            svg += `<path d="M ${sx.toFixed(1)} ${sy.toFixed(1)} A ${r} ${r} 0 ${largeArc} 0 ${ex_x.toFixed(1)} ${ex_y.toFixed(1)}" fill="none" stroke="${color}" stroke-width="1.5"/>`;
+            const mid = sa + (angle * Math.PI / 180) / 2;
+            const lx = px + (r + 14) * Math.cos(-mid);
+            const ly = py + (r + 14) * Math.sin(-mid);
+            svg += `<text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" fill="${color}" font-size="12" text-anchor="middle" dominant-baseline="middle">${label}&deg;</text>`;
+        }
+
+        // Angle en B
+        const angleBstart = 0;
+        drawAngleArc(Bx, By, B_angle, angleBstart, B_angle, '#e53e3e');
+
+        // Angle en C
+        const angleCstart = Math.PI - Math.atan2(Cy - Ay, Cx - Ax);
+        // Simplifier : angle en C entre CB et CA
+        const cbAngle = Math.atan2(By - Cy, Bx - Cx);
+        const caAngle = Math.atan2(Ay - Cy, Ax - Cx);
+        const r_arc = 22;
+        const csX = Cx + r_arc * Math.cos(cbAngle);
+        const csY = Cy + r_arc * Math.sin(cbAngle);
+        const ceX = Cx + r_arc * Math.cos(caAngle);
+        const ceY = Cy + r_arc * Math.sin(caAngle);
+        svg += `<path d="M ${csX.toFixed(1)} ${csY.toFixed(1)} A ${r_arc} ${r_arc} 0 0 0 ${ceX.toFixed(1)} ${ceY.toFixed(1)}" fill="none" stroke="#ff9800" stroke-width="1.5"/>`;
+        const cmid = (cbAngle + caAngle) / 2;
+        const clx = Cx + (r_arc + 14) * Math.cos(cmid);
+        const cly = Cy + (r_arc + 14) * Math.sin(cmid);
+        svg += `<text x="${clx.toFixed(1)}" y="${cly.toFixed(1)}" fill="#ff9800" font-size="12" text-anchor="middle" dominant-baseline="middle">${C_angle}&deg;</text>`;
+
+        // Labels des sommets
+        svg += `<text x="${Bx - 15}" y="${By + 5}" fill="#333" font-size="14" font-weight="bold">B</text>`;
+        svg += `<text x="${Cx + 8}" y="${Cy + 5}" fill="#333" font-size="14" font-weight="bold">C</text>`;
+        svg += `<text x="${Ax.toFixed(1)}" y="${(Ay - 10).toFixed(1)}" fill="#333" font-size="14" font-weight="bold" text-anchor="middle">A</text>`;
+
+        // Labels des cotes
+        // a = BC (base)
+        svg += `<text x="${((Bx + Cx) / 2).toFixed(1)}" y="${By + 22}" fill="#2196F3" font-size="13" font-weight="bold" text-anchor="middle">a = ${ex.a}</text>`;
+        // b = AC
+        const bMx = (Ax + Cx) / 2 + 10;
+        const bMy = (Ay + Cy) / 2;
+        svg += `<text x="${bMx.toFixed(1)}" y="${bMy.toFixed(1)}" fill="#48bb78" font-size="13" font-weight="bold">b = ${ex.b}</text>`;
+        // c = AB
+        const cMx = (Ax + Bx) / 2 - 15;
+        const cMy = (Ay + By) / 2;
+        svg += `<text x="${cMx.toFixed(1)}" y="${cMy.toFixed(1)}" fill="#e53e3e" font-size="13" font-weight="bold">c = ${roundDec(ex.c, 1)}</text>`;
+
+        svg += `</svg>`;
+        container.innerHTML = svg;
     }
 }
 

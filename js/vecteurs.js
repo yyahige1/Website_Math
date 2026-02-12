@@ -70,6 +70,269 @@ function signTerm(n, first) {
 }
 
 // ========================================
+// Dessin des vecteurs sur le graphique
+// ========================================
+
+var vecGraph = null;
+
+/**
+ * Dessine une fleche de vecteur sur le GraphCanvas
+ */
+function drawArrowVec(graph, x1, y1, x2, y2, color, label) {
+    const ctx = graph.ctx;
+    const cx1 = graph.toCanvasX(x1);
+    const cy1 = graph.toCanvasY(y1);
+    const cx2 = graph.toCanvasX(x2);
+    const cy2 = graph.toCanvasY(y2);
+
+    // Ligne
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.moveTo(cx1, cy1);
+    ctx.lineTo(cx2, cy2);
+    ctx.stroke();
+
+    // Tete de fleche
+    const angle = Math.atan2(cy2 - cy1, cx2 - cx1);
+    const headLen = 12;
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.moveTo(cx2, cy2);
+    ctx.lineTo(cx2 - headLen * Math.cos(angle - 0.35), cy2 - headLen * Math.sin(angle - 0.35));
+    ctx.lineTo(cx2 - headLen * Math.cos(angle + 0.35), cy2 - headLen * Math.sin(angle + 0.35));
+    ctx.closePath();
+    ctx.fill();
+
+    // Label au milieu
+    if (label) {
+        const mx = (cx1 + cx2) / 2;
+        const my = (cy1 + cy2) / 2;
+        // Decaler le label perpendiculairement a la fleche
+        const perpX = -Math.sin(angle) * 14;
+        const perpY = Math.cos(angle) * 14;
+        ctx.fillStyle = color;
+        ctx.font = 'bold 13px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(label, mx + perpX, my + perpY);
+    }
+}
+
+/**
+ * Dessine le graphique des vecteurs selon le type d'exercice
+ */
+function drawVectorGraph() {
+    const ex = VecteursState.exercise;
+    const type = VecteursState.currentType;
+    const sub = VecteursState['subtype_' + type] || '';
+
+    // Collecter tous les points pour determiner les bornes
+    let points = [];
+
+    switch (type) {
+        case 'coordonnees':
+            points.push({ x: ex.ax, y: ex.ay }, { x: ex.bx, y: ex.by });
+            break;
+        case 'norme':
+            if (sub === 'distance') {
+                points.push({ x: ex.ax, y: ex.ay }, { x: ex.bx, y: ex.by });
+            } else {
+                points.push({ x: 0, y: 0 }, { x: ex.vx, y: ex.vy });
+            }
+            break;
+        case 'colinearite':
+            points.push({ x: 0, y: 0 }, { x: ex.ux, y: ex.uy }, { x: ex.vx, y: ex.vy });
+            break;
+        case 'scalaire':
+            points.push({ x: 0, y: 0 }, { x: ex.ux, y: ex.uy }, { x: ex.vx, y: ex.vy });
+            break;
+        case 'operations':
+            points.push({ x: 0, y: 0 }, { x: ex.ux, y: ex.uy }, { x: ex.vx, y: ex.vy }, { x: ex.rx, y: ex.ry });
+            break;
+    }
+
+    // Calculer les bornes avec marge
+    let xMin = -1, xMax = 1, yMin = -1, yMax = 1;
+    for (const p of points) {
+        if (p.x < xMin) xMin = p.x;
+        if (p.x > xMax) xMax = p.x;
+        if (p.y < yMin) yMin = p.y;
+        if (p.y > yMax) yMax = p.y;
+    }
+    const margin = 2;
+    xMin = Math.floor(xMin - margin);
+    xMax = Math.ceil(xMax + margin);
+    yMin = Math.floor(yMin - margin);
+    yMax = Math.ceil(yMax + margin);
+
+    // Rendre carre si possible
+    const rangeX = xMax - xMin;
+    const rangeY = yMax - yMin;
+    if (rangeX > rangeY) {
+        const diff = rangeX - rangeY;
+        yMin -= Math.floor(diff / 2);
+        yMax += Math.ceil(diff / 2);
+    } else if (rangeY > rangeX) {
+        const diff = rangeY - rangeX;
+        xMin -= Math.floor(diff / 2);
+        xMax += Math.ceil(diff / 2);
+    }
+
+    vecGraph = new GraphCanvas('vecCanvas', {
+        width: 420,
+        height: 420,
+        padding: 40,
+        xMin: xMin,
+        xMax: xMax,
+        yMin: yMin,
+        yMax: yMax
+    });
+
+    vecGraph.clear();
+    vecGraph.drawGrid();
+    vecGraph.drawAxes();
+    vecGraph.drawTicks();
+
+    // Dessiner selon le type
+    switch (type) {
+        case 'coordonnees':
+            drawGraphCoordonnees(ex);
+            break;
+        case 'norme':
+            drawGraphNorme(ex, sub);
+            break;
+        case 'colinearite':
+            drawGraphColinearite(ex);
+            break;
+        case 'scalaire':
+            drawGraphScalaire(ex, sub);
+            break;
+        case 'operations':
+            drawGraphOperations(ex);
+            break;
+    }
+}
+
+function drawGraphCoordonnees(ex) {
+    const sub = VecteursState.subtype_coordonnees;
+    const blue = '#2196F3';
+    const red = '#e53e3e';
+
+    // Points A et B
+    vecGraph.drawPoint(ex.ax, ex.ay, blue, 5, 'A(' + ex.ax + ';' + ex.ay + ')');
+    vecGraph.drawPoint(ex.bx, ex.by, red, 5, 'B(' + ex.bx + ';' + ex.by + ')');
+
+    if (sub === 'vecteur_ab' || sub === 'point') {
+        // Fleche AB
+        drawArrowVec(vecGraph, ex.ax, ex.ay, ex.bx, ex.by, '#667eea', 'AB');
+    }
+    if (sub === 'milieu') {
+        // Segment AB + milieu
+        const ctx = vecGraph.ctx;
+        ctx.strokeStyle = '#667eea';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([5, 5]);
+        ctx.beginPath();
+        ctx.moveTo(vecGraph.toCanvasX(ex.ax), vecGraph.toCanvasY(ex.ay));
+        ctx.lineTo(vecGraph.toCanvasX(ex.bx), vecGraph.toCanvasY(ex.by));
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        const mx = (ex.ax + ex.bx) / 2;
+        const my = (ex.ay + ex.by) / 2;
+        vecGraph.drawPoint(mx, my, '#48bb78', 5, 'M');
+    }
+}
+
+function drawGraphNorme(ex, sub) {
+    if (sub === 'distance') {
+        vecGraph.drawPoint(ex.ax, ex.ay, '#2196F3', 5, 'A');
+        vecGraph.drawPoint(ex.bx, ex.by, '#e53e3e', 5, 'B');
+        drawArrowVec(vecGraph, ex.ax, ex.ay, ex.bx, ex.by, '#667eea', 'AB');
+    } else {
+        // Vecteur depuis l'origine
+        vecGraph.drawPoint(0, 0, '#333', 4, 'O');
+        drawArrowVec(vecGraph, 0, 0, ex.vx, ex.vy, '#2196F3', 'u');
+
+        // Ligne en pointilles pour la norme
+        const ctx = vecGraph.ctx;
+        ctx.strokeStyle = 'rgba(233,62,62,0.5)';
+        ctx.lineWidth = 1;
+        ctx.setLineDash([4, 4]);
+        // Projections
+        ctx.beginPath();
+        ctx.moveTo(vecGraph.toCanvasX(ex.vx), vecGraph.toCanvasY(ex.vy));
+        ctx.lineTo(vecGraph.toCanvasX(ex.vx), vecGraph.toCanvasY(0));
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(vecGraph.toCanvasX(ex.vx), vecGraph.toCanvasY(ex.vy));
+        ctx.lineTo(vecGraph.toCanvasX(0), vecGraph.toCanvasY(ex.vy));
+        ctx.stroke();
+        ctx.setLineDash([]);
+    }
+}
+
+function drawGraphColinearite(ex) {
+    vecGraph.drawPoint(0, 0, '#333', 4, 'O');
+    drawArrowVec(vecGraph, 0, 0, ex.ux, ex.uy, '#2196F3', 'u');
+    drawArrowVec(vecGraph, 0, 0, ex.vx, ex.vy, '#e53e3e', 'v');
+}
+
+function drawGraphScalaire(ex, sub) {
+    vecGraph.drawPoint(0, 0, '#333', 4, 'O');
+    drawArrowVec(vecGraph, 0, 0, ex.ux, ex.uy, '#2196F3', 'u');
+    drawArrowVec(vecGraph, 0, 0, ex.vx, ex.vy, '#e53e3e', 'v');
+
+    // Dessiner l'arc d'angle si on cherche l'angle
+    if (sub === 'angle' || sub === 'orthogonalite') {
+        const ctx = vecGraph.ctx;
+        const ox = vecGraph.toCanvasX(0);
+        const oy = vecGraph.toCanvasY(0);
+        const angleU = Math.atan2(ex.uy, ex.ux);
+        const angleV = Math.atan2(ex.vy, ex.vx);
+
+        // Arc entre les deux vecteurs (en coordonnees canvas, y est inverse)
+        const canvasAngleU = Math.atan2(-ex.uy, ex.ux);
+        const canvasAngleV = Math.atan2(-ex.vy, ex.vx);
+
+        ctx.strokeStyle = 'rgba(102,126,234,0.6)';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.arc(ox, oy, 25, Math.min(canvasAngleU, canvasAngleV), Math.max(canvasAngleU, canvasAngleV));
+        ctx.stroke();
+    }
+}
+
+function drawGraphOperations(ex) {
+    const sub = VecteursState.subtype_operations;
+
+    vecGraph.drawPoint(0, 0, '#333', 4, 'O');
+    drawArrowVec(vecGraph, 0, 0, ex.ux, ex.uy, '#2196F3', 'u');
+    drawArrowVec(vecGraph, 0, 0, ex.vx, ex.vy, '#e53e3e', 'v');
+
+    // Vecteur resultat en vert
+    drawArrowVec(vecGraph, 0, 0, ex.rx, ex.ry, '#48bb78', sub === 'somme' ? 'u' + ex.op + 'v' : 'w');
+
+    // Parallelogramme en pointilles pour la somme
+    if (sub === 'somme' && ex.op === '+') {
+        const ctx = vecGraph.ctx;
+        ctx.strokeStyle = 'rgba(150,150,150,0.5)';
+        ctx.lineWidth = 1;
+        ctx.setLineDash([4, 4]);
+        ctx.beginPath();
+        ctx.moveTo(vecGraph.toCanvasX(ex.ux), vecGraph.toCanvasY(ex.uy));
+        ctx.lineTo(vecGraph.toCanvasX(ex.rx), vecGraph.toCanvasY(ex.ry));
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(vecGraph.toCanvasX(ex.vx), vecGraph.toCanvasY(ex.vy));
+        ctx.lineTo(vecGraph.toCanvasX(ex.rx), vecGraph.toCanvasY(ex.ry));
+        ctx.stroke();
+        ctx.setLineDash([]);
+    }
+}
+
+// ========================================
 // Initialisation
 // ========================================
 
@@ -342,6 +605,9 @@ function updateExerciseDisplay() {
     }
 
     $('expressionDisplay').innerHTML = html;
+
+    // Dessiner le graphique
+    drawVectorGraph();
 }
 
 function displayCoordonnees(ex) {
