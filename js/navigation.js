@@ -111,6 +111,7 @@ function generateNavigation(currentPage = '') {
                     </a>
                     <ul class="nav-dropdown">
                         <li><a href="trigonometrie.html" ${currentPage === 'trigonometrie' ? 'class="active"' : ''}>Trigonométrie</a></li>
+                        <li><a href="vecteurs.html" ${currentPage === 'vecteurs' ? 'class="active"' : ''}>Vecteurs</a></li>
                     </ul>
                 </li>
             </ul>

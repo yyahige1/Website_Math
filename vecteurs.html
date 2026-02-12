@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MathsFacile - Vecteurs</title>
+    <meta name="description" content="Exercices interactifs sur les vecteurs. Programme Seconde, Premiere. Coordonnees, norme, colinearite, produit scalaire, decomposition.">
+    <meta name="keywords" content="vecteurs, coordonnees, norme, colinearite, produit scalaire, decomposition, lycee, mathematiques, exercices">
+
+    <!-- KaTeX pour le rendu mathematique -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"
+          integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV"
+          crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"
+            integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8"
+            crossorigin="anonymous"></script>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/exercices.css">
+    <link rel="stylesheet" href="css/navigation.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>➡️ Vecteurs</h1>
+            <p class="subtitle">Niveau : Seconde / Premiere</p>
+            <p class="intro">Entraine-toi sur les vecteurs du plan : coordonnees, norme, colinearite, produit scalaire.<br>Choisis un type d'exercice, puis clique sur <strong>Correction</strong>.</p>
+        </header>
+
+        <div class="card">
+            <div class="type-selector grid-3">
+                <button class="type-btn active" data-type="coordonnees">
+                    <div class="example">AB&#8407;(x;y)</div>
+                    <div class="label">Coordonnees</div>
+                </button>
+                <button class="type-btn" data-type="norme">
+                    <div class="example">||u&#8407;|| = ?</div>
+                    <div class="label">Norme & Distance</div>
+                </button>
+                <button class="type-btn" data-type="colinearite">
+                    <div class="example">u&#8407; // v&#8407; ?</div>
+                    <div class="label">Colinearite</div>
+                </button>
+                <button class="type-btn" data-type="scalaire">
+                    <div class="example">u&#8407; &middot; v&#8407;</div>
+                    <div class="label">Produit scalaire</div>
+                </button>
+                <button class="type-btn" data-type="operations">
+                    <div class="example">2u&#8407; + 3v&#8407;</div>
+                    <div class="label">Operations</div>
+                </button>
+            </div>
+
+            <!-- Section Coordonnees -->
+            <div id="coordonneesSection">
+                <h3>Coordonnees d'un vecteur</h3>
+                <div class="param-row">
+                    <label>Type d'exercice :</label>
+                    <select id="subtype_coordonnees">
+                        <option value="vecteur_ab">Coordonnees de AB a partir de A et B</option>
+                        <option value="milieu">Coordonnees du milieu de [AB]</option>
+                        <option value="point">Trouver B sachant A et AB</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Section Norme & Distance -->
+            <div id="normeSection" style="display: none;">
+                <h3>Norme & Distance</h3>
+                <div class="param-row">
+                    <label>Type d'exercice :</label>
+                    <select id="subtype_norme">
+                        <option value="norme_vecteur">Norme d'un vecteur</option>
+                        <option value="distance">Distance entre deux points</option>
+                        <option value="unitaire">Vecteur unitaire</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Section Colinearite -->
+            <div id="colineariteSection" style="display: none;">
+                <h3>Colinearite</h3>
+                <div class="param-row">
+                    <label>Type d'exercice :</label>
+                    <select id="subtype_colinearite">
+                        <option value="tester">Tester si deux vecteurs sont colineaires</option>
+                        <option value="trouver_k">Trouver k pour que les vecteurs soient colineaires</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Section Produit scalaire -->
+            <div id="scalaireSection" style="display: none;">
+                <h3>Produit scalaire</h3>
+                <div class="param-row">
+                    <label>Type d'exercice :</label>
+                    <select id="subtype_scalaire">
+                        <option value="coordonnees">Avec les coordonnees</option>
+                        <option value="angle">Trouver l'angle entre deux vecteurs</option>
+                        <option value="orthogonalite">Tester l'orthogonalite</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Section Operations -->
+            <div id="operationsSection" style="display: none;">
+                <h3>Operations sur les vecteurs</h3>
+                <div class="param-row">
+                    <label>Type d'exercice :</label>
+                    <select id="subtype_operations">
+                        <option value="somme">Somme de vecteurs</option>
+                        <option value="combinaison">Combinaison lineaire</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="expression-display">
+                <div class="expression" id="expressionDisplay"></div>
+            </div>
+
+            <div class="action-buttons">
+                <button id="newExerciseBtn" class="btn btn-secondary">Nouvel exercice</button>
+                <button id="solveBtn" class="btn btn-primary">Correction</button>
+            </div>
+        </div>
+
+        <!-- Zone de solution -->
+        <div id="solutionDiv" class="card solution">
+            <h3>Correction detaillee</h3>
+            <div id="stepsContainer"></div>
+        </div>
+
+        <footer>
+            <p>MathsFacile - Vecteurs</p>
+        </footer>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="js/utils.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/navigation.js"></script>
+    <script src="js/vecteurs.js"></script>
+</body>
+</html>
