@@ -709,8 +709,18 @@ const tableau = createTableauVariations(containerId, {
 
 ### 🔜 Prochaines Étapes Prioritaires
 
-1. **Trigonométrie** (Seconde/Première) - 5-6 types
-2. **Vecteurs** (Seconde/Première) - 4-5 types
+**Phase 5 - Géométrie & Trigonométrie**:
+1. **Trigonométrie** (Seconde/Première/Terminale) - 6 types
+2. **Vecteurs** (Seconde/Première) - 5 types
+3. **Géométrie analytique plane** (Seconde/Première) - 4 types
+
+**Phase 6 - Terminale Spécialité**:
+4. **Arithmétique** (Terminale Spé) - 5 types
+5. **Nombres Complexes** (Terminale Spé) - 5 types
+6. **Géométrie dans l'espace** (Terminale) - 5 types
+
+**Phase 7 - Compléments**:
+7. **Logique et Dénombrement** (Terminale) - 3 types
 
 ### 🔧 Améliorations Techniques Futures
 - Tests automatisés (Jest)

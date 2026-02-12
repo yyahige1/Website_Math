@@ -157,8 +157,9 @@ npm run test:coverage
 - [x] Probabilités & Statistiques : Probabilités, Statistiques
 
 ### 📋 Prochaines étapes
-- Trigonométrie (cercle, valeurs remarquables, équations)
-- Vecteurs (opérations, coordonnées, colinéarité, produit scalaire)
+- **Phase 5** : Trigonométrie, Vecteurs, Géométrie analytique plane
+- **Phase 6** : Arithmétique, Nombres Complexes, Géométrie dans l'espace (Terminale Spé)
+- **Phase 7** : Logique et Dénombrement
 
 📖 Voir [ROADMAP.md](ROADMAP.md) pour le détail complet.
 

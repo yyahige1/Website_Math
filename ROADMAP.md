@@ -122,36 +122,97 @@
 > Module implémenté avec 5 types d'exercices : moyenne (simple, pondérée, classes), médiane & quartiles, variance & écart-type, diagramme en boîte (construire, lire), régression linéaire (équation droite, coefficient de corrélation). Visualisations SVG (box plot, nuage de points). Corrections détaillées avec KaTeX.
 
 ### 1. 📐 Trigonométrie (Priorité Haute)
+**Niveau**: Seconde / Première / Terminale
+
+**Types d'exercices suggérés**:
+- Cercle trigonométrique (placement d'angles, lecture de cos/sin)
+- Valeurs remarquables (sin, cos, tan de 0, pi/6, pi/4, pi/3, pi/2)
+- Équations trigonométriques (cos x = a, sin x = a, tan x = a)
+- Formules d'addition et duplication (cos(a+b), sin(2a), etc.)
+- Résolution de triangles (loi des sinus, loi des cosinus)
+- Simplification d'expressions trigonométriques
+
+### 2. ➡️ Vecteurs (Priorité Haute)
 **Niveau**: Seconde / Première
 
 **Types d'exercices suggérés**:
-- Cercle trigonométrique
-- Valeurs remarquables (sin, cos, tan)
-- Équations trigonométriques
-- Formules d'addition
-- Résolution triangles
+- Opérations sur vecteurs (somme, différence, multiplication par scalaire)
+- Coordonnées dans le plan (composantes, norme)
+- Colinéarité (déterminant, alignement de points)
+- Produit scalaire (formules, angle entre vecteurs)
+- Équations de droites (cartésienne, paramétrique, vecteur directeur/normal)
 
-### 2. ➡️ Vecteurs (Priorité Basse)
+### 3. 🔢 Arithmétique (Priorité Moyenne)
+**Niveau**: Terminale Spécialité Maths
+
+**Types d'exercices suggérés**:
+- Divisibilité (critères, preuves)
+- PGCD et algorithme d'Euclide
+- Nombres premiers (crible, décomposition)
+- Congruences (calculs modulo n)
+- Théorème de Bézout et applications
+
+### 4. 🔮 Nombres Complexes (Priorité Moyenne)
+**Niveau**: Terminale Spécialité Maths
+
+**Types d'exercices suggérés**:
+- Forme algébrique (opérations, conjugué, module)
+- Forme trigonométrique (module, argument)
+- Forme exponentielle (notation e^{i*theta})
+- Équations dans C (second degré, racines n-ièmes)
+- Interprétation géométrique (transformations du plan)
+
+### 5. 📦 Géométrie dans l'espace (Priorité Moyenne)
+**Niveau**: Terminale
+
+**Types d'exercices suggérés**:
+- Coordonnées dans l'espace (points, vecteurs, distances)
+- Droites et plans (équations paramétriques, cartésiennes)
+- Positions relatives (intersection, parallélisme, orthogonalité)
+- Produit scalaire dans l'espace
+- Sections de solides (plans coupant cubes, tétraèdres)
+
+### 6. 📏 Géométrie analytique plane (Priorité Basse)
 **Niveau**: Seconde / Première
 
 **Types d'exercices suggérés**:
-- Opérations sur vecteurs
-- Coordonnées dans le plan
-- Colinéarité
-- Produit scalaire
-- Équations de droites
+- Équations de cercles (centre, rayon, position relative)
+- Distance point-droite
+- Milieu, barycentre
+- Transformations du plan (symétries, rotations, homothéties)
+
+### 7. 🧩 Logique et Dénombrement (Priorité Basse)
+**Niveau**: Terminale
+
+**Types d'exercices suggérés**:
+- Dénombrement (arrangements, combinaisons, permutations)
+- Raisonnement par récurrence
+- Formule du binôme de Newton
 
 ---
 
-## 🎯 Prochaine Étape Immédiate
+## 🎯 Phases de Développement Futures
 
-**Recommandation forte**: **Trigonométrie** 📐
+### Phase 5 : Géométrie & Trigonométrie (prioritaire)
+| # | Module | Types | Priorité |
+|---|--------|-------|----------|
+| 22 | **Trigonométrie** | 6 types | Haute |
+| 23 | **Vecteurs** | 5 types | Haute |
+| 24 | **Géométrie analytique plane** | 4 types | Basse |
 
-**Pourquoi Trigonométrie en priorité ?**
-- ✅ Présent en Seconde, Première et Terminale
-- ✅ Sujet majeur au Bac
-- ✅ Diversité de types d'exercices (cercle, valeurs remarquables, équations, formules)
-- ✅ Complète le programme de mathématiques
+### Phase 6 : Terminale Spécialité
+| # | Module | Types | Priorité |
+|---|--------|-------|----------|
+| 25 | **Arithmétique** | 5 types | Moyenne |
+| 26 | **Nombres Complexes** | 5 types | Moyenne |
+| 27 | **Géométrie dans l'espace** | 5 types | Moyenne |
+
+### Phase 7 : Compléments
+| # | Module | Types | Priorité |
+|---|--------|-------|----------|
+| 28 | **Logique et Dénombrement** | 3 types | Basse |
+
+**Objectif**: ~28 modules couvrant l'intégralité du programme Seconde → Terminale Spé Maths
 
 ---
 
@@ -264,4 +325,5 @@
 **Lignes de code**: ~16 000
 **Dépendances externes**: 1 (KaTeX CDN)
 
-**Prochaine étape prioritaire**: Trigonométrie 📐
+**Prochaine étape prioritaire**: Phase 5 - Trigonométrie 📐 puis Vecteurs ➡️
+**Objectif final**: ~28 modules (programme complet Seconde → Terminale Spé Maths)
