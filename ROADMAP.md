@@ -31,6 +31,10 @@
 - ✅ Probabilités (simples, conditionnelles, arbres, loi binomiale, variables aléatoires, fluctuation)
 - ✅ Statistiques (moyenne, médiane & quartiles, variance & écart-type, diagramme en boîte, régression linéaire)
 
+### Géométrie & Trigonométrie
+- ✅ Trigonométrie (valeurs remarquables, conversion degrés/radians, équations trigo, formules d'addition, identités, triangles)
+- ✅ Vecteurs (coordonnées, norme & distance, colinéarité, produit scalaire, opérations)
+
 ### Infrastructure Technique
 - ✅ Module de graphiques Canvas réutilisable (`js/graphing.js`)
 - ✅ Architecture responsive (mobile, tablette, desktop)
@@ -41,7 +45,7 @@
 
 ## 📁 Structure du Projet
 
-### Fichiers HTML (21)
+### Fichiers HTML (23)
 1. `index.html` - Équations 1er degré
 2. `developpement.html` - Développement d'expressions
 3. `reduction.html` - Réduction d'expressions
@@ -63,8 +67,10 @@
 19. `exponentielles.html` - Exponentielles & Logarithmes
 20. `probabilites.html` - Probabilités
 21. `statistiques.html` - Statistiques
+22. `trigonometrie.html` - Trigonométrie
+23. `vecteurs.html` - Vecteurs
 
-### Modules JavaScript (27 fichiers)
+### Modules JavaScript (29 fichiers)
 - `js/utils.js` - Fonctions utilitaires (PGCD, formatage, etc.)
 - `js/ui.js` - Manipulation DOM (show, hide, $)
 - `js/main.js` - Initialisation globale
@@ -92,6 +98,8 @@
 - `js/exponentielles.js` - Logique exponentielles et logarithmes
 - `js/probabilites.js` - Logique probabilités
 - `js/statistiques.js` - Logique statistiques
+- `js/trigonometrie.js` - Logique trigonométrie (cercle trigo SVG, triangles SVG)
+- `js/vecteurs.js` - Logique vecteurs (graphiques Canvas avec flèches)
 
 ### Feuilles de Style CSS
 - `css/theme.css` - Variables CSS (couleurs, espacements)
@@ -121,26 +129,11 @@
 ### ~~1. 📊 Statistiques~~ ✅ Complété
 > Module implémenté avec 5 types d'exercices : moyenne (simple, pondérée, classes), médiane & quartiles, variance & écart-type, diagramme en boîte (construire, lire), régression linéaire (équation droite, coefficient de corrélation). Visualisations SVG (box plot, nuage de points). Corrections détaillées avec KaTeX.
 
-### 1. 📐 Trigonométrie (Priorité Haute)
-**Niveau**: Seconde / Première / Terminale
+### ~~1. 📐 Trigonométrie~~ ✅ Complété
+> Module implémenté avec 6 types d'exercices : valeurs remarquables (sin/cos/tan), conversion degrés/radians, équations trigonométriques (cos x=a, sin x=a, tan x=a dans [0,2π[), formules d'addition et duplication, identités trigonométriques (simplification, trouver cos/sin), triangles (rectangle SOH-CAH-TOA, quelconque loi des cosinus). Graphiques SVG : cercle trigonométrique avec projections cos/sin, triangles avec angles et côtés étiquetés.
 
-**Types d'exercices suggérés**:
-- Cercle trigonométrique (placement d'angles, lecture de cos/sin)
-- Valeurs remarquables (sin, cos, tan de 0, pi/6, pi/4, pi/3, pi/2)
-- Équations trigonométriques (cos x = a, sin x = a, tan x = a)
-- Formules d'addition et duplication (cos(a+b), sin(2a), etc.)
-- Résolution de triangles (loi des sinus, loi des cosinus)
-- Simplification d'expressions trigonométriques
-
-### 2. ➡️ Vecteurs (Priorité Haute)
-**Niveau**: Seconde / Première
-
-**Types d'exercices suggérés**:
-- Opérations sur vecteurs (somme, différence, multiplication par scalaire)
-- Coordonnées dans le plan (composantes, norme)
-- Colinéarité (déterminant, alignement de points)
-- Produit scalaire (formules, angle entre vecteurs)
-- Équations de droites (cartésienne, paramétrique, vecteur directeur/normal)
+### ~~2. ➡️ Vecteurs~~ ✅ Complété
+> Module implémenté avec 5 types d'exercices : coordonnées (vecteur AB, milieu, trouver un point), norme & distance (norme, distance, vecteur unitaire), colinéarité (tester, trouver k), produit scalaire (coordonnées, angle, orthogonalité), opérations (somme, combinaison linéaire). Graphiques Canvas avec flèches vectorielles colorées, projections, parallélogramme, arc d'angle.
 
 ### 3. 🔢 Arithmétique (Priorité Moyenne)
 **Niveau**: Terminale Spécialité Maths
@@ -193,12 +186,12 @@
 
 ## 🎯 Phases de Développement Futures
 
-### Phase 5 : Géométrie & Trigonométrie (prioritaire)
-| # | Module | Types | Priorité |
-|---|--------|-------|----------|
-| 22 | **Trigonométrie** | 6 types | Haute |
-| 23 | **Vecteurs** | 5 types | Haute |
-| 24 | **Géométrie analytique plane** | 4 types | Basse |
+### Phase 5 : Géométrie & Trigonométrie ✅ (partiellement)
+| # | Module | Types | Statut |
+|---|--------|-------|--------|
+| 22 | **Trigonométrie** | 6 types | ✅ Complété |
+| 23 | **Vecteurs** | 5 types | ✅ Complété |
+| 24 | **Géométrie analytique plane** | 4 types | En attente |
 
 ### Phase 6 : Terminale Spécialité
 | # | Module | Types | Priorité |
@@ -316,14 +309,14 @@
 ## 📊 Statistiques
 
 **Dernière mise à jour**: 12 Février 2026
-**Modules d'exercices**: 21 ✅
-**Fichiers HTML**: 21
-**Fichiers JavaScript**: 27
-  - 21 modules d'exercices
+**Modules d'exercices**: 23 ✅
+**Fichiers HTML**: 23
+**Fichiers JavaScript**: 29
+  - 23 modules d'exercices
   - 6 utilitaires (utils, ui, main, navigation, graphing, tableau-variations)
 **Fichiers CSS**: 9
-**Lignes de code**: ~16 000
+**Lignes de code**: ~18 500
 **Dépendances externes**: 1 (KaTeX CDN)
 
-**Prochaine étape prioritaire**: Phase 5 - Trigonométrie 📐 puis Vecteurs ➡️
+**Prochaine étape prioritaire**: Phase 6 - Arithmétique 🔢 puis Nombres Complexes 🔮
 **Objectif final**: ~28 modules (programme complet Seconde → Terminale Spé Maths)
