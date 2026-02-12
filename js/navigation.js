@@ -91,14 +91,15 @@ function generateNavigation(currentPage = '') {
                     </ul>
                 </li>
 
-                <!-- Catégorie : Probabilités -->
+                <!-- Catégorie : Probabilités & Statistiques -->
                 <li class="nav-item has-dropdown">
                     <a href="#" class="nav-link">
-                        Probabilités
+                        Proba & Stats
                         <span class="arrow">▾</span>
                     </a>
                     <ul class="nav-dropdown">
                         <li><a href="probabilites.html" ${currentPage === 'probabilites' ? 'class="active"' : ''}>Probabilités</a></li>
+                        <li><a href="statistiques.html" ${currentPage === 'statistiques' ? 'class="active"' : ''}>Statistiques</a></li>
                     </ul>
                 </li>
             </ul>

@@ -29,6 +29,7 @@
 
 ### Probabilités & Statistiques
 - ✅ Probabilités (simples, conditionnelles, arbres, loi binomiale, variables aléatoires, fluctuation)
+- ✅ Statistiques (moyenne, médiane & quartiles, variance & écart-type, diagramme en boîte, régression linéaire)
 
 ### Infrastructure Technique
 - ✅ Module de graphiques Canvas réutilisable (`js/graphing.js`)
@@ -40,7 +41,7 @@
 
 ## 📁 Structure du Projet
 
-### Fichiers HTML (20)
+### Fichiers HTML (21)
 1. `index.html` - Équations 1er degré
 2. `developpement.html` - Développement d'expressions
 3. `reduction.html` - Réduction d'expressions
@@ -61,8 +62,9 @@
 18. `primitives.html` - Primitives & Intégrales
 19. `exponentielles.html` - Exponentielles & Logarithmes
 20. `probabilites.html` - Probabilités
+21. `statistiques.html` - Statistiques
 
-### Modules JavaScript (26 fichiers)
+### Modules JavaScript (27 fichiers)
 - `js/utils.js` - Fonctions utilitaires (PGCD, formatage, etc.)
 - `js/ui.js` - Manipulation DOM (show, hide, $)
 - `js/main.js` - Initialisation globale
@@ -89,6 +91,7 @@
 - `js/primitives.js` - Logique primitives et intégrales
 - `js/exponentielles.js` - Logique exponentielles et logarithmes
 - `js/probabilites.js` - Logique probabilités
+- `js/statistiques.js` - Logique statistiques
 
 ### Feuilles de Style CSS
 - `css/theme.css` - Variables CSS (couleurs, espacements)
@@ -115,17 +118,10 @@
 ### ~~1. 🎲 Probabilités~~ ✅ Complété
 > Module implémenté avec 6 types d'exercices : probabilités simples (dé, cartes, urne), probabilités conditionnelles (tableau croisé, formule, Bayes), arbres de probabilités (deux épreuves, probabilités totales), loi binomiale (P(X=k), espérance/écart-type, probabilités cumulées), variables aléatoires (loi de probabilité, espérance/variance), intervalle de fluctuation (calcul, prise de décision). Corrections détaillées avec KaTeX.
 
-### 1. 📊 Statistiques (Priorité Haute)
-**Niveau**: Seconde / Première
+### ~~1. 📊 Statistiques~~ ✅ Complété
+> Module implémenté avec 5 types d'exercices : moyenne (simple, pondérée, classes), médiane & quartiles, variance & écart-type, diagramme en boîte (construire, lire), régression linéaire (équation droite, coefficient de corrélation). Visualisations SVG (box plot, nuage de points). Corrections détaillées avec KaTeX.
 
-**Types d'exercices suggérés**:
-- Moyenne, médiane, quartiles
-- Variance, écart-type
-- Diagrammes (boîtes, histogrammes)
-- Régression linéaire
-- Coefficient de corrélation
-
-### 4. 📐 Trigonométrie (Priorité Basse)
+### 1. 📐 Trigonométrie (Priorité Haute)
 **Niveau**: Seconde / Première
 
 **Types d'exercices suggérés**:
@@ -135,7 +131,7 @@
 - Formules d'addition
 - Résolution triangles
 
-### 5. ➡️ Vecteurs (Priorité Basse)
+### 2. ➡️ Vecteurs (Priorité Basse)
 **Niveau**: Seconde / Première
 
 **Types d'exercices suggérés**:
@@ -149,12 +145,12 @@
 
 ## 🎯 Prochaine Étape Immédiate
 
-**Recommandation forte**: **Probabilités** 🎲
+**Recommandation forte**: **Trigonométrie** 📐
 
-**Pourquoi Probabilités en priorité ?**
-- ✅ Présent à tous les niveaux (Seconde, Première, Terminale)
+**Pourquoi Trigonométrie en priorité ?**
+- ✅ Présent en Seconde, Première et Terminale
 - ✅ Sujet majeur au Bac
-- ✅ Diversité de types d'exercices
+- ✅ Diversité de types d'exercices (cercle, valeurs remarquables, équations, formules)
 - ✅ Complète le programme de mathématiques
 
 ---
@@ -258,14 +254,14 @@
 
 ## 📊 Statistiques
 
-**Dernière mise à jour**: 11 Février 2026
-**Modules d'exercices**: 20 ✅
-**Fichiers HTML**: 20
-**Fichiers JavaScript**: 26
-  - 20 modules d'exercices
+**Dernière mise à jour**: 12 Février 2026
+**Modules d'exercices**: 21 ✅
+**Fichiers HTML**: 21
+**Fichiers JavaScript**: 27
+  - 21 modules d'exercices
   - 6 utilitaires (utils, ui, main, navigation, graphing, tableau-variations)
 **Fichiers CSS**: 9
-**Lignes de code**: ~15 000
+**Lignes de code**: ~16 000
 **Dépendances externes**: 1 (KaTeX CDN)
 
-**Prochaine étape prioritaire**: Statistiques 📊
+**Prochaine étape prioritaire**: Trigonométrie 📐

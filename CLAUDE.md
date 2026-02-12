@@ -2,8 +2,8 @@
 
 > Documentation pour les sessions futures avec Claude ou autres assistants IA
 
-**Dernière mise à jour**: 11 Février 2026
-**Version projet**: v1.8 (Probabilites)
+**Dernière mise à jour**: 12 Février 2026
+**Version projet**: v1.9 (Statistiques)
 
 ---
 
@@ -37,7 +37,7 @@
 
 ```
 Website_Math/
-├── *.html (20 fichiers)         # Pages des modules
+├── *.html (21 fichiers)         # Pages des modules
 ├── css/
 │   ├── theme.css               # Variables CSS (couleurs, espacements)
 │   ├── base.css                # Reset, typographie, formulaires
@@ -57,7 +57,7 @@ Website_Math/
 │   ├── graphing.js             # GraphCanvas (paraboles, droites)
 │   ├── tableau-variations.js   # Tableaux de variations dynamiques
 │   │
-│   └── [MODULE].js (20 fichiers) # Logique de chaque module
+│   └── [MODULE].js (21 fichiers) # Logique de chaque module
 │       ├── equations.js
 │       ├── developpement.js
 │       ├── reduction.js
@@ -77,7 +77,8 @@ Website_Math/
 │       ├── limites.js
 │       ├── primitives.js
 │       ├── exponentielles.js
-│       └── probabilites.js
+│       ├── probabilites.js
+│       └── statistiques.js
 │
 ├── README.md
 ├── ROADMAP.md
@@ -562,7 +563,7 @@ const v_align = signes_derivee[i] === '+' ? 'var-v-align-bottom' : 'var-v-align-
 
 ---
 
-## 📊 Modules Actuels (20)
+## 📊 Modules Actuels (21)
 
 ### Algèbre (8 modules)
 1. **Équations** (`index.html`) - 1er degré
@@ -593,8 +594,9 @@ const v_align = signes_derivee[i] === '+' ? 'var-v-align-bottom' : 'var-v-align-
 18. **Primitives & Intégrales** - 6 types (polynomiale, usuelles, condition initiale, intégrale définie, aire, valeur moyenne)
 19. **Exponentielles & Logarithmes** - 6 types (équations exp, équations ln, dérivées exp/ln, étude de fonctions, croissance exponentielle, log décimal)
 
-### Probabilités (1 module)
+### Probabilités & Statistiques (2 modules)
 20. **Probabilités** - 6 types (simples, conditionnelles, arbres, loi binomiale, variables aléatoires, fluctuation)
+21. **Statistiques** - 5 types (moyenne, médiane & quartiles, variance & écart-type, diagramme en boîte, régression linéaire)
 
 ---
 
@@ -692,8 +694,8 @@ const tableau = createTableauVariations(containerId, {
 
 ## 🚀 Roadmap Actuelle
 
-### ✅ Complété (v1.8)
-- 20 modules fonctionnels
+### ✅ Complété (v1.9)
+- 21 modules fonctionnels
 - Navigation responsive
 - KaTeX intégré
 - GraphCanvas
@@ -703,12 +705,12 @@ const tableau = createTableauVariations(containerId, {
 - Module Primitives & Intégrales (6 types, visualisation aires Canvas)
 - Module Exponentielles & Logarithmes (6 types, équations exp/ln, dérivées, études, applications)
 - Module Probabilités (6 types, simples, conditionnelles, arbres, binomiale, variables aléatoires, fluctuation)
+- Module Statistiques (5 types, moyenne, médiane & quartiles, variance & écart-type, diagramme en boîte, régression linéaire)
 
 ### 🔜 Prochaines Étapes Prioritaires
 
-1. **Statistiques** (Seconde/Première) - 4-5 types
-2. **Trigonométrie** (Seconde/Première) - 5-6 types
-3. **Vecteurs** (Seconde/Première) - 4-5 types
+1. **Trigonométrie** (Seconde/Première) - 5-6 types
+2. **Vecteurs** (Seconde/Première) - 4-5 types
 
 ### 🔧 Améliorations Techniques Futures
 - Tests automatisés (Jest)

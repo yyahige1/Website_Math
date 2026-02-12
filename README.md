@@ -10,9 +10,9 @@ Une plateforme d'entraînement en mathématiques interactive pour l'enseignement
 
 ## ✨ Fonctionnalités
 
-### Modules Disponibles (v1.3)
+### Modules Disponibles (v1.9 - 21 modules)
 
-#### Phase 1 - Algèbre de Base (5 modules)
+#### Algèbre (8 modules)
 
 | Module | Description | Types d'exercices |
 |--------|-------------|-------------------|
@@ -21,23 +21,42 @@ Une plateforme d'entraînement en mathématiques interactive pour l'enseignement
 | **Réduction** | Simplification d'expressions | Termes en x, x², avec parenthèses |
 | **Factorisation** | Mise en facteur | Facteur commun, identités remarquables |
 | **Inéquations** | Inéquations du 1er degré | Avec représentation graphique |
+| **Équations 2nd degré** | Résolution ax²+bx+c=0 | Discriminant, canonique, particulières, somme-produit |
+| **Inéquations 2nd degré** | Résolution d'inéquations | Tableau de signes, graphique Canvas |
+| **Systèmes d'équations** | Systèmes linéaires 2×2 | Substitution, combinaison |
 
-#### Phase 2 - Calculs Numériques (4 modules)
+#### Calculs (4 modules)
 
 | Module | Description | Types d'exercices |
 |--------|-------------|-------------------|
 | **Fractions** | Opérations sur fractions | Addition, soustraction, multiplication, division, simplification, inverse |
 | **Pourcentages** | Calculs de pourcentages | Calculer %, appliquer %, variation, évolution, taux global |
-| **Puissances** | Calcul avec puissances | Produit, quotient, puissance, produit élevé, notation scientifique, combiné |
-| **Racines carrées** | Calcul avec racines | Carrés parfaits, simplification, expression conjuguée, fraction conjuguée |
+| **Puissances** | Calcul avec puissances | Produit, quotient, puissance, notation scientifique, combiné |
+| **Racines carrées** | Calcul avec racines | Carrés parfaits, simplification, conjuguée, fraction |
 
-#### Phase 3 - Second Degré (3 modules)
+#### Fonctions (3 modules)
 
 | Module | Description | Types d'exercices |
 |--------|-------------|-------------------|
-| **Équations 2nd degré** | Résolution d'équations ax²+bx+c=0 | Discriminant, forme canonique, équations particulières, somme-produit |
-| **Inéquations 2nd degré** | Résolution d'inéquations | Tableau de signes, ensemble solution, graphique interactif Canvas |
-| **Systèmes d'équations** | Systèmes linéaires 2×2 | Méthode par substitution, méthode par combinaison |
+| **Fonctions affines** | Fonctions y = ax + b | Graphique, image, antécédent, équation, intersection |
+| **Fonctions 2nd degré** | Paraboles | Graphique, canonique, sommet, variations, extremum |
+| **Dérivées** | Calcul de dérivées | Polynomiale, produit, quotient, composition, tangente, variations |
+
+#### Suites & Analyse (4 modules)
+
+| Module | Description | Types d'exercices |
+|--------|-------------|-------------------|
+| **Suites numériques** | Suites arithmétiques/géométriques | Arithmétique, géométrique, sommes, variation |
+| **Limites** | Limites de fonctions | Polynôme, rationnelle, point, formes indéterminées, racines, asymptotes |
+| **Primitives & Intégrales** | Calcul intégral | Polynomiale, usuelles, condition initiale, intégrale définie, aire, valeur moyenne |
+| **Exponentielles & Logarithmes** | Fonctions exp/ln | Équations exp/ln, dérivées, études, croissance, log décimal |
+
+#### Probabilités & Statistiques (2 modules)
+
+| Module | Description | Types d'exercices |
+|--------|-------------|-------------------|
+| **Probabilités** | Calcul de probabilités | Simples, conditionnelles, arbres, binomiale, variables aléatoires, fluctuation |
+| **Statistiques** | Statistiques descriptives | Moyenne, médiane & quartiles, variance & écart-type, diagramme en boîte, régression linéaire |
 
 ### Points Forts
 
@@ -82,56 +101,30 @@ npx serve .
 
 ```
 Website_Math/
-├── index.html              # Équations du 1er degré (landing page)
-├── developpement.html      # Développement d'expressions
-├── reduction.html          # Réduction d'expressions
-├── factorisation.html      # Factorisation
-├── inequations.html        # Inéquations du 1er degré
-├── fractions.html          # Fractions
-├── pourcentages.html       # Pourcentages
-├── puissances.html         # Puissances
-├── racines.html            # Racines carrées
-├── equations2.html         # Équations du 2nd degré
-├── inequations2.html       # Inéquations du 2nd degré
-├── systemes.html           # Systèmes d'équations linéaires
-├── template.html           # Template pour nouvelles pages
-│
+├── *.html (21 fichiers)       # Pages des modules
 ├── css/
-│   ├── theme.css           # Variables CSS (couleurs, espacements)
-│   ├── base.css            # Reset, typographie
-│   ├── layout.css          # Navigation, cards, grilles
-│   ├── exercices.css       # Styles communs exercices
-│   ├── equations2.css      # Styles équations/inéquations 2nd degré
-│   ├── puissances.css      # Styles spécifiques puissances
-│   └── racines.css         # Styles spécifiques racines
+│   ├── theme.css              # Variables CSS (couleurs, espacements)
+│   ├── base.css               # Reset, typographie
+│   ├── layout.css             # Navigation, cards, grilles
+│   ├── navigation.css         # Navigation responsive + hamburger
+│   ├── exercices.css          # Styles communs exercices
+│   ├── equations2.css         # Tableaux de signes, fractions
+│   ├── developpement.css      # Flèches SVG distributivité
+│   ├── puissances.css         # Notation scientifique
+│   └── racines.css            # Styles racines carrées
 │
 ├── js/
-│   ├── utils.js            # Fonctions utilitaires (PGCD, formatage...)
-│   ├── ui.js               # Manipulation DOM
-│   ├── main.js             # Initialisation globale
-│   ├── navigation.js       # Génération navigation (factorisation)
-│   ├── graphing.js         # Module graphiques Canvas (paraboles)
-│   ├── equations.js        # Logique équations 1er degré
-│   ├── developpement.js    # Logique développement
-│   ├── reduction.js        # Logique réduction
-│   ├── factorisation.js    # Logique factorisation
-│   ├── inequations.js      # Logique inéquations 1er degré
-│   ├── fractions.js        # Logique fractions
-│   ├── pourcentages.js     # Logique pourcentages
-│   ├── puissances.js       # Logique puissances
-│   ├── racines.js          # Logique racines carrées
-│   ├── equations2.js       # Logique équations 2nd degré
-│   ├── inequations2.js     # Logique inéquations 2nd degré
-│   └── systemes.js         # Logique systèmes d'équations
+│   ├── utils.js               # Fonctions utilitaires (PGCD, formatage...)
+│   ├── ui.js                  # Manipulation DOM
+│   ├── main.js                # Initialisation globale
+│   ├── navigation.js          # Génération navigation responsive
+│   ├── graphing.js            # Module graphiques Canvas (GraphCanvas)
+│   ├── tableau-variations.js  # Tableaux de variations dynamiques
+│   └── [module].js (21)       # Logique de chaque module
 │
-├── tests/
-│   ├── *.test.js           # Tests unitaires pour chaque module
-│   └── utils.test.js       # Tests utilitaires
-│
-├── CLAUDE.md               # Guide pour assistants IA
-├── ROADMAP.md              # Plan de développement
-├── NAVIGATION-REFACTOR.md  # Documentation factorisation navigation
-└── README.md               # Ce fichier
+├── CLAUDE.md                  # Guide pour assistants IA
+├── ROADMAP.md                 # Plan de développement
+└── README.md                  # Ce fichier
 ```
 
 ---
@@ -156,31 +149,16 @@ npm run test:coverage
 
 ## 🗺️ Roadmap
 
-### ✅ Phase 1 - Algèbre de Base (Complète)
-- [x] Équations du 1er degré
-- [x] Développement d'expressions
-- [x] Réduction d'expressions
-- [x] Factorisation
-- [x] Inéquations du 1er degré
+### ✅ Complété (21 modules)
+- [x] Algèbre : Équations, Développement, Réduction, Factorisation, Inéquations, Équations 2nd degré, Inéquations 2nd degré, Systèmes
+- [x] Calculs : Fractions, Pourcentages, Puissances, Racines carrées
+- [x] Fonctions : Fonctions affines, Fonctions 2nd degré, Dérivées
+- [x] Suites & Analyse : Suites numériques, Limites, Primitives & Intégrales, Exponentielles & Logarithmes
+- [x] Probabilités & Statistiques : Probabilités, Statistiques
 
-### ✅ Phase 2 - Calculs Numériques (Complète)
-- [x] Fractions (6 types d'exercices)
-- [x] Pourcentages (5 types d'exercices)
-- [x] Puissances (6 types d'exercices)
-- [x] Racines carrées (6 types d'exercices)
-
-### ✅ Phase 3 - Second Degré (Complète)
-- [x] Équations du 2nd degré (discriminant, canonique, particulières, somme-produit)
-- [x] Inéquations du 2nd degré (tableau de signes, graphiques Canvas)
-- [x] Systèmes d'équations linéaires 2×2 (substitution, combinaison)
-- [x] Module de graphiques Canvas réutilisable (paraboles, racines, zones)
-
-### 📋 Phases Futures
-- Phase 4 : Fonctions (affines, polynômes, dérivées)
-- Phase 5 : Géométrie analytique (vecteurs, droites)
-- Phase 6 : Suites et analyse
-- Phase 7 : Probabilités et statistiques
-- Phase 8 : Nombres complexes et avancé
+### 📋 Prochaines étapes
+- Trigonométrie (cercle, valeurs remarquables, équations)
+- Vecteurs (opérations, coordonnées, colinéarité, produit scalaire)
 
 📖 Voir [ROADMAP.md](ROADMAP.md) pour le détail complet.
 
