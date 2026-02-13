@@ -123,6 +123,7 @@ function generateNavigation(currentPage = '') {
                     </a>
                     <ul class="nav-dropdown">
                         <li><a href="arithmetique.html" ${currentPage === 'arithmetique' ? 'class="active"' : ''}>Arithmétique</a></li>
+                        <li><a href="nombres-complexes.html" ${currentPage === 'nombres-complexes' ? 'class="active"' : ''}>Nombres Complexes</a></li>
                     </ul>
                 </li>
             </ul>

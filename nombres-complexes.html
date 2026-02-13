@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MathsFacile - Nombres Complexes</title>
+    <meta name="description" content="Exercices interactifs sur les nombres complexes. Programme Terminale Specialite Maths. Forme algebrique, trigonometrique, module, argument, equations, geometrie.">
+    <meta name="keywords" content="nombres complexes, forme algebrique, trigonometrique, module, argument, equations, geometrie, terminale, specialite, mathematiques, exercices">
+
+    <!-- KaTeX pour le rendu mathematique -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"
+          integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV"
+          crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"
+            integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8"
+            crossorigin="anonymous"></script>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/exercices.css">
+    <link rel="stylesheet" href="css/navigation.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>&#x2102; Nombres Complexes</h1>
+            <p class="subtitle">Niveau : Terminale Specialite Maths</p>
+            <p class="intro">Entraine-toi sur les nombres complexes : forme algebrique, trigonometrique, module, argument, equations et geometrie.<br>Choisis un type d'exercice, puis clique sur <strong>Correction</strong>.</p>
+        </header>
+
+        <div class="card">
+            <div class="type-selector grid-3">
+                <button class="type-btn active" data-type="algebrique">
+                    <div class="example">z = a + bi</div>
+                    <div class="label">Forme algebrique</div>
+                </button>
+                <button class="type-btn" data-type="trigonometrique">
+                    <div class="example">r e<sup>i&theta;</sup></div>
+                    <div class="label">Forme trigo / exp</div>
+                </button>
+                <button class="type-btn" data-type="module_argument">
+                    <div class="example">|z|, arg(z)</div>
+                    <div class="label">Module & Argument</div>
+                </button>
+                <button class="type-btn" data-type="equations">
+                    <div class="example">z&sup2; + bz + c = 0</div>
+                    <div class="label">Equations dans C</div>
+                </button>
+                <button class="type-btn" data-type="geometrie">
+                    <div class="example">|z - z<sub>A</sub>|</div>
+                    <div class="label">Geometrie complexe</div>
+                </button>
+            </div>
+
+            <!-- Section Forme algebrique -->
+            <div id="algebriqueSection">
+                <h3>Forme algebrique</h3>
+                <div class="param-row">
+                    <label>Type d'exercice :</label>
+                    <select id="subtype_algebrique">
+                        <option value="addition">Addition / Soustraction</option>
+                        <option value="multiplication">Multiplication</option>
+                        <option value="conjugue">Conjugue</option>
+                        <option value="inverse">Inverse</option>
+                        <option value="quotient">Quotient</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Section Forme trigonometrique -->
+            <div id="trigonometriqueSection" style="display: none;">
+                <h3>Forme trigonometrique & exponentielle</h3>
+                <div class="param-row">
+                    <label>Type d'exercice :</label>
+                    <select id="subtype_trigonometrique">
+                        <option value="algebrique_vers_trigo">Algebrique vers trigonometrique</option>
+                        <option value="trigo_vers_algebrique">Trigonometrique vers algebrique</option>
+                        <option value="produit_trigo">Produit en forme trigo</option>
+                        <option value="puissance_moivre">Puissance (formule de Moivre)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Section Module & Argument -->
+            <div id="module_argumentSection" style="display: none;">
+                <h3>Module & Argument</h3>
+                <div class="param-row">
+                    <label>Type d'exercice :</label>
+                    <select id="subtype_module_argument">
+                        <option value="module">Calculer le module</option>
+                        <option value="argument">Calculer l'argument</option>
+                        <option value="ensemble">Ensemble de points</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Section Equations -->
+            <div id="equationsSection" style="display: none;">
+                <h3>Equations dans C</h3>
+                <div class="param-row">
+                    <label>Type d'exercice :</label>
+                    <select id="subtype_equations">
+                        <option value="second_degre">Equation du second degre</option>
+                        <option value="z_carre">z&sup2; = w</option>
+                        <option value="lineaire">Equation lineaire en z et z barre</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Section Geometrie -->
+            <div id="geometrieSection" style="display: none;">
+                <h3>Geometrie complexe</h3>
+                <div class="param-row">
+                    <label>Type d'exercice :</label>
+                    <select id="subtype_geometrie">
+                        <option value="distance">Distance entre deux points</option>
+                        <option value="milieu">Milieu d'un segment</option>
+                        <option value="translation">Translation</option>
+                        <option value="rotation">Rotation</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="expression-display">
+                <div class="expression" id="expressionDisplay"></div>
+            </div>
+
+            <div class="action-buttons">
+                <button id="newExerciseBtn" class="btn btn-secondary">Nouvel exercice</button>
+                <button id="solveBtn" class="btn btn-primary">Correction</button>
+            </div>
+        </div>
+
+        <!-- Zone de solution -->
+        <div id="solutionDiv" class="card solution">
+            <h3>Correction detaillee</h3>
+            <div id="stepsContainer"></div>
+        </div>
+
+        <footer>
+            <p>MathsFacile - Nombres Complexes</p>
+        </footer>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="js/utils.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/navigation.js"></script>
+    <script src="js/nombres-complexes.js"></script>
+</body>
+</html>
