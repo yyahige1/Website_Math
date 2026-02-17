@@ -10,7 +10,7 @@ Une plateforme d'entraînement en mathématiques interactive pour l'enseignement
 
 ## ✨ Fonctionnalités
 
-### Modules Disponibles (v1.9 - 21 modules)
+### Modules Disponibles (v2.1 - 25 modules)
 
 #### Algèbre (8 modules)
 
@@ -58,6 +58,20 @@ Une plateforme d'entraînement en mathématiques interactive pour l'enseignement
 | **Probabilités** | Calcul de probabilités | Simples, conditionnelles, arbres, binomiale, variables aléatoires, fluctuation |
 | **Statistiques** | Statistiques descriptives | Moyenne, médiane & quartiles, variance & écart-type, diagramme en boîte, régression linéaire |
 
+#### Géométrie & Trigonométrie (2 modules)
+
+| Module | Description | Types d'exercices |
+|--------|-------------|-------------------|
+| **Trigonométrie** | Cercle trigo, formules | Valeurs remarquables, conversion, équations, formules d'addition, identités, triangles |
+| **Vecteurs** | Vecteurs du plan | Coordonnées, norme & distance, colinéarité, produit scalaire, opérations |
+
+#### Terminale Spécialité (2 modules)
+
+| Module | Description | Types d'exercices |
+|--------|-------------|-------------------|
+| **Arithmétique** | Divisibilité, PGCD, premiers | Divisibilité, PGCD & Euclide, nombres premiers, congruences, Bézout |
+| **Nombres Complexes** | Formes, géométrie | Algébrique, trigonométrique, module & argument, équations, géométrie |
+
 ### Points Forts
 
 - ♾️ **Exercices illimités** - Génération aléatoire infinie
@@ -101,7 +115,7 @@ npx serve .
 
 ```
 Website_Math/
-├── *.html (21 fichiers)       # Pages des modules
+├── *.html (25 fichiers)       # Pages des modules
 ├── css/
 │   ├── theme.css              # Variables CSS (couleurs, espacements)
 │   ├── base.css               # Reset, typographie
@@ -110,8 +124,7 @@ Website_Math/
 │   ├── exercices.css          # Styles communs exercices
 │   ├── equations2.css         # Tableaux de signes, fractions
 │   ├── developpement.css      # Flèches SVG distributivité
-│   ├── puissances.css         # Notation scientifique
-│   └── racines.css            # Styles racines carrées
+│   └── ...                    # Styles spécifiques modules
 │
 ├── js/
 │   ├── utils.js               # Fonctions utilitaires (PGCD, formatage...)
@@ -120,7 +133,7 @@ Website_Math/
 │   ├── navigation.js          # Génération navigation responsive
 │   ├── graphing.js            # Module graphiques Canvas (GraphCanvas)
 │   ├── tableau-variations.js  # Tableaux de variations dynamiques
-│   └── [module].js (21)       # Logique de chaque module
+│   └── [module].js (25)       # Logique de chaque module
 │
 ├── CLAUDE.md                  # Guide pour assistants IA
 ├── ROADMAP.md                 # Plan de développement
@@ -149,17 +162,18 @@ npm run test:coverage
 
 ## 🗺️ Roadmap
 
-### ✅ Complété (21 modules)
+### ✅ Complété (25 modules)
 - [x] Algèbre : Équations, Développement, Réduction, Factorisation, Inéquations, Équations 2nd degré, Inéquations 2nd degré, Systèmes
 - [x] Calculs : Fractions, Pourcentages, Puissances, Racines carrées
 - [x] Fonctions : Fonctions affines, Fonctions 2nd degré, Dérivées
 - [x] Suites & Analyse : Suites numériques, Limites, Primitives & Intégrales, Exponentielles & Logarithmes
 - [x] Probabilités & Statistiques : Probabilités, Statistiques
+- [x] Géométrie & Trigonométrie : Trigonométrie, Vecteurs
+- [x] Terminale Spécialité : Arithmétique, Nombres Complexes
 
 ### 📋 Prochaines étapes
-- **Phase 5** : Trigonométrie, Vecteurs, Géométrie analytique plane
-- **Phase 6** : Arithmétique, Nombres Complexes, Géométrie dans l'espace (Terminale Spé)
-- **Phase 7** : Logique et Dénombrement
+- **Phase 7** : Géométrie analytique plane, Géométrie dans l'espace
+- **Phase 8** : Logique et Dénombrement
 
 📖 Voir [ROADMAP.md](ROADMAP.md) pour le détail complet.
 
@@ -172,9 +186,9 @@ npm run test:coverage
 | HTML5 | Structure des pages |
 | CSS3 | Styles, variables CSS, responsive |
 | JavaScript (ES6+) | Logique, génération, DOM |
-| Canvas API | Graphiques (paraboles, fonctions) |
+| Canvas API | Graphiques (paraboles, fonctions, diagrammes d'Argand) |
+| KaTeX (CDN) | Rendu mathématique (fractions, racines, vecteurs) |
 | SVG | Flèches de distributivité |
-| Jest | Tests unitaires (optionnel) |
 
 ### Pourquoi Vanilla JS ?
 - ✅ Zéro dépendance = zéro vulnérabilité

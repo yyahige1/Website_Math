@@ -31,6 +31,14 @@
 - ✅ Probabilités (simples, conditionnelles, arbres, loi binomiale, variables aléatoires, fluctuation)
 - ✅ Statistiques (moyenne, médiane & quartiles, variance & écart-type, diagramme en boîte, régression linéaire)
 
+### Géométrie & Trigonométrie
+- ✅ Trigonométrie (valeurs remarquables, conversion, équations, formules d'addition, identités, triangles)
+- ✅ Vecteurs (coordonnées, norme & distance, colinéarité, produit scalaire, opérations)
+
+### Terminale Spécialité
+- ✅ Arithmétique (divisibilité, PGCD & Euclide, nombres premiers, congruences, Bézout)
+- ✅ Nombres Complexes (forme algébrique, forme trigonométrique, module & argument, équations, géométrie)
+
 ### Infrastructure Technique
 - ✅ Module de graphiques Canvas réutilisable (`js/graphing.js`)
 - ✅ Architecture responsive (mobile, tablette, desktop)
@@ -41,7 +49,7 @@
 
 ## 📁 Structure du Projet
 
-### Fichiers HTML (21)
+### Fichiers HTML (25)
 1. `index.html` - Équations 1er degré
 2. `developpement.html` - Développement d'expressions
 3. `reduction.html` - Réduction d'expressions
@@ -63,8 +71,12 @@
 19. `exponentielles.html` - Exponentielles & Logarithmes
 20. `probabilites.html` - Probabilités
 21. `statistiques.html` - Statistiques
+22. `trigonometrie.html` - Trigonométrie
+23. `vecteurs.html` - Vecteurs
+24. `arithmetique.html` - Arithmétique
+25. `nombres-complexes.html` - Nombres Complexes
 
-### Modules JavaScript (27 fichiers)
+### Modules JavaScript (31 fichiers)
 - `js/utils.js` - Fonctions utilitaires (PGCD, formatage, etc.)
 - `js/ui.js` - Manipulation DOM (show, hide, $)
 - `js/main.js` - Initialisation globale
@@ -92,15 +104,20 @@
 - `js/exponentielles.js` - Logique exponentielles et logarithmes
 - `js/probabilites.js` - Logique probabilités
 - `js/statistiques.js` - Logique statistiques
+- `js/trigonometrie.js` - Logique trigonométrie
+- `js/vecteurs.js` - Logique vecteurs
+- `js/arithmetique.js` - Logique arithmétique
+- `js/nombres-complexes.js` - Logique nombres complexes
 
-### Feuilles de Style CSS
+### Feuilles de Style CSS (12 fichiers)
 - `css/theme.css` - Variables CSS (couleurs, espacements)
 - `css/base.css` - Reset et styles de base
-- `css/layout.css` - Structure générale, navigation
+- `css/layout.css` - Structure générale
 - `css/exercices.css` - Styles communs aux exercices
 - `css/navigation.css` - Navigation responsive
 - `css/equations2.css` - Styles spécifiques 2nd degré (tableaux, graphiques)
-- `css/puissances.css`, `css/racines.css` - Styles spécifiques modules
+- `css/developpement.css` - Flèches SVG distributivité
+- `css/fractions.css`, `css/pourcentages.css`, `css/puissances.css`, `css/racines.css`, `css/systemes.css` - Styles spécifiques modules
 
 ---
 
@@ -130,27 +147,19 @@
 ### ~~3. 🔢 Arithmétique~~ ✅ Complété
 > Module implémenté avec 5 types d'exercices : divisibilité (division euclidienne, critères, diviseurs), PGCD & algorithme d'Euclide (PGCD, PPCM, simplification), nombres premiers (test, décomposition, crible d'Ératosthène), congruences (calcul, opérations, puissance modulaire), théorème de Bézout (coefficients, équations diophantiennes). Corrections détaillées avec KaTeX.
 
-### 4. 🔮 Nombres Complexes (Priorité Moyenne)
-**Niveau**: Terminale Spécialité Maths
+### ~~4. 🔮 Nombres Complexes~~ ✅ Complété
+> Module implémenté avec 5 types d'exercices : forme algébrique (addition, multiplication, conjugué, module, inverse), forme trigonométrique (conversions, produit, puissance de Moivre), module & argument (calcul, ensemble de points), équations dans C (2nd degré, racines n-ièmes), géométrie (distance, milieu, translation, rotation). Arithmétique exacte avec racines (sqrt(2), sqrt(3)), diagramme d'Argand avec Canvas, 16 angles remarquables.
+
+### 5. 📏 Géométrie analytique plane (Priorité Haute)
+**Niveau**: Seconde / Première
 
 **Types d'exercices suggérés**:
-- Divisibilité (critères, preuves)
-- PGCD et algorithme d'Euclide
-- Nombres premiers (crible, décomposition)
-- Congruences (calculs modulo n)
-- Théorème de Bézout et applications
+- Équations de droites (cartésienne, réduite, passage par 2 points)
+- Équations de cercles (centre, rayon, position relative)
+- Distance point-droite
+- Transformations du plan (symétries, rotations, homothéties)
 
-### 4. 🔮 Nombres Complexes (Priorité Moyenne)
-**Niveau**: Terminale Spécialité Maths
-
-**Types d'exercices suggérés**:
-- Forme algébrique (opérations, conjugué, module)
-- Forme trigonométrique (module, argument)
-- Forme exponentielle (notation e^{i*theta})
-- Équations dans C (second degré, racines n-ièmes)
-- Interprétation géométrique (transformations du plan)
-
-### 5. 📦 Géométrie dans l'espace (Priorité Moyenne)
+### 6. 📦 Géométrie dans l'espace (Priorité Moyenne)
 **Niveau**: Terminale
 
 **Types d'exercices suggérés**:
@@ -159,15 +168,6 @@
 - Positions relatives (intersection, parallélisme, orthogonalité)
 - Produit scalaire dans l'espace
 - Sections de solides (plans coupant cubes, tétraèdres)
-
-### 6. 📏 Géométrie analytique plane (Priorité Basse)
-**Niveau**: Seconde / Première
-
-**Types d'exercices suggérés**:
-- Équations de cercles (centre, rayon, position relative)
-- Distance point-droite
-- Milieu, barycentre
-- Transformations du plan (symétries, rotations, homothéties)
 
 ### 7. 🧩 Logique et Dénombrement (Priorité Basse)
 **Niveau**: Terminale
@@ -181,21 +181,25 @@
 
 ## 🎯 Phases de Développement Futures
 
-### Phase 5 : Géométrie & Trigonométrie ✅ (Trigo + Vecteurs)
+### Phase 5 : Géométrie & Trigonométrie ✅
 | # | Module | Types | Priorité | Statut |
 |---|--------|-------|----------|--------|
 | 22 | **Trigonométrie** | 6 types | Haute | ✅ |
 | 23 | **Vecteurs** | 5 types | Haute | ✅ |
-| 24 | **Géométrie analytique plane** | 4 types | Basse | |
 
-### Phase 6 : Terminale Spécialité (en cours)
+### Phase 6 : Terminale Spécialité ✅
 | # | Module | Types | Priorité | Statut |
 |---|--------|-------|----------|--------|
-| 25 | **Arithmétique** | 5 types | Moyenne | ✅ |
-| 26 | **Nombres Complexes** | 5 types | Moyenne | |
+| 24 | **Arithmétique** | 5 types | Moyenne | ✅ |
+| 25 | **Nombres Complexes** | 5 types | Moyenne | ✅ |
+
+### Phase 7 : Géométrie (prochaine)
+| # | Module | Types | Priorité | Statut |
+|---|--------|-------|----------|--------|
+| 26 | **Géométrie analytique plane** | 4 types | Haute | |
 | 27 | **Géométrie dans l'espace** | 5 types | Moyenne | |
 
-### Phase 7 : Compléments
+### Phase 8 : Compléments
 | # | Module | Types | Priorité |
 |---|--------|-------|----------|
 | 28 | **Logique et Dénombrement** | 3 types | Basse |
@@ -287,6 +291,25 @@
   - Ajout classe .param-row pour alignement inputs
   - Synchronisation .type-selector dans tous modules
 
+- ✅ **Module Trigonométrie** (`trigonometrie.html` + `trigonometrie.js`)
+  - 6 types d'exercices : valeurs remarquables, conversion deg/rad, équations trigo, formules d'addition, identités, triangles
+  - Cercle trigonométrique interactif avec Canvas
+
+- ✅ **Module Vecteurs** (`vecteurs.html` + `vecteurs.js`)
+  - 5 types d'exercices : coordonnées, norme & distance, colinéarité, produit scalaire, opérations
+  - Visualisation graphique des vecteurs avec Canvas
+  - Boutons de type avec rendu KaTeX
+
+- ✅ **Module Arithmétique** (`arithmetique.html` + `arithmetique.js`)
+  - 5 types d'exercices : divisibilité, PGCD & Euclide, nombres premiers, congruences, Bézout
+  - Algorithme d'Euclide détaillé, crible d'Ératosthène
+
+- ✅ **Module Nombres Complexes** (`nombres-complexes.html` + `nombres-complexes.js`)
+  - 5 types d'exercices : forme algébrique (5 sous-types), forme trigonométrique (4 sous-types), module & argument (3 sous-types), équations (2 sous-types), géométrie (4 sous-types)
+  - Arithmétique exacte avec racines carrées (16 angles remarquables)
+  - Diagramme d'Argand interactif avec Canvas (affiché avec la correction)
+  - Arcs d'angle avec flèches directionnelles
+
 ### Bugs Corrigés
 - ✅ Navigation "Suites Numériques" tronquée (width: max-content)
 - ✅ Boutons exercices Suites mal affichés (class type-selector)
@@ -303,15 +326,15 @@
 
 ## 📊 Statistiques
 
-**Dernière mise à jour**: 12 Février 2026
-**Modules d'exercices**: 24 ✅
-**Fichiers HTML**: 24
-**Fichiers JavaScript**: 30
-  - 24 modules d'exercices
+**Dernière mise à jour**: 17 Février 2026
+**Modules d'exercices**: 25 ✅
+**Fichiers HTML**: 25
+**Fichiers JavaScript**: 31
+  - 25 modules d'exercices
   - 6 utilitaires (utils, ui, main, navigation, graphing, tableau-variations)
-**Fichiers CSS**: 9
-**Lignes de code**: ~19 000
+**Fichiers CSS**: 12
+**Lignes de code**: ~24 000
 **Dépendances externes**: 1 (KaTeX CDN)
 
-**Prochaine étape prioritaire**: Phase 6 - Nombres Complexes 🔮
+**Prochaine étape prioritaire**: Phase 7 - Géométrie analytique plane 📏
 **Objectif final**: ~28 modules (programme complet Seconde → Terminale Spé Maths)
