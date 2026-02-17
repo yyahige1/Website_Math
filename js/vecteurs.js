@@ -337,6 +337,13 @@ function drawGraphOperations(ex) {
 // ========================================
 
 function initVecteursPage() {
+    // Rendu KaTeX des exemples dans les boutons de type
+    $('exCoord').innerHTML = K('\\vec{AB}(x\\,;\\,y)');
+    $('exNorme').innerHTML = K('\\|\\vec{u}\\| = \\,?');
+    $('exColin').innerHTML = K('\\vec{u} \\mathbin{/\\!/} \\vec{v}\\,?');
+    $('exScal').innerHTML = K('\\vec{u} \\cdot \\vec{v}');
+    $('exOps').innerHTML = K('2\\vec{u} + 3\\vec{v}');
+
     setupTypeButtons();
     setupInputHandlers();
     setupActionButtons();

@@ -1988,47 +1988,54 @@ function drawAngleArc(graph, cx, cy, startAngle, endAngle, radius, color, mathCC
     const ox = graph.toCanvasX(cx);
     const oy = graph.toCanvasY(cy);
     const r = Math.abs(graph.toCanvasX(cx + radius) - ox);
-    const headLen = 8;
+    const headLen = 10; // Taille de la fleche
+
     ctx.strokeStyle = color || '#764ba2';
     ctx.lineWidth = 2;
-    ctx.beginPath();
-    // Canvas Y est inverse : angle math theta -> angle canvas -theta
-    // mathCCW=true (sens trigo positif) -> counterclockwise=true en canvas (Y inverse)
-    const ccw = !!mathCCW;
-    // Raccourcir l'arc pour laisser place a la pointe de fleche
-    const delta = r > headLen ? headLen / r : 0.3;
-    const arcSpan = Math.abs(endAngle - startAngle);
-    let arcEnd;
-    if (arcSpan > 2 * delta) {
-        arcEnd = ccw ? (-endAngle + delta) : (-endAngle - delta);
-    } else {
-        arcEnd = -endAngle;
-    }
-    ctx.arc(ox, oy, r, -startAngle, arcEnd, ccw);
-    ctx.stroke();
-
-    // Pointe de fleche a l'endpoint original (pas au bout raccourci)
+    // Conversion en angles Canvas (Y inverse)
+    const startCanvas = -startAngle;
     const endCanvas = -endAngle;
+    const ccw = !!mathCCW;
+    // 1. Calcul de la tangente pour l'orientation de la fleche
+    // En Canvas : CCW signifie qu'on va vers les angles negatifs.
+    // La tangente est perpendiculaire au rayon.
+    const tangent = ccw ? (endCanvas - Math.PI / 2) : (endCanvas + Math.PI / 2);
+    // 2. Calcul de la pointe (le sommet)
     const tipX = ox + r * Math.cos(endCanvas);
     const tipY = oy + r * Math.sin(endCanvas);
-    // Tangente : perpendiculaire au rayon dans le sens de parcours
-    const tangent = ccw ? (endCanvas + Math.PI / 2) : (endCanvas - Math.PI / 2);
+    // 3. Dessin de l'arc (on l'arrete un tout petit peu avant pour ne pas depasser la pointe)
+    const delta = (headLen * 0.5) / r;
+    const arcEnd = ccw ? (endCanvas + delta) : (endCanvas - delta);
+    ctx.beginPath();
+    ctx.arc(ox, oy, r, startCanvas, arcEnd, ccw);
+    ctx.stroke();
+    // 4. Dessin de la pointe de fleche
     ctx.fillStyle = color || '#764ba2';
     ctx.beginPath();
     ctx.moveTo(tipX, tipY);
-    ctx.lineTo(tipX - headLen * Math.cos(tangent - Math.PI / 6), tipY - headLen * Math.sin(tangent - Math.PI / 6));
-    ctx.lineTo(tipX - headLen * Math.cos(tangent + Math.PI / 6), tipY - headLen * Math.sin(tangent + Math.PI / 6));
+    // On trace les deux "ailes" de la fleche vers l'arriere
+    ctx.lineTo(
+        tipX - headLen * Math.cos(tangent - Math.PI / 7),
+        tipY - headLen * Math.sin(tangent - Math.PI / 7)
+    );
+    ctx.lineTo(
+        tipX - headLen * Math.cos(tangent + Math.PI / 7),
+        tipY - headLen * Math.sin(tangent + Math.PI / 7)
+    );
     ctx.closePath();
     ctx.fill();
-
-    // Label d'angle (optionnel)
+    // 5. Label
     if (label) {
-        const midAngle = -(startAngle + endAngle) / 2;
-        const labelR = r + 14;
+        // On calcule le milieu de l'arc pour placer le texte
+        let diff = endAngle - startAngle;
+        if (ccw && diff < 0) diff += Math.PI * 2;
+        if (!ccw && diff > 0) diff -= Math.PI * 2;
+        const midAngle = -(startAngle + diff / 2);
+
+        const labelR = r + 18;
         const lx = ox + labelR * Math.cos(midAngle);
         const ly = oy + labelR * Math.sin(midAngle);
-        ctx.fillStyle = color || '#764ba2';
-        ctx.font = 'bold 12px Arial';
+        ctx.font = 'bold 13px Arial';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText(label, lx, ly);
