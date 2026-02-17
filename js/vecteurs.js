@@ -767,7 +767,7 @@ function solveCoordonnees() {
         html += '<div class="step">';
         html += '<div class="step-number">1. Rappeler la relation</div>';
         html += `<div class="step-expression">` + K(`${vecTeX('AB')}${coordTeX('x_B - x_A', 'y_B - y_A')}`) + `</div>`;
-        html += `<div class="step-explanation">Donc ` + K(`x_B = x_A + x_{${vecTeX('AB')}}`) + ` et ` + K(`y_B = y_A + y_{${vecTeX('AB')}}`) + `</div>`;
+        html += `<div class="step-explanation">Donc ` + K(`x_B = x_A + x_{AB}`) + ` et ` + K(`y_B = y_A + y_{AB}`) + `</div>`;
         html += '</div>';
 
         html += '<div class="step">';
@@ -877,26 +877,26 @@ function solveNorme() {
 
         html += '<div class="step">';
         html += '<div class="step-number">2. Rappeler la formule du vecteur unitaire</div>';
-        html += `<div class="step-expression">` + K(`${vecTeX('u_0')} = \\frac{1}{\\|${vecTeX('u')}\\|} \\times ${vecTeX('u')}`) + `</div>`;
+        html += `<div class="step-expression">` + K(`\\vec{u}_0 = \\frac{1}{\\|${vecTeX('u')}\\|} \\times ${vecTeX('u')}`) + `</div>`;
         html += '</div>';
 
         html += '<div class="step">';
         html += '<div class="step-number">3. Calculer</div>';
-        html += `<div class="step-expression">` + K(`${vecTeX('u_0')} = \\frac{1}{\\sqrt{${sum}}} ${coordTeX(ex.vx, ex.vy)}`) + `</div>`;
-        html += `<div class="step-expression">` + K(`${vecTeX('u_0')}${coordTeX(`\\frac{${ex.vx}}{\\sqrt{${sum}}}`, `\\frac{${ex.vy}}{\\sqrt{${sum}}}`)}`) + `</div>`;
+        html += `<div class="step-expression">` + K(`\\vec{u}_0 = \\frac{1}{\\sqrt{${sum}}} ${coordTeX(ex.vx, ex.vy)}`) + `</div>`;
+        html += `<div class="step-expression">` + K(`\\vec{u}_0${coordTeX(`\\frac{${ex.vx}}{\\sqrt{${sum}}}`, `\\frac{${ex.vy}}{\\sqrt{${sum}}}`)}`) + `</div>`;
         const ux = roundDec(ex.ux, 4);
         const uy = roundDec(ex.uy, 4);
-        html += `<div class="step-expression">` + K(`${vecTeX('u_0')} \\approx ${coordTeX(ux, uy)}`) + `</div>`;
+        html += `<div class="step-expression">` + K(`\\vec{u}_0 \\approx ${coordTeX(ux, uy)}`) + `</div>`;
         html += '</div>';
 
         html += '<div class="step">';
         html += '<div class="step-number">4. Verification</div>';
         const normeU0 = roundDec(Math.sqrt(ux * ux + uy * uy), 4);
-        html += `<div class="step-expression">` + K(`\\|${vecTeX('u_0')}\\| \\approx ${normeU0} \\approx 1`) + ` ✓</div>`;
+        html += `<div class="step-expression">` + K(`\\|\\vec{u}_0\\| \\approx ${normeU0} \\approx 1`) + ` ✓</div>`;
         html += '</div>';
 
         html += '<div class="result-highlight">';
-        html += `<div class="final">` + K(`${vecTeX('u_0')} \\approx ${coordTeX(ux, uy)}`) + `</div>`;
+        html += `<div class="final">` + K(`\\vec{u}_0 \\approx ${coordTeX(ux, uy)}`) + `</div>`;
         html += '</div>';
     }
 
