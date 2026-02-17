@@ -127,11 +127,6 @@
                 <div class="expression" id="expressionDisplay"></div>
             </div>
 
-            <!-- Diagramme d'Argand -->
-            <div id="graphContainer" style="text-align: center; margin: 12px 0; display: none;">
-                <canvas id="complexCanvas" style="border: 1px solid #ddd; border-radius: 8px; max-width: 100%;"></canvas>
-            </div>
-
             <div class="action-buttons">
                 <button id="newExerciseBtn" class="btn btn-secondary">Nouvel exercice</button>
                 <button id="solveBtn" class="btn btn-primary">Correction</button>
@@ -142,6 +137,10 @@
         <div id="solutionDiv" class="card solution">
             <h3>Correction detaillee</h3>
             <div id="stepsContainer"></div>
+            <!-- Diagramme d'Argand (affiche avec la correction) -->
+            <div id="graphContainer" style="text-align: center; margin: 12px 0; display: none;">
+                <canvas id="complexCanvas" style="border: 1px solid #ddd; border-radius: 8px; max-width: 100%;"></canvas>
+            </div>
         </div>
 
         <footer>

@@ -702,7 +702,6 @@ function updateExerciseDisplay() {
     }
 
     $('expressionDisplay').innerHTML = display;
-    drawComplexDiagram();
 }
 
 function displayAlgebrique(ex) {
@@ -855,6 +854,7 @@ function solveExercise() {
 
     $('stepsContainer').innerHTML = html;
     showSolution('solutionDiv');
+    drawComplexDiagram();
 }
 
 // ---- Forme algebrique ----
@@ -1988,22 +1988,31 @@ function drawAngleArc(graph, cx, cy, startAngle, endAngle, radius, color, mathCC
     const ox = graph.toCanvasX(cx);
     const oy = graph.toCanvasY(cy);
     const r = Math.abs(graph.toCanvasX(cx + radius) - ox);
+    const headLen = 8;
     ctx.strokeStyle = color || '#764ba2';
     ctx.lineWidth = 2;
     ctx.beginPath();
     // Canvas Y est inverse : angle math theta -> angle canvas -theta
     // mathCCW=true (sens trigo positif) -> counterclockwise=true en canvas (Y inverse)
     const ccw = !!mathCCW;
-    ctx.arc(ox, oy, r, -startAngle, -endAngle, ccw);
+    // Raccourcir l'arc pour laisser place a la pointe de fleche
+    const delta = r > headLen ? headLen / r : 0.3;
+    const arcSpan = Math.abs(endAngle - startAngle);
+    let arcEnd;
+    if (arcSpan > 2 * delta) {
+        arcEnd = ccw ? (-endAngle + delta) : (-endAngle - delta);
+    } else {
+        arcEnd = -endAngle;
+    }
+    ctx.arc(ox, oy, r, -startAngle, arcEnd, ccw);
     ctx.stroke();
 
-    // Fleche de direction a l'extremite de l'arc
+    // Pointe de fleche a l'endpoint original (pas au bout raccourci)
     const endCanvas = -endAngle;
     const tipX = ox + r * Math.cos(endCanvas);
     const tipY = oy + r * Math.sin(endCanvas);
     // Tangente : perpendiculaire au rayon dans le sens de parcours
     const tangent = ccw ? (endCanvas + Math.PI / 2) : (endCanvas - Math.PI / 2);
-    const headLen = 8;
     ctx.fillStyle = color || '#764ba2';
     ctx.beginPath();
     ctx.moveTo(tipX, tipY);
@@ -2368,18 +2377,7 @@ function drawDiagramForType() {
                 drawAngleArc(g, 0, 0, 0, theta, 0.5, blue, theta > 0, '\u03B8');
             }
 
-            // Afficher les puissances intermediaires en gris clair
-            for (let k = 2; k < n; k++) {
-                const kAngle = (angle.k * k) % 16;
-                const aK = ANGLES_REMARQUABLES[kAngle];
-                const rk = Math.pow(r, k);
-                const xk = rk * aK.cosVal;
-                const yk = rk * aK.sinVal;
-                g.drawPoint(xk, yk, '#ccc', 3, '');
-                drawSegmentComplex(g, 0, 0, xk, yk, '#ddd', true);
-            }
-
-            // z^n final
+            // z^n final (pas de puissances intermediaires)
             const kTotal = (angle.k * n) % 16;
             const angleRes = ANGLES_REMARQUABLES[kTotal];
             const rn = Math.pow(r, n);
