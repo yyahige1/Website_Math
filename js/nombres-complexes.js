@@ -80,25 +80,161 @@ function simplifyFrac(num, den) {
     return { num: sign * num / g, den: sign * den / g };
 }
 
-// Angles remarquables: theta -> {cos_num, cos_den, sin_num, sin_den} (fractions de sqrt)
-// Retourne cos et sin sous forme exacte pour les angles classiques
+// Formate une valeur exacte num * sqrt(sqrtPart) / den en TeX
+function formatExactTeX(num, sqrtPart, den) {
+    if (num === 0) return '0';
+    const sign = num < 0 ? '-' : '';
+    const absNum = Math.abs(num);
+
+    if (sqrtPart === 1) {
+        // Valeur rationnelle
+        if (den === 1) return String(num);
+        return sign + '\\frac{' + absNum + '}{' + den + '}';
+    }
+    // Valeur irrationnelle avec racine
+    const sqrtStr = '\\sqrt{' + sqrtPart + '}';
+    const numStr = absNum === 1 ? sqrtStr : absNum + sqrtStr;
+    if (den === 1) return sign + numStr;
+    return sign + '\\frac{' + numStr + '}{' + den + '}';
+}
+
+// Multiplie un entier r par une valeur exacte {num, sqrt, den}
+// Retourne { num, sqrt, den, value, tex }
+function multiplyExact(r, exactVal) {
+    if (r === 0 || exactVal.num === 0) {
+        return { num: 0, sqrt: 1, den: 1, value: 0, tex: '0' };
+    }
+    let newNum = r * exactVal.num;
+    let newDen = exactVal.den;
+    const g = gcdLocal(Math.abs(newNum), Math.abs(newDen));
+    newNum = newNum / g;
+    newDen = newDen / g;
+    if (newDen < 0) { newNum = -newNum; newDen = -newDen; }
+    const value = newNum * Math.sqrt(exactVal.sqrt) / newDen;
+    const tex = formatExactTeX(newNum, exactVal.sqrt, newDen);
+    return { num: newNum, sqrt: exactVal.sqrt, den: newDen, value, tex };
+}
+
+// Additionne deux valeurs exactes
+// Si meme base sqrt : retourne une valeur exacte simplifiee
+// Si bases differentes : retourne un objet compose { isCompound, tex, value }
+function addExactValues(ex1, ex2) {
+    // Cas triviaux
+    if (ex1.num === 0) return ex2.isCompound ? ex2 : { num: ex2.num, sqrt: ex2.sqrt, den: ex2.den, value: ex2.value, tex: ex2.tex };
+    if (ex2.num === 0) return ex1.isCompound ? ex1 : { num: ex1.num, sqrt: ex1.sqrt, den: ex1.den, value: ex1.value, tex: ex1.tex };
+
+    if (ex1.sqrt === ex2.sqrt) {
+        // Meme base : (n1/d1 + n2/d2) * sqrt(s) = (n1*d2 + n2*d1)/(d1*d2) * sqrt(s)
+        let newNum = ex1.num * ex2.den + ex2.num * ex1.den;
+        let newDen = ex1.den * ex2.den;
+        const g = gcdLocal(Math.abs(newNum), Math.abs(newDen));
+        newNum = newNum / g;
+        newDen = newDen / g;
+        if (newDen < 0) { newNum = -newNum; newDen = -newDen; }
+        const value = newNum * Math.sqrt(ex1.sqrt) / newDen;
+        const tex = formatExactTeX(newNum, ex1.sqrt, newDen);
+        return { num: newNum, sqrt: ex1.sqrt, den: newDen, value, tex };
+    }
+
+    // Bases differentes : mettre au meme denominateur
+    const commonDen = (ex1.den * ex2.den) / gcdLocal(ex1.den, ex2.den);
+    const mult1 = commonDen / ex1.den;
+    const mult2 = commonDen / ex2.den;
+    const n1 = ex1.num * mult1;
+    const n2 = ex2.num * mult2;
+    const value = ex1.value + ex2.value;
+
+    // Construire le TeX du numerateur : n1*sqrt(s1) + n2*sqrt(s2)
+    function termTeX(n, s) {
+        if (s === 1) return String(n);
+        const absN = Math.abs(n);
+        if (absN === 1) return (n < 0 ? '-' : '') + '\\sqrt{' + s + '}';
+        return n + '\\sqrt{' + s + '}';
+    }
+
+    let numTeX = termTeX(n1, ex1.sqrt);
+    if (n2 >= 0) numTeX += ' + ' + termTeX(n2, ex2.sqrt);
+    else numTeX += ' - ' + termTeX(Math.abs(n2), ex2.sqrt);
+
+    let tex;
+    if (commonDen === 1) {
+        tex = numTeX;
+    } else {
+        tex = '\\frac{' + numTeX + '}{' + commonDen + '}';
+    }
+
+    return { isCompound: true, value, tex };
+}
+
+// Formate un nombre complexe exact a + bi en TeX
+// Chaque partie est un objet { tex, value } (ou isCompound)
+function formatExactComplexTeX(realEx, imagEx) {
+    const rVal = realEx.value;
+    const iVal = imagEx.value;
+
+    if (Math.abs(rVal) < 1e-9 && Math.abs(iVal) < 1e-9) return '0';
+    if (Math.abs(iVal) < 1e-9) return realEx.tex;
+
+    // Cas compose (rotation pi/3 etc.) : utiliser les parentheses
+    if (realEx.isCompound || imagEx.isCompound) {
+        if (Math.abs(rVal) < 1e-9) return '\\left(' + imagEx.tex + '\\right)i';
+        if (Math.abs(iVal) < 1e-9) return realEx.tex;
+        return realEx.tex + ' + \\left(' + imagEx.tex + '\\right)i';
+    }
+
+    // Partie imaginaire simple
+    const imagIsNeg = imagEx.num < 0;
+    let imagAbsTex = formatExactTeX(Math.abs(imagEx.num), imagEx.sqrt, imagEx.den);
+
+    // Cas imaginaire pur
+    if (Math.abs(rVal) < 1e-9) {
+        if (Math.abs(iVal - 1) < 1e-9) return 'i';
+        if (Math.abs(iVal + 1) < 1e-9) return '-i';
+        if (imagIsNeg) return '-' + imagAbsTex + 'i';
+        return imagAbsTex + 'i';
+    }
+
+    // Cas general : a + bi
+    const signStr = imagIsNeg ? ' - ' : ' + ';
+    if (imagAbsTex === '1') imagAbsTex = '';
+    return realEx.tex + signStr + imagAbsTex + 'i';
+}
+
+// Angles remarquables avec valeurs exactes structurees
+// cosE/sinE : { num, sqrt, den } representant num * sqrt(sqrt) / den
 const ANGLES_REMARQUABLES = [
-    { k: 0, label: '0', cos: '1', sin: '0', cosVal: 1, sinVal: 0 },
-    { k: 1, label: '\\frac{\\pi}{6}', cos: '\\frac{\\sqrt{3}}{2}', sin: '\\frac{1}{2}', cosVal: Math.sqrt(3)/2, sinVal: 0.5 },
-    { k: 2, label: '\\frac{\\pi}{4}', cos: '\\frac{\\sqrt{2}}{2}', sin: '\\frac{\\sqrt{2}}{2}', cosVal: Math.sqrt(2)/2, sinVal: Math.sqrt(2)/2 },
-    { k: 3, label: '\\frac{\\pi}{3}', cos: '\\frac{1}{2}', sin: '\\frac{\\sqrt{3}}{2}', cosVal: 0.5, sinVal: Math.sqrt(3)/2 },
-    { k: 4, label: '\\frac{\\pi}{2}', cos: '0', sin: '1', cosVal: 0, sinVal: 1 },
-    { k: 5, label: '\\frac{2\\pi}{3}', cos: '-\\frac{1}{2}', sin: '\\frac{\\sqrt{3}}{2}', cosVal: -0.5, sinVal: Math.sqrt(3)/2 },
-    { k: 6, label: '\\frac{3\\pi}{4}', cos: '-\\frac{\\sqrt{2}}{2}', sin: '\\frac{\\sqrt{2}}{2}', cosVal: -Math.sqrt(2)/2, sinVal: Math.sqrt(2)/2 },
-    { k: 7, label: '\\frac{5\\pi}{6}', cos: '-\\frac{\\sqrt{3}}{2}', sin: '\\frac{1}{2}', cosVal: -Math.sqrt(3)/2, sinVal: 0.5 },
-    { k: 8, label: '\\pi', cos: '-1', sin: '0', cosVal: -1, sinVal: 0 },
-    { k: 9, label: '\\frac{7\\pi}{6}', cos: '-\\frac{\\sqrt{3}}{2}', sin: '-\\frac{1}{2}', cosVal: -Math.sqrt(3)/2, sinVal: -0.5 },
-    { k: 10, label: '\\frac{5\\pi}{4}', cos: '-\\frac{\\sqrt{2}}{2}', sin: '-\\frac{\\sqrt{2}}{2}', cosVal: -Math.sqrt(2)/2, sinVal: -Math.sqrt(2)/2 },
-    { k: 11, label: '\\frac{4\\pi}{3}', cos: '-\\frac{1}{2}', sin: '-\\frac{\\sqrt{3}}{2}', cosVal: -0.5, sinVal: -Math.sqrt(3)/2 },
-    { k: 12, label: '\\frac{3\\pi}{2}', cos: '0', sin: '-1', cosVal: 0, sinVal: -1 },
-    { k: 13, label: '\\frac{5\\pi}{3}', cos: '\\frac{1}{2}', sin: '-\\frac{\\sqrt{3}}{2}', cosVal: 0.5, sinVal: -Math.sqrt(3)/2 },
-    { k: 14, label: '\\frac{7\\pi}{4}', cos: '\\frac{\\sqrt{2}}{2}', sin: '-\\frac{\\sqrt{2}}{2}', cosVal: Math.sqrt(2)/2, sinVal: -Math.sqrt(2)/2 },
-    { k: 15, label: '\\frac{11\\pi}{6}', cos: '\\frac{\\sqrt{3}}{2}', sin: '-\\frac{1}{2}', cosVal: Math.sqrt(3)/2, sinVal: -0.5 },
+    { k: 0, label: '0', cos: '1', sin: '0', cosVal: 1, sinVal: 0,
+      cosE: {num:1, sqrt:1, den:1}, sinE: {num:0, sqrt:1, den:1} },
+    { k: 1, label: '\\frac{\\pi}{6}', cos: '\\frac{\\sqrt{3}}{2}', sin: '\\frac{1}{2}', cosVal: Math.sqrt(3)/2, sinVal: 0.5,
+      cosE: {num:1, sqrt:3, den:2}, sinE: {num:1, sqrt:1, den:2} },
+    { k: 2, label: '\\frac{\\pi}{4}', cos: '\\frac{\\sqrt{2}}{2}', sin: '\\frac{\\sqrt{2}}{2}', cosVal: Math.sqrt(2)/2, sinVal: Math.sqrt(2)/2,
+      cosE: {num:1, sqrt:2, den:2}, sinE: {num:1, sqrt:2, den:2} },
+    { k: 3, label: '\\frac{\\pi}{3}', cos: '\\frac{1}{2}', sin: '\\frac{\\sqrt{3}}{2}', cosVal: 0.5, sinVal: Math.sqrt(3)/2,
+      cosE: {num:1, sqrt:1, den:2}, sinE: {num:1, sqrt:3, den:2} },
+    { k: 4, label: '\\frac{\\pi}{2}', cos: '0', sin: '1', cosVal: 0, sinVal: 1,
+      cosE: {num:0, sqrt:1, den:1}, sinE: {num:1, sqrt:1, den:1} },
+    { k: 5, label: '\\frac{2\\pi}{3}', cos: '-\\frac{1}{2}', sin: '\\frac{\\sqrt{3}}{2}', cosVal: -0.5, sinVal: Math.sqrt(3)/2,
+      cosE: {num:-1, sqrt:1, den:2}, sinE: {num:1, sqrt:3, den:2} },
+    { k: 6, label: '\\frac{3\\pi}{4}', cos: '-\\frac{\\sqrt{2}}{2}', sin: '\\frac{\\sqrt{2}}{2}', cosVal: -Math.sqrt(2)/2, sinVal: Math.sqrt(2)/2,
+      cosE: {num:-1, sqrt:2, den:2}, sinE: {num:1, sqrt:2, den:2} },
+    { k: 7, label: '\\frac{5\\pi}{6}', cos: '-\\frac{\\sqrt{3}}{2}', sin: '\\frac{1}{2}', cosVal: -Math.sqrt(3)/2, sinVal: 0.5,
+      cosE: {num:-1, sqrt:3, den:2}, sinE: {num:1, sqrt:1, den:2} },
+    { k: 8, label: '\\pi', cos: '-1', sin: '0', cosVal: -1, sinVal: 0,
+      cosE: {num:-1, sqrt:1, den:1}, sinE: {num:0, sqrt:1, den:1} },
+    { k: 9, label: '\\frac{7\\pi}{6}', cos: '-\\frac{\\sqrt{3}}{2}', sin: '-\\frac{1}{2}', cosVal: -Math.sqrt(3)/2, sinVal: -0.5,
+      cosE: {num:-1, sqrt:3, den:2}, sinE: {num:-1, sqrt:1, den:2} },
+    { k: 10, label: '\\frac{5\\pi}{4}', cos: '-\\frac{\\sqrt{2}}{2}', sin: '-\\frac{\\sqrt{2}}{2}', cosVal: -Math.sqrt(2)/2, sinVal: -Math.sqrt(2)/2,
+      cosE: {num:-1, sqrt:2, den:2}, sinE: {num:-1, sqrt:2, den:2} },
+    { k: 11, label: '\\frac{4\\pi}{3}', cos: '-\\frac{1}{2}', sin: '-\\frac{\\sqrt{3}}{2}', cosVal: -0.5, sinVal: -Math.sqrt(3)/2,
+      cosE: {num:-1, sqrt:1, den:2}, sinE: {num:-1, sqrt:3, den:2} },
+    { k: 12, label: '\\frac{3\\pi}{2}', cos: '0', sin: '-1', cosVal: 0, sinVal: -1,
+      cosE: {num:0, sqrt:1, den:1}, sinE: {num:-1, sqrt:1, den:1} },
+    { k: 13, label: '\\frac{5\\pi}{3}', cos: '\\frac{1}{2}', sin: '-\\frac{\\sqrt{3}}{2}', cosVal: 0.5, sinVal: -Math.sqrt(3)/2,
+      cosE: {num:1, sqrt:1, den:2}, sinE: {num:-1, sqrt:3, den:2} },
+    { k: 14, label: '\\frac{7\\pi}{4}', cos: '\\frac{\\sqrt{2}}{2}', sin: '-\\frac{\\sqrt{2}}{2}', cosVal: Math.sqrt(2)/2, sinVal: -Math.sqrt(2)/2,
+      cosE: {num:1, sqrt:2, den:2}, sinE: {num:-1, sqrt:2, den:2} },
+    { k: 15, label: '\\frac{11\\pi}{6}', cos: '\\frac{\\sqrt{3}}{2}', sin: '-\\frac{1}{2}', cosVal: Math.sqrt(3)/2, sinVal: -0.5,
+      cosE: {num:1, sqrt:3, den:2}, sinE: {num:-1, sqrt:1, den:2} },
 ];
 
 // Angles pour exercices trigo (premier et deuxieme quadrant principalement)
@@ -296,11 +432,10 @@ function generateTrigonometrique(ex) {
         // Generer un complexe dont le module et l'argument sont "jolis"
         const angle = pick(ANGLES_EXERCICES);
         const r = pick([1, 2, 3, 4]);
-        ex.a = Math.round(r * angle.cosVal * 1000) / 1000;
-        ex.b = Math.round(r * angle.sinVal * 1000) / 1000;
-        // Arrondir a des entiers si possible
-        if (Math.abs(ex.a - Math.round(ex.a)) < 1e-6) ex.a = Math.round(ex.a);
-        if (Math.abs(ex.b - Math.round(ex.b)) < 1e-6) ex.b = Math.round(ex.b);
+        ex.aExact = multiplyExact(r, angle.cosE);
+        ex.bExact = multiplyExact(r, angle.sinE);
+        ex.a = ex.aExact.value;
+        ex.b = ex.bExact.value;
         ex.r = r;
         ex.angle = angle;
     } else if (sub === 'trigo_vers_algebrique') {
@@ -332,10 +467,10 @@ function generateModuleArgument(ex) {
         // Choisir un angle remarquable pour que la reponse soit exacte
         const angle = pick(ANGLES_EXERCICES);
         const r = pick([1, 2, 3]);
-        ex.a = Math.round(r * angle.cosVal * 1000) / 1000;
-        ex.b = Math.round(r * angle.sinVal * 1000) / 1000;
-        if (Math.abs(ex.a - Math.round(ex.a)) < 1e-6) ex.a = Math.round(ex.a);
-        if (Math.abs(ex.b - Math.round(ex.b)) < 1e-6) ex.b = Math.round(ex.b);
+        ex.aExact = multiplyExact(r, angle.cosE);
+        ex.bExact = multiplyExact(r, angle.sinE);
+        ex.a = ex.aExact.value;
+        ex.b = ex.bExact.value;
         ex.angle = angle;
         ex.r = r;
     } else if (sub === 'ensemble') {
@@ -430,15 +565,22 @@ function generateGeometrie(ex) {
         // Centre de rotation
         ex.cx = randInt(-3, 3);
         ex.cy = randInt(-3, 3);
-        // Angle de rotation : angle remarquable
+        // Angle de rotation : angle remarquable avec valeurs exactes
         ex.rotAngle = pick([
-            { label: '\\frac{\\pi}{2}', cos: 0, sin: 1 },
-            { label: '-\\frac{\\pi}{2}', cos: 0, sin: -1 },
-            { label: '\\pi', cos: -1, sin: 0 },
-            { label: '\\frac{\\pi}{3}', cos: 0.5, sin: Math.sqrt(3)/2 },
-            { label: '-\\frac{\\pi}{3}', cos: 0.5, sin: -Math.sqrt(3)/2 },
-            { label: '\\frac{\\pi}{4}', cos: Math.sqrt(2)/2, sin: Math.sqrt(2)/2 },
-            { label: '-\\frac{\\pi}{4}', cos: Math.sqrt(2)/2, sin: -Math.sqrt(2)/2 },
+            { label: '\\frac{\\pi}{2}', cos: 0, sin: 1,
+              cosE: {num:0, sqrt:1, den:1}, sinE: {num:1, sqrt:1, den:1} },
+            { label: '-\\frac{\\pi}{2}', cos: 0, sin: -1,
+              cosE: {num:0, sqrt:1, den:1}, sinE: {num:-1, sqrt:1, den:1} },
+            { label: '\\pi', cos: -1, sin: 0,
+              cosE: {num:-1, sqrt:1, den:1}, sinE: {num:0, sqrt:1, den:1} },
+            { label: '\\frac{\\pi}{3}', cos: 0.5, sin: Math.sqrt(3)/2,
+              cosE: {num:1, sqrt:1, den:2}, sinE: {num:1, sqrt:3, den:2} },
+            { label: '-\\frac{\\pi}{3}', cos: 0.5, sin: -Math.sqrt(3)/2,
+              cosE: {num:1, sqrt:1, den:2}, sinE: {num:-1, sqrt:3, den:2} },
+            { label: '\\frac{\\pi}{4}', cos: Math.sqrt(2)/2, sin: Math.sqrt(2)/2,
+              cosE: {num:1, sqrt:2, den:2}, sinE: {num:1, sqrt:2, den:2} },
+            { label: '-\\frac{\\pi}{4}', cos: Math.sqrt(2)/2, sin: -Math.sqrt(2)/2,
+              cosE: {num:1, sqrt:2, den:2}, sinE: {num:-1, sqrt:2, den:2} },
         ]);
     }
 }
@@ -471,6 +613,7 @@ function updateExerciseDisplay() {
     }
 
     $('expressionDisplay').innerHTML = display;
+    drawComplexDiagram();
 }
 
 function displayAlgebrique(ex) {
@@ -499,7 +642,7 @@ function displayTrigonometrique(ex) {
     const sub = ComplexState.subtype_trigonometrique;
 
     if (sub === 'algebrique_vers_trigo') {
-        const z = formatComplexTeX(ex.a, ex.b);
+        const z = ex.aExact ? formatExactComplexTeX(ex.aExact, ex.bExact) : formatComplexTeX(ex.a, ex.b);
         return 'Ecrire ' + K('z = ' + z) + ' sous forme trigonometrique et exponentielle';
     } else if (sub === 'trigo_vers_algebrique') {
         return 'Ecrire sous forme algebrique : ' +
@@ -526,7 +669,7 @@ function displayModuleArgument(ex) {
         const z = formatComplexTeX(ex.a, ex.b);
         return 'Calculer le module de ' + K('z = ' + z);
     } else if (sub === 'argument') {
-        const z = formatComplexTeX(ex.a, ex.b);
+        const z = ex.aExact ? formatExactComplexTeX(ex.aExact, ex.bExact) : formatComplexTeX(ex.a, ex.b);
         return 'Determiner l\'argument de ' + K('z = ' + z);
     } else if (sub === 'ensemble') {
         const zA = formatComplexTeX(ex.xa, ex.ya);
@@ -883,6 +1026,49 @@ function solveTrigonometrique(ex) {
 
 function solveAlgVersTrigo(ex) {
     let html = '';
+
+    // Utiliser les valeurs exactes si disponibles
+    if (ex.aExact && ex.r && ex.angle) {
+        const r = ex.r;
+        const angle = ex.angle;
+        const zTex = formatExactComplexTeX(ex.aExact, ex.bExact);
+
+        html += '<div class="step">';
+        html += '<div class="step-number">Etape 1 : Module</div>';
+        html += '<div class="step-expression">' +
+            K('z = ' + zTex) + '</div>';
+        html += '<div class="step-expression">' +
+            K('|z| = ' + r) + '</div>';
+        html += '</div>';
+
+        html += '<div class="step">';
+        html += '<div class="step-number">Etape 2 : Argument</div>';
+        html += '<div class="step-expression">' +
+            K('\\cos\\theta = \\frac{a}{|z|} = ' + angle.cos) + '<br>' +
+            K('\\sin\\theta = \\frac{b}{|z|} = ' + angle.sin) + '</div>';
+        html += '<div class="step-explanation">On identifie l\'angle remarquable :</div>';
+        html += '<div class="step-expression">' +
+            K('\\theta = ' + angle.label) + '</div>';
+        html += '</div>';
+
+        html += '<div class="step">';
+        html += '<div class="step-number">Etape 3 : Formes</div>';
+        html += '<div class="step-expression">';
+        html += 'Forme trigonometrique : ' +
+            K('z = ' + r + '\\left(\\cos ' + angle.label + ' + i\\sin ' + angle.label + '\\right)') + '<br>';
+        html += 'Forme exponentielle : ' +
+            K('z = ' + r + 'e^{i' + angle.label + '}') + '</div>';
+        html += '</div>';
+
+        html += '<div class="result-highlight">';
+        html += '<div class="final">' +
+            K('z = \\boxed{' + r + 'e^{i' + angle.label + '}}') + '</div>';
+        html += '</div>';
+
+        return html;
+    }
+
+    // Fallback pour les cas sans valeur exacte
     const a = ex.a, b = ex.b;
     const mod = moduleExact(a, b);
     const arg = argumentExact(a, b);
@@ -945,30 +1131,21 @@ function solveTrigoVersAlg(ex) {
     html += '<div class="step-expression">' +
         K('z = ' + r + '\\left(' + angle.cos + ' + i \\cdot ' + angle.sin + '\\right)') + '</div>';
 
-    // Calculer les valeurs
-    const aVal = Math.round(r * angle.cosVal * 1000) / 1000;
-    const bVal = Math.round(r * angle.sinVal * 1000) / 1000;
-    const aDisp = Math.abs(aVal - Math.round(aVal)) < 1e-6 ? Math.round(aVal) : aVal;
-    const bDisp = Math.abs(bVal - Math.round(bVal)) < 1e-6 ? Math.round(bVal) : bVal;
+    // Calculer les valeurs exactes
+    const realExact = multiplyExact(r, angle.cosE);
+    const imagExact = multiplyExact(r, angle.sinE);
 
-    // Affichage exact avec r * cos, r * sin
+    // Montrer le detail de la multiplication si r > 1
     if (r !== 1) {
-        let reTeX = r + ' \\times ' + angle.cos;
-        let imTeX = r + ' \\times ' + angle.sin;
         html += '<div class="step-expression">' +
-            K('= ' + reTeX + ' + i \\times ' + imTeX) + '</div>';
+            K('= ' + r + ' \\times ' + angle.cos + ' + i \\times ' + r + ' \\times ' + angle.sin) + '</div>';
+        html += '<div class="step-expression">' +
+            K('= ' + formatExactComplexTeX(realExact, imagExact)) + '</div>';
     }
     html += '</div>';
 
-    // Resultat
-    let resTex;
-    // Essayer un affichage exact
-    if (Number.isInteger(aDisp) && Number.isInteger(bDisp)) {
-        resTex = formatComplexTeX(aDisp, bDisp);
-    } else {
-        // Affichage avec racines
-        resTex = r + '\\cos ' + angle.label + ' + ' + r + 'i\\sin ' + angle.label;
-    }
+    // Resultat exact
+    const resTex = formatExactComplexTeX(realExact, imagExact);
 
     html += '<div class="result-highlight">';
     html += '<div class="final">' + K('z = \\boxed{' + resTex + '}') + '</div>';
@@ -1076,9 +1253,10 @@ function solveMoivre(ex) {
         K('= ' + finalAngleLabel + ' \\pmod{2\\pi}') + '</div>';
     html += '</div>';
 
-    // Forme algebrique
-    const aVal = Math.round(rn * angleRes.cosVal);
-    const bVal = Math.round(rn * angleRes.sinVal);
+    // Forme algebrique exacte
+    const realExact = multiplyExact(rn, angleRes.cosE);
+    const imagExact = multiplyExact(rn, angleRes.sinE);
+    const algTex = formatExactComplexTeX(realExact, imagExact);
 
     html += '<div class="step">';
     html += '<div class="step-number">Etape 4 : Forme algebrique</div>';
@@ -1086,19 +1264,14 @@ function solveMoivre(ex) {
         K('z^{' + n + '} = ' + rn + '\\left(\\cos ' + finalAngleLabel + ' + i\\sin ' + finalAngleLabel + '\\right)') + '</div>';
     html += '<div class="step-expression">' +
         K('= ' + rn + '\\left(' + angleRes.cos + ' + i \\cdot ' + angleRes.sin + '\\right)') + '</div>';
-
-    if (Number.isInteger(aVal) && Number.isInteger(bVal)) {
-        html += '<div class="step-expression">' +
-            K('= ' + formatComplexTeX(aVal, bVal)) + '</div>';
-    }
+    html += '<div class="step-expression">' +
+        K('= ' + algTex) + '</div>';
     html += '</div>';
 
     html += '<div class="result-highlight">';
     html += '<div class="final">' +
-        K('z^{' + n + '} = \\boxed{' + rn + 'e^{i' + finalAngleLabel + '}}');
-    if (Number.isInteger(aVal) && Number.isInteger(bVal)) {
-        html += '<br>' + K('= ' + formatComplexTeX(aVal, bVal));
-    }
+        K('z^{' + n + '} = \\boxed{' + rn + 'e^{i' + finalAngleLabel + '}}') +
+        '<br>' + K('= ' + algTex);
     html += '</div></div>';
 
     return html;
@@ -1147,6 +1320,42 @@ function solveModule(ex) {
 
 function solveArgument(ex) {
     let html = '';
+
+    // Utiliser les valeurs exactes si disponibles
+    if (ex.aExact && ex.r && ex.angle) {
+        const r = ex.r;
+        const angle = ex.angle;
+
+        html += '<div class="step">';
+        html += '<div class="step-number">Etape 1 : Module</div>';
+        html += '<div class="step-expression">' +
+            K('|z| = ' + r) + '</div>';
+        html += '</div>';
+
+        html += '<div class="step">';
+        html += '<div class="step-number">Etape 2 : Cosinus et sinus</div>';
+        html += '<div class="step-expression">' +
+            K('\\cos\\theta = \\frac{a}{|z|} = ' + angle.cos) + '<br>' +
+            K('\\sin\\theta = \\frac{b}{|z|} = ' + angle.sin) + '</div>';
+        html += '</div>';
+
+        html += '<div class="step">';
+        html += '<div class="step-number">Etape 3 : Identification</div>';
+        html += '<div class="step-explanation">On reconnait les valeurs trigonometriques de l\'angle remarquable ' +
+            K(angle.label) + ' :</div>';
+        html += '<div class="step-expression">' +
+            K('\\cos\\left(' + angle.label + '\\right) = ' + angle.cos) + ' et ' +
+            K('\\sin\\left(' + angle.label + '\\right) = ' + angle.sin) + '</div>';
+        html += '</div>';
+
+        html += '<div class="result-highlight">';
+        html += '<div class="final">' + K('\\arg(z) = \\boxed{' + angle.label + '}') + '</div>';
+        html += '</div>';
+
+        return html;
+    }
+
+    // Fallback
     const a = ex.a, b = ex.b;
     const mod = moduleExact(a, b);
     const arg = argumentExact(a, b);
@@ -1598,50 +1807,337 @@ function solveRotation(ex) {
     html += '<div class="step-expression">' +
         K('e^{i' + rot.label + '} = \\cos ' + rot.label + ' + i\\sin ' + rot.label) + '</div>';
 
-    // cos(theta) + i*sin(theta)
-    const cosT = rot.cos;
-    const sinT = rot.sin;
+    // Calcul exact : (dx + dy*i)(cos + i*sin)
+    // Partie reelle = dx*cos - dy*sin
+    // Partie imaginaire = dx*sin + dy*cos
+    const rp1 = multiplyExact(dx, rot.cosE);
+    const rp2 = multiplyExact(-dy, rot.sinE);
+    const ip1 = multiplyExact(dx, rot.sinE);
+    const ip2 = multiplyExact(dy, rot.cosE);
 
-    // (dx + dy*i)(cosT + sinT*i)
-    const resX_raw = dx * cosT - dy * sinT;
-    const resY_raw = dx * sinT + dy * cosT;
-
-    // Arrondir
-    const resX = Math.round(resX_raw * 1000) / 1000;
-    const resY = Math.round(resY_raw * 1000) / 1000;
-
-    html += '<div class="step-expression">' +
-        K('e^{i' + rot.label + '} \\times (' + formatComplexTeX(dx, dy) + ')') + '</div>';
-
-    // Resultat de la multiplication
-    const finalX_raw = resX + ex.cx;
-    const finalY_raw = resY + ex.cy;
-    const finalX = Math.round(finalX_raw * 1000) / 1000;
-    const finalY = Math.round(finalY_raw * 1000) / 1000;
+    const realProd = addExactValues(rp1, rp2);
+    const imagProd = addExactValues(ip1, ip2);
 
     html += '<div class="step-expression">' +
-        K('= ' + formatComplexTeX(resX, resY)) + '</div>';
+        K('(' + formatComplexTeX(dx, dy) + ')(\\cos ' + rot.label + ' + i\\sin ' + rot.label + ')') + '</div>';
+    html += '<div class="step-explanation">On developpe : ' +
+        K('(a + bi)(\\cos\\theta + i\\sin\\theta) = (a\\cos\\theta - b\\sin\\theta) + (a\\sin\\theta + b\\cos\\theta)i') + '</div>';
+
+    const prodTex = formatExactComplexTeX(realProd, imagProd);
+    html += '<div class="step-expression">' +
+        K('= ' + prodTex) + '</div>';
     html += '</div>';
+
+    // Retranslation : ajouter le centre
+    const cxExact = { num: ex.cx, sqrt: 1, den: 1, value: ex.cx, tex: String(ex.cx) };
+    const cyExact = { num: ex.cy, sqrt: 1, den: 1, value: ex.cy, tex: String(ex.cy) };
+
+    const finalReal = addExactValues(realProd, cxExact);
+    const finalImag = addExactValues(imagProd, cyExact);
+    const finalTex = formatExactComplexTeX(finalReal, finalImag);
 
     html += '<div class="step">';
     html += '<div class="step-number">Etape 4 : Retranslation</div>';
     html += '<div class="step-expression">' +
-        K('z_{A\'} = (' + formatComplexTeX(resX, resY) + ') + (' + formatComplexTeX(ex.cx, ex.cy) + ')') + '</div>';
+        K('z_{A\'} = (' + prodTex + ') + (' + formatComplexTeX(ex.cx, ex.cy) + ')') + '</div>';
     html += '<div class="step-expression">' +
-        K('= ' + formatComplexTeX(finalX, finalY)) + '</div>';
+        K('= ' + finalTex) + '</div>';
     html += '</div>';
 
     html += '<div class="result-highlight">';
-
-    // Afficher entier si possible
-    const dispX = Math.abs(finalX - Math.round(finalX)) < 1e-6 ? Math.round(finalX) : finalX;
-    const dispY = Math.abs(finalY - Math.round(finalY)) < 1e-6 ? Math.round(finalY) : finalY;
-
-    html += '<div class="final">' + K('z_{A\'} = \\boxed{' + formatComplexTeX(dispX, dispY) + '}') +
-        '<br>L\'image est ' + K('A\'(' + dispX + '\\,;\\,' + dispY + ')') + '</div>';
+    html += '<div class="final">' + K('z_{A\'} = \\boxed{' + finalTex + '}') + '</div>';
     html += '</div>';
 
     return html;
+}
+
+// ========================================
+// Diagramme d'Argand (Canvas)
+// ========================================
+
+var complexGraph = null;
+
+// Dessine un segment entre deux points
+function drawSegmentComplex(graph, x1, y1, x2, y2, color, dashed) {
+    const ctx = graph.ctx;
+    ctx.strokeStyle = color || '#667eea';
+    ctx.lineWidth = 2;
+    if (dashed) ctx.setLineDash([5, 5]);
+    ctx.beginPath();
+    ctx.moveTo(graph.toCanvasX(x1), graph.toCanvasY(y1));
+    ctx.lineTo(graph.toCanvasX(x2), graph.toCanvasY(y2));
+    ctx.stroke();
+    if (dashed) ctx.setLineDash([]);
+}
+
+// Dessine un cercle
+function drawCircleComplex(graph, cx, cy, r, color) {
+    const ctx = graph.ctx;
+    ctx.strokeStyle = color || '#667eea';
+    ctx.lineWidth = 2;
+    const rx = Math.abs(graph.toCanvasX(cx + r) - graph.toCanvasX(cx));
+    const ry = Math.abs(graph.toCanvasY(cy) - graph.toCanvasY(cy + r));
+    ctx.beginPath();
+    ctx.ellipse(graph.toCanvasX(cx), graph.toCanvasY(cy), rx, ry, 0, 0, 2 * Math.PI);
+    ctx.stroke();
+}
+
+// Dessine un arc d'angle (counterclockwise = sens trigo en math)
+function drawAngleArc(graph, cx, cy, startAngle, endAngle, radius, color, mathCCW) {
+    const ctx = graph.ctx;
+    const ox = graph.toCanvasX(cx);
+    const oy = graph.toCanvasY(cy);
+    const r = Math.abs(graph.toCanvasX(cx + radius) - ox);
+    ctx.strokeStyle = color || '#764ba2';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    // Canvas Y est inverse : angle math theta -> angle canvas -theta
+    // mathCCW=true (sens trigo) -> clockwise en canvas (counterclockwise=false)
+    const ccw = mathCCW === false; // rotation horaire en math = counterclockwise en canvas
+    ctx.arc(ox, oy, r, -startAngle, -endAngle, ccw);
+    ctx.stroke();
+}
+
+// Dessine une fleche entre deux points
+function drawArrowComplex(graph, x1, y1, x2, y2, color, label) {
+    const ctx = graph.ctx;
+    const cx1 = graph.toCanvasX(x1), cy1 = graph.toCanvasY(y1);
+    const cx2 = graph.toCanvasX(x2), cy2 = graph.toCanvasY(y2);
+    const angle = Math.atan2(cy2 - cy1, cx2 - cx1);
+    const headLen = 10;
+
+    ctx.strokeStyle = color || '#667eea';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(cx1, cy1);
+    ctx.lineTo(cx2, cy2);
+    ctx.stroke();
+
+    // Pointe de fleche
+    ctx.fillStyle = color || '#667eea';
+    ctx.beginPath();
+    ctx.moveTo(cx2, cy2);
+    ctx.lineTo(cx2 - headLen * Math.cos(angle - Math.PI/6), cy2 - headLen * Math.sin(angle - Math.PI/6));
+    ctx.lineTo(cx2 - headLen * Math.cos(angle + Math.PI/6), cy2 - headLen * Math.sin(angle + Math.PI/6));
+    ctx.closePath();
+    ctx.fill();
+
+    // Label
+    if (label) {
+        const mx = (cx1 + cx2) / 2;
+        const my = (cy1 + cy2) / 2;
+        ctx.fillStyle = color || '#333';
+        ctx.font = 'bold 13px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText(label, mx + 12 * Math.cos(angle + Math.PI/2), my + 12 * Math.sin(angle + Math.PI/2));
+    }
+}
+
+// Dessine des projections en pointilles depuis un point vers les axes
+function drawProjections(graph, x, y, color) {
+    drawSegmentComplex(graph, x, y, x, 0, color || '#aaa', true);
+    drawSegmentComplex(graph, x, y, 0, y, color || '#aaa', true);
+}
+
+// Determine si le type d'exercice necessite un diagramme
+function shouldShowDiagram() {
+    const type = ComplexState.currentType;
+    if (type === 'geometrie') return true;
+    if (type === 'module_argument') return true;
+    if (type === 'trigonometrique' && ComplexState.subtype_trigonometrique === 'algebrique_vers_trigo') return true;
+    return false;
+}
+
+// Collecte les points pour calculer les bornes
+function collectPoints() {
+    const type = ComplexState.currentType;
+    const ex = ComplexState.exercise;
+    const sub = ComplexState['subtype_' + type];
+    const pts = [[0, 0]]; // Toujours inclure l'origine
+
+    if (type === 'geometrie') {
+        if (sub === 'distance' || sub === 'milieu') {
+            pts.push([ex.xa, ex.ya], [ex.xb, ex.yb]);
+        } else if (sub === 'translation') {
+            pts.push([ex.xa, ex.ya], [ex.xa + ex.tx, ex.ya + ex.ty]);
+        } else if (sub === 'rotation') {
+            pts.push([ex.xa, ex.ya], [ex.cx, ex.cy]);
+            // Estimer l'image pour les bornes
+            const dx = ex.xa - ex.cx, dy = ex.ya - ex.cy;
+            const fx = dx * ex.rotAngle.cos - dy * ex.rotAngle.sin + ex.cx;
+            const fy = dx * ex.rotAngle.sin + dy * ex.rotAngle.cos + ex.cy;
+            pts.push([fx, fy]);
+        }
+    } else if (type === 'module_argument') {
+        if (sub === 'module' || sub === 'argument') {
+            pts.push([ex.a, ex.b]);
+        } else if (sub === 'ensemble') {
+            if (ex.ensType === 'cercle') {
+                pts.push([ex.xa - ex.rayon, ex.ya - ex.rayon], [ex.xa + ex.rayon, ex.ya + ex.rayon]);
+            } else {
+                pts.push([ex.xa, ex.ya], [ex.xb, ex.yb]);
+            }
+        }
+    } else if (type === 'trigonometrique') {
+        pts.push([ex.a, ex.b]);
+    }
+    return pts;
+}
+
+// Fonction principale de dessin du diagramme
+function drawComplexDiagram() {
+    const container = $('graphContainer');
+    if (!container) return;
+
+    if (!shouldShowDiagram()) {
+        container.style.display = 'none';
+        return;
+    }
+
+    container.style.display = 'block';
+
+    const pts = collectPoints();
+    let xMin = Infinity, xMax = -Infinity, yMin = Infinity, yMax = -Infinity;
+    for (const [x, y] of pts) {
+        if (x < xMin) xMin = x;
+        if (x > xMax) xMax = x;
+        if (y < yMin) yMin = y;
+        if (y > yMax) yMax = y;
+    }
+
+    // Marge et symetrie
+    const margin = 2;
+    xMin = Math.floor(xMin) - margin;
+    xMax = Math.ceil(xMax) + margin;
+    yMin = Math.floor(yMin) - margin;
+    yMax = Math.ceil(yMax) + margin;
+
+    // Rendre le repere carre
+    const range = Math.max(xMax - xMin, yMax - yMin);
+    const cx = (xMin + xMax) / 2;
+    const cy = (yMin + yMax) / 2;
+    xMin = Math.floor(cx - range / 2);
+    xMax = Math.ceil(cx + range / 2);
+    yMin = Math.floor(cy - range / 2);
+    yMax = Math.ceil(cy + range / 2);
+
+    complexGraph = new GraphCanvas('complexCanvas', {
+        width: 420, height: 420, padding: 40,
+        xMin, xMax, yMin, yMax
+    });
+
+    complexGraph.clear();
+    complexGraph.drawGrid();
+    complexGraph.drawAxes();
+    complexGraph.drawTicks();
+
+    // Labels des axes
+    const ctx = complexGraph.ctx;
+    ctx.fillStyle = '#333';
+    ctx.font = '14px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText('Re', complexGraph.toCanvasX(xMax) - 5, complexGraph.toCanvasY(0) + 18);
+    ctx.fillText('Im', complexGraph.toCanvasX(0) + 18, complexGraph.toCanvasY(yMax) + 5);
+
+    // Dessin specifique au type
+    drawDiagramForType();
+}
+
+// Dispatch le dessin selon le type
+function drawDiagramForType() {
+    const type = ComplexState.currentType;
+    const ex = ComplexState.exercise;
+    const sub = ComplexState['subtype_' + type];
+    const g = complexGraph;
+    const blue = '#2196F3', red = '#e53e3e', green = '#48bb78', purple = '#764ba2';
+
+    if (type === 'geometrie') {
+        if (sub === 'distance') {
+            g.drawPoint(ex.xa, ex.ya, blue, 5, 'A');
+            g.drawPoint(ex.xb, ex.yb, red, 5, 'B');
+            drawSegmentComplex(g, ex.xa, ex.ya, ex.xb, ex.yb, purple, false);
+        } else if (sub === 'milieu') {
+            g.drawPoint(ex.xa, ex.ya, blue, 5, 'A');
+            g.drawPoint(ex.xb, ex.yb, red, 5, 'B');
+            drawSegmentComplex(g, ex.xa, ex.ya, ex.xb, ex.yb, '#aaa', true);
+            const mx = (ex.xa + ex.xb) / 2, my = (ex.ya + ex.yb) / 2;
+            g.drawPoint(mx, my, green, 6, 'I');
+        } else if (sub === 'translation') {
+            g.drawPoint(ex.xa, ex.ya, blue, 5, 'A');
+            const ax = ex.xa + ex.tx, ay = ex.ya + ex.ty;
+            g.drawPoint(ax, ay, red, 5, "A'");
+            drawArrowComplex(g, ex.xa, ex.ya, ax, ay, purple, 't');
+        } else if (sub === 'rotation') {
+            g.drawPoint(ex.cx, ex.cy, '#333', 6, '\u03A9');
+            g.drawPoint(ex.xa, ex.ya, blue, 5, 'A');
+            // Calculer l'image
+            const dx = ex.xa - ex.cx, dy = ex.ya - ex.cy;
+            const fx = dx * ex.rotAngle.cos - dy * ex.rotAngle.sin + ex.cx;
+            const fy = dx * ex.rotAngle.sin + dy * ex.rotAngle.cos + ex.cy;
+            g.drawPoint(fx, fy, red, 5, "A'");
+            drawSegmentComplex(g, ex.cx, ex.cy, ex.xa, ex.ya, '#aaa', true);
+            drawSegmentComplex(g, ex.cx, ex.cy, fx, fy, '#aaa', true);
+            // Arc de rotation
+            const startAngle = Math.atan2(dy, dx);
+            const endAngle = Math.atan2(fy - ex.cy, fx - ex.cx);
+            const radius = Math.sqrt(dx * dx + dy * dy) * 0.3;
+            // Determiner le sens : sin > 0 = rotation positive (sens trigo)
+            const isCCW = ex.rotAngle.sin > 0 || (ex.rotAngle.sin === 0 && ex.rotAngle.cos < 0);
+            drawAngleArc(g, ex.cx, ex.cy, startAngle, endAngle, radius, purple, isCCW);
+        }
+    } else if (type === 'module_argument') {
+        if (sub === 'module') {
+            g.drawPoint(0, 0, '#333', 4, 'O');
+            g.drawPoint(ex.a, ex.b, blue, 5, 'M');
+            drawSegmentComplex(g, 0, 0, ex.a, ex.b, purple, false);
+            drawProjections(g, ex.a, ex.b, '#ccc');
+        } else if (sub === 'argument') {
+            g.drawPoint(0, 0, '#333', 4, 'O');
+            const a = ex.aExact ? ex.aExact.value : ex.a;
+            const b = ex.bExact ? ex.bExact.value : ex.b;
+            g.drawPoint(a, b, blue, 5, 'M');
+            drawSegmentComplex(g, 0, 0, a, b, purple, false);
+            drawProjections(g, a, b, '#ccc');
+            // Arc d'argument
+            const angle = Math.atan2(b, a);
+            if (Math.abs(angle) > 0.05) {
+                drawAngleArc(g, 0, 0, 0, angle, 0.8, '#ed8936', angle > 0);
+            }
+        } else if (sub === 'ensemble') {
+            if (ex.ensType === 'cercle') {
+                g.drawPoint(ex.xa, ex.ya, blue, 5, 'A');
+                drawCircleComplex(g, ex.xa, ex.ya, ex.rayon, purple);
+            } else {
+                g.drawPoint(ex.xa, ex.ya, blue, 5, 'A');
+                g.drawPoint(ex.xb, ex.yb, red, 5, 'B');
+                drawSegmentComplex(g, ex.xa, ex.ya, ex.xb, ex.yb, '#aaa', true);
+                const mx = (ex.xa + ex.xb) / 2, my = (ex.ya + ex.yb) / 2;
+                g.drawPoint(mx, my, green, 4, 'I');
+                // Mediatrice : perpendiculaire a AB passant par I
+                const abx = ex.xb - ex.xa, aby = ex.yb - ex.ya;
+                const perpX = -aby, perpY = abx;
+                const len = Math.sqrt(perpX * perpX + perpY * perpY);
+                if (len > 0) {
+                    const ext = 6;
+                    const nx = perpX / len, ny = perpY / len;
+                    drawSegmentComplex(g, mx - ext * nx, my - ext * ny, mx + ext * nx, my + ext * ny, purple, false);
+                }
+            }
+        }
+    } else if (type === 'trigonometrique') {
+        // algebrique_vers_trigo
+        const a = ex.aExact ? ex.aExact.value : ex.a;
+        const b = ex.bExact ? ex.bExact.value : ex.b;
+        g.drawPoint(0, 0, '#333', 4, 'O');
+        g.drawPoint(a, b, blue, 5, 'M');
+        drawSegmentComplex(g, 0, 0, a, b, purple, false);
+        drawProjections(g, a, b, '#ccc');
+        // Arc d'argument
+        const angle = Math.atan2(b, a);
+        if (Math.abs(angle) > 0.05) {
+            drawAngleArc(g, 0, 0, 0, angle, 0.8, '#ed8936', angle > 0);
+        }
+    }
 }
 
 // ========================================
