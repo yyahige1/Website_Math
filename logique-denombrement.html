@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MathsFacile - Logique et Denombrement</title>
+    <meta name="description" content="Exercices interactifs sur la logique et le denombrement. Arrangements, combinaisons, permutations, recurrence, binome de Newton.">
+    <meta name="keywords" content="denombrement, combinaisons, arrangements, permutations, recurrence, binome Newton, terminale, mathematiques">
+
+    <!-- KaTeX pour le rendu mathematique -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"
+          integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV"
+          crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"
+            integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8"
+            crossorigin="anonymous"></script>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/exercices.css">
+    <link rel="stylesheet" href="css/navigation.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Logique et Denombrement</h1>
+            <p class="subtitle">Niveau : Terminale</p>
+            <p class="intro">Entraine-toi sur le denombrement (permutations, arrangements, combinaisons), le raisonnement par recurrence et le binome de Newton.<br>Choisis un type d'exercice, puis clique sur <strong>Correction</strong>.</p>
+        </header>
+
+        <div class="card">
+            <div class="type-selector grid-3">
+                <button class="type-btn active" data-type="denombrement">
+                    <div class="example" id="exDenom"></div>
+                    <div class="label">Denombrement</div>
+                </button>
+                <button class="type-btn" data-type="recurrence">
+                    <div class="example" id="exRecur"></div>
+                    <div class="label">Recurrence</div>
+                </button>
+                <button class="type-btn" data-type="binome">
+                    <div class="example" id="exBinom"></div>
+                    <div class="label">Binome de Newton</div>
+                </button>
+            </div>
+
+            <!-- Section Denombrement -->
+            <div id="denombrementSection">
+                <h3>Denombrement</h3>
+                <div class="param-row">
+                    <label>Type d'exercice :</label>
+                    <select id="subtype_denombrement">
+                        <option value="permutation">Permutations (n!)</option>
+                        <option value="arrangement">Arrangements (A_n^k)</option>
+                        <option value="combinaison">Combinaisons (C_n^k)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Section Recurrence -->
+            <div id="recurrenceSection" style="display: none;">
+                <h3>Raisonnement par recurrence</h3>
+                <div class="param-row">
+                    <label>Type d'exercice :</label>
+                    <select id="subtype_recurrence">
+                        <option value="somme">Egalite : formule de somme</option>
+                        <option value="inegalite">Inegalite</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Section Binome -->
+            <div id="binomeSection" style="display: none;">
+                <h3>Binome de Newton</h3>
+                <div class="param-row">
+                    <label>Type d'exercice :</label>
+                    <select id="subtype_binome">
+                        <option value="developpement">Developpement de (a+b)^n</option>
+                        <option value="coefficient">Calcul de C_n^k</option>
+                        <option value="terme">Terme de rang k</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="expression-display">
+                <div class="expression" id="expressionDisplay"></div>
+            </div>
+
+            <div class="action-buttons">
+                <button id="newExerciseBtn" class="btn btn-secondary">Nouvel exercice</button>
+                <button id="solveBtn" class="btn btn-primary">Correction</button>
+            </div>
+        </div>
+
+        <!-- Zone de solution -->
+        <div id="solutionDiv" class="card solution">
+            <h3>Correction detaillee</h3>
+            <div id="stepsContainer"></div>
+        </div>
+
+        <footer>
+            <p>MathsFacile - Logique et Denombrement</p>
+        </footer>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="js/utils.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/navigation.js"></script>
+    <script src="js/logique-denombrement.js"></script>
+</body>
+</html>

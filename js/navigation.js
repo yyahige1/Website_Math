@@ -112,6 +112,8 @@ function generateNavigation(currentPage = '') {
                     <ul class="nav-dropdown">
                         <li><a href="trigonometrie.html" ${currentPage === 'trigonometrie' ? 'class="active"' : ''}>Trigonométrie</a></li>
                         <li><a href="vecteurs.html" ${currentPage === 'vecteurs' ? 'class="active"' : ''}>Vecteurs</a></li>
+                        <li><a href="geometrie-analytique.html" ${currentPage === 'geometrie-analytique' ? 'class="active"' : ''}>Géométrie analytique</a></li>
+                        <li><a href="geometrie-espace.html" ${currentPage === 'geometrie-espace' ? 'class="active"' : ''}>Géométrie dans l'espace</a></li>
                     </ul>
                 </li>
 
@@ -124,6 +126,7 @@ function generateNavigation(currentPage = '') {
                     <ul class="nav-dropdown">
                         <li><a href="arithmetique.html" ${currentPage === 'arithmetique' ? 'class="active"' : ''}>Arithmétique</a></li>
                         <li><a href="nombres-complexes.html" ${currentPage === 'nombres-complexes' ? 'class="active"' : ''}>Nombres Complexes</a></li>
+                        <li><a href="logique-denombrement.html" ${currentPage === 'logique-denombrement' ? 'class="active"' : ''}>Logique & Dénombrement</a></li>
                     </ul>
                 </li>
             </ul>

@@ -49,7 +49,7 @@
 
 ## 📁 Structure du Projet
 
-### Fichiers HTML (25)
+### Fichiers HTML (28)
 1. `index.html` - Équations 1er degré
 2. `developpement.html` - Développement d'expressions
 3. `reduction.html` - Réduction d'expressions
@@ -75,6 +75,9 @@
 23. `vecteurs.html` - Vecteurs
 24. `arithmetique.html` - Arithmétique
 25. `nombres-complexes.html` - Nombres Complexes
+26. `geometrie-analytique.html` - Géométrie analytique plane
+27. `geometrie-espace.html` - Géométrie dans l'espace
+28. `logique-denombrement.html` - Logique et Dénombrement
 
 ### Modules JavaScript (31 fichiers)
 - `js/utils.js` - Fonctions utilitaires (PGCD, formatage, etc.)
@@ -108,6 +111,9 @@
 - `js/vecteurs.js` - Logique vecteurs
 - `js/arithmetique.js` - Logique arithmétique
 - `js/nombres-complexes.js` - Logique nombres complexes
+- `js/geometrie-analytique.js` - Logique géométrie analytique plane
+- `js/geometrie-espace.js` - Logique géométrie dans l'espace
+- `js/logique-denombrement.js` - Logique dénombrement, récurrence, binôme
 
 ### Feuilles de Style CSS (12 fichiers)
 - `css/theme.css` - Variables CSS (couleurs, espacements)
@@ -150,32 +156,14 @@
 ### ~~4. 🔮 Nombres Complexes~~ ✅ Complété
 > Module implémenté avec 5 types d'exercices : forme algébrique (addition, multiplication, conjugué, module, inverse), forme trigonométrique (conversions, produit, puissance de Moivre), module & argument (calcul, ensemble de points), équations dans C (2nd degré, racines n-ièmes), géométrie (distance, milieu, translation, rotation). Arithmétique exacte avec racines (sqrt(2), sqrt(3)), diagramme d'Argand avec Canvas, 16 angles remarquables.
 
-### 5. 📏 Géométrie analytique plane (Priorité Haute)
-**Niveau**: Seconde / Première
+### ~~5. 📏 Géométrie analytique plane~~ ✅ Complété
+> Module implémenté avec 4 types d'exercices : équations de droites (réduite, cartésienne, deux points), équations de cercles (equation, centre/rayon, position relative), distances (point-point, point-droite), transformations du plan (symétrie axiale, rotation, homothétie).
 
-**Types d'exercices suggérés**:
-- Équations de droites (cartésienne, réduite, passage par 2 points)
-- Équations de cercles (centre, rayon, position relative)
-- Distance point-droite
-- Transformations du plan (symétries, rotations, homothéties)
+### ~~6. 📦 Géométrie dans l'espace~~ ✅ Complété
+> Module implémenté avec 5 types d'exercices : coordonnées 3D (distance, vecteur AB, milieu), droites et plans (équation cartésienne, représentation paramétrique), positions relatives (parallélisme, orthogonalité, coplanarité), produit scalaire dans l'espace (calcul, angle), sections de solides (cube, tétraèdre).
 
-### 6. 📦 Géométrie dans l'espace (Priorité Moyenne)
-**Niveau**: Terminale
-
-**Types d'exercices suggérés**:
-- Coordonnées dans l'espace (points, vecteurs, distances)
-- Droites et plans (équations paramétriques, cartésiennes)
-- Positions relatives (intersection, parallélisme, orthogonalité)
-- Produit scalaire dans l'espace
-- Sections de solides (plans coupant cubes, tétraèdres)
-
-### 7. 🧩 Logique et Dénombrement (Priorité Basse)
-**Niveau**: Terminale
-
-**Types d'exercices suggérés**:
-- Dénombrement (arrangements, combinaisons, permutations)
-- Raisonnement par récurrence
-- Formule du binôme de Newton
+### ~~7. 🧩 Logique et Dénombrement~~ ✅ Complété
+> Module implémenté avec 3 types d'exercices : dénombrement (permutations n!, arrangements A_n^k, combinaisons C_n^k avec contextes), raisonnement par récurrence (égalités de sommes, inégalités, avec toutes les étapes détaillées), binôme de Newton (développement (a+b)^n, coefficient C_n^k, terme de rang k).
 
 ---
 
@@ -193,18 +181,18 @@
 | 24 | **Arithmétique** | 5 types | Moyenne | ✅ |
 | 25 | **Nombres Complexes** | 5 types | Moyenne | ✅ |
 
-### Phase 7 : Géométrie (prochaine)
+### Phase 7 : Géométrie ✅
 | # | Module | Types | Priorité | Statut |
 |---|--------|-------|----------|--------|
-| 26 | **Géométrie analytique plane** | 4 types | Haute | |
-| 27 | **Géométrie dans l'espace** | 5 types | Moyenne | |
+| 26 | **Géométrie analytique plane** | 4 types | Haute | ✅ |
+| 27 | **Géométrie dans l'espace** | 5 types | Moyenne | ✅ |
 
-### Phase 8 : Compléments
-| # | Module | Types | Priorité |
-|---|--------|-------|----------|
-| 28 | **Logique et Dénombrement** | 3 types | Basse |
+### Phase 8 : Compléments ✅
+| # | Module | Types | Priorité | Statut |
+|---|--------|-------|----------|--------|
+| 28 | **Logique et Dénombrement** | 3 types | Basse | ✅ |
 
-**Objectif**: ~28 modules couvrant l'intégralité du programme Seconde → Terminale Spé Maths
+**Objectif atteint**: 28 modules couvrant l'intégralité du programme Seconde → Terminale Spé Maths ✅
 
 ---
 
@@ -310,6 +298,17 @@
   - Diagramme d'Argand interactif avec Canvas (affiché avec la correction)
   - Arcs d'angle avec flèches directionnelles
 
+- ✅ **Module Géométrie analytique plane** (`geometrie-analytique.html` + `geometrie-analytique.js`)
+  - 4 types d'exercices : droites (réduite, cartésienne, deux points), cercles (équation, centre/rayon, position relative point/cercle), distances (point-point, point-droite), transformations (symétrie axiale, rotation 90°/180°/270°, homothétie)
+  - Formules avec KaTeX, corrections étape par étape
+
+- ✅ **Module Géométrie dans l'espace** (`geometrie-espace.html` + `geometrie-espace.js`)
+  - 5 types d'exercices : coordonnées 3D (distance AB, vecteur AB, milieu), droites et plans (équation cartésienne d'un plan, représentation paramétrique), positions relatives (parallélisme, orthogonalité, coplanarité par déterminant), produit scalaire (calcul, angle), sections de solides (cube, tétraèdre)
+  - Matrices LaTeX (vecteurs colonnes, déterminants 3×3)
+
+- ✅ **Module Logique et Dénombrement** (`logique-denombrement.html` + `logique-denombrement.js`)
+  - 3 types d'exercices : dénombrement (permutations n!, arrangements A_n^k, combinaisons C_n^k avec contextes concrets), récurrence (formules de somme classiques, inégalités avec démonstration complète en 5 étapes), binôme de Newton (développement (a+b)^n, coefficient C_n^k, terme de rang k)
+
 ### Bugs Corrigés
 - ✅ Navigation "Suites Numériques" tronquée (width: max-content)
 - ✅ Boutons exercices Suites mal affichés (class type-selector)
@@ -326,15 +325,14 @@
 
 ## 📊 Statistiques
 
-**Dernière mise à jour**: 17 Février 2026
-**Modules d'exercices**: 25 ✅
-**Fichiers HTML**: 25
-**Fichiers JavaScript**: 31
-  - 25 modules d'exercices
+**Dernière mise à jour**: 18 Février 2026
+**Modules d'exercices**: 28 ✅
+**Fichiers HTML**: 28
+**Fichiers JavaScript**: 34
+  - 28 modules d'exercices
   - 6 utilitaires (utils, ui, main, navigation, graphing, tableau-variations)
 **Fichiers CSS**: 12
-**Lignes de code**: ~24 000
+**Lignes de code**: ~31 000
 **Dépendances externes**: 1 (KaTeX CDN)
 
-**Prochaine étape prioritaire**: Phase 7 - Géométrie analytique plane 📏
-**Objectif final**: ~28 modules (programme complet Seconde → Terminale Spé Maths)
+**Objectif atteint**: 28 modules — programme complet Seconde → Terminale Spé Maths ✅

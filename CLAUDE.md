@@ -2,8 +2,8 @@
 
 > Documentation pour les sessions futures avec Claude ou autres assistants IA
 
-**Dernière mise à jour**: 12 Février 2026
-**Version projet**: v2.0 (Arithmetique)
+**Dernière mise à jour**: 18 Février 2026
+**Version projet**: v3.0 (Programme complet 28 modules)
 
 ---
 
@@ -566,7 +566,7 @@ const v_align = signes_derivee[i] === '+' ? 'var-v-align-bottom' : 'var-v-align-
 
 ---
 
-## 📊 Modules Actuels (24)
+## 📊 Modules Actuels (28) ✅ Programme Complet
 
 ### Algèbre (8 modules)
 1. **Équations** (`index.html`) - 1er degré
@@ -601,12 +601,16 @@ const v_align = signes_derivee[i] === '+' ? 'var-v-align-bottom' : 'var-v-align-
 20. **Probabilités** - 6 types (simples, conditionnelles, arbres, loi binomiale, variables aléatoires, fluctuation)
 21. **Statistiques** - 5 types (moyenne, médiane & quartiles, variance & écart-type, diagramme en boîte, régression linéaire)
 
-### Géométrie & Trigonométrie (2 modules)
+### Géométrie & Trigonométrie (4 modules)
 22. **Trigonométrie** - 6 types (valeurs remarquables, conversion deg/rad, équations trigo, formules d'addition, identités, triangles)
 23. **Vecteurs** - 5 types (coordonnées, norme & distance, colinéarité, produit scalaire, opérations)
+24. **Géométrie analytique plane** - 4 types (droites, cercles, distances, transformations)
+25. **Géométrie dans l'espace** - 5 types (coordonnées 3D, droites/plans, positions relatives, produit scalaire, sections)
 
-### Terminale Spécialité (1 module)
-24. **Arithmétique** - 5 types (divisibilité, PGCD & Euclide, nombres premiers, congruences, Bézout)
+### Terminale Spécialité (3 modules)
+26. **Arithmétique** - 5 types (divisibilité, PGCD & Euclide, nombres premiers, congruences, Bézout)
+27. **Nombres Complexes** - 5 types (forme algébrique, trigonométrique, module & argument, équations, géométrie)
+28. **Logique & Dénombrement** - 3 types (dénombrement, récurrence, binôme de Newton)
 
 ---
 
@@ -704,33 +708,25 @@ const tableau = createTableauVariations(containerId, {
 
 ## 🚀 Roadmap Actuelle
 
-### ✅ Complété (v2.0)
-- 24 modules fonctionnels
-- Navigation responsive
-- KaTeX intégré
-- GraphCanvas
+### ✅ Complété (v3.0) — Programme complet 28 modules
+- 28 modules fonctionnels (programme complet Seconde → Terminale Spé)
+- Navigation responsive avec toutes les catégories
+- KaTeX intégré pour tous les modules
+- GraphCanvas pour visualisations
 - Tableaux variations
-- Module Suites Numériques
+- Module Suites Numériques (5 types)
 - Module Limites (6 types, corrections colorées KaTeX)
 - Module Primitives & Intégrales (6 types, visualisation aires Canvas)
-- Module Exponentielles & Logarithmes (6 types, équations exp/ln, dérivées, études, applications)
-- Module Probabilités (6 types, simples, conditionnelles, arbres, binomiale, variables aléatoires, fluctuation)
-- Module Statistiques (5 types, moyenne, médiane & quartiles, variance & écart-type, diagramme en boîte, régression linéaire)
-- Module Trigonométrie (6 types, valeurs remarquables, conversion, équations, formules d'addition, identités, triangles)
-- Module Vecteurs (5 types, coordonnées, norme, colinéarité, produit scalaire, opérations)
-- Module Arithmétique (5 types, divisibilité, PGCD & Euclide, nombres premiers, congruences, Bézout)
-
-### 🔜 Prochaines Étapes Prioritaires
-
-**Phase 5 - Géométrie & Trigonométrie** (restant):
-1. **Géométrie analytique plane** (Seconde/Première) - 4 types
-
-**Phase 6 - Terminale Spécialité** (restant):
-2. **Nombres Complexes** (Terminale Spé) - 5 types
-3. **Géométrie dans l'espace** (Terminale) - 5 types
-
-**Phase 7 - Compléments**:
-4. **Logique et Dénombrement** (Terminale) - 3 types
+- Module Exponentielles & Logarithmes (6 types)
+- Module Probabilités (6 types)
+- Module Statistiques (5 types)
+- Module Trigonométrie (6 types)
+- Module Vecteurs (5 types)
+- Module Arithmétique (5 types)
+- Module Nombres Complexes (5 types, diagramme d'Argand Canvas)
+- Module Géométrie analytique plane (4 types : droites, cercles, distances, transformations)
+- Module Géométrie dans l'espace (5 types : coordonnées 3D, droites/plans, positions, produit scalaire, sections)
+- Module Logique & Dénombrement (3 types : dénombrement, récurrence, binôme de Newton)
 
 ### 🔧 Améliorations Techniques Futures
 - Tests automatisés (Jest)

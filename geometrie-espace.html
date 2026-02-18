@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MathsFacile - Geometrie dans l'espace</title>
+    <meta name="description" content="Exercices interactifs sur la geometrie dans l'espace. Coordonnees 3D, droites et plans, positions relatives, produit scalaire, sections.">
+    <meta name="keywords" content="geometrie espace, coordonnees 3D, plans, droites, produit scalaire, sections, terminale, mathematiques">
+
+    <!-- KaTeX pour le rendu mathematique -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"
+          integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV"
+          crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"
+            integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8"
+            crossorigin="anonymous"></script>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/exercices.css">
+    <link rel="stylesheet" href="css/navigation.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Geometrie dans l'espace</h1>
+            <p class="subtitle">Niveau : Terminale</p>
+            <p class="intro">Entraine-toi sur la geometrie dans l'espace : coordonnees 3D, droites et plans, positions relatives, produit scalaire, sections de solides.<br>Choisis un type d'exercice, puis clique sur <strong>Correction</strong>.</p>
+        </header>
+
+        <div class="card">
+            <div class="type-selector grid-3">
+                <button class="type-btn active" data-type="coordonnees">
+                    <div class="example" id="exCoord"></div>
+                    <div class="label">Coordonnees 3D</div>
+                </button>
+                <button class="type-btn" data-type="droites_plans">
+                    <div class="example" id="exDroitesPlan"></div>
+                    <div class="label">Droites et Plans</div>
+                </button>
+                <button class="type-btn" data-type="positions">
+                    <div class="example" id="exPositions"></div>
+                    <div class="label">Positions relatives</div>
+                </button>
+                <button class="type-btn" data-type="produit_scalaire">
+                    <div class="example" id="exScalaire"></div>
+                    <div class="label">Produit scalaire</div>
+                </button>
+                <button class="type-btn" data-type="sections">
+                    <div class="example" id="exSections"></div>
+                    <div class="label">Sections de solides</div>
+                </button>
+            </div>
+
+            <!-- Section Coordonnees 3D -->
+            <div id="coordonneesSection">
+                <h3>Coordonnees dans l'espace</h3>
+                <div class="param-row">
+                    <label>Type d'exercice :</label>
+                    <select id="subtype_coordonnees">
+                        <option value="distance">Distance entre deux points</option>
+                        <option value="vecteur">Coordonnees d'un vecteur</option>
+                        <option value="milieu">Coordonnees du milieu</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Section Droites et Plans -->
+            <div id="droites_plansSection" style="display: none;">
+                <h3>Droites et Plans</h3>
+                <div class="param-row">
+                    <label>Type d'exercice :</label>
+                    <select id="subtype_droites_plans">
+                        <option value="equation_plan">Equation cartesienne d'un plan</option>
+                        <option value="droite_parametrique">Representation parametrique d'une droite</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Section Positions relatives -->
+            <div id="positionsSection" style="display: none;">
+                <h3>Positions relatives</h3>
+                <div class="param-row">
+                    <label>Type d'exercice :</label>
+                    <select id="subtype_positions">
+                        <option value="parallelisme">Parallelisme de droites</option>
+                        <option value="orthogonalite">Orthogonalite de vecteurs</option>
+                        <option value="coplanaire">Coplanarité de points</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Section Produit scalaire -->
+            <div id="produit_scalaireSection" style="display: none;">
+                <h3>Produit scalaire dans l'espace</h3>
+                <div class="param-row">
+                    <label>Type d'exercice :</label>
+                    <select id="subtype_produit_scalaire">
+                        <option value="calcul">Calcul du produit scalaire</option>
+                        <option value="angle">Angle entre deux vecteurs</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Section Sections -->
+            <div id="sectionsSection" style="display: none;">
+                <h3>Sections de solides</h3>
+                <div class="param-row">
+                    <label>Type d'exercice :</label>
+                    <select id="subtype_sections">
+                        <option value="cube">Section d'un cube</option>
+                        <option value="tetraedre">Section d'un tetraedre</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="expression-display">
+                <div class="expression" id="expressionDisplay"></div>
+            </div>
+
+            <div class="action-buttons">
+                <button id="newExerciseBtn" class="btn btn-secondary">Nouvel exercice</button>
+                <button id="solveBtn" class="btn btn-primary">Correction</button>
+            </div>
+        </div>
+
+        <!-- Zone de solution -->
+        <div id="solutionDiv" class="card solution">
+            <h3>Correction detaillee</h3>
+            <div id="stepsContainer"></div>
+        </div>
+
+        <footer>
+            <p>MathsFacile - Geometrie dans l'espace</p>
+        </footer>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="js/utils.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/navigation.js"></script>
+    <script src="js/geometrie-espace.js"></script>
+</body>
+</html>
