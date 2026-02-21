@@ -75,7 +75,6 @@ function fmtTerm(c, variable, first) {
 // Formate equation reduite en LaTeX: y = mx + p
 function eqReduiteTeX(m, p) {
     let rhs = '';
-    // Terme mx
     if (m === 0) {
         rhs = `${p}`;
     } else if (m === 1) {
@@ -85,14 +84,12 @@ function eqReduiteTeX(m, p) {
     } else {
         rhs = `${m}x`;
     }
-    // Terme +p
     if (m !== 0 && p !== 0) {
         if (p > 0) rhs += ` + ${p}`;
         else rhs += ` - ${Math.abs(p)}`;
     } else if (m === 0) {
         rhs = `${p}`;
     }
-    // Cas m!=0 et p==0
     return `y = ${rhs}`;
 }
 
@@ -125,11 +122,18 @@ function eqCartTeX(a, b, c) {
     return parts.join(' ') + ' = 0';
 }
 
-// Formate equation cercle en LaTeX: (x-a)² + (y-b)² = r²
+// Formate equation cercle en LaTeX: (x-a)^2 + (y-b)^2 = r^2
 function eqCercleTeX(a, b, r) {
     let xPart = a === 0 ? 'x^2' : (a > 0 ? `(x - ${a})^2` : `(x + ${Math.abs(a)})^2`);
     let yPart = b === 0 ? 'y^2' : (b > 0 ? `(y - ${b})^2` : `(y + ${Math.abs(b)})^2`);
     return `${xPart} + ${yPart} = ${r * r}`;
+}
+
+// Formate une fraction LaTeX (simplifie si denominateur = 1)
+function fracTeX(num, den) {
+    if (den === 1) return `${num}`;
+    if (num === 0) return '0';
+    return `\\dfrac{${num}}{${den}}`;
 }
 
 // ========================================
@@ -227,45 +231,35 @@ function generateDroites() {
     const ex = {};
 
     if (sub === 'reduite') {
-        // Donner un point M et une pente m, trouver l'equation y = mx + p
         ex.m = rint(-4, 4, [0]);
         ex.mx = rint(-5, 5);
         ex.my = rint(-8, 8);
-        // p = y - m*x
         ex.p = ex.my - ex.m * ex.mx;
     } else if (sub === 'cartesienne') {
-        // Donner ax + by + c = 0 (b != 0), mettre sous forme reduite
         ex.a = rint(-4, 4, [0]);
         ex.b = rint(-4, 4, [0]);
         ex.c = rint(-10, 10);
-        // Forme reduite: y = (-a/b)x + (-c/b)
-        // Simplifier la fraction
         const g1 = gcdLocal(ex.a, ex.b);
         ex.m_num = -ex.a / g1;
         ex.m_den = ex.b / g1;
-        // Normaliser: denominateur positif
         if (ex.m_den < 0) { ex.m_num = -ex.m_num; ex.m_den = -ex.m_den; }
         const g2 = gcdLocal(ex.c, ex.b);
         ex.p_num = -ex.c / g2;
         ex.p_den = ex.b / g2;
         if (ex.p_den < 0) { ex.p_num = -ex.p_num; ex.p_den = -ex.p_den; }
     } else {
-        // deux_points: donner A et B, trouver equation
         ex.ax = rint(-6, 6);
         ex.ay = rint(-6, 6);
         do {
             ex.bx = rint(-6, 6);
             ex.by = rint(-6, 6);
-        } while (ex.bx === ex.ax); // eviter droite verticale
-        // Pente
+        } while (ex.bx === ex.ax);
         const dx = ex.bx - ex.ax;
         const dy = ex.by - ex.ay;
         const g = gcdLocal(dy, dx);
         ex.m_num = dy / g;
         ex.m_den = dx / g;
         if (ex.m_den < 0) { ex.m_num = -ex.m_num; ex.m_den = -ex.m_den; }
-        // Ordonnee a l'origine: p = ay - m*ax = ay - (m_num/m_den)*ax
-        // p = (ay*m_den - m_num*ax) / m_den
         ex.p_num = ex.ay * ex.m_den - ex.m_num * ex.ax;
         ex.p_den = ex.m_den;
         const g2 = gcdLocal(Math.abs(ex.p_num), Math.abs(ex.p_den));
@@ -288,28 +282,20 @@ function generateCercles() {
 
     if (sub === 'equation') {
         // Donner centre et rayon, ecrire l'equation
-        // Rien de plus a generer
     } else if (sub === 'centre_rayon') {
         // Donner equation, trouver centre et rayon
-        // Utilise les memes ex.cx, ex.cy, ex.r
     } else {
         // position: donner un point M, determiner sa position par rapport au cercle
-        // Generer un point qui peut etre interieur, sur le cercle, ou exterieur
         const pos = pick(['interieur', 'sur', 'exterieur']);
         ex.position = pos;
         if (pos === 'interieur') {
-            // d(O, M) < r : choisir des coordonnees telles que dist < r
-            // Point aleatoire proche du centre
             const angle = Math.random() * 2 * Math.PI;
             const dist = Math.random() * (ex.r - 0.5);
             ex.mx = ex.cx + Math.round(dist * Math.cos(angle));
             ex.my = ex.cy + Math.round(dist * Math.sin(angle));
-            // Verifier
             const d2 = (ex.mx - ex.cx) ** 2 + (ex.my - ex.cy) ** 2;
             if (d2 >= ex.r * ex.r) ex.position = 'exterieur';
         } else if (pos === 'sur') {
-            // Choisir un angle tel que le point est sur le cercle avec coordonnees entieres
-            // Triplets pythagoriciens pour r
             const pythagorean = [[3,4,5],[5,12,13],[8,15,17]];
             const trip = pick(pythagorean.filter(t => t[2] === ex.r || t[2] <= ex.r + 2));
             if (trip && trip[2] === ex.r) {
@@ -320,16 +306,13 @@ function generateCercles() {
                 const d2 = (ex.mx - ex.cx) ** 2 + (ex.my - ex.cy) ** 2;
                 if (d2 !== ex.r * ex.r) ex.position = 'exterieur';
             } else {
-                // Fallback: placer sur l'axe
                 ex.mx = ex.cx + ex.r;
                 ex.my = ex.cy;
             }
         } else {
-            // exterieur
             ex.mx = ex.cx + ex.r + rint(1, 4);
             ex.my = ex.cy + rint(-3, 3);
         }
-        // Recalculer distance reelle
         ex.dist2 = (ex.mx - ex.cx) ** 2 + (ex.my - ex.cy) ** 2;
         ex.dist_num = Math.sqrt(ex.dist2);
     }
@@ -354,7 +337,6 @@ function generateDistance() {
         ex.dist2 = ex.dx * ex.dx + ex.dy * ex.dy;
         ex.dist = Math.sqrt(ex.dist2);
     } else {
-        // point_droite: d(M, droite ax+by+c=0)
         ex.a = rint(-3, 3, [0]);
         ex.b = rint(-3, 3, [0]);
         ex.c = rint(-8, 8);
@@ -398,14 +380,12 @@ function generateTransformations() {
             ex.qx = ex.py; ex.qy = -ex.px;
         }
     } else {
-        // homothetie
         ex.k = pick([-3, -2, -1, 2, 3, 0.5, -0.5]);
         if (Number.isInteger(ex.k)) {
             ex.qx = ex.k * ex.px;
             ex.qy = ex.k * ex.py;
         } else {
-            // k = 1/2 ou -1/2
-            ex.px = rint(-6, 6, [0]) * 2; // pair pour eviter les decimaux
+            ex.px = rint(-6, 6, [0]) * 2;
             ex.py = rint(-6, 6, [0]) * 2;
             ex.qx = ex.k * ex.px;
             ex.qy = ex.k * ex.py;
@@ -416,65 +396,64 @@ function generateTransformations() {
 }
 
 // ========================================
-// Affichage de l'exercice
+// Affichage de l'exercice (HTML + KaTeX inline)
 // ========================================
 
 function updateExerciseDisplay() {
     const type = GeoAnaState.currentType;
     const sub = GeoAnaState['subtype_' + type];
     const ex = GeoAnaState.exercise;
-    let tex = '';
+    let display = '';
 
     if (type === 'droites') {
         if (sub === 'reduite') {
-            tex = `\\text{Le point } M(${ex.mx}\\,;\\,${ex.my}) \\text{ est sur la droite de pente } m = ${ex.m}.`;
-            tex += `\\\\[6pt] \\text{Trouver l'equation } y = mx + p \\text{ de cette droite.}`;
+            display = `<p>Le point ${K(`M(${ex.mx}\\,;\\,${ex.my})`)} est sur la droite de pente ${K(`m = ${ex.m}`)}.</p>`;
+            display += `<p>Trouver l'equation ${K('y = mx + p')} de cette droite.</p>`;
         } else if (sub === 'cartesienne') {
-            tex = `\\text{Droite d'equation : } ${eqCartTeX(ex.a, ex.b, ex.c)}`;
-            tex += `\\\\[6pt] \\text{Mettre sous la forme } y = mx + p.`;
+            display = `<p>Droite d'equation : ${K(eqCartTeX(ex.a, ex.b, ex.c))}</p>`;
+            display += `<p>Mettre sous la forme ${K('y = mx + p')}.</p>`;
         } else {
-            tex = `A(${ex.ax}\\,;\\,${ex.ay}) \\text{ et } B(${ex.bx}\\,;\\,${ex.by})`;
-            tex += `\\\\[6pt] \\text{Trouver l'equation de la droite } (AB).`;
+            display = `<p>${K(`A(${ex.ax}\\,;\\,${ex.ay})`)} et ${K(`B(${ex.bx}\\,;\\,${ex.by})`)}</p>`;
+            display += `<p>Trouver l'equation de la droite ${K('(AB)')}.</p>`;
         }
     } else if (type === 'cercles') {
         if (sub === 'equation') {
-            tex = `\\text{Cercle de centre } \\Omega(${ex.cx}\\,;\\,${ex.cy}) \\text{ et de rayon } r = ${ex.r}.`;
-            tex += `\\\\[6pt] \\text{Ecrire l'equation de ce cercle.}`;
+            display = `<p>Cercle de centre ${K(`\\Omega(${ex.cx}\\,;\\,${ex.cy})`)} et de rayon ${K(`r = ${ex.r}`)}.</p>`;
+            display += `<p>Ecrire l'equation de ce cercle.</p>`;
         } else if (sub === 'centre_rayon') {
-            tex = eqCercleTeX(ex.cx, ex.cy, ex.r);
-            tex += `\\\\[6pt] \\text{Trouver le centre et le rayon de ce cercle.}`;
+            display = `<p>${K(eqCercleTeX(ex.cx, ex.cy, ex.r))}</p>`;
+            display += `<p>Trouver le centre et le rayon de ce cercle.</p>`;
         } else {
-            tex = `\\text{Cercle } \\mathcal{C} \\text{ : } ${eqCercleTeX(ex.cx, ex.cy, ex.r)}`;
-            tex += `\\\\[6pt] \\text{Point } M(${ex.mx}\\,;\\,${ex.my}).`;
-            tex += `\\\\[4pt] \\text{Determiner la position de } M \\text{ par rapport a } \\mathcal{C}.`;
+            display = `<p>Cercle ${K('\\mathcal{C}')} : ${K(eqCercleTeX(ex.cx, ex.cy, ex.r))}</p>`;
+            display += `<p>Point ${K(`M(${ex.mx}\\,;\\,${ex.my})`)}.</p>`;
+            display += `<p>Determiner la position de ${K('M')} par rapport a ${K('\\mathcal{C}')}.</p>`;
         }
     } else if (type === 'distance') {
         if (sub === 'point_point') {
-            tex = `A(${ex.ax}\\,;\\,${ex.ay}) \\text{ et } B(${ex.bx}\\,;\\,${ex.by})`;
-            tex += `\\\\[6pt] \\text{Calculer la distance } AB.`;
+            display = `<p>${K(`A(${ex.ax}\\,;\\,${ex.ay})`)} et ${K(`B(${ex.bx}\\,;\\,${ex.by})`)}</p>`;
+            display += `<p>Calculer la distance ${K('AB')}.</p>`;
         } else {
-            tex = `\\text{Droite } d : ${eqCartTeX(ex.a, ex.b, ex.c)}`;
-            tex += `\\\\[6pt] \\text{Point } M(${ex.mx}\\,;\\,${ex.my})`;
-            tex += `\\\\[4pt] \\text{Calculer la distance de } M \\text{ a la droite } d.`;
+            display = `<p>Droite ${K('d')} : ${K(eqCartTeX(ex.a, ex.b, ex.c))}</p>`;
+            display += `<p>Point ${K(`M(${ex.mx}\\,;\\,${ex.my})`)}</p>`;
+            display += `<p>Calculer la distance de ${K('M')} a la droite ${K('d')}.</p>`;
         }
     } else {
         if (sub === 'symetrie_axe') {
             const axisName = { 'Ox': "l'axe des abscisses (Ox)", 'Oy': "l'axe des ordonnees (Oy)", 'yx': "la droite y = x", 'y_neg_x': "la droite y = -x" };
-            tex = `A(${ex.px}\\,;\\,${ex.py})`;
-            tex += `\\\\[6pt] \\text{Trouver le symetrique } A' \\text{ de } A \\text{ par rapport a }`;
-            tex += `\\\\[2pt] ${axisName[ex.axis]}.`;
+            display = `<p>${K(`A(${ex.px}\\,;\\,${ex.py})`)}</p>`;
+            display += `<p>Trouver le symetrique ${K("A'")} de ${K('A')} par rapport a ${axisName[ex.axis]}.</p>`;
         } else if (sub === 'rotation_90') {
-            tex = `A(${ex.px}\\,;\\,${ex.py})`;
-            tex += `\\\\[6pt] \\text{Image de } A \\text{ par la rotation de centre } O \\text{ et d'angle } ${ex.angle}^\\circ.`;
+            display = `<p>${K(`A(${ex.px}\\,;\\,${ex.py})`)}</p>`;
+            display += `<p>Image de ${K('A')} par la rotation de centre ${K('O')} et d'angle ${K(`${ex.angle}^\\circ`)}.</p>`;
         } else {
             const kDisplay = Number.isInteger(ex.k) ? ex.k : (ex.k > 0 ? '\\frac{1}{2}' : '-\\frac{1}{2}');
-            tex = `A(${ex.px}\\,;\\,${ex.py})`;
-            tex += `\\\\[6pt] \\text{Homothetie de centre } O \\text{ et de rapport } k = ${kDisplay}.`;
-            tex += `\\\\[4pt] \\text{Trouver l'image } A' \\text{ de } A.`;
+            display = `<p>${K(`A(${ex.px}\\,;\\,${ex.py})`)}</p>`;
+            display += `<p>Homothetie de centre ${K('O')} et de rapport ${K(`k = ${kDisplay}`)}.</p>`;
+            display += `<p>Trouver l'image ${K("A'")} de ${K('A')}.</p>`;
         }
     }
 
-    $('expressionDisplay').innerHTML = K(tex);
+    $('expressionDisplay').innerHTML = display;
 }
 
 // ========================================
@@ -498,8 +477,22 @@ function solveGeoAna() {
         html = solveTransformations(ex, sub);
     }
 
+    // Ajouter le graphique
+    html += '<div class="graph-container">';
+    html += '<h4>Representation graphique</h4>';
+    html += '<canvas id="geoCanvas" width="420" height="420"></canvas>';
+    html += '</div>';
+
     $('stepsContainer').innerHTML = html;
     showSolution('solutionDiv');
+
+    // Dessiner le graphique apres insertion dans le DOM
+    requestAnimationFrame(() => {
+        if (type === 'droites') drawDroitesGraph(ex, sub);
+        else if (type === 'cercles') drawCerclesGraph(ex, sub);
+        else if (type === 'distance') drawDistanceGraph(ex, sub);
+        else if (type === 'transformations') drawTransformationsGraph(ex, sub);
+    });
 }
 
 // --- Correction Droites ---
@@ -507,75 +500,65 @@ function solveDroites(ex, sub) {
     let html = '';
 
     if (sub === 'reduite') {
-        html += step('Rappel de la forme reduite',
-            'y = mx + p',
-            'L\'equation reduite d\'une droite a pour coefficient directeur m (pente) et ordonnee a l\'origine p.');
+        html += '<div class="formula-box">' + K('y = mx + p') + '</div>';
 
         html += step('Substitution du point M',
             `${ex.my} = ${ex.m} \\times ${ex.mx} + p`,
-            `Le point M(${ex.mx}\\,;\\,${ex.my}) est sur la droite, donc ses coordonnees verifient l\'equation.`);
+            `Le point <span class="color-coef">${K(`M(${ex.mx}\\,;\\,${ex.my})`)}</span> est sur la droite, donc ses coordonnees verifient l'equation.`);
 
         const mx = ex.m * ex.mx;
         html += step('Calcul de p',
-            `p = ${ex.my} - (${mx}) = ${ex.p}`,
-            '');
+            `p = ${ex.my} - ${mx >= 0 ? mx : `(${mx})`} = ${ex.p}`,
+            `On isole <span class="color-solution">p</span> : ${K(`p = ${ex.my} - ${mx} = ${ex.p}`)}.`);
 
-        html += resultBlock(eqReduiteTeX(ex.m, ex.p), `Coefficient directeur : m = ${ex.m}. Ordonnee a l\'origine : p = ${ex.p}.`);
+        html += resultBlock(eqReduiteTeX(ex.m, ex.p),
+            `Pente : <span class="color-coef">m = ${ex.m}</span>. Ordonnee a l'origine : <span class="color-solution">p = ${ex.p}</span>.`);
 
     } else if (sub === 'cartesienne') {
         html += step('Equation de depart',
             eqCartTeX(ex.a, ex.b, ex.c),
-            'On isole y en passant les autres termes de l\'autre cote.');
+            `On isole ${K('y')} pour mettre sous forme reduite.`);
 
         html += step('Isoler le terme en y',
             `${ex.b}y = ${-ex.a}x ${ex.c > 0 ? '- ' + ex.c : '+ ' + Math.abs(ex.c)}`,
-            `On deplace le terme ${ex.a}x et la constante ${ex.c}.`);
+            `On deplace <span class="color-coef">${K(`${ex.a}x`)}</span> et la constante <span class="color-coef">${ex.c}</span>.`);
 
-        let mTeX;
-        if (ex.m_den === 1) mTeX = `${ex.m_num}`;
-        else if (ex.m_num === 0) mTeX = '0';
-        else mTeX = `\\dfrac{${ex.m_num}}{${ex.m_den}}`;
-
-        let pTeX;
-        if (ex.p_den === 1) pTeX = `${ex.p_num}`;
-        else if (ex.p_num === 0) pTeX = '0';
-        else pTeX = `\\dfrac{${ex.p_num}}{${ex.p_den}}`;
+        const mTeX = fracTeX(ex.m_num, ex.m_den);
+        const pTeX = fracTeX(ex.p_num, ex.p_den);
 
         html += step('Diviser par le coefficient de y',
-            `y = ${mTeX} x + (${pTeX})`,
-            `On divise tout par ${ex.b}.`);
+            `y = ${mTeX}\\, x + ${pTeX}`,
+            `On divise tout par <span class="color-coef">${ex.b}</span>.`);
 
-        html += resultBlock(`y = ${mTeX} x + ${pTeX}`,
-            `Pente : m = ${mTeX}. Ordonnee a l\'origine : p = ${pTeX}.`);
+        html += resultBlock(`y = ${mTeX}\\, x + ${pTeX}`,
+            `Pente : <span class="color-coef">m = ${K(mTeX)}</span>. Ordonnee a l'origine : <span class="color-solution">p = ${K(pTeX)}</span>.`);
 
     } else {
         // deux_points
-        html += step('Calcul de la pente (coefficient directeur)',
-            `m = \\dfrac{y_B - y_A}{x_B - x_A} = \\dfrac{${ex.by} - (${ex.ay})}{${ex.bx} - (${ex.ax})} = \\dfrac{${ex.by - ex.ay}}{${ex.bx - ex.ax}}`,
-            'La pente est le rapport de l\'accroissement des ordonnees sur l\'accroissement des abscisses.');
+        html += '<div class="formula-box">' + K('m = \\dfrac{y_B - y_A}{x_B - x_A}') + '</div>';
 
-        let mTeX;
-        if (ex.m_den === 1) mTeX = `${ex.m_num}`;
-        else mTeX = `\\dfrac{${ex.m_num}}{${ex.m_den}}`;
+        html += step('Calcul de la pente',
+            `m = \\dfrac{${ex.by} - (${ex.ay})}{${ex.bx} - (${ex.ax})} = \\dfrac{${ex.by - ex.ay}}{${ex.bx - ex.ax}}`,
+            `A partir de <span class="color-coef">${K(`A(${ex.ax}\\,;\\,${ex.ay})`)}</span> et <span class="color-coef">${K(`B(${ex.bx}\\,;\\,${ex.by})`)}</span>.`);
+
+        const mTeX = fracTeX(ex.m_num, ex.m_den);
 
         html += step('Simplification de la pente',
             `m = ${mTeX}`,
             '');
 
-        html += step('Calcul de l\'ordonnee a l\'origine',
+        html += step("Calcul de l'ordonnee a l'origine",
             `p = y_A - m \\cdot x_A = ${ex.ay} - \\left(${mTeX}\\right) \\times ${ex.ax}`,
-            `On utilise le point A(${ex.ax}\\,;\\,${ex.ay}) pour trouver p.`);
+            `On utilise le point ${K(`A(${ex.ax}\\,;\\,${ex.ay})`)} pour trouver <span class="color-solution">p</span>.`);
 
-        let pTeX;
-        if (ex.p_den === 1) pTeX = `${ex.p_num}`;
-        else pTeX = `\\dfrac{${ex.p_num}}{${ex.p_den}}`;
+        const pTeX = fracTeX(ex.p_num, ex.p_den);
 
         html += step('Valeur de p',
             `p = ${pTeX}`,
             '');
 
-        html += resultBlock(`y = ${mTeX} x + ${pTeX}`,
-            `Equation de la droite (AB).`);
+        html += resultBlock(`y = ${mTeX}\\, x + ${pTeX}`,
+            `Equation de la droite <span class="color-solution">${K('(AB)')}</span>.`);
     }
 
     return html;
@@ -586,24 +569,24 @@ function solveCercles(ex, sub) {
     let html = '';
 
     if (sub === 'equation') {
-        html += step('Formule de l\'equation du cercle',
-            '(x - a)^2 + (y - b)^2 = r^2',
-            'Un cercle de centre Omega(a\\,;\\,b) et de rayon r a pour equation reduite ci-dessus.');
+        html += '<div class="formula-box">' + K('(x - a)^2 + (y - b)^2 = r^2') + '</div>';
 
         html += step('Application numerique',
             eqCercleTeX(ex.cx, ex.cy, ex.r),
-            `Centre Omega(${ex.cx}\\,;\\,${ex.cy}), rayon r = ${ex.r}, donc r^2 = ${ex.r * ex.r}.`);
+            `Centre <span class="color-coef">${K(`\\Omega(${ex.cx}\\,;\\,${ex.cy})`)}</span>, rayon <span class="color-coef">${K(`r = ${ex.r}`)}</span>, donc ${K(`r^2 = ${ex.r * ex.r}`)}.`);
 
         html += resultBlock(eqCercleTeX(ex.cx, ex.cy, ex.r), '');
 
     } else if (sub === 'centre_rayon') {
+        html += '<div class="formula-box">' + K('(x - a)^2 + (y - b)^2 = R^2') + '</div>';
+
         html += step('Identification de la forme standard',
-            '(x - a)^2 + (y - b)^2 = R^2',
-            'On identifie les valeurs de a, b et R^2 dans l\'equation donnee.');
+            eqCercleTeX(ex.cx, ex.cy, ex.r),
+            `On identifie les valeurs de <span class="color-coef">a</span>, <span class="color-coef">b</span> et ${K('R^2')} dans l'equation.`);
 
         html += step('Lecture du centre et du rayon',
-            eqCercleTeX(ex.cx, ex.cy, ex.r),
-            `a = ${ex.cx}, b = ${ex.cy}, R^2 = ${ex.r * ex.r}`);
+            `\\Omega(${ex.cx}\\,;\\,${ex.cy}), \\quad R^2 = ${ex.r * ex.r}`,
+            `<span class="color-coef">a = ${ex.cx}</span>, <span class="color-coef">b = ${ex.cy}</span>, ${K(`R^2 = ${ex.r * ex.r}`)}.`);
 
         html += step('Calcul du rayon',
             `r = \\sqrt{${ex.r * ex.r}} = ${ex.r}`,
@@ -611,35 +594,41 @@ function solveCercles(ex, sub) {
 
         html += resultBlock(
             `\\Omega(${ex.cx}\\,;\\,${ex.cy}), \\quad r = ${ex.r}`,
-            `Centre : Omega(${ex.cx}\\,;\\,${ex.cy}). Rayon : r = ${ex.r}.`);
+            `Centre : <span class="color-solution">${K(`\\Omega(${ex.cx}\\,;\\,${ex.cy})`)}</span>. Rayon : <span class="color-solution">${K(`r = ${ex.r}`)}</span>.`);
 
     } else {
         // position
         html += step('Calcul de la distance entre M et le centre',
-            `d(\\Omega, M) = \\sqrt{(${ex.mx} - ${ex.cx})^2 + (${ex.my} - ${ex.cy})^2}`,
-            `Centre Omega(${ex.cx}\\,;\\,${ex.cy}), point M(${ex.mx}\\,;\\,${ex.my}).`);
+            `d(\\Omega, M) = \\sqrt{(${ex.mx} - (${ex.cx}))^2 + (${ex.my} - (${ex.cy}))^2}`,
+            `Centre <span class="color-coef">${K(`\\Omega(${ex.cx}\\,;\\,${ex.cy})`)}</span>, point <span class="color-coef">${K(`M(${ex.mx}\\,;\\,${ex.my})`)}</span>.`);
 
         const dx = ex.mx - ex.cx;
         const dy = ex.my - ex.cy;
         html += step('Calcul du radicande',
-            `d(\\Omega, M) = \\sqrt{(${dx})^2 + (${dy})^2} = \\sqrt{${dx*dx + dy*dy}}`,
+            `d(\\Omega, M) = \\sqrt{(${dx})^2 + (${dy})^2} = \\sqrt{${dx*dx} + ${dy*dy}} = \\sqrt{${ex.dist2}}`,
             '');
 
         const distVal = roundDec(Math.sqrt(ex.dist2), 3);
+        const isPerfect = Number.isInteger(Math.sqrt(ex.dist2));
+        const distDisplay = isPerfect ? Math.sqrt(ex.dist2) : `\\sqrt{${ex.dist2}} \\approx ${distVal}`;
+
         html += step('Comparaison avec le rayon',
-            `d(\\Omega, M) = \\sqrt{${ex.dist2}} \\approx ${distVal} \\quad \\text{et} \\quad r = ${ex.r}`,
+            `d(\\Omega, M) = ${distDisplay} \\quad \\text{et} \\quad r = ${ex.r}`,
             '');
 
-        let conclusion, expl;
+        let conclusion, expl, conclusionClass;
         if (ex.dist2 < ex.r * ex.r) {
-            conclusion = `d(\\Omega, M) < r \\implies M \\text{ est interieur au cercle}`;
-            expl = `Puisque la distance de M au centre est strictement inferieure au rayon, M est a l\'interieur du cercle.`;
+            conclusion = `d(\\Omega, M) < r`;
+            expl = `La distance est <span class="case-positive">strictement inferieure</span> au rayon : <span class="color-solution">M est a l'interieur du cercle</span>.`;
+            conclusionClass = 'case-positive';
         } else if (ex.dist2 === ex.r * ex.r) {
-            conclusion = `d(\\Omega, M) = r \\implies M \\text{ est sur le cercle}`;
-            expl = `La distance de M au centre est exactement egale au rayon : M appartient au cercle.`;
+            conclusion = `d(\\Omega, M) = r`;
+            expl = `La distance est <span class="case-zero">egale</span> au rayon : <span class="color-solution">M appartient au cercle</span>.`;
+            conclusionClass = 'case-zero';
         } else {
-            conclusion = `d(\\Omega, M) > r \\implies M \\text{ est exterieur au cercle}`;
-            expl = `La distance de M au centre est superieure au rayon : M est a l\'exterieur du cercle.`;
+            conclusion = `d(\\Omega, M) > r`;
+            expl = `La distance est <span class="case-negative">superieure</span> au rayon : <span class="color-solution">M est a l'exterieur du cercle</span>.`;
+            conclusionClass = 'case-negative';
         }
 
         html += resultBlock(conclusion, expl);
@@ -653,24 +642,24 @@ function solveDistance(ex, sub) {
     let html = '';
 
     if (sub === 'point_point') {
-        html += step('Formule de la distance',
-            'AB = \\sqrt{(x_B - x_A)^2 + (y_B - y_A)^2}',
-            'La distance entre deux points A(xA\\,;\\,yA) et B(xB\\,;\\,yB) est donnee par cette formule (theoreme de Pythagore).');
+        html += '<div class="formula-box">' + K('AB = \\sqrt{(x_B - x_A)^2 + (y_B - y_A)^2}') + '</div>';
 
         html += step('Application numerique',
-            `AB = \\sqrt{(${ex.bx} - ${ex.ax})^2 + (${ex.by} - ${ex.ay})^2} = \\sqrt{${ex.dx}^2 + ${ex.dy}^2}`,
+            `AB = \\sqrt{(${ex.bx} - (${ex.ax}))^2 + (${ex.by} - (${ex.ay}))^2}`,
+            `Avec <span class="color-coef">${K(`A(${ex.ax}\\,;\\,${ex.ay})`)}</span> et <span class="color-coef">${K(`B(${ex.bx}\\,;\\,${ex.by})`)}</span>.`);
+
+        html += step('Calcul des differences',
+            `AB = \\sqrt{(${ex.dx})^2 + (${ex.dy})^2} = \\sqrt{${ex.dx * ex.dx} + ${ex.dy * ex.dy}}`,
             '');
 
         html += step('Calcul du radicande',
-            `AB = \\sqrt{${ex.dx * ex.dx} + ${ex.dy * ex.dy}} = \\sqrt{${ex.dist2}}`,
+            `AB = \\sqrt{${ex.dist2}}`,
             '');
 
-        // Simplifier la racine si possible
         const isPerf = Number.isInteger(Math.sqrt(ex.dist2));
         if (isPerf) {
             html += resultBlock(`AB = ${Math.sqrt(ex.dist2)}`, '');
         } else {
-            // Chercher facteur carre
             let factor = 1;
             for (let k = Math.floor(Math.sqrt(ex.dist2)); k >= 2; k--) {
                 if (ex.dist2 % (k * k) === 0) { factor = k; break; }
@@ -684,21 +673,19 @@ function solveDistance(ex, sub) {
 
     } else {
         // point_droite
-        html += step('Formule de la distance point-droite',
-            'd(M, d) = \\dfrac{|a \\cdot x_M + b \\cdot y_M + c|}{\\sqrt{a^2 + b^2}}',
-            `Pour la droite d'equation ax + by + c = 0 et le point M(xM\\,;\\,yM).`);
+        html += '<div class="formula-box">' + K('d(M, d) = \\dfrac{|ax_M + by_M + c|}{\\sqrt{a^2 + b^2}}') + '</div>';
 
         html += step('Identification des coefficients',
-            `a = ${ex.a},\\quad b = ${ex.b},\\quad c = ${ex.c},\\quad M(${ex.mx}\\,;\\,${ex.my})`,
-            '');
+            `a = ${ex.a},\\quad b = ${ex.b},\\quad c = ${ex.c}`,
+            `Droite <span class="color-coef">${K(eqCartTeX(ex.a, ex.b, ex.c))}</span> et point <span class="color-coef">${K(`M(${ex.mx}\\,;\\,${ex.my})`)}</span>.`);
 
         const num_val = ex.a * ex.mx + ex.b * ex.my + ex.c;
         html += step('Calcul du numerateur',
-            `|${ex.a} \\times ${ex.mx} + ${ex.b} \\times ${ex.my} + (${ex.c})| = |${num_val}| = ${Math.abs(num_val)}`,
+            `|${ex.a} \\times (${ex.mx}) + ${ex.b} \\times (${ex.my}) + (${ex.c})| = |${num_val}| = ${Math.abs(num_val)}`,
             '');
 
         html += step('Calcul du denominateur',
-            `\\sqrt{${ex.a}^2 + ${ex.b}^2} = \\sqrt{${ex.a*ex.a} + ${ex.b*ex.b}} = \\sqrt{${ex.den2}}`,
+            `\\sqrt{(${ex.a})^2 + (${ex.b})^2} = \\sqrt{${ex.a*ex.a} + ${ex.b*ex.b}} = \\sqrt{${ex.den2}}`,
             '');
 
         const isPerf = Number.isInteger(Math.sqrt(ex.den2));
@@ -716,12 +703,14 @@ function solveTransformations(ex, sub) {
 
     if (sub === 'symetrie_axe') {
         const axisMap = {
-            'Ox': { name: "l\'axe des abscisses (Ox)", rule: "(x, y) \\mapsto (x, -y)", ruletxt: "La symetrie par rapport a Ox conserve x et change le signe de y." },
-            'Oy': { name: "l\'axe des ordonnees (Oy)", rule: "(x, y) \\mapsto (-x, y)", ruletxt: "La symetrie par rapport a Oy change le signe de x et conserve y." },
-            'yx': { name: "la droite y = x", rule: "(x, y) \\mapsto (y, x)", ruletxt: "La symetrie par rapport a y = x echange les coordonnees." },
-            'y_neg_x': { name: "la droite y = -x", rule: "(x, y) \\mapsto (-y, -x)", ruletxt: "La symetrie par rapport a y = -x echange les coordonnees en changeant leurs signes." }
+            'Ox': { name: "l'axe (Ox)", rule: "(x, y) \\mapsto (x, -y)", ruletxt: "La symetrie par rapport a <span class=\"color-coef\">(Ox)</span> conserve x et change le signe de y." },
+            'Oy': { name: "l'axe (Oy)", rule: "(x, y) \\mapsto (-x, y)", ruletxt: "La symetrie par rapport a <span class=\"color-coef\">(Oy)</span> change le signe de x et conserve y." },
+            'yx': { name: "la droite y = x", rule: "(x, y) \\mapsto (y, x)", ruletxt: "La symetrie par rapport a <span class=\"color-coef\">y = x</span> echange les coordonnees." },
+            'y_neg_x': { name: "la droite y = -x", rule: "(x, y) \\mapsto (-y, -x)", ruletxt: "La symetrie par rapport a <span class=\"color-coef\">y = -x</span> echange et change les signes." }
         };
         const info = axisMap[ex.axis];
+
+        html += '<div class="formula-box">' + K(info.rule) + '</div>';
 
         html += step('Regle de symetrie',
             info.rule,
@@ -731,15 +720,18 @@ function solveTransformations(ex, sub) {
             `A(${ex.px}\\,;\\,${ex.py}) \\implies A'(${ex.qx}\\,;\\,${ex.qy})`,
             '');
 
-        html += resultBlock(`A'(${ex.qx}\\,;\\,${ex.qy})`, `Symetrique de A par rapport a ${info.name}.`);
+        html += resultBlock(`A'(${ex.qx}\\,;\\,${ex.qy})`,
+            `Symetrique de <span class="color-coef">${K(`A(${ex.px}\\,;\\,${ex.py})`)}</span> par rapport a ${info.name}.`);
 
     } else if (sub === 'rotation_90') {
         const ruleMap = {
-            90: { rule: "(x, y) \\mapsto (-y, x)", expl: "Rotation de 90° (sens direct) : on echange x et y puis on change le signe de la nouvelle abscisse." },
-            180: { rule: "(x, y) \\mapsto (-x, -y)", expl: "Rotation de 180° : on change les signes des deux coordonnees." },
-            270: { rule: "(x, y) \\mapsto (y, -x)", expl: "Rotation de 270° (sens direct) = rotation de 90° dans le sens indirect." }
+            90: { rule: "(x, y) \\mapsto (-y, x)", expl: "Rotation de <span class=\"color-coef\">90°</span> (sens direct) : on echange x et y puis on change le signe de la nouvelle abscisse." },
+            180: { rule: "(x, y) \\mapsto (-x, -y)", expl: "Rotation de <span class=\"color-coef\">180°</span> : on change les signes des deux coordonnees." },
+            270: { rule: "(x, y) \\mapsto (y, -x)", expl: "Rotation de <span class=\"color-coef\">270°</span> (sens direct) = rotation de 90° dans le sens indirect." }
         };
         const info = ruleMap[ex.angle];
+
+        html += '<div class="formula-box">' + K(info.rule) + '</div>';
 
         html += step(`Regle pour une rotation de ${ex.angle}° autour de O`,
             info.rule,
@@ -749,25 +741,202 @@ function solveTransformations(ex, sub) {
             `A(${ex.px}\\,;\\,${ex.py}) \\implies A'(${ex.qx}\\,;\\,${ex.qy})`,
             '');
 
-        html += resultBlock(`A'(${ex.qx}\\,;\\,${ex.qy})`, `Image de A par la rotation de ${ex.angle}° autour de l\'origine.`);
+        html += resultBlock(`A'(${ex.qx}\\,;\\,${ex.qy})`,
+            `Image de <span class="color-coef">${K(`A(${ex.px}\\,;\\,${ex.py})`)}</span> par la rotation de ${ex.angle}° autour de l'origine.`);
 
     } else {
         // homothetie
         const kDisplay = Number.isInteger(ex.k) ? ex.k : (ex.k > 0 ? '\\frac{1}{2}' : '-\\frac{1}{2}');
 
-        html += step('Regle de l\'homothetie de centre O et de rapport k',
+        html += '<div class="formula-box">' + K(`(x, y) \\mapsto (kx,\\, ky)`) + '</div>';
+
+        html += step("Regle de l'homothetie de centre O et de rapport k",
             `(x, y) \\mapsto (kx, ky)`,
-            'Chaque coordonnee est multipliee par le rapport k.');
+            `Chaque coordonnee est multipliee par le rapport <span class="color-coef">${K(`k = ${kDisplay}`)}</span>.`);
 
         html += step('Application numerique',
-            `A'\\left(${kDisplay} \\times ${ex.px}\\,;\\,${kDisplay} \\times ${ex.py}\\right)`,
+            `A'\\left(${kDisplay} \\times (${ex.px})\\,;\\,${kDisplay} \\times (${ex.py})\\right)`,
             '');
 
         html += resultBlock(`A'(${ex.qx}\\,;\\,${ex.qy})`,
-            `Image de A(${ex.px}\\,;\\,${ex.py}) par l\'homothetie de centre O et de rapport k = ${kDisplay}.`);
+            `Image de <span class="color-coef">${K(`A(${ex.px}\\,;\\,${ex.py})`)}</span> par l'homothetie de centre O et de rapport ${K(`k = ${kDisplay}`)}.`);
     }
 
     return html;
+}
+
+// ========================================
+// Graphiques
+// ========================================
+
+function computeGraphBounds(points, margin) {
+    margin = margin || 2;
+    let xMin = Infinity, xMax = -Infinity, yMin = Infinity, yMax = -Infinity;
+    for (const p of points) {
+        if (p.x < xMin) xMin = p.x;
+        if (p.x > xMax) xMax = p.x;
+        if (p.y < yMin) yMin = p.y;
+        if (p.y > yMax) yMax = p.y;
+    }
+    xMin = Math.floor(xMin - margin);
+    xMax = Math.ceil(xMax + margin);
+    yMin = Math.floor(yMin - margin);
+    yMax = Math.ceil(yMax + margin);
+
+    // Rendre le viewport a peu pres carre
+    const rangeX = xMax - xMin;
+    const rangeY = yMax - yMin;
+    if (rangeX > rangeY) {
+        const diff = rangeX - rangeY;
+        yMin -= Math.floor(diff / 2);
+        yMax += Math.ceil(diff / 2);
+    } else if (rangeY > rangeX) {
+        const diff = rangeY - rangeX;
+        xMin -= Math.floor(diff / 2);
+        xMax += Math.ceil(diff / 2);
+    }
+
+    return { xMin, xMax, yMin, yMax };
+}
+
+function createGeoGraph(points, margin) {
+    const bounds = computeGraphBounds(points, margin || 2);
+    const graph = new GraphCanvas('geoCanvas', {
+        width: 420, height: 420, padding: 40,
+        xMin: bounds.xMin, xMax: bounds.xMax,
+        yMin: bounds.yMin, yMax: bounds.yMax
+    });
+    graph.clear();
+    graph.drawGrid();
+    graph.drawAxes();
+    graph.drawTicks();
+    return graph;
+}
+
+function drawDroitesGraph(ex, sub) {
+    let points = [];
+
+    if (sub === 'reduite') {
+        const m = ex.m, p = ex.p;
+        points.push({ x: ex.mx, y: ex.my });
+        points.push({ x: 0, y: p });
+        points.push({ x: -5, y: m * (-5) + p });
+        points.push({ x: 5, y: m * 5 + p });
+
+        const graph = createGeoGraph(points, 2);
+        graph.drawLineEquation(m, p, '#3498db', 2.5);
+        graph.drawPoint(ex.mx, ex.my, '#e74c3c', 6, `M(${ex.mx};${ex.my})`);
+        graph.drawPoint(0, p, '#27ae60', 5, `(0;${p})`);
+
+    } else if (sub === 'cartesienne') {
+        if (ex.b !== 0) {
+            const m = -ex.a / ex.b, p = -ex.c / ex.b;
+            points.push({ x: -5, y: m * (-5) + p });
+            points.push({ x: 5, y: m * 5 + p });
+            points.push({ x: 0, y: p });
+        } else {
+            const xv = -ex.c / ex.a;
+            points.push({ x: xv, y: -5 });
+            points.push({ x: xv, y: 5 });
+        }
+
+        const graph = createGeoGraph(points, 2);
+        graph.drawLineCartesian(ex.a, ex.b, ex.c, '#3498db', 2.5);
+
+    } else {
+        // deux_points
+        const m = ex.m_num / ex.m_den;
+        const p = ex.p_num / ex.p_den;
+        points.push({ x: ex.ax, y: ex.ay });
+        points.push({ x: ex.bx, y: ex.by });
+        points.push({ x: -5, y: m * (-5) + p });
+        points.push({ x: 5, y: m * 5 + p });
+
+        const graph = createGeoGraph(points, 2);
+        graph.drawLineEquation(m, p, '#3498db', 2.5);
+        graph.drawPoint(ex.ax, ex.ay, '#e74c3c', 6, `A(${ex.ax};${ex.ay})`);
+        graph.drawPoint(ex.bx, ex.by, '#27ae60', 6, `B(${ex.bx};${ex.by})`);
+    }
+}
+
+function drawCerclesGraph(ex, sub) {
+    let points = [];
+    points.push({ x: ex.cx - ex.r, y: ex.cy });
+    points.push({ x: ex.cx + ex.r, y: ex.cy });
+    points.push({ x: ex.cx, y: ex.cy - ex.r });
+    points.push({ x: ex.cx, y: ex.cy + ex.r });
+
+    if (sub === 'position' && ex.mx !== undefined) {
+        points.push({ x: ex.mx, y: ex.my });
+    }
+
+    const graph = createGeoGraph(points, 2);
+    graph.drawCircle(ex.cx, ex.cy, ex.r, '#3498db', 2.5);
+    graph.drawPoint(ex.cx, ex.cy, '#9b59b6', 5, `\u03A9(${ex.cx};${ex.cy})`);
+
+    if (sub === 'position') {
+        const mColor = ex.dist2 < ex.r * ex.r ? '#27ae60' :
+                       ex.dist2 === ex.r * ex.r ? '#3498db' : '#e74c3c';
+        graph.drawPoint(ex.mx, ex.my, mColor, 6, `M(${ex.mx};${ex.my})`);
+        graph.drawDashedLine(ex.cx, ex.cy, ex.mx, ex.my, 'rgba(150,150,150,0.6)');
+    }
+}
+
+function drawDistanceGraph(ex, sub) {
+    let points = [];
+
+    if (sub === 'point_point') {
+        points.push({ x: ex.ax, y: ex.ay });
+        points.push({ x: ex.bx, y: ex.by });
+
+        const graph = createGeoGraph(points, 2);
+        graph.drawPoint(ex.ax, ex.ay, '#3498db', 6, `A(${ex.ax};${ex.ay})`);
+        graph.drawPoint(ex.bx, ex.by, '#e74c3c', 6, `B(${ex.bx};${ex.by})`);
+        graph.drawDashedLine(ex.ax, ex.ay, ex.bx, ex.by, '#27ae60', 2);
+    } else {
+        points.push({ x: ex.mx, y: ex.my });
+        if (ex.b !== 0) {
+            for (let xi = -6; xi <= 6; xi += 3) {
+                points.push({ x: xi, y: (-ex.a * xi - ex.c) / ex.b });
+            }
+        } else {
+            const xv = -ex.c / ex.a;
+            points.push({ x: xv, y: -6 });
+            points.push({ x: xv, y: 6 });
+        }
+
+        const graph = createGeoGraph(points, 2);
+        graph.drawLineCartesian(ex.a, ex.b, ex.c, '#3498db', 2);
+        graph.drawPoint(ex.mx, ex.my, '#e74c3c', 6, `M(${ex.mx};${ex.my})`);
+    }
+}
+
+function drawTransformationsGraph(ex, sub) {
+    let points = [
+        { x: ex.px, y: ex.py },
+        { x: ex.qx, y: ex.qy },
+        { x: 0, y: 0 }
+    ];
+
+    const graph = createGeoGraph(points, 2);
+
+    // Tracer l'axe de symetrie
+    if (sub === 'symetrie_axe') {
+        if (ex.axis === 'Ox') {
+            graph.drawLineEquation(0, 0, '#9b59b6', 1.5);
+        } else if (ex.axis === 'Oy') {
+            graph.drawLineCartesian(1, 0, 0, '#9b59b6', 1.5);
+        } else if (ex.axis === 'yx') {
+            graph.drawLineEquation(1, 0, '#9b59b6', 1.5);
+        } else {
+            graph.drawLineEquation(-1, 0, '#9b59b6', 1.5);
+        }
+    }
+
+    graph.drawPoint(ex.px, ex.py, '#3498db', 6, `A(${ex.px};${ex.py})`);
+    graph.drawPoint(ex.qx, ex.qy, '#27ae60', 6, `A'(${ex.qx};${ex.qy})`);
+    graph.drawDashedLine(ex.px, ex.py, ex.qx, ex.qy, 'rgba(150,150,150,0.5)');
+    graph.drawPoint(0, 0, '#333', 4, 'O');
 }
 
 // ========================================
@@ -784,10 +953,10 @@ function step(title, tex, expl) {
 }
 
 function resultBlock(tex, expl) {
-    let html = '<div class="result-highlight">';
-    html += `<div class="final">${K(tex)}</div>`;
-    if (expl) html += `<div class="step-explanation" style="margin-top:8px">${expl}</div>`;
+    let html = '<div class="final-result">';
+    html += K(tex);
     html += '</div>';
+    if (expl) html += `<div class="step-explanation" style="margin-top:8px; text-align:center;">${expl}</div>`;
     return html;
 }
 

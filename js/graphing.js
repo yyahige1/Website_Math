@@ -279,6 +279,72 @@ class GraphCanvas {
     /**
      * Dessine le graphique complet d'une inéquation du 2nd degré
      */
+    /**
+     * Dessine un cercle de centre (cx, cy) et de rayon r
+     */
+    drawCircle(cx, cy, r, color = '#3498db', lineWidth = 2.5) {
+        const ctx = this.ctx;
+        ctx.strokeStyle = color;
+        ctx.lineWidth = lineWidth;
+        ctx.beginPath();
+
+        const steps = 200;
+        for (let i = 0; i <= steps; i++) {
+            const angle = (2 * Math.PI * i) / steps;
+            const x = cx + r * Math.cos(angle);
+            const y = cy + r * Math.sin(angle);
+            const canvasX = this.toCanvasX(x);
+            const canvasY = this.toCanvasY(y);
+            if (i === 0) {
+                ctx.moveTo(canvasX, canvasY);
+            } else {
+                ctx.lineTo(canvasX, canvasY);
+            }
+        }
+        ctx.closePath();
+        ctx.stroke();
+    }
+
+    /**
+     * Dessine une droite y = mx + p
+     */
+    drawLineEquation(m, p, color = '#3498db', lineWidth = 2.5) {
+        this.drawFunction(x => m * x + p, color, lineWidth);
+    }
+
+    /**
+     * Dessine une droite ax + by + c = 0
+     */
+    drawLineCartesian(a, b, c, color = '#3498db', lineWidth = 2.5) {
+        if (b !== 0) {
+            this.drawFunction(x => (-a * x - c) / b, color, lineWidth);
+        } else {
+            const x = -c / a;
+            const canvasX = this.toCanvasX(x);
+            this.ctx.strokeStyle = color;
+            this.ctx.lineWidth = lineWidth;
+            this.ctx.beginPath();
+            this.ctx.moveTo(canvasX, this.options.padding);
+            this.ctx.lineTo(canvasX, this.options.height - this.options.padding);
+            this.ctx.stroke();
+        }
+    }
+
+    /**
+     * Dessine un segment en pointilles
+     */
+    drawDashedLine(x1, y1, x2, y2, color = 'rgba(150,150,150,0.6)', lineWidth = 1.5) {
+        const ctx = this.ctx;
+        ctx.strokeStyle = color;
+        ctx.lineWidth = lineWidth;
+        ctx.setLineDash([5, 5]);
+        ctx.beginPath();
+        ctx.moveTo(this.toCanvasX(x1), this.toCanvasY(y1));
+        ctx.lineTo(this.toCanvasX(x2), this.toCanvasY(y2));
+        ctx.stroke();
+        ctx.setLineDash([]);
+    }
+
     drawQuadraticInequality(a, b, c, sign, roots = null) {
         this.clear();
         this.drawGrid();
