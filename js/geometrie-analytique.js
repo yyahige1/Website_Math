@@ -453,7 +453,10 @@ function updateExerciseDisplay() {
         }
     }
 
-    $('expressionDisplay').innerHTML = display;
+    const el = $('expressionDisplay');
+    el.innerHTML = display;
+    el.style.fontSize = '1.1em';
+    el.style.fontWeight = '500';
 }
 
 // ========================================
@@ -820,8 +823,11 @@ function drawDroitesGraph(ex, sub) {
         const m = ex.m, p = ex.p;
         points.push({ x: ex.mx, y: ex.my });
         points.push({ x: 0, y: p });
-        points.push({ x: -5, y: m * (-5) + p });
-        points.push({ x: 5, y: m * 5 + p });
+        // Limiter l'etendue de la droite pour eviter des bounds trop grands
+        const xLo = Math.min(ex.mx, 0) - 3;
+        const xHi = Math.max(ex.mx, 0) + 3;
+        points.push({ x: xLo, y: m * xLo + p });
+        points.push({ x: xHi, y: m * xHi + p });
 
         const graph = createGeoGraph(points, 2);
         graph.drawLineEquation(m, p, '#3498db', 2.5);
@@ -829,15 +835,16 @@ function drawDroitesGraph(ex, sub) {
         graph.drawPoint(0, p, '#27ae60', 5, `(0;${p})`);
 
     } else if (sub === 'cartesienne') {
+        points.push({ x: 0, y: 0 });
         if (ex.b !== 0) {
             const m = -ex.a / ex.b, p = -ex.c / ex.b;
-            points.push({ x: -5, y: m * (-5) + p });
-            points.push({ x: 5, y: m * 5 + p });
+            points.push({ x: -4, y: m * (-4) + p });
+            points.push({ x: 4, y: m * 4 + p });
             points.push({ x: 0, y: p });
         } else {
             const xv = -ex.c / ex.a;
-            points.push({ x: xv, y: -5 });
-            points.push({ x: xv, y: 5 });
+            points.push({ x: xv, y: -4 });
+            points.push({ x: xv, y: 4 });
         }
 
         const graph = createGeoGraph(points, 2);
@@ -849,8 +856,10 @@ function drawDroitesGraph(ex, sub) {
         const p = ex.p_num / ex.p_den;
         points.push({ x: ex.ax, y: ex.ay });
         points.push({ x: ex.bx, y: ex.by });
-        points.push({ x: -5, y: m * (-5) + p });
-        points.push({ x: 5, y: m * 5 + p });
+        const xLo = Math.min(ex.ax, ex.bx, 0) - 2;
+        const xHi = Math.max(ex.ax, ex.bx, 0) + 2;
+        points.push({ x: xLo, y: m * xLo + p });
+        points.push({ x: xHi, y: m * xHi + p });
 
         const graph = createGeoGraph(points, 2);
         graph.drawLineEquation(m, p, '#3498db', 2.5);
@@ -865,12 +874,14 @@ function drawCerclesGraph(ex, sub) {
     points.push({ x: ex.cx + ex.r, y: ex.cy });
     points.push({ x: ex.cx, y: ex.cy - ex.r });
     points.push({ x: ex.cx, y: ex.cy + ex.r });
+    // Toujours inclure l'origine pour voir le lien avec les axes
+    points.push({ x: 0, y: 0 });
 
     if (sub === 'position' && ex.mx !== undefined) {
         points.push({ x: ex.mx, y: ex.my });
     }
 
-    const graph = createGeoGraph(points, 2);
+    const graph = createGeoGraph(points, 3);
     graph.drawCircle(ex.cx, ex.cy, ex.r, '#3498db', 2.5);
     graph.drawPoint(ex.cx, ex.cy, '#9b59b6', 5, `\u03A9(${ex.cx};${ex.cy})`);
 

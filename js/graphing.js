@@ -196,38 +196,44 @@ class GraphCanvas {
     }
 
     /**
-     * Dessine une fonction y = f(x)
+     * Dessine une fonction y = f(x) avec clipping dans la zone de dessin
      */
     drawFunction(func, color = null, lineWidth = null) {
-        this.ctx.strokeStyle = color || this.options.curveColor;
-        this.ctx.lineWidth = lineWidth || this.options.curveWidth;
-        this.ctx.beginPath();
+        const ctx = this.ctx;
+        ctx.save();
+        // Clipper dans la zone de dessin pour eviter les debordements
+        ctx.beginPath();
+        ctx.rect(this.options.padding, this.options.padding, this.drawWidth, this.drawHeight);
+        ctx.clip();
+
+        ctx.strokeStyle = color || this.options.curveColor;
+        ctx.lineWidth = lineWidth || this.options.curveWidth;
+        ctx.beginPath();
 
         let started = false;
-        const step = (this.options.xMax - this.options.xMin) / 500; // 500 points
+        const step = (this.options.xMax - this.options.xMin) / 500;
 
         for (let x = this.options.xMin; x <= this.options.xMax; x += step) {
             const y = func(x);
-
-            // Vérifier que y est dans les limites
-            if (isNaN(y) || !isFinite(y)) continue;
+            if (isNaN(y) || !isFinite(y)) { started = false; continue; }
 
             const canvasX = this.toCanvasX(x);
             const canvasY = this.toCanvasY(y);
 
             if (!started) {
-                this.ctx.moveTo(canvasX, canvasY);
+                ctx.moveTo(canvasX, canvasY);
                 started = true;
             } else {
-                this.ctx.lineTo(canvasX, canvasY);
+                ctx.lineTo(canvasX, canvasY);
             }
         }
 
-        this.ctx.stroke();
+        ctx.stroke();
+        ctx.restore();
     }
 
     /**
-     * Dessine un point
+     * Dessine un point avec label intelligent (evite superposition avec axes)
      */
     drawPoint(x, y, color = '#e74c3c', radius = 4, label = null) {
         const canvasX = this.toCanvasX(x);
@@ -243,12 +249,46 @@ class GraphCanvas {
         this.ctx.lineWidth = 2;
         this.ctx.stroke();
 
-        // Label optionnel
         if (label) {
-            this.ctx.fillStyle = '#333';
-            this.ctx.font = '12px Arial';
-            this.ctx.textAlign = 'center';
-            this.ctx.fillText(label, canvasX, canvasY - 10);
+            const ctx = this.ctx;
+            ctx.font = 'bold 11px Arial';
+
+            // Positionnement intelligent du label
+            const x0 = this.toCanvasX(0);
+            const y0 = this.toCanvasY(0);
+            const pad = this.options.padding;
+            const nearYAxis = Math.abs(canvasX - x0) < 28;
+            const nearXAxis = Math.abs(canvasY - y0) < 28;
+            const nearTop = canvasY < pad + 22;
+
+            let lx = canvasX, ly = canvasY - radius - 8;
+            ctx.textAlign = 'center';
+
+            if (nearTop) {
+                // Trop pres du haut : label en dessous
+                ly = canvasY + radius + 14;
+            } else if (nearYAxis && canvasX >= x0) {
+                // Pres de l'axe Y cote droit : decaler a droite
+                lx = canvasX + radius + 4;
+                ly = canvasY - 2;
+                ctx.textAlign = 'left';
+            } else if (nearYAxis) {
+                // Pres de l'axe Y cote gauche : decaler a gauche
+                lx = canvasX - radius - 4;
+                ly = canvasY - 2;
+                ctx.textAlign = 'right';
+            }
+
+            // Fond blanc pour lisibilite (evite superposition avec graduations)
+            const m = ctx.measureText(label);
+            const bx = ctx.textAlign === 'center' ? lx - m.width / 2 - 2
+                      : ctx.textAlign === 'left' ? lx - 2
+                      : lx - m.width - 2;
+            ctx.fillStyle = 'rgba(255,255,255,0.85)';
+            ctx.fillRect(bx, ly - 10, m.width + 4, 13);
+
+            ctx.fillStyle = color;
+            ctx.fillText(label, lx, ly);
         }
     }
 
@@ -284,6 +324,11 @@ class GraphCanvas {
      */
     drawCircle(cx, cy, r, color = '#3498db', lineWidth = 2.5) {
         const ctx = this.ctx;
+        ctx.save();
+        ctx.beginPath();
+        ctx.rect(this.options.padding, this.options.padding, this.drawWidth, this.drawHeight);
+        ctx.clip();
+
         ctx.strokeStyle = color;
         ctx.lineWidth = lineWidth;
         ctx.beginPath();
@@ -303,6 +348,7 @@ class GraphCanvas {
         }
         ctx.closePath();
         ctx.stroke();
+        ctx.restore();
     }
 
     /**

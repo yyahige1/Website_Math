@@ -80,6 +80,11 @@ function fmtTerm(c, variable, first) {
     return `${sign} ${term}`;
 }
 
+// Formate un signe pour affichage
+function signStr(val) {
+    return val >= 0 ? `+ ${val}` : `- ${Math.abs(val)}`;
+}
+
 // ========================================
 // Initialisation
 // ========================================
@@ -195,18 +200,14 @@ function generateDroitesPlan() {
     const ex = {};
 
     if (sub === 'equation_plan') {
-        // Vecteur normal n(a, b, c) et point M(x0, y0, z0) sur le plan
         ex.na = rint(-3, 3, [0]);
         ex.nb = rint(-3, 3, [0]);
         ex.nc = rint(-3, 3, [0]);
         ex.x0 = rint(-4, 4);
         ex.y0 = rint(-4, 4);
         ex.z0 = rint(-4, 4);
-        // Equation: na(x-x0) + nb(y-y0) + nc(z-z0) = 0
-        // => na*x + nb*y + nc*z + d = 0 avec d = -(na*x0 + nb*y0 + nc*z0)
         ex.d = -(ex.na * ex.x0 + ex.nb * ex.y0 + ex.nc * ex.z0);
     } else {
-        // droite_parametrique: point A et vecteur directeur d
         ex.ax = rint(-4, 4);
         ex.ay = rint(-4, 4);
         ex.az = rint(-4, 4);
@@ -224,7 +225,6 @@ function generatePositions() {
     const ex = {};
 
     if (sub === 'parallelisme') {
-        // Deux vecteurs u et v - soit paralleles, soit non
         ex.ux = rint(-3, 3, [0]);
         ex.uy = rint(-3, 3, [0]);
         ex.uz = rint(-3, 3, [0]);
@@ -236,7 +236,6 @@ function generatePositions() {
             ex.vz = k * ex.uz;
             ex.k_coef = k;
         } else {
-            // Vecteur non proportionnel
             do {
                 ex.vx = rint(-3, 3, [0]);
                 ex.vy = rint(-3, 3, [0]);
@@ -248,14 +247,11 @@ function generatePositions() {
             );
         }
     } else if (sub === 'orthogonalite') {
-        // Deux vecteurs - soit orthogonaux, soit non
         ex.ux = rint(-3, 3, [0]);
         ex.uy = rint(-3, 3, [0]);
         ex.uz = rint(-3, 3, [0]);
         ex.orthogonal = Math.random() > 0.5;
         if (ex.orthogonal) {
-            // Construire v orthogonal a u : u.v = 0
-            // Choisir vx et vy librement, calculer vz = -(ux*vx + uy*vy)/uz (si uz != 0)
             ex.vx = rint(-3, 3, [0]);
             ex.vy = rint(-3, 3, [0]);
             if (ex.uz !== 0) {
@@ -263,12 +259,10 @@ function generatePositions() {
                 if (dot_partial % ex.uz === 0) {
                     ex.vz = -dot_partial / ex.uz;
                 } else {
-                    // Ajuster vx pour que vz soit entier
                     ex.vx = ex.uz; ex.vy = 0;
-                    ex.vz = -ex.ux; // uz*vz = -ux*uz => vz = -ux
+                    ex.vz = -ex.ux;
                 }
             } else {
-                // uz = 0 : choisir vz libre, vx = uy, vy = -ux
                 ex.vx = ex.uy; ex.vy = -ex.ux; ex.vz = rint(-3, 3);
             }
         } else {
@@ -280,14 +274,12 @@ function generatePositions() {
         }
         ex.dot = ex.ux * ex.vx + ex.uy * ex.vy + ex.uz * ex.vz;
     } else {
-        // coplanaire: 4 points A, B, C, D
         ex.ax = rint(-4, 4); ex.ay = rint(-4, 4); ex.az = rint(-4, 4);
         ex.bx = rint(-4, 4); ex.by = rint(-4, 4); ex.bz = rint(-4, 4);
         ex.cx = rint(-4, 4); ex.cy = rint(-4, 4); ex.cz = rint(-4, 4);
         ex.coplanar = Math.random() > 0.5;
 
         if (ex.coplanar) {
-            // D = A + s*AB + t*AC pour certains s, t
             const s = pick([1, 2, -1]);
             const t = pick([1, 2, -1]);
             ex.dx = ex.ax + s * (ex.bx - ex.ax) + t * (ex.cx - ex.ax);
@@ -305,7 +297,6 @@ function generatePositions() {
             ) === 0);
         }
 
-        // Calculer le determinant
         ex.det = det3(
             ex.bx - ex.ax, ex.by - ex.ay, ex.bz - ex.az,
             ex.cx - ex.ax, ex.cy - ex.ay, ex.cz - ex.az,
@@ -346,12 +337,10 @@ function generateSections() {
     const sub = GeoEspState.subtype_sections;
 
     if (sub === 'cube') {
-        // Differents types de sections dans un cube unite [0,a]^3
         const a = pick([2, 3, 4]);
         const sectionType = pick(['diagonale', 'mediane', 'hexagone']);
         GeoEspState.exercise = { a, sectionType };
     } else {
-        // tetraedre regulier
         const a = pick([2, 4, 6]);
         const sectionType = pick(['milieux_aretes', 'parallele_face']);
         GeoEspState.exercise = { a, sectionType };
@@ -359,56 +348,52 @@ function generateSections() {
 }
 
 // ========================================
-// Affichage de l'exercice
+// Affichage de l'exercice (HTML + KaTeX inline)
 // ========================================
 
 function updateExerciseDisplay() {
     const type = GeoEspState.currentType;
     const sub = GeoEspState['subtype_' + type];
     const ex = GeoEspState.exercise;
-    let tex = '';
+    let display = '';
 
     if (type === 'coordonnees') {
-        const ptA = pt3('A', ex.ax, ex.ay, ex.az);
-        const ptB = pt3('B', ex.bx, ex.by, ex.bz);
+        display = `<p style="text-align:center">${K(pt3('A', ex.ax, ex.ay, ex.az))} &nbsp; et &nbsp; ${K(pt3('B', ex.bx, ex.by, ex.bz))}</p>`;
         if (sub === 'distance') {
-            tex = `${ptA} \\quad ${ptB}`;
-            tex += `\\\\[6pt] \\text{Calculer la distance } AB.`;
+            display += `<p>Calculer la distance ${K('AB')}.</p>`;
         } else if (sub === 'vecteur') {
-            tex = `${ptA} \\quad ${ptB}`;
-            tex += `\\\\[6pt] \\text{Donner les coordonnees du vecteur } \\overrightarrow{AB}.`;
+            display += `<p>Donner les coordonnees du vecteur ${K('\\overrightarrow{AB}')}.</p>`;
         } else {
-            tex = `${ptA} \\quad ${ptB}`;
-            tex += `\\\\[6pt] \\text{Trouver les coordonnees du milieu } I \\text{ de } [AB].`;
+            display += `<p>Trouver les coordonnees du milieu ${K('I')} de ${K('[AB]')}.</p>`;
         }
     } else if (type === 'droites_plans') {
         if (sub === 'equation_plan') {
-            tex = `\\text{Plan passant par } M${pt3('', ex.x0, ex.y0, ex.z0)}`;
-            tex += `\\\\[4pt] \\text{de vecteur normal } \\vec{n}${vec3(ex.na, ex.nb, ex.nc)}`;
-            tex += `\\\\[6pt] \\text{Determiner une equation cartesienne de ce plan.}`;
+            display = `<p>Plan passant par ${K(pt3('M', ex.x0, ex.y0, ex.z0))}</p>`;
+            display += `<p style="text-align:center">de vecteur normal ${K(`${vecName('n')} ${vec3(ex.na, ex.nb, ex.nc)}`)}</p>`;
+            display += `<p>Determiner une equation cartesienne de ce plan.</p>`;
         } else {
-            tex = `\\text{Droite passant par } A${pt3('', ex.ax, ex.ay, ex.az)}`;
-            tex += `\\\\[4pt] \\text{de vecteur directeur } \\vec{d}${vec3(ex.dl, ex.dm, ex.dn)}`;
-            tex += `\\\\[6pt] \\text{Ecrire la representation parametrique de cette droite.}`;
+            display = `<p>Droite passant par ${K(pt3('A', ex.ax, ex.ay, ex.az))}</p>`;
+            display += `<p style="text-align:center">de vecteur directeur ${K(`${vecName('d')} ${vec3(ex.dl, ex.dm, ex.dn)}`)}</p>`;
+            display += `<p>Ecrire la representation parametrique de cette droite.</p>`;
         }
     } else if (type === 'positions') {
         if (sub === 'parallelisme') {
-            tex = `\\vec{u}${vec3(ex.ux, ex.uy, ex.uz)} \\qquad \\vec{v}${vec3(ex.vx, ex.vy, ex.vz)}`;
-            tex += `\\\\[6pt] \\text{Les vecteurs } \\vec{u} \\text{ et } \\vec{v} \\text{ sont-ils colineaires (paralleles) ?}`;
+            display = `<p style="text-align:center">${K(`${vecName('u')} ${vec3(ex.ux, ex.uy, ex.uz)}`)} &nbsp;&nbsp; ${K(`${vecName('v')} ${vec3(ex.vx, ex.vy, ex.vz)}`)}</p>`;
+            display += `<p>Les vecteurs ${K(vecName('u'))} et ${K(vecName('v'))} sont-ils colineaires (paralleles) ?</p>`;
         } else if (sub === 'orthogonalite') {
-            tex = `\\vec{u}${vec3(ex.ux, ex.uy, ex.uz)} \\qquad \\vec{v}${vec3(ex.vx, ex.vy, ex.vz)}`;
-            tex += `\\\\[6pt] \\text{Les vecteurs } \\vec{u} \\text{ et } \\vec{v} \\text{ sont-ils orthogonaux ?}`;
+            display = `<p style="text-align:center">${K(`${vecName('u')} ${vec3(ex.ux, ex.uy, ex.uz)}`)} &nbsp;&nbsp; ${K(`${vecName('v')} ${vec3(ex.vx, ex.vy, ex.vz)}`)}</p>`;
+            display += `<p>Les vecteurs ${K(vecName('u'))} et ${K(vecName('v'))} sont-ils orthogonaux ?</p>`;
         } else {
-            tex = `A${pt3('', ex.ax, ex.ay, ex.az)}, \\; B${pt3('', ex.bx, ex.by, ex.bz)},`;
-            tex += `\\\\[4pt] C${pt3('', ex.cx, ex.cy, ex.cz)}, \\; D${pt3('', ex.dx, ex.dy, ex.dz)}`;
-            tex += `\\\\[6pt] \\text{Les points A, B, C, D sont-ils coplanaires ?}`;
+            display = `<p style="text-align:center">${K(pt3('A', ex.ax, ex.ay, ex.az))}, &nbsp; ${K(pt3('B', ex.bx, ex.by, ex.bz))}</p>`;
+            display += `<p style="text-align:center">${K(pt3('C', ex.cx, ex.cy, ex.cz))}, &nbsp; ${K(pt3('D', ex.dx, ex.dy, ex.dz))}</p>`;
+            display += `<p>Les points A, B, C, D sont-ils coplanaires ?</p>`;
         }
     } else if (type === 'produit_scalaire') {
-        tex = `\\vec{u}${vec3(ex.ux, ex.uy, ex.uz)} \\qquad \\vec{v}${vec3(ex.vx, ex.vy, ex.vz)}`;
+        display = `<p style="text-align:center">${K(`${vecName('u')} ${vec3(ex.ux, ex.uy, ex.uz)}`)} &nbsp;&nbsp; ${K(`${vecName('v')} ${vec3(ex.vx, ex.vy, ex.vz)}`)}</p>`;
         if (sub === 'calcul') {
-            tex += `\\\\[6pt] \\text{Calculer } \\vec{u} \\cdot \\vec{v}.`;
+            display += `<p>Calculer ${K(`${vecName('u')} \\cdot ${vecName('v')}`)}.</p>`;
         } else {
-            tex += `\\\\[6pt] \\text{Calculer l'angle } \\theta \\text{ entre } \\vec{u} \\text{ et } \\vec{v}.`;
+            display += `<p>Calculer l'angle ${K('\\theta')} entre ${K(vecName('u'))} et ${K(vecName('v'))}.</p>`;
         }
     } else {
         // sections
@@ -418,21 +403,24 @@ function updateExerciseDisplay() {
                 'mediane': 'un plan parallele a une face',
                 'hexagone': 'un plan coupant les six faces'
             };
-            tex = `\\text{Cube ABCDEFGH de cote } a = ${ex.a}.`;
-            tex += `\\\\[6pt] \\text{Section par } \\text{${sectionLabels[ex.sectionType]}}.`;
-            tex += `\\\\[4pt] \\text{Quelle est la nature de la section ?}`;
+            display = `<p>Cube ABCDEFGH de cote ${K(`a = ${ex.a}`)}.</p>`;
+            display += `<p>Section par ${sectionLabels[ex.sectionType]}.</p>`;
+            display += `<p>Quelle est la nature de la section ?</p>`;
         } else {
             const sectionLabels = {
                 'milieux_aretes': 'les milieux de 3 aretes',
                 'parallele_face': 'un plan parallele a une face'
             };
-            tex = `\\text{Tetraedre ABCD regulier de cote } a = ${ex.a}.`;
-            tex += `\\\\[6pt] \\text{Section par } \\text{${sectionLabels[ex.sectionType]}}.`;
-            tex += `\\\\[4pt] \\text{Quelle est la nature de la section ?}`;
+            display = `<p>Tetraedre regulier ABCD de cote ${K(`a = ${ex.a}`)}.</p>`;
+            display += `<p>Section par ${sectionLabels[ex.sectionType]}.</p>`;
+            display += `<p>Quelle est la nature de la section ?</p>`;
         }
     }
 
-    $('expressionDisplay').innerHTML = K(tex);
+    const el = $('expressionDisplay');
+    el.innerHTML = display;
+    el.style.fontSize = '1.1em';
+    el.style.fontWeight = '500';
 }
 
 // ========================================
@@ -458,8 +446,24 @@ function solveGeoEsp() {
         html = solveSections(ex, sub);
     }
 
+    // Ajouter graphique 3D pour coordonnees et sections
+    if (type === 'coordonnees' || type === 'sections') {
+        html += '<div class="graph-container">';
+        html += '<h4>Representation graphique</h4>';
+        html += '<canvas id="geo3DCanvas" width="420" height="380"></canvas>';
+        html += '</div>';
+    }
+
     $('stepsContainer').innerHTML = html;
     showSolution('solutionDiv');
+
+    // Dessin apres insertion dans le DOM
+    if (type === 'coordonnees' || type === 'sections') {
+        requestAnimationFrame(() => {
+            if (type === 'coordonnees') draw3DCoordonnees(ex, sub);
+            else if (type === 'sections') draw3DSections(ex, sub);
+        });
+    }
 }
 
 // --- Correction Coordonnees 3D ---
@@ -467,16 +471,18 @@ function solveCoordonnees3D(ex, sub) {
     let html = '';
 
     if (sub === 'distance') {
-        html += step('Formule de la distance en 3D',
-            'AB = \\sqrt{(x_B - x_A)^2 + (y_B - y_A)^2 + (z_B - z_A)^2}',
-            'Extension du theoreme de Pythagore a l\'espace a trois dimensions.');
+        html += '<div class="formula-box">' + K('AB = \\sqrt{(x_B - x_A)^2 + (y_B - y_A)^2 + (z_B - z_A)^2}') + '</div>';
 
         html += step('Application numerique',
-            `AB = \\sqrt{(${ex.bx} - ${ex.ax})^2 + (${ex.by} - ${ex.ay})^2 + (${ex.bz} - ${ex.az})^2}`,
-            '');
+            `AB = \\sqrt{(${ex.bx} - (${ex.ax}))^2 + (${ex.by} - (${ex.ay}))^2 + (${ex.bz} - (${ex.az}))^2}`,
+            `Avec <span class="color-coef">${K(pt3('A', ex.ax, ex.ay, ex.az))}</span> et <span class="color-coef">${K(pt3('B', ex.bx, ex.by, ex.bz))}</span>.`);
 
         html += step('Calcul des differences',
-            `AB = \\sqrt{(${ex.vx})^2 + (${ex.vy})^2 + (${ex.vz})^2} = \\sqrt{${ex.dist2}}`,
+            `AB = \\sqrt{(${ex.vx})^2 + (${ex.vy})^2 + (${ex.vz})^2} = \\sqrt{${ex.vx*ex.vx} + ${ex.vy*ex.vy} + ${ex.vz*ex.vz}}`,
+            '');
+
+        html += step('Simplification',
+            `AB = \\sqrt{${ex.dist2}}`,
             '');
 
         const isPerf = Number.isInteger(Math.sqrt(ex.dist2));
@@ -495,37 +501,24 @@ function solveCoordonnees3D(ex, sub) {
         }
 
     } else if (sub === 'vecteur') {
-        html += step('Formule des coordonnees de AB',
-            '\\overrightarrow{AB} = \\begin{pmatrix} x_B - x_A \\\\ y_B - y_A \\\\ z_B - z_A \\end{pmatrix}',
-            'On soustrait les coordonnees de l\'origine (A) a celles de l\'extremite (B).');
+        html += '<div class="formula-box">' + K('\\overrightarrow{AB} = \\begin{pmatrix} x_B - x_A \\\\ y_B - y_A \\\\ z_B - z_A \\end{pmatrix}') + '</div>';
 
         html += step('Application numerique',
             `\\overrightarrow{AB} = \\begin{pmatrix} ${ex.bx} - (${ex.ax}) \\\\ ${ex.by} - (${ex.ay}) \\\\ ${ex.bz} - (${ex.az}) \\end{pmatrix}`,
-            '');
+            `De <span class="color-coef">${K(pt3('A', ex.ax, ex.ay, ex.az))}</span> vers <span class="color-coef">${K(pt3('B', ex.bx, ex.by, ex.bz))}</span>.`);
 
-        html += resultBlock(`\\overrightarrow{AB} = \\begin{pmatrix} ${ex.vx} \\\\ ${ex.vy} \\\\ ${ex.vz} \\end{pmatrix}`, '');
+        html += resultBlock(`\\overrightarrow{AB} = ${vec3(ex.vx, ex.vy, ex.vz)}`, '');
 
     } else {
-        html += step('Formule du milieu en 3D',
-            'I = \\left( \\dfrac{x_A + x_B}{2} \\;,\\; \\dfrac{y_A + y_B}{2} \\;,\\; \\dfrac{z_A + z_B}{2} \\right)',
-            'Le milieu est le barycentre de A et B avec des coefficients egaux.');
+        html += '<div class="formula-box">' + K('I = \\left( \\dfrac{x_A + x_B}{2} \\;;\\; \\dfrac{y_A + y_B}{2} \\;;\\; \\dfrac{z_A + z_B}{2} \\right)') + '</div>';
 
         html += step('Application numerique',
-            `I = \\left( \\dfrac{${ex.ax} + ${ex.bx}}{2} \\;,\\; \\dfrac{${ex.ay} + ${ex.by}}{2} \\;,\\; \\dfrac{${ex.az} + ${ex.bz}}{2} \\right)`,
-            '');
-
-        const mx = (ex.ax + ex.bx) / 2;
-        const my = (ex.ay + ex.by) / 2;
-        const mz = (ex.az + ex.bz) / 2;
-
-        function fmtHalf(n) {
-            if (n === Math.floor(n)) return `${n}`;
-            return `\\dfrac{${ex.ax + ex.bx}}{2}`;
-        }
+            `I = \\left( \\dfrac{${ex.ax} + (${ex.bx})}{2} \\;;\\; \\dfrac{${ex.ay} + (${ex.by})}{2} \\;;\\; \\dfrac{${ex.az} + (${ex.bz})}{2} \\right)`,
+            `Avec <span class="color-coef">${K(pt3('A', ex.ax, ex.ay, ex.az))}</span> et <span class="color-coef">${K(pt3('B', ex.bx, ex.by, ex.bz))}</span>.`);
 
         html += resultBlock(
-            `I\\left(${mx}\\,;\\,${my}\\,;\\,${mz}\\right)`,
-            'Coordonnees du milieu de [AB].');
+            `I\\left(${ex.mx}\\,;\\,${ex.my}\\,;\\,${ex.mz}\\right)`,
+            '<span class="color-solution">Coordonnees du milieu</span> de [AB].');
     }
 
     return html;
@@ -536,16 +529,14 @@ function solveDroitesPlan(ex, sub) {
     let html = '';
 
     if (sub === 'equation_plan') {
-        html += step('Equation d\'un plan de vecteur normal n(a, b, c) passant par M(x0, y0, z0)',
-            'a(x - x_0) + b(y - y_0) + c(z - z_0) = 0',
-            'Le vecteur normal est perpendiculaire a tout vecteur du plan.');
+        html += '<div class="formula-box">' + K('a(x - x_0) + b(y - y_0) + c(z - z_0) = 0') + '</div>';
+
+        html += step('Identification',
+            `${K(pt3('M', ex.x0, ex.y0, ex.z0))}, \\quad ${K(`${vecName('n')} ${vec3(ex.na, ex.nb, ex.nc)}`)}`,
+            `Point du plan : <span class="color-coef">${K(pt3('M', ex.x0, ex.y0, ex.z0))}</span>. Vecteur normal : <span class="color-coef">${K(`${vecName('n')}(${ex.na}\\,;\\,${ex.nb}\\,;\\,${ex.nc})`)}</span>.`);
 
         html += step('Substitution',
-            `${ex.na}(x - ${ex.x0}) + ${ex.nb}(y - ${ex.y0}) + ${ex.nc}(z - ${ex.z0}) = 0`,
-            '');
-
-        html += step('Developpement',
-            `${ex.na}x ${ex.na * (-ex.x0) >= 0 ? '+ ' + ex.na * (-ex.x0) : '- ' + Math.abs(ex.na * (-ex.x0))} + ${ex.nb}y ${ex.nb * (-ex.y0) >= 0 ? '+ ' + ex.nb * (-ex.y0) : '- ' + Math.abs(ex.nb * (-ex.y0))} + ${ex.nc}z ${ex.nc * (-ex.z0) >= 0 ? '+ ' + ex.nc * (-ex.z0) : '- ' + Math.abs(ex.nc * (-ex.z0))} = 0`,
+            `${ex.na}(x - (${ex.x0})) + ${ex.nb}(y - (${ex.y0})) + ${ex.nc}(z - (${ex.z0})) = 0`,
             '');
 
         // Construire l'equation finale
@@ -575,22 +566,23 @@ function solveDroitesPlan(ex, sub) {
             else terms.push(`- ${Math.abs(ex.d)}`);
         }
 
-        html += resultBlock(terms.join(' ') + ' = 0',
-            `Equation cartesienne du plan de vecteur normal n(${ex.na}\\,;\\,${ex.nb}\\,;\\,${ex.nc}).`);
+        html += step('Developpement et simplification',
+            terms.join(' ') + ' = 0',
+            `On developpe les parentheses et on regroupe les constantes : <span class="color-delta">${K(`d = ${ex.d}`)}</span>.`);
+
+        html += resultBlock(terms.join(' ') + ' = 0', '');
 
     } else {
         // droite_parametrique
-        html += step('Representation parametrique d\'une droite',
-            '\\begin{cases} x = x_A + l \\cdot t \\\\ y = y_A + m \\cdot t \\\\ z = z_A + n \\cdot t \\end{cases} \\quad (t \\in \\mathbb{R})',
-            'On part du point A et on se deplace dans la direction du vecteur directeur d(l, m, n).');
+        html += '<div class="formula-box">' + K('\\begin{cases} x = x_A + l \\cdot t \\\\ y = y_A + m \\cdot t \\\\ z = z_A + n \\cdot t \\end{cases} \\quad (t \\in \\mathbb{R})') + '</div>';
 
         html += step('Identification des parametres',
-            `A(${ex.ax}\\,;\\,${ex.ay}\\,;\\,${ex.az}), \\quad \\vec{d}${vec3(ex.dl, ex.dm, ex.dn)}`,
-            '');
+            '',
+            `Point : <span class="color-coef">${K(pt3('A', ex.ax, ex.ay, ex.az))}</span>. Vecteur directeur : <span class="color-coef">${K(`${vecName('d')}(${ex.dl}\\,;\\,${ex.dm}\\,;\\,${ex.dn})`)}</span>.`);
 
         html += resultBlock(
             `\\begin{cases} x = ${ex.ax} ${ex.dl >= 0 ? '+ ' + ex.dl : '- ' + Math.abs(ex.dl)} t \\\\ y = ${ex.ay} ${ex.dm >= 0 ? '+ ' + ex.dm : '- ' + Math.abs(ex.dm)} t \\\\ z = ${ex.az} ${ex.dn >= 0 ? '+ ' + ex.dn : '- ' + Math.abs(ex.dn)} t \\end{cases}`,
-            'Representation parametrique de la droite (t \\in \\mathbb{R}).');
+            `avec ${K('t \\in \\mathbb{R}')}.`);
     }
 
     return html;
@@ -601,71 +593,80 @@ function solvePositions(ex, sub) {
     let html = '';
 
     if (sub === 'parallelisme') {
-        html += step('Condition de colinearite',
-            '\\vec{u} \\text{ et } \\vec{v} \\text{ colineaires} \\iff \\exists \\, k \\in \\mathbb{R} : \\vec{v} = k \\cdot \\vec{u}',
-            'Deux vecteurs sont colineaires (paralleles) si et seulement si l\'un est un multiple scalaire de l\'autre. On verifie si les rapports des coordonnees sont egaux.');
+        html += '<div class="formula-box">' + K('\\vec{u} \\parallel \\vec{v} \\iff \\exists \\, k \\in \\mathbb{R} : \\vec{v} = k \\cdot \\vec{u}') + '</div>';
 
-        html += step('Calcul des rapports',
-            `\\frac{${ex.vx}}{${ex.ux}} = ? \\qquad \\frac{${ex.vy}}{${ex.uy}} = ? \\qquad \\frac{${ex.vz}}{${ex.uz}} = ?`,
-            '');
+        html += step('Donnees',
+            '',
+            `<span class="color-coef">${K(`${vecName('u')}(${ex.ux}\\,;\\,${ex.uy}\\,;\\,${ex.uz})`)}</span> et <span class="color-coef">${K(`${vecName('v')}(${ex.vx}\\,;\\,${ex.vy}\\,;\\,${ex.vz})`)}</span>.`);
+
+        html += step('Verification des rapports',
+            `\\frac{v_x}{u_x} = \\frac{${ex.vx}}{${ex.ux}}, \\quad \\frac{v_y}{u_y} = \\frac{${ex.vy}}{${ex.uy}}, \\quad \\frac{v_z}{u_z} = \\frac{${ex.vz}}{${ex.uz}}`,
+            'On verifie si les rapports des coordonnees sont tous egaux.');
 
         if (ex.parallel) {
-            html += step('Verification',
-                `\\vec{v} = ${ex.k_coef} \\, \\vec{u}`,
-                `Les trois rapports sont egaux a ${ex.k_coef} : les vecteurs sont colineaires.`);
-            html += resultBlock('\\vec{u} \\text{ et } \\vec{v} \\text{ sont colineaires (paralleles)}.',
-                `k = ${ex.k_coef}`);
+            html += step('Conclusion',
+                `${vecName('v')} = ${ex.k_coef} \\, ${vecName('u')}`,
+                `Les trois rapports sont egaux a <span class="color-delta">${K(`k = ${ex.k_coef}`)}</span>.`);
+            html += resultBlock(`${vecName('u')} \\parallel ${vecName('v')} \\quad (k = ${ex.k_coef})`,
+                '<span class="color-solution">Les vecteurs sont colineaires (paralleles).</span>');
         } else {
-            html += step('Verification',
-                '\\text{Les rapports ne sont pas tous egaux.}',
-                'Au moins un rapport differe des autres : les vecteurs ne sont pas colineaires.');
-            html += resultBlock('\\vec{u} \\text{ et } \\vec{v} \\text{ ne sont pas colineaires.}', '');
+            html += step('Conclusion',
+                '',
+                '<span class="color-delta">Les rapports ne sont pas tous egaux.</span>');
+            html += resultBlock(`${vecName('u')} \\not\\parallel ${vecName('v')}`,
+                '<span class="color-solution">Les vecteurs ne sont pas colineaires.</span>');
         }
 
     } else if (sub === 'orthogonalite') {
-        html += step('Condition d\'orthogonalite',
-            '\\vec{u} \\perp \\vec{v} \\iff \\vec{u} \\cdot \\vec{v} = 0',
-            'Deux vecteurs sont orthogonaux si et seulement si leur produit scalaire est nul.');
+        html += '<div class="formula-box">' + K('\\vec{u} \\perp \\vec{v} \\iff \\vec{u} \\cdot \\vec{v} = 0') + '</div>';
+
+        html += step('Donnees',
+            '',
+            `<span class="color-coef">${K(`${vecName('u')}(${ex.ux}\\,;\\,${ex.uy}\\,;\\,${ex.uz})`)}</span> et <span class="color-coef">${K(`${vecName('v')}(${ex.vx}\\,;\\,${ex.vy}\\,;\\,${ex.vz})`)}</span>.`);
 
         html += step('Calcul du produit scalaire',
-            `\\vec{u} \\cdot \\vec{v} = (${ex.ux})(${ex.vx}) + (${ex.uy})(${ex.vy}) + (${ex.uz})(${ex.vz})`,
+            `${vecName('u')} \\cdot ${vecName('v')} = (${ex.ux})(${ex.vx}) + (${ex.uy})(${ex.vy}) + (${ex.uz})(${ex.vz})`,
             '');
 
+        const p1 = ex.ux * ex.vx, p2 = ex.uy * ex.vy, p3 = ex.uz * ex.vz;
         html += step('Resultat',
-            `\\vec{u} \\cdot \\vec{v} = ${ex.ux * ex.vx} + ${ex.uy * ex.vy} + ${ex.uz * ex.vz} = ${ex.dot}`,
+            `${vecName('u')} \\cdot ${vecName('v')} = ${p1} + (${p2}) + (${p3}) = ${ex.dot}`,
             '');
 
         if (ex.orthogonal) {
-            html += resultBlock('\\vec{u} \\perp \\vec{v} \\quad (\\text{car } \\vec{u} \\cdot \\vec{v} = 0)',
-                'Les vecteurs sont orthogonaux.');
+            html += resultBlock(`${vecName('u')} \\cdot ${vecName('v')} = 0 \\implies ${vecName('u')} \\perp ${vecName('v')}`,
+                '<span class="color-solution">Les vecteurs sont orthogonaux.</span>');
         } else {
-            html += resultBlock(`\\vec{u} \\cdot \\vec{v} = ${ex.dot} \\neq 0 \\implies \\vec{u} \\text{ et } \\vec{v} \\text{ ne sont pas orthogonaux.}`, '');
+            html += resultBlock(`${vecName('u')} \\cdot ${vecName('v')} = ${ex.dot} \\neq 0`,
+                '<span class="color-solution">Les vecteurs ne sont pas orthogonaux.</span>');
         }
 
     } else {
         // coplanaire
-        html += step('Condition de coplanarite',
-            '\\text{A, B, C, D coplanaires} \\iff \\det(\\overrightarrow{AB}, \\overrightarrow{AC}, \\overrightarrow{AD}) = 0',
-            'Quatre points sont coplanaires si et seulement si le determinant de la matrice formee par les vecteurs AB, AC, AD est nul.');
+        html += '<div class="formula-box">' + K('\\det(\\overrightarrow{AB}, \\overrightarrow{AC}, \\overrightarrow{AD}) = 0 \\iff \\text{coplanaires}') + '</div>';
 
         const abx = ex.bx - ex.ax, aby = ex.by - ex.ay, abz = ex.bz - ex.az;
         const acx = ex.cx - ex.ax, acy = ex.cy - ex.ay, acz = ex.cz - ex.az;
         const adx = ex.dx - ex.ax, ady = ex.dy - ex.ay, adz = ex.dz - ex.az;
 
         html += step('Calcul des vecteurs',
-            `\\overrightarrow{AB}${vec3(abx, aby, abz)} \\quad \\overrightarrow{AC}${vec3(acx, acy, acz)} \\quad \\overrightarrow{AD}${vec3(adx, ady, adz)}`,
-            '');
+            '',
+            `<span class="color-coef">${K(`\\overrightarrow{AB} ${vec3(abx, aby, abz)}`)}</span> &nbsp; <span class="color-coef">${K(`\\overrightarrow{AC} ${vec3(acx, acy, acz)}`)}</span> &nbsp; <span class="color-coef">${K(`\\overrightarrow{AD} ${vec3(adx, ady, adz)}`)}</span>`);
 
         html += step('Calcul du determinant',
-            `\\det = \\begin{vmatrix} ${abx} & ${acx} & ${adx} \\\\ ${aby} & ${acy} & ${ady} \\\\ ${abz} & ${acz} & ${adz} \\end{vmatrix} = ${ex.det}`,
-            'On developpe selon la premiere colonne (ou par la regle de Sarrus).');
+            `\\det = \\begin{vmatrix} ${abx} & ${acx} & ${adx} \\\\ ${aby} & ${acy} & ${ady} \\\\ ${abz} & ${acz} & ${adz} \\end{vmatrix}`,
+            'Developpement selon la premiere colonne (ou regle de Sarrus).');
+
+        html += step('Valeur du determinant',
+            `\\det = ${ex.det}`,
+            `<span class="color-delta">${K(`\\det = ${ex.det}`)}</span>`);
 
         if (ex.coplanar) {
-            html += resultBlock('\\det = 0 \\implies \\text{A, B, C, D sont coplanaires.}',
-                'Les quatre points appartiennent au meme plan.');
+            html += resultBlock('\\det = 0',
+                '<span class="color-solution">A, B, C, D sont coplanaires.</span>');
         } else {
-            html += resultBlock(`\\det = ${ex.det} \\neq 0 \\implies \\text{A, B, C, D ne sont pas coplanaires.}`,
-                'Les quatre points ne sont pas dans le meme plan.');
+            html += resultBlock(`\\det = ${ex.det} \\neq 0`,
+                '<span class="color-solution">A, B, C, D ne sont pas coplanaires.</span>');
         }
     }
 
@@ -676,28 +677,29 @@ function solvePositions(ex, sub) {
 function solveProduitScalaire(ex, sub) {
     let html = '';
 
-    html += step('Formule du produit scalaire dans l\'espace',
-        '\\vec{u} \\cdot \\vec{v} = u_x v_x + u_y v_y + u_z v_z',
-        'Le produit scalaire est la somme des produits des coordonnees correspondantes.');
+    html += '<div class="formula-box">' + K(`${vecName('u')} \\cdot ${vecName('v')} = u_x v_x + u_y v_y + u_z v_z`) + '</div>';
+
+    html += step('Donnees',
+        '',
+        `<span class="color-coef">${K(`${vecName('u')}(${ex.ux}\\,;\\,${ex.uy}\\,;\\,${ex.uz})`)}</span> et <span class="color-coef">${K(`${vecName('v')}(${ex.vx}\\,;\\,${ex.vy}\\,;\\,${ex.vz})`)}</span>.`);
 
     html += step('Application numerique',
-        `\\vec{u} \\cdot \\vec{v} = (${ex.ux})(${ex.vx}) + (${ex.uy})(${ex.vy}) + (${ex.uz})(${ex.vz})`,
+        `${vecName('u')} \\cdot ${vecName('v')} = (${ex.ux})(${ex.vx}) + (${ex.uy})(${ex.vy}) + (${ex.uz})(${ex.vz})`,
         '');
 
+    const p1 = ex.ux * ex.vx, p2 = ex.uy * ex.vy, p3 = ex.uz * ex.vz;
     html += step('Calcul',
-        `\\vec{u} \\cdot \\vec{v} = ${ex.ux * ex.vx} + ${ex.uy * ex.vy} + ${ex.uz * ex.vz} = ${ex.dot}`,
+        `${vecName('u')} \\cdot ${vecName('v')} = ${p1} ${p2 >= 0 ? '+ ' + p2 : '- ' + Math.abs(p2)} ${p3 >= 0 ? '+ ' + p3 : '- ' + Math.abs(p3)} = ${ex.dot}`,
         '');
 
     if (sub === 'calcul') {
-        html += resultBlock(`\\vec{u} \\cdot \\vec{v} = ${ex.dot}`, '');
+        html += resultBlock(`${vecName('u')} \\cdot ${vecName('v')} = ${ex.dot}`, '');
     } else {
         // angle
-        html += step('Formule de l\'angle',
-            '\\cos \\theta = \\dfrac{\\vec{u} \\cdot \\vec{v}}{\\|\\vec{u}\\| \\cdot \\|\\vec{v}\\|}',
-            'L\'angle entre deux vecteurs se calcule a partir du produit scalaire et des normes.');
+        html += '<div class="formula-box">' + K('\\cos \\theta = \\dfrac{\\vec{u} \\cdot \\vec{v}}{\\|\\vec{u}\\| \\cdot \\|\\vec{v}\\|}') + '</div>';
 
         html += step('Calcul des normes',
-            `\\|\\vec{u}\\| = \\sqrt{${ex.normU2}} \\approx ${roundDec(ex.normU, 3)} \\qquad \\|\\vec{v}\\| = \\sqrt{${ex.normV2}} \\approx ${roundDec(ex.normV, 3)}`,
+            `\\|${vecName('u')}\\| = \\sqrt{${ex.normU2}} \\approx ${roundDec(ex.normU, 3)} \\qquad \\|${vecName('v')}\\| = \\sqrt{${ex.normV2}} \\approx ${roundDec(ex.normV, 3)}`,
             '');
 
         const cosTheta = ex.dot / (ex.normU * ex.normV);
@@ -705,11 +707,14 @@ function solveProduitScalaire(ex, sub) {
         const thetaDeg = roundDec(theta * 180 / Math.PI, 1);
 
         html += step('Calcul du cosinus',
-            `\\cos \\theta = \\dfrac{${ex.dot}}{\\sqrt{${ex.normU2}} \\times \\sqrt{${ex.normV2}}} \\approx ${roundDec(cosTheta, 4)}`,
+            `\\cos \\theta = \\dfrac{${ex.dot}}{${roundDec(ex.normU, 3)} \\times ${roundDec(ex.normV, 3)}} \\approx ${roundDec(cosTheta, 4)}`,
             '');
 
-        html += resultBlock(`\\theta = \\arccos\\left(${roundDec(cosTheta, 4)}\\right) \\approx ${thetaDeg}^\\circ`,
-            cosTheta >= 0 ? 'Angle aigu (cos > 0).' : 'Angle obtus (cos < 0).');
+        const angleType = cosTheta > 0.01 ? '<span class="case-positive">Angle aigu</span> (cos > 0)' :
+                          cosTheta < -0.01 ? '<span class="case-negative">Angle obtus</span> (cos < 0)' :
+                          '<span class="case-zero">Angle droit</span> (cos = 0)';
+
+        html += resultBlock(`\\theta \\approx ${thetaDeg}^\\circ`, angleType);
     }
 
     return html;
@@ -724,36 +729,37 @@ function solveSections(ex, sub) {
 
         if (sectionType === 'diagonale') {
             html += step('Section par un plan diagonal',
-                '\\text{Le plan passe par deux aretes opposees du cube}',
-                'Le plan contient une diagonale de la base et une arete verticale correspondante.');
+                '',
+                'Le plan contient une <span class="color-coef">diagonale de la base</span> et une <span class="color-coef">arete verticale</span> correspondante.');
 
-            html += step('Vertices de la section',
-                '\\text{La section est un rectangle}',
-                'Le rectangle a pour dimensions : un cote = a (cote du cube), l\'autre cote = a\\sqrt{2} (diagonale de la face).');
+            html += step('Nature de la section',
+                '',
+                `La section est un <span class="color-delta">rectangle</span> de dimensions : cote du cube ${K(`a = ${a}`)} et diagonale de face ${K(`a\\sqrt{2}`)}.`);
 
             const diag = roundDec(a * Math.sqrt(2), 3);
+            const aire = roundDec(a * a * Math.sqrt(2), 3);
             html += resultBlock(
-                `\\text{Section : rectangle } a \\times a\\sqrt{2} = ${a} \\times ${diag}`,
-                `Aire = a^2\\sqrt{2} = ${roundDec(a * a * Math.sqrt(2), 3)} \\text{ u}^2`);
+                `\\text{Rectangle } ${a} \\times ${diag}`,
+                `Aire = <span class="color-solution">${K(`a^2\\sqrt{2} = ${aire}`)} u${K('^2')}</span>`);
 
         } else if (sectionType === 'mediane') {
             html += step('Section parallele a une face',
-                '\\text{Le plan est parallele a la face ABCD}',
-                'Tout plan parallele a une face d\'un cube coupe le cube en un carre.');
+                '',
+                'Tout plan parallele a une face d\'un cube coupe le cube en un <span class="color-delta">carre</span> de meme dimension.');
 
             html += resultBlock(
-                `\\text{Section : carre de cote } ${a}`,
-                `Aire = ${a}^2 = ${a * a} \\text{ u}^2`);
+                `\\text{Carre de cote } ${a}`,
+                `Aire = <span class="color-solution">${K(`${a}^2 = ${a * a}`)} u${K('^2')}</span>`);
 
         } else {
             html += step('Section par un plan coupant les 6 faces',
-                '\\text{Le plan passe par les milieux de 6 aretes}',
-                'Si le plan passe par les milieux d\'aretes deux a deux paralleles, il coupe le cube en un hexagone regulier.');
+                '',
+                'Le plan passe par les <span class="color-coef">milieux de 6 aretes</span> (deux a deux paralleles). La section est un <span class="color-delta">hexagone regulier</span>.');
 
             const side = roundDec(a * Math.sqrt(2) / 2, 3);
             html += resultBlock(
-                `\\text{Section : hexagone regulier de cote } \\frac{a\\sqrt{2}}{2} = ${side}`,
-                `Perimetre = 3a\\sqrt{2} = ${roundDec(3 * a * Math.sqrt(2), 3)} \\text{ u}`);
+                `\\text{Hexagone regulier de cote } ${K(`\\frac{a\\sqrt{2}}{2} = ${side}`)}`,
+                `Perimetre = <span class="color-solution">${K(`3a\\sqrt{2} = ${roundDec(3 * a * Math.sqrt(2), 3)}`)} u</span>`);
         }
 
     } else {
@@ -762,33 +768,334 @@ function solveSections(ex, sub) {
 
         if (sectionType === 'milieux_aretes') {
             html += step('Section par les milieux de 3 aretes',
-                '\\text{Plan passant par les milieux de 3 aretes}',
-                'Le plan de milieux de 3 aretes d\'un tetraedre regulier donne une section triangulaire.');
-
-            html += step('Nature de la section',
-                '\\text{Section : triangle equilateral}',
-                'Par le theoreme des milieux, le triangle de section est semblable au triangle de base avec un rapport 1/2.');
+                '',
+                'Par le <span class="color-coef">theoreme des milieux</span>, la section est un <span class="color-delta">triangle equilateral</span> semblable au triangle de base avec rapport 1/2.');
 
             html += resultBlock(
-                `\\text{Triangle equilateral de cote } \\frac{a}{2} = ${a / 2}`,
-                `Perimetre = \\frac{3a}{2} = ${3 * a / 2} \\text{ u}`);
+                `\\text{Triangle equilateral de cote } ${K(`\\frac{a}{2} = ${a / 2}`)}`,
+                `Perimetre = <span class="color-solution">${K(`\\frac{3a}{2} = ${3 * a / 2}`)} u</span>`);
 
         } else {
             html += step('Section par un plan parallele a une face',
-                '\\text{Plan parallele a la face BCD}',
-                'Un plan parallele a une face d\'un tetraedre coupe les 3 aretes adjacentes.');
-
-            html += step('Propriete',
-                '\\text{La section est un triangle semblable a la face}',
-                'Le rapport de similitude depend de la position du plan par rapport au sommet oppose.');
+                '',
+                'Un plan parallele a une face d\'un tetraedre coupe les 3 aretes adjacentes en un <span class="color-delta">triangle equilateral</span> (homothete de la face).');
 
             html += resultBlock(
-                '\\text{Section : triangle equilateral (homothete de la face)}',
-                'Le rapport de similitude k verifie 0 < k < 1.');
+                '\\text{Triangle equilateral (homothete de la face)}',
+                'Le rapport de similitude <span class="color-solution">' + K('k') + '</span> verifie ' + K('0 < k < 1') + '.');
         }
     }
 
     return html;
+}
+
+// ========================================
+// Graphiques 3D (projection isometrique)
+// ========================================
+
+function iso3D(x, y, z, cx, cy, scale) {
+    // Projection isometrique simplifiee
+    const angle = Math.PI / 6;
+    const px = cx + scale * (x * Math.cos(angle) - y * Math.cos(angle));
+    const py = cy - scale * z + scale * (x * Math.sin(angle) + y * Math.sin(angle)) * 0.5;
+    return { x: px, y: py };
+}
+
+function drawArrow3D(ctx, from, to, color, label) {
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(from.x, from.y);
+    ctx.lineTo(to.x, to.y);
+    ctx.stroke();
+
+    // Fleche
+    const dx = to.x - from.x, dy = to.y - from.y;
+    const len = Math.sqrt(dx * dx + dy * dy);
+    if (len < 5) return;
+    const ux = dx / len, uy = dy / len;
+    const sz = 8;
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.moveTo(to.x, to.y);
+    ctx.lineTo(to.x - sz * ux + sz * 0.4 * uy, to.y - sz * uy - sz * 0.4 * ux);
+    ctx.lineTo(to.x - sz * ux - sz * 0.4 * uy, to.y - sz * uy + sz * 0.4 * ux);
+    ctx.closePath();
+    ctx.fill();
+
+    if (label) {
+        ctx.fillStyle = color;
+        ctx.font = 'bold 14px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText(label, to.x + ux * 12, to.y + uy * 12);
+    }
+}
+
+function drawPoint3D(ctx, p, color, label) {
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, 5, 0, 2 * Math.PI);
+    ctx.fill();
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    if (label) {
+        const m = ctx.measureText(label);
+        ctx.fillStyle = 'rgba(255,255,255,0.85)';
+        ctx.fillRect(p.x - m.width / 2 - 2, p.y - 18, m.width + 4, 14);
+        ctx.fillStyle = color;
+        ctx.font = 'bold 11px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText(label, p.x, p.y - 7);
+    }
+}
+
+function draw3DCoordonnees(ex, sub) {
+    const canvas = document.getElementById('geo3DCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const W = 420, H = 380;
+    canvas.width = W;
+    canvas.height = H;
+
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(0, 0, W, H);
+
+    // Determiner l'echelle
+    const allCoords = [ex.ax, ex.ay, ex.az, ex.bx, ex.by, ex.bz, 0];
+    if (sub === 'milieu') allCoords.push(ex.mx, ex.my, ex.mz);
+    const maxVal = Math.max(...allCoords.map(Math.abs), 1);
+    const scale = Math.min(40, 140 / maxVal);
+    const cx = W * 0.5, cy = H * 0.55;
+
+    // Axes
+    const axisLen = maxVal + 1.5;
+    const oP = iso3D(0, 0, 0, cx, cy, scale);
+    const xP = iso3D(axisLen, 0, 0, cx, cy, scale);
+    const yP = iso3D(0, axisLen, 0, cx, cy, scale);
+    const zP = iso3D(0, 0, axisLen, cx, cy, scale);
+
+    drawArrow3D(ctx, oP, xP, '#e74c3c', 'x');
+    drawArrow3D(ctx, oP, yP, '#27ae60', 'y');
+    drawArrow3D(ctx, oP, zP, '#3498db', 'z');
+
+    // Label O
+    ctx.fillStyle = '#333';
+    ctx.font = '12px Arial';
+    ctx.textAlign = 'right';
+    ctx.fillText('O', oP.x - 8, oP.y + 4);
+
+    // Points A et B
+    const pA = iso3D(ex.ax, ex.ay, ex.az, cx, cy, scale);
+    const pB = iso3D(ex.bx, ex.by, ex.bz, cx, cy, scale);
+
+    // Lignes de projection (pointilles)
+    ctx.setLineDash([3, 3]);
+    ctx.strokeStyle = 'rgba(231,76,60,0.3)';
+    ctx.lineWidth = 1;
+    // Projection A sur le plan xy
+    const pAxy = iso3D(ex.ax, ex.ay, 0, cx, cy, scale);
+    ctx.beginPath(); ctx.moveTo(pA.x, pA.y); ctx.lineTo(pAxy.x, pAxy.y); ctx.stroke();
+    // Projection B
+    ctx.strokeStyle = 'rgba(39,174,96,0.3)';
+    const pBxy = iso3D(ex.bx, ex.by, 0, cx, cy, scale);
+    ctx.beginPath(); ctx.moveTo(pB.x, pB.y); ctx.lineTo(pBxy.x, pBxy.y); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Segment AB (ou vers milieu)
+    if (sub === 'distance') {
+        ctx.strokeStyle = '#9b59b6';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([6, 4]);
+        ctx.beginPath(); ctx.moveTo(pA.x, pA.y); ctx.lineTo(pB.x, pB.y); ctx.stroke();
+        ctx.setLineDash([]);
+    } else if (sub === 'vecteur') {
+        drawArrow3D(ctx, pA, pB, '#9b59b6', '');
+    }
+
+    drawPoint3D(ctx, pA, '#e74c3c', `A(${ex.ax};${ex.ay};${ex.az})`);
+    drawPoint3D(ctx, pB, '#27ae60', `B(${ex.bx};${ex.by};${ex.bz})`);
+
+    if (sub === 'milieu') {
+        const pM = iso3D(ex.mx, ex.my, ex.mz, cx, cy, scale);
+        ctx.strokeStyle = 'rgba(155,89,182,0.5)';
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([4, 4]);
+        ctx.beginPath(); ctx.moveTo(pA.x, pA.y); ctx.lineTo(pB.x, pB.y); ctx.stroke();
+        ctx.setLineDash([]);
+        drawPoint3D(ctx, pM, '#9b59b6', `I(${ex.mx};${ex.my};${ex.mz})`);
+    }
+}
+
+function draw3DSections(ex, sub) {
+    const canvas = document.getElementById('geo3DCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const W = 420, H = 380;
+    canvas.width = W;
+    canvas.height = H;
+
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(0, 0, W, H);
+
+    const cx = W * 0.5, cy = H * 0.55;
+
+    if (sub === 'cube') {
+        const a = ex.a;
+        const scale = Math.min(50, 120 / a);
+
+        // 8 sommets du cube
+        const v = [
+            iso3D(0, 0, 0, cx, cy, scale),     // A = 0
+            iso3D(a, 0, 0, cx, cy, scale),     // B = 1
+            iso3D(a, a, 0, cx, cy, scale),     // C = 2
+            iso3D(0, a, 0, cx, cy, scale),     // D = 3
+            iso3D(0, 0, a, cx, cy, scale),     // E = 4
+            iso3D(a, 0, a, cx, cy, scale),     // F = 5
+            iso3D(a, a, a, cx, cy, scale),     // G = 6
+            iso3D(0, a, a, cx, cy, scale),     // H = 7
+        ];
+        const labels = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+
+        // Aretes cachees (pointilles)
+        ctx.setLineDash([4, 4]);
+        ctx.strokeStyle = 'rgba(0,0,0,0.2)';
+        ctx.lineWidth = 1;
+        [[0, 3], [0, 4], [3, 7]].forEach(([i, j]) => {
+            ctx.beginPath(); ctx.moveTo(v[i].x, v[i].y); ctx.lineTo(v[j].x, v[j].y); ctx.stroke();
+        });
+        ctx.setLineDash([]);
+
+        // Aretes visibles
+        ctx.strokeStyle = '#333';
+        ctx.lineWidth = 1.5;
+        [[0, 1], [1, 2], [2, 3],
+         [4, 5], [5, 6], [6, 7], [7, 4],
+         [1, 5], [2, 6], [3, 7], [0, 4]].forEach(([i, j]) => {
+            ctx.beginPath(); ctx.moveTo(v[i].x, v[i].y); ctx.lineTo(v[j].x, v[j].y); ctx.stroke();
+        });
+
+        // Section coloree
+        ctx.fillStyle = 'rgba(52,152,219,0.25)';
+        ctx.strokeStyle = '#3498db';
+        ctx.lineWidth = 2.5;
+
+        if (ex.sectionType === 'diagonale') {
+            // Rectangle diagonal ABGF (diagonale AC base)
+            const pts = [v[0], v[2], v[6], v[4]];
+            ctx.beginPath();
+            pts.forEach((p, i) => i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y));
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+        } else if (ex.sectionType === 'mediane') {
+            // Carre milieu en hauteur
+            const h = a / 2;
+            const pts = [
+                iso3D(0, 0, h, cx, cy, scale),
+                iso3D(a, 0, h, cx, cy, scale),
+                iso3D(a, a, h, cx, cy, scale),
+                iso3D(0, a, h, cx, cy, scale)
+            ];
+            ctx.beginPath();
+            pts.forEach((p, i) => i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y));
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+        } else {
+            // Hexagone par les milieux
+            const h = a / 2;
+            const pts = [
+                iso3D(h, 0, 0, cx, cy, scale),
+                iso3D(a, h, 0, cx, cy, scale),
+                iso3D(a, a, h, cx, cy, scale),
+                iso3D(h, a, a, cx, cy, scale),
+                iso3D(0, h, a, cx, cy, scale),
+                iso3D(0, 0, h, cx, cy, scale)
+            ];
+            ctx.beginPath();
+            pts.forEach((p, i) => i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y));
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+        }
+
+        // Labels sommets
+        v.forEach((p, i) => {
+            ctx.fillStyle = '#333';
+            ctx.font = 'bold 12px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText(labels[i], p.x + (i < 4 ? 0 : 0), p.y + (i < 4 ? 14 : -8));
+        });
+
+    } else {
+        // Tetraedre
+        const a = ex.a;
+        const scale = Math.min(45, 100 / a);
+        const h = a * Math.sqrt(2 / 3);
+
+        const v = [
+            iso3D(0, 0, 0, cx, cy, scale),                            // A
+            iso3D(a, 0, 0, cx, cy, scale),                            // B
+            iso3D(a / 2, a * Math.sqrt(3) / 2, 0, cx, cy, scale),    // C
+            iso3D(a / 2, a * Math.sqrt(3) / 6, h, cx, cy, scale),    // D (sommet)
+        ];
+        const labels = ['A', 'B', 'C', 'D'];
+
+        // Aretes cachees
+        ctx.setLineDash([4, 4]);
+        ctx.strokeStyle = 'rgba(0,0,0,0.2)';
+        ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(v[0].x, v[0].y); ctx.lineTo(v[2].x, v[2].y); ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Aretes visibles
+        ctx.strokeStyle = '#333';
+        ctx.lineWidth = 1.5;
+        [[0, 1], [1, 2], [0, 3], [1, 3], [2, 3]].forEach(([i, j]) => {
+            ctx.beginPath(); ctx.moveTo(v[i].x, v[i].y); ctx.lineTo(v[j].x, v[j].y); ctx.stroke();
+        });
+
+        // Section
+        ctx.fillStyle = 'rgba(46,204,113,0.25)';
+        ctx.strokeStyle = '#27ae60';
+        ctx.lineWidth = 2.5;
+
+        if (ex.sectionType === 'milieux_aretes') {
+            // Milieux de AB, BC, CA
+            const mid = (i, j) => ({ x: (v[i].x + v[j].x) / 2, y: (v[i].y + v[j].y) / 2 });
+            const pts = [mid(0, 1), mid(1, 2), mid(0, 2)];
+            ctx.beginPath();
+            pts.forEach((p, i) => i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y));
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+        } else {
+            // Plan parallele a BCD passant a mi-hauteur
+            const k = 0.5;
+            const pts = [
+                { x: v[3].x + k * (v[1].x - v[3].x), y: v[3].y + k * (v[1].y - v[3].y) },
+                { x: v[3].x + k * (v[2].x - v[3].x), y: v[3].y + k * (v[2].y - v[3].y) },
+                { x: v[3].x + k * (v[0].x - v[3].x), y: v[3].y + k * (v[0].y - v[3].y) },
+            ];
+            ctx.beginPath();
+            pts.forEach((p, i) => i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y));
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+        }
+
+        // Labels
+        v.forEach((p, i) => {
+            ctx.fillStyle = '#333';
+            ctx.font = 'bold 12px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText(labels[i], p.x, p.y + (i === 3 ? -10 : 16));
+        });
+    }
 }
 
 // ========================================
@@ -805,10 +1112,10 @@ function step(title, tex, expl) {
 }
 
 function resultBlock(tex, expl) {
-    let html = '<div class="result-highlight">';
-    html += `<div class="final">${K(tex)}</div>`;
-    if (expl) html += `<div class="step-explanation" style="margin-top:8px">${expl}</div>`;
+    let html = '<div class="final-result">';
+    html += K(tex);
     html += '</div>';
+    if (expl) html += `<div class="step-explanation" style="margin-top:8px; text-align:center;">${expl}</div>`;
     return html;
 }
 
