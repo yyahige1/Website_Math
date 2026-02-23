@@ -285,6 +285,8 @@ function generatePositions() {
             ex.dx = ex.ax + s * (ex.bx - ex.ax) + t * (ex.cx - ex.ax);
             ex.dy = ex.ay + s * (ex.by - ex.ay) + t * (ex.cy - ex.ay);
             ex.dz = ex.az + s * (ex.bz - ex.az) + t * (ex.cz - ex.az);
+            ex.alpha = s;
+            ex.beta = t;
         } else {
             do {
                 ex.dx = rint(-4, 4);
@@ -296,12 +298,6 @@ function generatePositions() {
                 ex.dx - ex.ax, ex.dy - ex.ay, ex.dz - ex.az
             ) === 0);
         }
-
-        ex.det = det3(
-            ex.bx - ex.ax, ex.by - ex.ay, ex.bz - ex.az,
-            ex.cx - ex.ax, ex.cy - ex.ay, ex.cz - ex.az,
-            ex.dx - ex.ax, ex.dy - ex.ay, ex.dz - ex.az
-        );
     }
 
     GeoEspState.exercise = ex;
@@ -642,8 +638,8 @@ function solvePositions(ex, sub) {
         }
 
     } else {
-        // coplanaire
-        html += '<div class="formula-box">' + K('\\det(\\overrightarrow{AB}, \\overrightarrow{AC}, \\overrightarrow{AD}) = 0 \\iff \\text{coplanaires}') + '</div>';
+        // coplanaire — methode combinaison lineaire (programme lycee)
+        html += '<div class="formula-box">' + K('A, B, C, D \\text{ coplanaires} \\iff \\exists\\,\\alpha, \\beta \\in \\mathbb{R} : \\overrightarrow{AD} = \\alpha \\overrightarrow{AB} + \\beta \\overrightarrow{AC}') + '</div>';
 
         const abx = ex.bx - ex.ax, aby = ex.by - ex.ay, abz = ex.bz - ex.az;
         const acx = ex.cx - ex.ax, acy = ex.cy - ex.ay, acz = ex.cz - ex.az;
@@ -653,19 +649,73 @@ function solvePositions(ex, sub) {
             '',
             `<span class="color-coef">${K(`\\overrightarrow{AB} ${vec3(abx, aby, abz)}`)}</span> &nbsp; <span class="color-coef">${K(`\\overrightarrow{AC} ${vec3(acx, acy, acz)}`)}</span> &nbsp; <span class="color-coef">${K(`\\overrightarrow{AD} ${vec3(adx, ady, adz)}`)}</span>`);
 
-        html += step('Calcul du determinant',
-            `\\det = \\begin{vmatrix} ${abx} & ${acx} & ${adx} \\\\ ${aby} & ${acy} & ${ady} \\\\ ${abz} & ${acz} & ${adz} \\end{vmatrix}`,
-            'Developpement selon la premiere colonne (ou regle de Sarrus).');
+        // Format un terme alpha ou beta avec gestion des signes
+        function sysTermA(c) {
+            if (c === 0) return '0';
+            if (c === 1) return '\\alpha';
+            if (c === -1) return '-\\alpha';
+            return `${c}\\alpha`;
+        }
+        function sysTermB(c) {
+            if (c === 0) return '';
+            if (c === 1) return ' + \\beta';
+            if (c === -1) return ' - \\beta';
+            if (c > 0) return ` + ${c}\\beta`;
+            return ` - ${Math.abs(c)}\\beta`;
+        }
+        const sysLine = (a, b, rhs) => `${sysTermA(a)}${sysTermB(b)} = ${rhs}`;
 
-        html += step('Valeur du determinant',
-            `\\det = ${ex.det}`,
-            `<span class="color-delta">${K(`\\det = ${ex.det}`)}</span>`);
+        html += step('Systeme a resoudre (3 equations, 2 inconnues)',
+            `\\begin{cases} ${sysLine(abx, acx, adx)} \\\\ ${sysLine(aby, acy, ady)} \\\\ ${sysLine(abz, acz, adz)} \\end{cases}`,
+            `On cherche <span class="color-coef">${K('\\alpha')}</span> et <span class="color-coef">${K('\\beta')}</span> satisfaisant les 3 equations simultanement.`);
 
         if (ex.coplanar) {
-            html += resultBlock('\\det = 0',
+            const al = ex.alpha, be = ex.beta;
+            html += step('Solution du systeme',
+                '',
+                `Le systeme est compatible : <span class="color-delta">${K(`\\alpha = ${al}`)}</span> et <span class="color-delta">${K(`\\beta = ${be}`)}</span>.`);
+
+            const v1 = al * abx + be * acx;
+            const v2 = al * aby + be * acy;
+            const v3 = al * abz + be * acz;
+            html += step('Verification dans les 3 equations',
+                '',
+                `(1) : ${K(`${al}(${abx}) + ${be}(${acx}) = ${v1} = ${adx}`)} ✓<br>` +
+                `(2) : ${K(`${al}(${aby}) + ${be}(${acy}) = ${v2} = ${ady}`)} ✓<br>` +
+                `(3) : ${K(`${al}(${abz}) + ${be}(${acz}) = ${v3} = ${adz}`)} ✓`);
+
+            function fmtVecCoef(c, v) {
+                if (c === 1) return `\\overrightarrow{${v}}`;
+                if (c === -1) return `-\\overrightarrow{${v}}`;
+                return `${c}\\overrightarrow{${v}}`;
+            }
+            const beSign = be >= 0 ? '+ ' : '';
+            html += resultBlock(
+                `\\overrightarrow{AD} = ${fmtVecCoef(al, 'AB')} ${beSign}${fmtVecCoef(be, 'AC')}`,
                 '<span class="color-solution">A, B, C, D sont coplanaires.</span>');
         } else {
-            html += resultBlock(`\\det = ${ex.det} \\neq 0`,
+            // Tenter de resoudre les equations (1) et (2)
+            const det2 = abx * acy - acx * aby;
+            if (Math.abs(det2) > 1e-9) {
+                const alpha = (adx * acy - acx * ady) / det2;
+                const beta = (abx * ady - adx * aby) / det2;
+                const checkLhs = roundDec(alpha * abz + beta * acz, 4);
+                const alFmt = roundDec(alpha, 2);
+                const beFmt = roundDec(beta, 2);
+                html += step('Resolution des equations (1) et (2)',
+                    '',
+                    `En resolvant avec les deux premieres equations, on trouve : <span class="color-delta">${K(`\\alpha \\approx ${alFmt}`)}</span> et <span class="color-delta">${K(`\\beta \\approx ${beFmt}`)}</span>.`);
+                html += step('Verification dans l\'equation (3)',
+                    '',
+                    `${K(`${alFmt}(${abz}) + ${beFmt}(${acz}) \\approx ${checkLhs}`)}, mais le membre droit vaut <span class="color-delta">${K(`${adz}`)}</span>.<br>` +
+                    `<span class="color-delta">L\'equation (3) n\'est pas satisfaite : le systeme est incompatible.</span>`);
+            } else {
+                html += step('Analyse du systeme',
+                    '',
+                    `<span class="color-delta">Le systeme n\'admet pas de solution</span> : les equations sont inconsistantes.`);
+            }
+            html += resultBlock(
+                '\\nexists\\,(\\alpha, \\beta) \\text{ solution du systeme}',
                 '<span class="color-solution">A, B, C, D ne sont pas coplanaires.</span>');
         }
     }
@@ -758,8 +808,8 @@ function solveSections(ex, sub) {
 
             const side = roundDec(a * Math.sqrt(2) / 2, 3);
             html += resultBlock(
-                `\\text{Hexagone regulier de cote } ${K(`\\frac{a\\sqrt{2}}{2} = ${side}`)}`,
-                `Perimetre = <span class="color-solution">${K(`3a\\sqrt{2} = ${roundDec(3 * a * Math.sqrt(2), 3)}`)} u</span>`);
+                `\\text{Hexagone regulier de cote } \\dfrac{a\\sqrt{2}}{2} = ${side}`,
+                `Perimetre = <span class="color-solution">${K(`3a\\sqrt{2} \\approx ${roundDec(3 * a * Math.sqrt(2), 3)}`)} u</span>`);
         }
 
     } else {
@@ -772,8 +822,8 @@ function solveSections(ex, sub) {
                 'Par le <span class="color-coef">theoreme des milieux</span>, la section est un <span class="color-delta">triangle equilateral</span> semblable au triangle de base avec rapport 1/2.');
 
             html += resultBlock(
-                `\\text{Triangle equilateral de cote } ${K(`\\frac{a}{2} = ${a / 2}`)}`,
-                `Perimetre = <span class="color-solution">${K(`\\frac{3a}{2} = ${3 * a / 2}`)} u</span>`);
+                `\\text{Triangle equilateral de cote } \\dfrac{a}{2} = ${a / 2}`,
+                `Perimetre = <span class="color-solution">${K(`\\dfrac{3a}{2} = ${3 * a / 2}`)} u</span>`);
 
         } else {
             html += step('Section par un plan parallele a une face',
