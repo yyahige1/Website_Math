@@ -10,7 +10,7 @@ Une plateforme d'entraînement en mathématiques interactive pour l'enseignement
 
 ## ✨ Fonctionnalités
 
-### Modules Disponibles (v2.1 - 25 modules)
+### Modules Disponibles (v3.1 - 28 modules)
 
 #### Algèbre (8 modules)
 
@@ -58,19 +58,22 @@ Une plateforme d'entraînement en mathématiques interactive pour l'enseignement
 | **Probabilités** | Calcul de probabilités | Simples, conditionnelles, arbres, binomiale, variables aléatoires, fluctuation |
 | **Statistiques** | Statistiques descriptives | Moyenne, médiane & quartiles, variance & écart-type, diagramme en boîte, régression linéaire |
 
-#### Géométrie & Trigonométrie (2 modules)
+#### Géométrie & Trigonométrie (4 modules)
 
 | Module | Description | Types d'exercices |
 |--------|-------------|-------------------|
 | **Trigonométrie** | Cercle trigo, formules | Valeurs remarquables, conversion, équations, formules d'addition, identités, triangles |
 | **Vecteurs** | Vecteurs du plan | Coordonnées, norme & distance, colinéarité, produit scalaire, opérations |
+| **Géométrie analytique** | Droites et cercles du plan | Équations droites (3 types), cercles (3 types), distances (2 types), transformations (3 types) |
+| **Géométrie espace** | Coordonnées et positions 3D | Coordonnées 3D, droites & plans, positions relatives, produit scalaire, sections solides |
 
-#### Terminale Spécialité (2 modules)
+#### Terminale Spécialité (3 modules)
 
 | Module | Description | Types d'exercices |
 |--------|-------------|-------------------|
 | **Arithmétique** | Divisibilité, PGCD, premiers | Divisibilité, PGCD & Euclide, nombres premiers, congruences, Bézout |
 | **Nombres Complexes** | Formes, géométrie | Algébrique, trigonométrique, module & argument, équations, géométrie |
+| **Logique & Dénombrement** | Combinatoire et raisonnement | Dénombrement (n!, A_n^k, C_n^k), récurrence, binôme de Newton |
 
 ### Points Forts
 
@@ -115,14 +118,14 @@ npx serve .
 
 ```
 Website_Math/
-├── *.html (25 fichiers)       # Pages des modules
+├── *.html (28 fichiers)       # Pages des modules
 ├── css/
 │   ├── theme.css              # Variables CSS (couleurs, espacements)
 │   ├── base.css               # Reset, typographie
 │   ├── layout.css             # Navigation, cards, grilles
 │   ├── navigation.css         # Navigation responsive + hamburger
 │   ├── exercices.css          # Styles communs exercices
-│   ├── equations2.css         # Tableaux de signes, fractions
+│   ├── equations2.css         # Tableaux de signes, fractions, graphiques
 │   ├── developpement.css      # Flèches SVG distributivité
 │   └── ...                    # Styles spécifiques modules
 │
@@ -131,12 +134,12 @@ Website_Math/
 │   ├── ui.js                  # Manipulation DOM
 │   ├── main.js                # Initialisation globale
 │   ├── navigation.js          # Génération navigation responsive
-│   ├── graphing.js            # Module graphiques Canvas (GraphCanvas)
+│   ├── graphing.js            # Module graphiques Canvas (GraphCanvas + 3D)
 │   ├── tableau-variations.js  # Tableaux de variations dynamiques
-│   └── [module].js (25)       # Logique de chaque module
+│   └── [module].js (28)       # Logique de chaque module
 │
-├── CLAUDE.md                  # Guide pour assistants IA
-├── ROADMAP.md                 # Plan de développement
+├── CLAUDE.md                  # Guide pour assistants IA (dernière mise à jour: 23 février)
+├── ROADMAP.md                 # Plan de développement (v3.1)
 └── README.md                  # Ce fichier
 ```
 

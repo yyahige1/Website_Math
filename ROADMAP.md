@@ -303,13 +303,29 @@
   - Formules avec KaTeX, corrections étape par étape
 
 - ✅ **Module Géométrie dans l'espace** (`geometrie-espace.html` + `geometrie-espace.js`)
-  - 5 types d'exercices : coordonnées 3D (distance AB, vecteur AB, milieu), droites et plans (équation cartésienne d'un plan, représentation paramétrique), positions relatives (parallélisme, orthogonalité, coplanarité par déterminant), produit scalaire (calcul, angle), sections de solides (cube, tétraèdre)
-  - Matrices LaTeX (vecteurs colonnes, déterminants 3×3)
+  - 5 types d'exercices : coordonnées 3D (distance AB, vecteur AB, milieu), droites et plans (équation cartésienne d'un plan, représentation paramétrique), positions relatives (parallélisme, orthogonalité, coplanarité par combinaison linéaire), produit scalaire (calcul, angle), sections de solides (cube, tétraèdre)
+  - Visualisation 3D isométrique avec Canvas (projections 3D → 2D)
+  - ✅ **CORRECTION (23 Février)**: Remplacement du déterminant 3×3 par la méthode de combinaison linéaire (AD = α·AB + β·AC) conforme au programme Terminale
+  - ✅ **CORRECTION (23 Février)**: Suppression des K() imbriqués dans resultBlock() (bug affichage <span class="katex">)
 
 - ✅ **Module Logique et Dénombrement** (`logique-denombrement.html` + `logique-denombrement.js`)
   - 3 types d'exercices : dénombrement (permutations n!, arrangements A_n^k, combinaisons C_n^k avec contextes concrets), récurrence (formules de somme classiques, inégalités avec démonstration complète en 5 étapes), binôme de Newton (développement (a+b)^n, coefficient C_n^k, terme de rang k)
 
 ### Bugs Corrigés
+
+#### Février 2026
+- ✅ **KaTeX double-rendu en resultBlock()** (`geometrie-espace.js` lignes 760-762, 774-776)
+  - **Problème**: Appels `K()` imbriqués dans le premier argument de `resultBlock(tex)`, causant l'affichage littéral de `<span class="katex">`
+  - **Solution**: Remplacer `${K(...)}` par équivalent LaTeX pur (`\dfrac`, etc.) dans le premier argument, garder K() uniquement dans expl (HTML)
+
+- ✅ **Coplanarité : déterminant 3×3 → combinaison linéaire** (`geometrie-espace.js` lignes 280-300, 644-700)
+  - **Problème**: Méthode du déterminant det(AB,AC,AD)=0 n'est **pas au programme** Terminale Spécialité (France)
+  - **Solution**: Remplacer par méthode pédagogique : résoudre système 3 équations / 2 inconnues (AD = α·AB + β·AC)
+    - Cas coplanaire: système compatible (solution existe)
+    - Cas non-coplanaire: système incompatible (pas de solution)
+  - **Bonus**: Stockage des coefficients α, β pour affichage direct
+
+#### Antérieur
 - ✅ Navigation "Suites Numériques" tronquée (width: max-content)
 - ✅ Boutons exercices Suites mal affichés (class type-selector)
 - ✅ Affichage "5 + -3n" → "5 - 3n" (gestion signes)

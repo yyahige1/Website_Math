@@ -2,8 +2,8 @@
 
 > Documentation pour les sessions futures avec Claude ou autres assistants IA
 
-**Dernière mise à jour**: 18 Février 2026
-**Version projet**: v3.0 (Programme complet 28 modules)
+**Dernière mise à jour**: 23 Février 2026
+**Version projet**: v3.1 (Programme complet 28 modules + corrections pédagogiques)
 
 ---
 
@@ -515,6 +515,61 @@ const v_align = signes_derivee[i] === '+' ? 'var-v-align-bottom' : 'var-v-align-
 - Expression display: utilise classe `.expression-display` (fond gris, centré)
 - Boutons: `<div class="action-buttons">` (PAS `class="card action-buttons"`)
 - Tout dans **UNE SEULE card** parent
+
+### 6. KaTeX Double-Rendu (K() Imbriqués)
+
+**Symptôme**: Affichage littéral de `<span class="katex">` dans les corrections
+
+**Cause**: Appels `K()` imbriqués dans le premier argument de `resultBlock(tex, expl)` qui elle-même applique `K(tex)`.
+```javascript
+// ❌ BUG: K() returns HTML, passed as LaTeX to outer K()
+html += resultBlock(
+    `\\text{Hexagone} ${K(`\\frac{a\\sqrt{2}}{2}`)}`,  // HTML string as LaTeX input!
+    `...`);
+
+// ✅ CORRECT: Pure LaTeX in first arg, K() only in expl
+html += resultBlock(
+    `\\text{Hexagone} \\dfrac{a\\sqrt{2}}{2}`,  // Pure LaTeX
+    `Perimetre = <span class="color-solution">${K(`3a\\sqrt{2}`)}</span>`);  // K() in HTML
+```
+
+**Règle**: `resultBlock(tex, expl)` where:
+- `tex` = pure LaTeX (no embedded HTML, no K() calls)
+- `expl` = HTML string (can contain K() calls)
+
+**Solution** (déjà appliquée dans `geometrie-espace.js` lignes 760-762, 774-776):
+- Remplacer `${K(...)}` par équivalent LaTeX pur (`\dfrac`, `\frac`, etc.)
+- Garder K() uniquement dans le deuxième argument (expl)
+
+### 7. Coplanarité : Déterminant vs Combinaison Linéaire ⚠️ CURRICULUM
+
+**Symptôme**: Correction affiche `det(AB, AC, AD) = 0` pour tester coplanarité
+
+**Problème**: Déterminant 3×3 n'est **PAS au programme** Terminale Spécialité (France).
+
+**Solution correcte** (déjà appliquée dans `geometrie-espace.js` depuis commit d6538dc):
+- Utiliser méthode combinaison linéaire: `AD = α·AB + β·AC`
+- Résoudre système 3 équations / 2 inconnues
+- Cas coplanaire: système compatible (solution existe)
+- Cas non-coplanaire: système incompatible (pas de solution)
+
+**Implémentation** (`js/geometrie-espace.js` lignes ~280-300, ~644-700):
+```javascript
+// Generation: stocker α et β pour cas coplanaire
+if (ex.coplanar) {
+    const s = pick([1, 2, -1]);
+    const t = pick([1, 2, -1]);
+    ex.dx = ex.ax + s * (ex.bx - ex.ax) + t * (ex.cx - ex.ax);
+    ex.dy = ex.ay + s * (ex.by - ex.ay) + t * (ex.cy - ex.ay);
+    ex.dz = ex.az + s * (ex.bz - ex.az) + t * (ex.cz - ex.az);
+    ex.alpha = s;  // ← Nouveau
+    ex.beta = t;   // ← Nouveau
+}
+
+// Correction: afficher système et vérifier compatibilité
+// Coplanar: montrer α, β et 3 équations vérifiées
+// Non-coplanar: résoudre eq(1)+(2), montrer eq(3) échoue
+```
 
 ---
 
