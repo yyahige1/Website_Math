@@ -528,7 +528,7 @@ function solveDroitesPlan(ex, sub) {
         html += '<div class="formula-box">' + K('a(x - x_0) + b(y - y_0) + c(z - z_0) = 0') + '</div>';
 
         html += step('Identification',
-            `${K(pt3('M', ex.x0, ex.y0, ex.z0))}, \\quad ${K(`${vecName('n')} ${vec3(ex.na, ex.nb, ex.nc)}`)}`,
+            `${pt3('M', ex.x0, ex.y0, ex.z0)}, \\quad ${vecName('n')} ${vec3(ex.na, ex.nb, ex.nc)}`,
             `Point du plan : <span class="color-coef">${K(pt3('M', ex.x0, ex.y0, ex.z0))}</span>. Vecteur normal : <span class="color-coef">${K(`${vecName('n')}(${ex.na}\\,;\\,${ex.nb}\\,;\\,${ex.nc})`)}</span>.`);
 
         html += step('Substitution',
