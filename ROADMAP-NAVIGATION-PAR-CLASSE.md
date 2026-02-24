@@ -1,0 +1,751 @@
+# Roadmap : Migration Navigation par Classe
+
+> Reorganiser MathsFacile pour que les eleves naviguent par niveau scolaire (6eme, 5eme, ..., Terminale) puis par chapitre, au lieu de la navigation actuelle par domaine mathematique (Algebre, Calculs, Fonctions...).
+
+**Date** : 24 Fevrier 2026
+**Statut** : Planification
+**Priorite** : Haute (UX critique)
+
+---
+
+## 1. Le Probleme
+
+### Situation actuelle
+La navigation est organisee par **domaine mathematique** :
+```
+Algebre | Calculs | Fonctions | Suites | Analyse | Proba & Stats | Geometrie & Trigo | Terminale Spe
+```
+
+### Pourquoi ca ne marche pas
+- Un eleve de 4eme ne sait pas ce qu'est "l'Algebre" ou "l'Analyse"
+- Il cherche : **"4eme → Calcul litteral"** ou **"3eme → Thales"**
+- Certains modules couvrent plusieurs niveaux (ex: Fractions = 6eme a 3eme) sans distinction
+- Aucun repere de progression scolaire
+- Un eleve de 6eme voit des exercices de Terminale dans le meme menu
+
+### Ce que veut l'eleve
+```
+Je suis en 4eme → Je cherche "Equations" → J'ai des exercices de MON niveau
+```
+
+---
+
+## 2. Architecture Cible
+
+### 2.1 Nouvelle navigation
+
+Remplacer les categories par domaine par des **niveaux scolaires** :
+
+```
+MathsFacile    6eme | 5eme | 4eme | 3eme | 2nde | 1ere Spe | Terminale Spe
+                 ▾      ▾      ▾      ▾      ▾       ▾           ▾
+```
+
+Chaque dropdown affiche les **chapitres du programme officiel** avec des titres que l'eleve reconnait.
+
+### 2.2 Page d'accueil par niveau
+
+Creer une page d'accueil (`accueil.html` ou refondre `index.html`) avec :
+- 7 grosses cards cliquables (une par niveau)
+- Chaque card montre le nombre de chapitres disponibles
+- Design visuel attractif (couleurs par niveau)
+
+### 2.3 Principe de fonctionnement
+
+**Deux modes de navigation coexistants :**
+
+1. **Navigation par classe** (defaut, pour les eleves) : dropdown par niveau → chapitres
+2. **Navigation par theme** (optionnel, pour les profs) : l'ancien systeme, accessible via un toggle
+
+**Chaque lien pointe vers le module existant avec un parametre de niveau :**
+```
+fractions.html?niveau=6eme    → Affiche seulement : addition/soustraction denominateurs identiques
+fractions.html?niveau=5eme    → Affiche : +/- avec denominateurs differents
+fractions.html?niveau=4eme    → Affiche : multiplication, division, simplification
+```
+
+Le JS du module lit `?niveau=` et filtre les types d'exercices affiches.
+
+---
+
+## 3. Programmes Officiels et Mapping des Modules Existants
+
+### Legende
+
+| Symbole | Signification |
+|---------|---------------|
+| ✅ | Module existant, utilisable tel quel ou avec filtrage de types |
+| 🔧 | Module existant mais necessite adaptation (difficulte, types specifiques) |
+| ❌ | Module a creer (n'existe pas) |
+
+---
+
+### 3.1 — 6eme (Cycle 3)
+
+> Programme : B.O. Cycle 3, partie mathematiques
+
+| # | Chapitre (titre eleve) | Module existant | Action |
+|---|------------------------|-----------------|--------|
+| 1 | **Nombres entiers et decimaux** | ❌ Aucun | A CREER : operations, comparaison, arrondis |
+| 2 | **Addition et soustraction de fractions** (meme denominateur) | 🔧 `fractions.html` | FILTRER : seulement addition/soustraction simples + ADAPTER la generation pour denominateurs identiques |
+| 3 | **Proportionnalite** | ❌ Aucun | A CREER : tableaux, coefficient, regles de trois |
+| 4 | **Perimetres et aires** | ❌ Aucun | A CREER : rectangle, carre, triangle, cercle |
+| 5 | **Volumes** (pave droit) | ❌ Aucun | A CREER : pave droit, conversions |
+| 6 | **Symetrie axiale** | ❌ Aucun | A CREER : constructions, proprietes, axes |
+| 7 | **Angles** (mesure, types) | ❌ Aucun | A CREER : mesurer, types d'angles, complementaires/supplementaires |
+| 8 | **Tableaux et graphiques** | 🔧 `statistiques.html` | FILTRER : seulement lecture de tableaux/graphiques simples |
+
+**Bilan 6eme : 2 modules reutilisables (avec adaptation), 6 modules a creer**
+
+---
+
+### 3.2 — 5eme (Cycle 4 - annee 1)
+
+| # | Chapitre (titre eleve) | Module existant | Action |
+|---|------------------------|-----------------|--------|
+| 1 | **Nombres relatifs** (introduction) | ❌ Aucun | A CREER : reperage, comparaison, addition/soustraction |
+| 2 | **Fractions** (+/- denominateurs differents) | 🔧 `fractions.html` | FILTRER : addition/soustraction seulement (pas multiplication/division) |
+| 3 | **Enchainement d'operations** (priorites) | ❌ Aucun | A CREER : priorites operatoires, parentheses |
+| 4 | **Proportionnalite et pourcentages** | 🔧 `pourcentages.html` | FILTRER : types simples (calculer un pourcentage, appliquer) |
+| 5 | **Angles et parallelisme** | ❌ Aucun | A CREER : alternes-internes, correspondants |
+| 6 | **Triangles** (construction, inegalite triangulaire) | ❌ Aucun | A CREER : construire un triangle, cas d'egalite |
+| 7 | **Parallelogrammes** (proprietes) | ❌ Aucun | A CREER : proprietes, reconnaissance |
+| 8 | **Symetrie centrale** | ❌ Aucun | A CREER : centre de symetrie, constructions |
+| 9 | **Aires et volumes** (prisme, cylindre) | ❌ Aucun | A CREER : prisme droit, cylindre, formules |
+| 10 | **Statistiques** (moyennes) | 🔧 `statistiques.html` | FILTRER : type moyenne seulement, nombres simples |
+
+**Bilan 5eme : 3 modules reutilisables (avec filtrage), 7 modules a creer**
+
+---
+
+### 3.3 — 4eme (Cycle 4 - annee 2)
+
+| # | Chapitre (titre eleve) | Module existant | Action |
+|---|------------------------|-----------------|--------|
+| 1 | **Nombres relatifs** (multiplication, division) | ❌ Aucun (extension du module 5eme) | A CREER ou etendre le module 5eme |
+| 2 | **Fractions** (x, ÷, simplification) | ✅ `fractions.html` | FILTRER : multiplication, division, simplification |
+| 3 | **Puissances** (introduction) | 🔧 `puissances.html` | FILTRER : types simples (notation, calcul, pas scientifique) |
+| 4 | **Calcul litteral** (simple, distributivite) | 🔧 `developpement.html` + `reduction.html` | FILTRER : simple distributivite seulement (pas identites remarquables) |
+| 5 | **Equations du 1er degre** | ✅ `index.html` | FILTRER : type 1 (equations simples ax+b=c) |
+| 6 | **Theoreme de Pythagore** | ❌ Aucun | A CREER : calcul hypotenuse, reciproque, applications |
+| 7 | **Proportionnalite** (approfondissement) | 🔧 `pourcentages.html` | ADAPTER : augmentation/reduction |
+| 8 | **Translations et rotations** | ❌ Aucun | A CREER : translations, rotations, images |
+| 9 | **Statistiques** (moyenne, mediane) | 🔧 `statistiques.html` | FILTRER : moyenne + mediane (pas ecart-type, pas regression) |
+| 10 | **Probabilites** (introduction) | 🔧 `probabilites.html` | FILTRER : type simple seulement (des, cartes) |
+| 11 | **Cosinus d'un angle** (dans le triangle rectangle) | 🔧 `trigonometrie.html` | ADAPTER : seulement cos, dans triangle rectangle |
+
+**Bilan 4eme : 2 modules directs, 6 adaptables, 3 modules a creer**
+
+---
+
+### 3.4 — 3eme (Cycle 4 - annee 3, Brevet)
+
+| # | Chapitre (titre eleve) | Module existant | Action |
+|---|------------------------|-----------------|--------|
+| 1 | **Calcul litteral** (developpement, factorisation) | ✅ `developpement.html` + `reduction.html` + `factorisation.html` | FILTRER : simple + double distributivite, facteur commun. Identites remarquables en intro |
+| 2 | **Identites remarquables** | ✅ `developpement.html` + `factorisation.html` | Types : carre-somme, carre-diff, diff-carres |
+| 3 | **Equations et inequations du 1er degre** | ✅ `index.html` + `inequations.html` | Tous types disponibles |
+| 4 | **Fonctions lineaires et affines** | ✅ `fonctions-affines.html` | FILTRER : image, antecedent, equation, graphique (pas intersection) |
+| 5 | **Racines carrees** | 🔧 `racines.html` | FILTRER : simplification, operations simples (pas rationalisation avancee) |
+| 6 | **Theoreme de Thales** | ❌ Aucun | A CREER : direct, reciproque, partie entiere |
+| 7 | **Trigonometrie** (sin, cos, tan) | 🔧 `trigonometrie.html` | FILTRER : type triangle seulement (pas cercle trigo, pas equations) |
+| 8 | **Statistiques** (mediane, quartiles, etendue) | ✅ `statistiques.html` | FILTRER : moyenne, mediane, quartiles |
+| 9 | **Probabilites** | 🔧 `probabilites.html` | FILTRER : simple + arbre (pas binomiale, pas conditionnelle) |
+| 10 | **PGCD et fractions irreductibles** | 🔧 `arithmetique.html` | FILTRER : divisibilite + PGCD seulement (pas congruences, pas Bezout) |
+| 11 | **Systemes d'equations** (introduction) | 🔧 `systemes.html` | OK tel quel |
+
+**Bilan 3eme : 5 modules directs, 6 adaptables, 1 module a creer (Thales)**
+
+---
+
+### 3.5 — Seconde (2nde)
+
+| # | Chapitre (titre eleve) | Module existant | Action |
+|---|------------------------|-----------------|--------|
+| 1 | **Ensembles de nombres et calculs** | 🔧 `fractions.html` + `racines.html` + `puissances.html` | FILTRER : tous types pertinents, renforcement |
+| 2 | **Calcul litteral et identites remarquables** | ✅ `developpement.html` + `factorisation.html` + `reduction.html` | Tous types |
+| 3 | **Equations et inequations** | ✅ `index.html` + `inequations.html` | Tous types |
+| 4 | **Notion de fonction** (generalites) | ❌ Aucun | A CREER : image, antecedent, lecture graphique, tableau de variations, ensemble de definition |
+| 5 | **Fonctions de reference** (carre, inverse, racine, cube) | ❌ Aucun | A CREER : etude de chaque fonction, variations, parite |
+| 6 | **Equations de droites** | ✅ `fonctions-affines.html` | Types : graphique, equation, intersection |
+| 7 | **Systemes d'equations** | ✅ `systemes.html` | Tous types |
+| 8 | **Vecteurs du plan** (introduction) | 🔧 `vecteurs.html` | FILTRER : coordonnees, operations (pas produit scalaire, pas colinearite avancee) |
+| 9 | **Statistiques descriptives** | ✅ `statistiques.html` | FILTRER : moyenne, mediane, quartiles, ecart-type, boite a moustaches |
+| 10 | **Probabilites** | 🔧 `probabilites.html` | FILTRER : simple, arbre, variable aleatoire (pas binomiale) |
+| 11 | **Echantillonnage et fluctuation** | 🔧 `probabilites.html` | FILTRER : type fluctuation |
+| 12 | **Geometrie dans le plan** | 🔧 `geometrie-analytique.html` | FILTRER : droites, distances (pas cercles avances, pas transformations) |
+
+**Bilan 2nde : 5 modules directs, 5 adaptables, 2 modules a creer**
+
+---
+
+### 3.6 — Premiere Specialite Maths
+
+| # | Chapitre (titre eleve) | Module existant | Action |
+|---|------------------------|-----------------|--------|
+| 1 | **Suites numeriques** | ✅ `suites.html` | Types : arithmetique, geometrique, variation |
+| 2 | **Second degre** | ✅ `equations2.html` + `inequations2.html` + `fonctions-second-degre.html` | Tous types |
+| 3 | **Derivation** | ✅ `derivees.html` | Tous types |
+| 4 | **Fonction exponentielle** (introduction) | 🔧 `exponentielles.html` | FILTRER : eq exp + derivee exp (pas ln, pas log decimal) |
+| 5 | **Trigonometrie** | ✅ `trigonometrie.html` | Types : valeurs remarquables, conversion, equations, addition, identites |
+| 6 | **Produit scalaire** | ✅ `vecteurs.html` | Types : scalaire + norme |
+| 7 | **Geometrie repere** (droites, cercles) | ✅ `geometrie-analytique.html` | Tous types |
+| 8 | **Probabilites conditionnelles** | ✅ `probabilites.html` | Types : conditionnelle, arbre, variable aleatoire |
+| 9 | **Variables aleatoires** | ✅ `probabilites.html` | Type : variable aleatoire |
+| 10 | **Suites** (sommes) | ✅ `suites.html` | Types : somme_arith, somme_geo |
+
+**Bilan 1ere Spe : 9 modules directs, 1 adaptable, 0 a creer**
+
+---
+
+### 3.7 — Terminale Specialite Maths
+
+| # | Chapitre (titre eleve) | Module existant | Action |
+|---|------------------------|-----------------|--------|
+| 1 | **Suites et limites de suites** | ✅ `suites.html` + `limites.html` | Tous types |
+| 2 | **Limites de fonctions et continuite** | ✅ `limites.html` | Tous types |
+| 3 | **Complements sur la derivation** | ✅ `derivees.html` | Types : composition, variations |
+| 4 | **Fonction logarithme neperien** | ✅ `exponentielles.html` | Types : eq_ln, derivee (ln) |
+| 5 | **Fonction exponentielle** (approfondissement) | ✅ `exponentielles.html` | Types : eq_exp, derivee, etude, croissance |
+| 6 | **Primitives et integrales** | ✅ `primitives.html` | Tous types |
+| 7 | **Geometrie dans l'espace** | ✅ `geometrie-espace.html` | Tous types |
+| 8 | **Nombres complexes** | ✅ `nombres-complexes.html` | Tous types |
+| 9 | **Arithmetique** | ✅ `arithmetique.html` | Tous types |
+| 10 | **Combinatoire et denombrement** | ✅ `logique-denombrement.html` | Tous types |
+| 11 | **Loi binomiale et grands nombres** | ✅ `probabilites.html` | Types : binomiale, fluctuation |
+| 12 | **Equations differentielles** (intro) | ❌ Aucun | Optionnel : y' = ay type basique (hors programme strict mais souvent aborde) |
+
+**Bilan Terminale Spe : 11 modules directs, 0 adaptable, 0 a creer (programme couvert a 100%)**
+
+---
+
+## 4. Bilan : Modules a Creer
+
+### 4.1 Modules entierement nouveaux necessaires
+
+| # | Module | Niveaux | Types d'exercices | Priorite |
+|---|--------|---------|-------------------|----------|
+| 1 | **Nombres entiers et decimaux** | 6eme | Operations, comparaison, arrondis, ordre de grandeur | Basse |
+| 2 | **Proportionnalite** | 6eme, 5eme, 4eme | Tableau, coefficient, 4eme proportionnelle, echelle | Moyenne |
+| 3 | **Perimetres, aires, volumes** | 6eme, 5eme | Rectangle, triangle, cercle, prisme, cylindre, conversions | Basse |
+| 4 | **Symetries** (axiale + centrale) | 6eme, 5eme | Constructions, proprietes, axes/centres | Basse |
+| 5 | **Angles** | 6eme, 5eme | Mesure, types, alternes-internes, correspondants | Basse |
+| 6 | **Nombres relatifs** | 5eme, 4eme | Reperage, comparaison, 4 operations | Moyenne |
+| 7 | **Priorites operatoires** | 5eme | Calculs avec parentheses, enchainements | Basse |
+| 8 | **Triangles et parallelogrammes** | 5eme | Proprietes, construction, reconnaissance | Basse |
+| 9 | **Theoreme de Pythagore** | 4eme | Direct, reciproque, problemes | Haute |
+| 10 | **Translations et rotations** | 4eme | Images de figures, proprietes | Basse |
+| 11 | **Theoreme de Thales** | 3eme | Direct, reciproque, agrandissement/reduction | Haute |
+| 12 | **Notion de fonction** (generalites) | 2nde | Lecture graphique, image/antecedent, ensemble de definition, variations | Moyenne |
+| 13 | **Fonctions de reference** | 2nde | Carre, inverse, racine, cube, valeur absolue | Moyenne |
+
+**Total : 13 nouveaux modules a creer**
+
+### 4.2 Priorites de creation
+
+**Priorite 1 (Haute)** — Les niveaux les plus demandes (3eme brevet, 4eme) :
+1. Theoreme de Pythagore (4eme)
+2. Theoreme de Thales (3eme)
+3. Nombres relatifs (5eme-4eme)
+4. Proportionnalite (6eme-5eme-4eme, transversal)
+
+**Priorite 2 (Moyenne)** — Completude 2nde et enrichissement college :
+5. Notion de fonction / generalites (2nde)
+6. Fonctions de reference (2nde)
+7. Perimetres, aires, volumes (6eme-5eme)
+
+**Priorite 3 (Basse)** — Completude 6eme-5eme :
+8. Nombres entiers et decimaux (6eme)
+9. Priorites operatoires (5eme)
+10. Symetries (6eme-5eme)
+11. Angles (6eme-5eme)
+12. Triangles et parallelogrammes (5eme)
+13. Translations et rotations (4eme)
+
+---
+
+## 5. Systeme de Filtrage par Niveau
+
+### 5.1 Principe technique
+
+Chaque module existant doit supporter un parametre URL `?niveau=XXX` qui filtre les types d'exercices disponibles.
+
+```javascript
+// Dans chaque module JS, ajouter au debut de init[Module]Page() :
+const urlParams = new URLSearchParams(window.location.search);
+const niveau = urlParams.get('niveau'); // "6eme", "5eme", ..., "terminale", ou null
+
+if (niveau) {
+    filterTypesByNiveau(niveau);
+}
+```
+
+### 5.2 Configuration du filtrage
+
+Creer un fichier `js/niveaux-config.js` qui centralise le mapping :
+
+```javascript
+const NIVEAUX_CONFIG = {
+    'fractions': {
+        '6eme':      { types: ['addition', 'soustraction'], label: 'Fractions simples',
+                       genConfig: { sameDenominator: true } },
+        '5eme':      { types: ['addition', 'soustraction'], label: 'Fractions +/-' },
+        '4eme':      { types: ['multiplication', 'division', 'simplification'], label: 'Fractions x/÷' },
+        '3eme':      { types: ['addition', 'soustraction', 'multiplication', 'division', 'simplification', 'inverse'] },
+        '2nde':      { types: ['addition', 'soustraction', 'multiplication', 'division', 'simplification', 'inverse'] },
+    },
+    'equations': {
+        '4eme':      { types: ['type1'], label: 'Equations simples' },
+        '3eme':      { types: ['type1', 'type2'] },
+        '2nde':      { types: ['type1', 'type2'] },
+    },
+    'developpement': {
+        '4eme':      { types: ['simple'], label: 'Distributivite simple' },
+        '3eme':      { types: ['simple', 'double', 'carre-somme', 'carre-diff', 'diff-carres'] },
+        '2nde':      { types: ['simple', 'double', 'carre-somme', 'carre-diff', 'diff-carres'] },
+    },
+    'puissances': {
+        '4eme':      { types: ['1', '2', '3'], label: 'Puissances : bases' },
+        '3eme':      { types: ['1', '2', '3', '4', '5'] },
+        '2nde':      { types: ['1', '2', '3', '4', '5', '6'] },
+    },
+    'trigonometrie': {
+        '4eme':      { types: ['triangle'], genConfig: { cosOnly: true }, label: 'Cosinus dans le triangle rectangle' },
+        '3eme':      { types: ['triangle'], label: 'Trigonometrie dans le triangle rectangle' },
+        '2nde':      { types: ['valeurs', 'conversion'] },
+        '1ere':      { types: ['valeurs', 'conversion', 'equations', 'addition', 'identites'] },
+        'terminale': { types: ['valeurs', 'conversion', 'equations', 'addition', 'identites', 'triangle'] },
+    },
+    'probabilites': {
+        '4eme':      { types: ['simple'], label: 'Introduction aux probabilites' },
+        '3eme':      { types: ['simple', 'arbre'] },
+        '2nde':      { types: ['simple', 'arbre', 'variable'] },
+        '1ere':      { types: ['simple', 'conditionnelle', 'arbre', 'variable'] },
+        'terminale': { types: ['simple', 'conditionnelle', 'arbre', 'binomiale', 'variable', 'fluctuation'] },
+    },
+    'statistiques': {
+        '5eme':      { types: ['moyenne'], label: 'Moyennes' },
+        '4eme':      { types: ['moyenne', 'mediane'], label: 'Moyenne et mediane' },
+        '3eme':      { types: ['moyenne', 'mediane', 'dispersion'] },
+        '2nde':      { types: ['moyenne', 'mediane', 'dispersion', 'boite'] },
+        '1ere':      { types: ['moyenne', 'mediane', 'dispersion', 'boite', 'regression'] },
+    },
+    'racines': {
+        '3eme':      { types: ['1', '2', '3'], label: 'Racines carrees : bases' },
+        '2nde':      { types: ['1', '2', '3', '4', '5', '6'] },
+    },
+    'factorisation': {
+        '3eme':      { types: ['facteur-commun', 'diff-carres', 'carre-parfait'] },
+        '2nde':      { types: ['facteur-commun', 'diff-carres', 'carre-parfait'] },
+    },
+    'reduction': {
+        '3eme':      { types: ['avec-x', 'avec-x2', 'avec-parentheses'] },
+        '2nde':      { types: ['avec-x', 'avec-x2', 'avec-parentheses'] },
+    },
+    'inequations': {
+        '3eme':      { types: ['type1', 'type2'] },
+        '2nde':      { types: ['type1', 'type2'] },
+    },
+    'fonctions-affines': {
+        '3eme':      { types: ['image', 'antecedent', 'graphique', 'equation'] },
+        '2nde':      { types: ['graphique', 'image', 'antecedent', 'equation', 'intersection'] },
+    },
+    'systemes': {
+        '3eme':      { types: ['substitution', 'combinaison'] },
+        '2nde':      { types: ['substitution', 'combinaison'] },
+    },
+    'vecteurs': {
+        '2nde':      { types: ['coordonnees', 'norme', 'operations'] },
+        '1ere':      { types: ['coordonnees', 'norme', 'colinearite', 'scalaire', 'operations'] },
+    },
+    'arithmetique': {
+        '3eme':      { types: ['divisibilite', 'pgcd'], label: 'PGCD et divisibilite' },
+        'terminale': { types: ['divisibilite', 'pgcd', 'premiers', 'congruences', 'bezout'] },
+    },
+    'equations2': {
+        '1ere':      { types: ['discriminant', 'canonique', 'particuliere', 'somme-produit'] },
+    },
+    'inequations2': {
+        '1ere':      { types: null }, // tous
+    },
+    'fonctions-second-degre': {
+        '1ere':      { types: null }, // tous
+    },
+    'derivees': {
+        '1ere':      { types: ['polynomiale', 'produit', 'tangente', 'variations'] },
+        'terminale': { types: ['polynomiale', 'produit', 'quotient', 'composition', 'tangente', 'variations'] },
+    },
+    'exponentielles': {
+        '1ere':      { types: ['eq_exp', 'derivee'], label: 'Fonction exponentielle' },
+        'terminale': { types: ['eq_exp', 'eq_ln', 'derivee', 'etude', 'croissance', 'log_decimal'] },
+    },
+    'suites': {
+        '1ere':      { types: ['arithmetique', 'geometrique', 'somme_arith', 'somme_geo', 'variation'] },
+        'terminale': { types: ['arithmetique', 'geometrique', 'somme_arith', 'somme_geo', 'variation'] },
+    },
+    'limites': {
+        'terminale': { types: null }, // tous
+    },
+    'primitives': {
+        'terminale': { types: null }, // tous
+    },
+    'geometrie-analytique': {
+        '2nde':      { types: ['droites', 'distance'] },
+        '1ere':      { types: ['droites', 'cercles', 'distance', 'transformations'] },
+    },
+    'geometrie-espace': {
+        'terminale': { types: null }, // tous
+    },
+    'nombres-complexes': {
+        'terminale': { types: null }, // tous
+    },
+    'logique-denombrement': {
+        'terminale': { types: null }, // tous
+    },
+    'pourcentages': {
+        '5eme':      { types: ['calculer', 'trouver'], label: 'Pourcentages simples' },
+        '4eme':      { types: ['calculer', 'trouver', 'augmentation', 'reduction'] },
+        '3eme':      { types: ['calculer', 'trouver', 'augmentation', 'reduction', 'retrouver'] },
+        '2nde':      { types: null }, // tous
+    },
+};
+```
+
+### 5.3 Fonction de filtrage generique
+
+```javascript
+function filterTypesByNiveau(niveau) {
+    // Detecter le module courant depuis l'URL
+    const page = window.location.pathname.split('/').pop().replace('.html', '') || 'index';
+    const moduleName = page === 'index' ? 'equations' : page;
+
+    const config = NIVEAUX_CONFIG[moduleName];
+    if (!config || !config[niveau]) return; // pas de filtrage
+
+    const allowedTypes = config[niveau].types;
+    if (!allowedTypes) return; // null = tous les types
+
+    // Cacher les boutons de type non autorises
+    document.querySelectorAll('.type-btn').forEach(btn => {
+        if (!allowedTypes.includes(btn.dataset.type)) {
+            btn.style.display = 'none';
+        }
+    });
+
+    // Activer le premier type autorise
+    const firstAllowed = document.querySelector(`.type-btn[data-type="${allowedTypes[0]}"]`);
+    if (firstAllowed) {
+        document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+        firstAllowed.classList.add('active');
+        firstAllowed.click();
+    }
+
+    // Afficher le niveau dans le header
+    const header = document.querySelector('.page-header p');
+    if (header) {
+        const niveauLabel = niveau.replace('1ere', '1ere Spe').replace('terminale', 'Terminale Spe');
+        header.textContent += ` — Niveau ${niveauLabel}`;
+    }
+}
+```
+
+---
+
+## 6. Nouvelle Navigation
+
+### 6.1 Structure du dropdown par niveau
+
+```javascript
+// Structure dans navigation.js (a remplacer)
+const NAVIGATION_PAR_CLASSE = {
+    '6eme': {
+        color: '#4CAF50',
+        chapitres: [
+            { titre: 'Nombres et calculs',          href: 'nombres-decimaux.html?niveau=6eme' },
+            { titre: 'Fractions simples',            href: 'fractions.html?niveau=6eme' },
+            { titre: 'Proportionnalite',             href: 'proportionnalite.html?niveau=6eme' },
+            { titre: 'Perimetres et aires',          href: 'aires-volumes.html?niveau=6eme' },
+            { titre: 'Symetrie axiale',              href: 'symetries.html?niveau=6eme' },
+            { titre: 'Angles',                       href: 'angles.html?niveau=6eme' },
+            { titre: 'Tableaux et graphiques',       href: 'statistiques.html?niveau=6eme' },
+        ]
+    },
+    '5eme': {
+        color: '#2196F3',
+        chapitres: [
+            { titre: 'Nombres relatifs',             href: 'nombres-relatifs.html?niveau=5eme' },
+            { titre: 'Fractions (+/-)',              href: 'fractions.html?niveau=5eme' },
+            { titre: 'Priorites operatoires',        href: 'priorites.html?niveau=5eme' },
+            { titre: 'Pourcentages',                 href: 'pourcentages.html?niveau=5eme' },
+            { titre: 'Angles et parallelisme',       href: 'angles.html?niveau=5eme' },
+            { titre: 'Triangles',                    href: 'triangles.html?niveau=5eme' },
+            { titre: 'Symetrie centrale',            href: 'symetries.html?niveau=5eme' },
+            { titre: 'Aires et volumes',             href: 'aires-volumes.html?niveau=5eme' },
+            { titre: 'Moyennes',                     href: 'statistiques.html?niveau=5eme' },
+        ]
+    },
+    '4eme': {
+        color: '#FF9800',
+        chapitres: [
+            { titre: 'Nombres relatifs (x, ÷)',     href: 'nombres-relatifs.html?niveau=4eme' },
+            { titre: 'Fractions (x, ÷)',             href: 'fractions.html?niveau=4eme' },
+            { titre: 'Puissances',                   href: 'puissances.html?niveau=4eme' },
+            { titre: 'Calcul litteral',              href: 'developpement.html?niveau=4eme' },
+            { titre: 'Equations',                    href: 'index.html?niveau=4eme' },
+            { titre: 'Pythagore',                    href: 'pythagore.html?niveau=4eme' },
+            { titre: 'Pourcentages',                 href: 'pourcentages.html?niveau=4eme' },
+            { titre: 'Cosinus',                      href: 'trigonometrie.html?niveau=4eme' },
+            { titre: 'Statistiques',                 href: 'statistiques.html?niveau=4eme' },
+            { titre: 'Probabilites',                 href: 'probabilites.html?niveau=4eme' },
+        ]
+    },
+    '3eme': {
+        color: '#F44336',
+        chapitres: [
+            { titre: 'Calcul litteral',              href: 'reduction.html?niveau=3eme' },
+            { titre: 'Developpement',                href: 'developpement.html?niveau=3eme' },
+            { titre: 'Factorisation',                href: 'factorisation.html?niveau=3eme' },
+            { titre: 'Equations',                    href: 'index.html?niveau=3eme' },
+            { titre: 'Inequations',                  href: 'inequations.html?niveau=3eme' },
+            { titre: 'Racines carrees',              href: 'racines.html?niveau=3eme' },
+            { titre: 'Fonctions affines',            href: 'fonctions-affines.html?niveau=3eme' },
+            { titre: 'Systemes d\'equations',        href: 'systemes.html?niveau=3eme' },
+            { titre: 'Thales',                       href: 'thales.html?niveau=3eme' },
+            { titre: 'Trigonometrie',                href: 'trigonometrie.html?niveau=3eme' },
+            { titre: 'PGCD et arithmetique',         href: 'arithmetique.html?niveau=3eme' },
+            { titre: 'Statistiques',                 href: 'statistiques.html?niveau=3eme' },
+            { titre: 'Probabilites',                 href: 'probabilites.html?niveau=3eme' },
+        ]
+    },
+    '2nde': {
+        color: '#9C27B0',
+        chapitres: [
+            { titre: 'Calcul litteral',              href: 'developpement.html?niveau=2nde' },
+            { titre: 'Equations et inequations',     href: 'index.html?niveau=2nde' },
+            { titre: 'Notion de fonction',           href: 'notion-fonction.html?niveau=2nde' },
+            { titre: 'Fonctions de reference',       href: 'fonctions-reference.html?niveau=2nde' },
+            { titre: 'Equations de droites',         href: 'fonctions-affines.html?niveau=2nde' },
+            { titre: 'Systemes d\'equations',        href: 'systemes.html?niveau=2nde' },
+            { titre: 'Vecteurs',                     href: 'vecteurs.html?niveau=2nde' },
+            { titre: 'Geometrie analytique',         href: 'geometrie-analytique.html?niveau=2nde' },
+            { titre: 'Statistiques',                 href: 'statistiques.html?niveau=2nde' },
+            { titre: 'Probabilites',                 href: 'probabilites.html?niveau=2nde' },
+            { titre: 'Echantillonnage',              href: 'probabilites.html?niveau=2nde&type=fluctuation' },
+        ]
+    },
+    '1ere': {
+        color: '#E91E63',
+        chapitres: [
+            { titre: 'Second degre',                 href: 'equations2.html?niveau=1ere' },
+            { titre: 'Fonction du 2nd degre',        href: 'fonctions-second-degre.html?niveau=1ere' },
+            { titre: 'Inequations 2nd degre',        href: 'inequations2.html?niveau=1ere' },
+            { titre: 'Derivation',                   href: 'derivees.html?niveau=1ere' },
+            { titre: 'Suites numeriques',            href: 'suites.html?niveau=1ere' },
+            { titre: 'Fonction exponentielle',       href: 'exponentielles.html?niveau=1ere' },
+            { titre: 'Trigonometrie',                href: 'trigonometrie.html?niveau=1ere' },
+            { titre: 'Produit scalaire',             href: 'vecteurs.html?niveau=1ere' },
+            { titre: 'Geometrie repere',             href: 'geometrie-analytique.html?niveau=1ere' },
+            { titre: 'Probabilites conditionnelles', href: 'probabilites.html?niveau=1ere' },
+        ]
+    },
+    'terminale': {
+        color: '#673AB7',
+        chapitres: [
+            { titre: 'Limites et continuite',        href: 'limites.html?niveau=terminale' },
+            { titre: 'Derivation (complements)',      href: 'derivees.html?niveau=terminale' },
+            { titre: 'Fonction logarithme neperien', href: 'exponentielles.html?niveau=terminale' },
+            { titre: 'Fonction exponentielle',       href: 'exponentielles.html?niveau=terminale' },
+            { titre: 'Primitives et integrales',     href: 'primitives.html?niveau=terminale' },
+            { titre: 'Suites (limites)',             href: 'suites.html?niveau=terminale' },
+            { titre: 'Nombres complexes',            href: 'nombres-complexes.html?niveau=terminale' },
+            { titre: 'Arithmetique',                 href: 'arithmetique.html?niveau=terminale' },
+            { titre: 'Denombrement et combinatoire', href: 'logique-denombrement.html?niveau=terminale' },
+            { titre: 'Geometrie dans l\'espace',     href: 'geometrie-espace.html?niveau=terminale' },
+            { titre: 'Loi binomiale',                href: 'probabilites.html?niveau=terminale' },
+        ]
+    }
+};
+```
+
+### 6.2 Toggle Theme/Classe
+
+Ajouter un petit bouton dans la barre de nav :
+```html
+<button class="nav-toggle-mode" title="Changer le mode de navigation">
+    <!-- Par defaut: mode classe -->
+    <span class="mode-classe active">Par classe</span>
+    <span class="mode-theme">Par theme</span>
+</button>
+```
+
+L'etat est sauvegarde dans `localStorage` :
+```javascript
+const navMode = localStorage.getItem('navMode') || 'classe';
+```
+
+---
+
+## 7. Page d'Accueil
+
+### 7.1 Nouveau design (`accueil.html` ou refonte de `index.html`)
+
+```
+┌──────────────────────────────────────────────────────┐
+│                    MathsFacile                        │
+│     Entraine-toi en maths de la 6eme a la Terminale  │
+│                                                      │
+│  ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐   │
+│  │  6eme   │ │  5eme   │ │  4eme   │ │  3eme   │   │
+│  │ 7 chap. │ │ 9 chap. │ │10 chap. │ │13 chap. │   │
+│  └─────────┘ └─────────┘ └─────────┘ └─────────┘   │
+│                                                      │
+│  ┌─────────┐ ┌─────────┐ ┌─────────┐               │
+│  │  2nde   │ │1ere Spe │ │Term Spe │               │
+│  │11 chap. │ │10 chap. │ │11 chap. │               │
+│  └─────────┘ └─────────┘ └─────────┘               │
+│                                                      │
+│  [ Voir tous les exercices par theme → ]             │
+└──────────────────────────────────────────────────────┘
+```
+
+Cliquer sur une carte de niveau affiche la liste des chapitres disponibles en dessous (accordeon ou page dediee).
+
+### 7.2 Pages intermediaires par niveau (optionnel)
+
+Si on veut pousser plus loin, creer une page par niveau : `6eme.html`, `5eme.html`, etc.
+Chaque page liste les chapitres sous forme de cards avec :
+- Titre du chapitre
+- Icone
+- Nombre de types d'exercices disponibles
+- Lien vers le module filtre
+
+---
+
+## 8. Phases d'Implementation
+
+### Phase 0 : Infrastructure (1-2 sessions)
+> Navigation + filtrage, sans creer de nouveaux modules
+
+- [ ] Creer `js/niveaux-config.js` avec le mapping complet
+- [ ] Ajouter la logique `filterTypesByNiveau()` dans un fichier partage (utils.js ou nouveau)
+- [ ] Modifier `js/navigation.js` : double mode (classe / theme)
+- [ ] Creer la page d'accueil avec selection du niveau
+- [ ] Tester le filtrage sur 3-4 modules pilotes (fractions, equations, statistiques, trigonometrie)
+- [ ] `localStorage` pour memoriser le niveau et le mode de navigation
+- [ ] CSS pour les nouvelles cards de la page d'accueil
+
+**Resultat** : Un eleve peut deja naviguer par classe pour le lycee (2nde-1ere-Terminale) et les niveaux 3eme-4eme du college, avec les modules existants filtres.
+
+### Phase 1 : Modules college haute priorite (3-4 sessions)
+> Les 2 gros manques critiques pour le college
+
+- [ ] **Theoreme de Pythagore** (`pythagore.html` + `js/pythagore.js`)
+  - Types : calcul hypotenuse, calcul cote, reciproque (est-ce un triangle rectangle ?), probleme contextualise
+  - Canvas pour visualisation du triangle
+- [ ] **Theoreme de Thales** (`thales.html` + `js/thales.js`)
+  - Types : calcul direct (longueur manquante), reciproque (parallelisme), agrandissement/reduction
+  - Canvas pour visualisation de la configuration
+- [ ] Tester l'integration dans la navigation par classe
+
+### Phase 2 : Modules college moyenne priorite (3-4 sessions)
+> Completer les niveaux 5eme et 4eme
+
+- [ ] **Nombres relatifs** (`nombres-relatifs.html` + `js/nombres-relatifs.js`)
+  - Types 5eme : reperage sur droite graduee, comparaison, addition/soustraction
+  - Types 4eme : multiplication, division, enchainements
+- [ ] **Proportionnalite** (`proportionnalite.html` + `js/proportionnalite.js`)
+  - Types : completer un tableau, coefficient de proportionnalite, 4eme proportionnelle, echelle, vitesse/debit
+- [ ] Adaptations de generation specifiques
+  - `fractions.html` avec `?niveau=6eme` → generer uniquement des fractions a meme denominateur
+  - `trigonometrie.html` avec `?niveau=4eme` → generer uniquement des exercices avec cosinus
+
+### Phase 3 : Modules 2nde manquants (2-3 sessions)
+> Completude du programme de Seconde
+
+- [ ] **Notion de fonction** (`notion-fonction.html` + `js/notion-fonction.js`)
+  - Types : lecture graphique (image, antecedent, variations), ensemble de definition, tableau de valeurs
+  - Canvas pour les graphiques
+- [ ] **Fonctions de reference** (`fonctions-reference.html` + `js/fonctions-reference.js`)
+  - Types : fonction carree, fonction inverse, fonction racine, fonction cube, fonction valeur absolue
+  - Canvas pour chaque courbe representative
+
+### Phase 4 : Modules college basse priorite (4-5 sessions)
+> Completude 6eme-5eme
+
+- [ ] **Nombres entiers et decimaux** (`nombres-decimaux.html`)
+- [ ] **Priorites operatoires** (`priorites.html`)
+- [ ] **Perimetres, aires et volumes** (`aires-volumes.html`)
+- [ ] **Symetries** axiale et centrale (`symetries.html`)
+  - Canvas pour les constructions geometriques
+- [ ] **Angles** (`angles.html`)
+  - Canvas pour les figures
+- [ ] **Triangles et parallelogrammes** (`triangles.html`)
+- [ ] **Translations et rotations** (`translations-rotations.html`)
+
+### Phase 5 : Polish et ameliorations (1-2 sessions)
+
+- [ ] Bandeau "Niveau" affiche sur chaque page quand filtre actif (breadcrumb : Accueil > 4eme > Equations)
+- [ ] Bouton "Voir tous les exercices" pour desactiver le filtre de niveau
+- [ ] Seo : meta descriptions par niveau
+- [ ] Tests sur mobile de toute la navigation
+- [ ] Mettre a jour CLAUDE.md et ROADMAP.md
+
+---
+
+## 9. Estimation de Charge
+
+| Phase | Sessions estimees | Modules concernes | Difficulte |
+|-------|-------------------|-------------------|------------|
+| Phase 0 (infra) | 1-2 | 0 nouveau, tous modifies | Moyenne |
+| Phase 1 (Pythagore/Thales) | 3-4 | 2 nouveaux | Moyenne |
+| Phase 2 (college mid) | 3-4 | 2 nouveaux + 2 adaptes | Moyenne |
+| Phase 3 (2nde) | 2-3 | 2 nouveaux | Moyenne |
+| Phase 4 (college low) | 4-5 | 7 nouveaux | Haute (geometrie canvas) |
+| Phase 5 (polish) | 1-2 | 0 nouveau | Faible |
+| **Total** | **~15-20 sessions** | **13 nouveaux + infra** | |
+
+---
+
+## 10. Points de Vigilance
+
+### 10.1 Ce qui ne change PAS
+- Les 28 modules existants restent intacts (memes URLs, meme code)
+- Le systeme de State par module ne change pas
+- Les fichiers CSS ne changent pas (sauf navigation.css)
+- KaTeX, GraphCanvas, utils.js, ui.js restent identiques
+
+### 10.2 Ce qui change
+- `js/navigation.js` : refonte majeure (double mode classe/theme)
+- Ajout `js/niveaux-config.js` : mapping centralise
+- `index.html` : n'est plus la page d'accueil (devient `equations.html` ou l'accueil change)
+- Page d'accueil : nouveau fichier
+- Chaque module JS : ajout de 3-4 lignes pour lire le parametre `?niveau=` et appeler le filtrage
+
+### 10.3 Risques
+- **URLs cassees** : `index.html` est actuellement la page des equations. Si on en fait la page d'accueil, il faut un redirect ou renommer.
+  - **Solution recommandee** : creer `accueil.html` comme nouvelle page d'accueil, garder `index.html` pour les equations. Changer le lien du logo dans la nav.
+- **Modules partages entre niveaux** : un eleve de 3eme qui clique "Fractions" et un de 4eme arrivent sur la meme page → le parametre `?niveau=` gere la distinction.
+- **SEO** : les URL avec parametres sont moins propres que des pages dediees, mais c'est acceptable pour un site statique sans backend.
+
+### 10.4 Alternative future
+Si le site croit, envisager un vrai routeur JS qui gere les vues sans rechargement de page. Mais pour l'instant, le systeme `?niveau=` est simple, zero-dependance, et suffisant.
+
+---
+
+## 11. Resume Visuel
+
+```
+AVANT (actuel) :
+  Nav: [Algebre ▾] [Calculs ▾] [Fonctions ▾] ...
+  → L'eleve ne s'y retrouve pas
+
+APRES (cible) :
+  Nav: [6eme ▾] [5eme ▾] [4eme ▾] [3eme ▾] [2nde ▾] [1ere ▾] [Term ▾]
+  → L'eleve clique sur sa classe, voit SES chapitres
+
+  Toggle [Par classe | Par theme] pour les profs qui preferent l'ancien mode
+```
+
+---
+
+**Fin de la roadmap. Commencer par la Phase 0 (infrastructure) qui apporte de la valeur immediatement sans creer de nouveau module.**
