@@ -1,5 +1,5 @@
 // Fichier: js/navigation.js
-// Navigation responsive avec double mode : par classe (defaut) / par theme
+// Navigation responsive par classe (6e a Terminale)
 
 /* ========================================
    CONFIGURATION : NIVEAUX
@@ -237,142 +237,7 @@ const NAVIGATION_PAR_CLASSE = {
 };
 
 /* ========================================
-   GESTION DU MODE DE NAVIGATION
-   ======================================== */
-
-function getNavMode() {
-    try {
-        return localStorage.getItem('mathsfacile-nav-mode') || 'classe';
-    } catch (e) {
-        return 'classe';
-    }
-}
-
-function setNavMode(mode) {
-    try {
-        localStorage.setItem('mathsfacile-nav-mode', mode);
-    } catch (e) {
-        // localStorage indisponible
-    }
-}
-
-/* ========================================
-   GENERATION NAVIGATION PAR THEME (ancien mode)
-   ======================================== */
-
-function generateNavigationParTheme(currentPage) {
-    return `
-            <!-- Algebre -->
-            <li class="nav-item has-dropdown">
-                <a href="#" class="nav-link">
-                    Alg\u00e8bre
-                    <span class="arrow">\u25be</span>
-                </a>
-                <ul class="nav-dropdown">
-                    <li><a href="index.html" ${currentPage === 'index' ? 'class="active"' : ''}>\u00c9quations</a></li>
-                    <li><a href="developpement.html" ${currentPage === 'developpement' ? 'class="active"' : ''}>D\u00e9veloppement</a></li>
-                    <li><a href="reduction.html" ${currentPage === 'reduction' ? 'class="active"' : ''}>R\u00e9duction</a></li>
-                    <li><a href="factorisation.html" ${currentPage === 'factorisation' ? 'class="active"' : ''}>Factorisation</a></li>
-                    <li><a href="inequations.html" ${currentPage === 'inequations' ? 'class="active"' : ''}>In\u00e9quations</a></li>
-                    <li><a href="equations2.html" ${currentPage === 'equations2' ? 'class="active"' : ''}>\u00c9quations 2nd degr\u00e9</a></li>
-                    <li><a href="inequations2.html" ${currentPage === 'inequations2' ? 'class="active"' : ''}>In\u00e9quations 2nd degr\u00e9</a></li>
-                    <li><a href="systemes.html" ${currentPage === 'systemes' ? 'class="active"' : ''}>Syst\u00e8mes d'\u00e9quations</a></li>
-                </ul>
-            </li>
-
-            <!-- Calculs -->
-            <li class="nav-item has-dropdown">
-                <a href="#" class="nav-link">
-                    Calculs
-                    <span class="arrow">\u25be</span>
-                </a>
-                <ul class="nav-dropdown">
-                    <li><a href="fractions.html" ${currentPage === 'fractions' ? 'class="active"' : ''}>Fractions</a></li>
-                    <li><a href="pourcentages.html" ${currentPage === 'pourcentages' ? 'class="active"' : ''}>Pourcentages</a></li>
-                    <li><a href="puissances.html" ${currentPage === 'puissances' ? 'class="active"' : ''}>Puissances</a></li>
-                    <li><a href="racines.html" ${currentPage === 'racines' ? 'class="active"' : ''}>Racines carr\u00e9es</a></li>
-                </ul>
-            </li>
-
-            <!-- Fonctions -->
-            <li class="nav-item has-dropdown">
-                <a href="#" class="nav-link">
-                    Fonctions
-                    <span class="arrow">\u25be</span>
-                </a>
-                <ul class="nav-dropdown">
-                    <li><a href="fonctions-affines.html" ${currentPage === 'fonctions-affines' ? 'class="active"' : ''}>Fonctions Affines</a></li>
-                    <li><a href="fonctions-second-degre.html" ${currentPage === 'fonctions-second-degre' ? 'class="active"' : ''}>Fonctions 2nd degr\u00e9</a></li>
-                    <li><a href="derivees.html" ${currentPage === 'derivees' ? 'class="active"' : ''}>D\u00e9riv\u00e9es</a></li>
-                </ul>
-            </li>
-
-            <!-- Suites -->
-            <li class="nav-item has-dropdown">
-                <a href="#" class="nav-link">
-                    Suites
-                    <span class="arrow">\u25be</span>
-                </a>
-                <ul class="nav-dropdown">
-                    <li><a href="suites.html" ${currentPage === 'suites' ? 'class="active"' : ''}>Suites Num\u00e9riques</a></li>
-                </ul>
-            </li>
-
-            <!-- Analyse -->
-            <li class="nav-item has-dropdown">
-                <a href="#" class="nav-link">
-                    Analyse
-                    <span class="arrow">\u25be</span>
-                </a>
-                <ul class="nav-dropdown">
-                    <li><a href="limites.html" ${currentPage === 'limites' ? 'class="active"' : ''}>Limites</a></li>
-                    <li><a href="primitives.html" ${currentPage === 'primitives' ? 'class="active"' : ''}>Primitives & Int\u00e9grales</a></li>
-                    <li><a href="exponentielles.html" ${currentPage === 'exponentielles' ? 'class="active"' : ''}>Exponentielles & Logarithmes</a></li>
-                </ul>
-            </li>
-
-            <!-- Proba & Stats -->
-            <li class="nav-item has-dropdown">
-                <a href="#" class="nav-link">
-                    Proba & Stats
-                    <span class="arrow">\u25be</span>
-                </a>
-                <ul class="nav-dropdown">
-                    <li><a href="probabilites.html" ${currentPage === 'probabilites' ? 'class="active"' : ''}>Probabilit\u00e9s</a></li>
-                    <li><a href="statistiques.html" ${currentPage === 'statistiques' ? 'class="active"' : ''}>Statistiques</a></li>
-                </ul>
-            </li>
-
-            <!-- Geometrie & Trigo -->
-            <li class="nav-item has-dropdown">
-                <a href="#" class="nav-link">
-                    G\u00e9om\u00e9trie & Trigo
-                    <span class="arrow">\u25be</span>
-                </a>
-                <ul class="nav-dropdown">
-                    <li><a href="trigonometrie.html" ${currentPage === 'trigonometrie' ? 'class="active"' : ''}>Trigonom\u00e9trie</a></li>
-                    <li><a href="vecteurs.html" ${currentPage === 'vecteurs' ? 'class="active"' : ''}>Vecteurs</a></li>
-                    <li><a href="geometrie-analytique.html" ${currentPage === 'geometrie-analytique' ? 'class="active"' : ''}>G\u00e9om\u00e9trie analytique</a></li>
-                    <li><a href="geometrie-espace.html" ${currentPage === 'geometrie-espace' ? 'class="active"' : ''}>G\u00e9om\u00e9trie dans l'espace</a></li>
-                </ul>
-            </li>
-
-            <!-- Terminale Spe -->
-            <li class="nav-item has-dropdown">
-                <a href="#" class="nav-link">
-                    Terminale Sp\u00e9
-                    <span class="arrow">\u25be</span>
-                </a>
-                <ul class="nav-dropdown">
-                    <li><a href="arithmetique.html" ${currentPage === 'arithmetique' ? 'class="active"' : ''}>Arithm\u00e9tique</a></li>
-                    <li><a href="nombres-complexes.html" ${currentPage === 'nombres-complexes' ? 'class="active"' : ''}>Nombres Complexes</a></li>
-                    <li><a href="logique-denombrement.html" ${currentPage === 'logique-denombrement' ? 'class="active"' : ''}>Logique & D\u00e9nombrement</a></li>
-                </ul>
-            </li>`;
-}
-
-/* ========================================
-   GENERATION NAVIGATION PAR CLASSE (nouveau mode)
+   GENERATION NAVIGATION PAR CLASSE
    ======================================== */
 
 function generateNavigationParClasse(currentPage) {
@@ -411,7 +276,7 @@ function generateNavigationParClasse(currentPage) {
 }
 
 /* ========================================
-   GENERATION NAVIGATION (dispatch)
+   GENERATION NAVIGATION
    ======================================== */
 
 /**
@@ -420,16 +285,10 @@ function generateNavigationParClasse(currentPage) {
  * @returns {string} HTML de la navigation
  */
 function generateNavigation(currentPage = '') {
-    const mode = getNavMode();
-    const menuContent = mode === 'classe'
-        ? generateNavigationParClasse(currentPage)
-        : generateNavigationParTheme(currentPage);
-
-    const modeClass = mode === 'classe' ? 'nav-mode-classe' : 'nav-mode-theme';
-    const toggleLabel = mode === 'classe' ? 'Par th\u00e8me' : 'Par classe';
+    const menuContent = generateNavigationParClasse(currentPage);
 
     return `
-    <nav class="nav ${modeClass}">
+    <nav class="nav nav-mode-classe">
         <div class="nav-container">
             <a href="accueil.html" class="nav-brand">MathsFacile</a>
 
@@ -442,10 +301,6 @@ function generateNavigation(currentPage = '') {
             <ul class="nav-menu">
                 ${menuContent}
             </ul>
-
-            <button class="nav-mode-toggle" id="navModeToggle" title="Changer le mode de navigation">
-                ${toggleLabel}
-            </button>
         </div>
     </nav>`;
 }
@@ -481,7 +336,6 @@ function initNavigationEvents() {
     const menu = document.querySelector('.nav-menu');
     const overlay = document.querySelector('.nav-overlay');
     const dropdownToggles = document.querySelectorAll('.nav-item.has-dropdown > .nav-link');
-    const mode = getNavMode();
 
     // Toggle menu mobile (hamburger)
     if (hamburger) {
@@ -505,16 +359,13 @@ function initNavigationEvents() {
         });
     }
 
-    // Dropdowns sur mobile
+    // Dropdowns sur mobile (accordion)
     dropdownToggles.forEach(toggle => {
         toggle.addEventListener('click', (e) => {
             if (window.innerWidth <= 768) {
                 e.preventDefault();
-                // En mode classe : toggle l'expansion du dropdown
-                if (mode === 'classe') {
-                    const item = toggle.parentElement;
-                    item.classList.toggle('expanded');
-                }
+                const item = toggle.parentElement;
+                item.classList.toggle('expanded');
             }
         });
     });
@@ -535,25 +386,6 @@ function initNavigationEvents() {
             closeMenu();
         }
     });
-
-    // Toggle mode classe/theme
-    const toggleBtn = document.getElementById('navModeToggle');
-    if (toggleBtn) {
-        toggleBtn.addEventListener('click', () => {
-            const current = getNavMode();
-            const next = current === 'classe' ? 'theme' : 'classe';
-            setNavMode(next);
-            // Recharger pour appliquer le nouveau mode
-            // Retirer le parametre niveau si on passe en mode theme
-            if (next === 'theme') {
-                const url = new URL(window.location);
-                url.searchParams.delete('niveau');
-                window.location.href = url.toString();
-            } else {
-                window.location.reload();
-            }
-        });
-    }
 }
 
 /**

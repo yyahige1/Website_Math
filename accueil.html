@@ -328,11 +328,6 @@
             </div>
         </div>
 
-        <!-- Lien vers mode theme -->
-        <div class="accueil-footer">
-            <p>Tu pr&eacute;f&egrave;res chercher par th&egrave;me (alg&egrave;bre, fonctions...) ?</p>
-            <button class="btn-theme-mode" id="switchToTheme">Voir tous les exercices par th&egrave;me</button>
-        </div>
     </div>
 
     <!-- JavaScript -->
@@ -371,16 +366,7 @@
                 });
             });
 
-            // Bouton "Voir par theme"
-            const themeBtn = document.getElementById('switchToTheme');
-            if (themeBtn) {
-                themeBtn.addEventListener('click', () => {
-                    try {
-                        localStorage.setItem('mathsfacile-nav-mode', 'theme');
-                    } catch(e) {}
-                    window.location.href = 'index.html';
-                });
-            }
+
         });
     </script>
 </body>

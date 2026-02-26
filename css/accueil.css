@@ -151,40 +151,6 @@
     text-align: center;
 }
 
-/* ===== FOOTER ===== */
-.accueil-footer {
-    text-align: center;
-    margin-top: 32px;
-    padding: 20px;
-    background: white;
-    border-radius: var(--radius-lg, 12px);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-}
-
-.accueil-footer p {
-    color: var(--gray-600, #666);
-    margin-bottom: 12px;
-    font-size: 0.9em;
-}
-
-.btn-theme-mode {
-    background: var(--gray-200, #f0f0f0);
-    color: var(--gray-700, #555);
-    border: none;
-    padding: 10px 24px;
-    border-radius: var(--radius-md, 8px);
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-    font-size: 0.9em;
-}
-
-.btn-theme-mode:hover {
-    background: var(--primary, #667eea);
-    color: white;
-    transform: translateY(-1px);
-}
-
 /* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
     .niveaux-grid {
