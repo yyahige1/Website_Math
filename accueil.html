@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MathsFacile - Exercices de maths de la 6e a la Terminale</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/navigation.css">
+    <link rel="stylesheet" href="css/accueil.css">
+</head>
+<body>
+    <div class="container accueil-container">
+        <header class="accueil-header">
+            <h1>MathsFacile</h1>
+            <p>Entra&icirc;ne-toi en maths de la 6&egrave;me &agrave; la Terminale</p>
+            <p class="accueil-subtitle">Exercices illimit&eacute;s avec corrections d&eacute;taill&eacute;es &eacute;tape par &eacute;tape</p>
+        </header>
+
+        <!-- Grille des niveaux -->
+        <div class="niveaux-grid">
+            <div class="niveau-card" data-niveau="6e" style="--niveau-color: #4CAF50">
+                <div class="niveau-emoji">&#x1F331;</div>
+                <div class="niveau-name">6&egrave;me</div>
+                <div class="niveau-count">2 chapitres</div>
+            </div>
+            <div class="niveau-card" data-niveau="5e" style="--niveau-color: #2196F3">
+                <div class="niveau-emoji">&#x1F4D7;</div>
+                <div class="niveau-name">5&egrave;me</div>
+                <div class="niveau-count">3 chapitres</div>
+            </div>
+            <div class="niveau-card" data-niveau="4e" style="--niveau-color: #FF9800">
+                <div class="niveau-emoji">&#x1F4D9;</div>
+                <div class="niveau-name">4&egrave;me</div>
+                <div class="niveau-count">8 chapitres</div>
+            </div>
+            <div class="niveau-card" data-niveau="3e" style="--niveau-color: #F44336">
+                <div class="niveau-emoji">&#x1F393;</div>
+                <div class="niveau-name">3&egrave;me</div>
+                <div class="niveau-count">12 chapitres</div>
+            </div>
+            <div class="niveau-card" data-niveau="2de" style="--niveau-color: #9C27B0">
+                <div class="niveau-emoji">&#x1F4D0;</div>
+                <div class="niveau-name">2nde</div>
+                <div class="niveau-count">10 chapitres</div>
+            </div>
+            <div class="niveau-card" data-niveau="1re" style="--niveau-color: #E91E63">
+                <div class="niveau-emoji">&#x1F4CA;</div>
+                <div class="niveau-name">1&egrave;re Sp&eacute;</div>
+                <div class="niveau-count">11 chapitres</div>
+            </div>
+            <div class="niveau-card" data-niveau="Tle" style="--niveau-color: #673AB7">
+                <div class="niveau-emoji">&#x1F680;</div>
+                <div class="niveau-name">Tle Sp&eacute;</div>
+                <div class="niveau-count">10 chapitres</div>
+            </div>
+        </div>
+
+        <!-- Sections de chapitres (une par niveau, cachees par defaut) -->
+        <div class="chapitres-section" id="chapitres-6e">
+            <h2 style="--niveau-color: #4CAF50">6&egrave;me</h2>
+            <div class="chapitres-grid">
+                <a href="fractions.html?niveau=6eme" class="chapitre-card">
+                    <span class="chapitre-icon">&#x2795;</span>
+                    Fractions simples
+                </a>
+                <a href="statistiques.html?niveau=6eme" class="chapitre-card">
+                    <span class="chapitre-icon">&#x1F4CA;</span>
+                    Tableaux et graphiques
+                </a>
+            </div>
+            <p class="chapitres-note">D'autres chapitres arrivent bient&ocirc;t : nombres d&eacute;cimaux, proportionnalit&eacute;, g&eacute;om&eacute;trie...</p>
+        </div>
+
+        <div class="chapitres-section" id="chapitres-5e">
+            <h2 style="--niveau-color: #2196F3">5&egrave;me</h2>
+            <div class="chapitres-grid">
+                <a href="fractions.html?niveau=5eme" class="chapitre-card">
+                    <span class="chapitre-icon">&#x2795;</span>
+                    Fractions (+/&minus;)
+                </a>
+                <a href="pourcentages.html?niveau=5eme" class="chapitre-card">
+                    <span class="chapitre-icon">%</span>
+                    Pourcentages
+                </a>
+                <a href="statistiques.html?niveau=5eme" class="chapitre-card">
+                    <span class="chapitre-icon">&#x1F4CA;</span>
+                    Moyennes
+                </a>
+            </div>
+            <p class="chapitres-note">D'autres chapitres arrivent bient&ocirc;t : nombres relatifs, angles, sym&eacute;tries...</p>
+        </div>
+
+        <div class="chapitres-section" id="chapitres-4e">
+            <h2 style="--niveau-color: #FF9800">4&egrave;me</h2>
+            <div class="chapitres-grid">
+                <a href="fractions.html?niveau=4eme" class="chapitre-card">
+                    <span class="chapitre-icon">&#x00d7;</span>
+                    Fractions (&times;, &divide;)
+                </a>
+                <a href="puissances.html?niveau=4eme" class="chapitre-card">
+                    <span class="chapitre-icon">x&sup2;</span>
+                    Puissances
+                </a>
+                <a href="developpement.html?niveau=4eme" class="chapitre-card">
+                    <span class="chapitre-icon">ab</span>
+                    Calcul litt&eacute;ral
+                </a>
+                <a href="index.html?niveau=4eme" class="chapitre-card">
+                    <span class="chapitre-icon">=</span>
+                    &Eacute;quations
+                </a>
+                <a href="pourcentages.html?niveau=4eme" class="chapitre-card">
+                    <span class="chapitre-icon">%</span>
+                    Pourcentages
+                </a>
+                <a href="trigonometrie.html?niveau=4eme" class="chapitre-card">
+                    <span class="chapitre-icon">cos</span>
+                    Cosinus
+                </a>
+                <a href="statistiques.html?niveau=4eme" class="chapitre-card">
+                    <span class="chapitre-icon">&#x1F4CA;</span>
+                    Statistiques
+                </a>
+                <a href="probabilites.html?niveau=4eme" class="chapitre-card">
+                    <span class="chapitre-icon">&#x1F3B2;</span>
+                    Probabilit&eacute;s
+                </a>
+            </div>
+        </div>
+
+        <div class="chapitres-section" id="chapitres-3e">
+            <h2 style="--niveau-color: #F44336">3&egrave;me</h2>
+            <div class="chapitres-grid">
+                <a href="reduction.html?niveau=3eme" class="chapitre-card">
+                    <span class="chapitre-icon">&#x2211;</span>
+                    R&eacute;duction
+                </a>
+                <a href="developpement.html?niveau=3eme" class="chapitre-card">
+                    <span class="chapitre-icon">( )</span>
+                    D&eacute;veloppement
+                </a>
+                <a href="factorisation.html?niveau=3eme" class="chapitre-card">
+                    <span class="chapitre-icon">[ ]</span>
+                    Factorisation
+                </a>
+                <a href="index.html?niveau=3eme" class="chapitre-card">
+                    <span class="chapitre-icon">=</span>
+                    &Eacute;quations
+                </a>
+                <a href="inequations.html?niveau=3eme" class="chapitre-card">
+                    <span class="chapitre-icon">&lt;</span>
+                    In&eacute;quations
+                </a>
+                <a href="racines.html?niveau=3eme" class="chapitre-card">
+                    <span class="chapitre-icon">&radic;</span>
+                    Racines carr&eacute;es
+                </a>
+                <a href="fonctions-affines.html?niveau=3eme" class="chapitre-card">
+                    <span class="chapitre-icon">f(x)</span>
+                    Fonctions affines
+                </a>
+                <a href="systemes.html?niveau=3eme" class="chapitre-card">
+                    <span class="chapitre-icon">{</span>
+                    Syst&egrave;mes d'&eacute;quations
+                </a>
+                <a href="trigonometrie.html?niveau=3eme" class="chapitre-card">
+                    <span class="chapitre-icon">sin</span>
+                    Trigonom&eacute;trie
+                </a>
+                <a href="arithmetique.html?niveau=3eme" class="chapitre-card">
+                    <span class="chapitre-icon">&#x00f7;</span>
+                    PGCD et arithm&eacute;tique
+                </a>
+                <a href="statistiques.html?niveau=3eme" class="chapitre-card">
+                    <span class="chapitre-icon">&#x1F4CA;</span>
+                    Statistiques
+                </a>
+                <a href="probabilites.html?niveau=3eme" class="chapitre-card">
+                    <span class="chapitre-icon">&#x1F3B2;</span>
+                    Probabilit&eacute;s
+                </a>
+            </div>
+        </div>
+
+        <div class="chapitres-section" id="chapitres-2de">
+            <h2 style="--niveau-color: #9C27B0">2nde</h2>
+            <div class="chapitres-grid">
+                <a href="developpement.html?niveau=2nde" class="chapitre-card">
+                    <span class="chapitre-icon">(a+b)&sup2;</span>
+                    Calcul litt&eacute;ral
+                </a>
+                <a href="factorisation.html?niveau=2nde" class="chapitre-card">
+                    <span class="chapitre-icon">[ ]</span>
+                    Factorisation
+                </a>
+                <a href="index.html?niveau=2nde" class="chapitre-card">
+                    <span class="chapitre-icon">=</span>
+                    &Eacute;quations
+                </a>
+                <a href="inequations.html?niveau=2nde" class="chapitre-card">
+                    <span class="chapitre-icon">&lt;</span>
+                    In&eacute;quations
+                </a>
+                <a href="fonctions-affines.html?niveau=2nde" class="chapitre-card">
+                    <span class="chapitre-icon">y=mx+p</span>
+                    &Eacute;quations de droites
+                </a>
+                <a href="systemes.html?niveau=2nde" class="chapitre-card">
+                    <span class="chapitre-icon">{</span>
+                    Syst&egrave;mes d'&eacute;quations
+                </a>
+                <a href="vecteurs.html?niveau=2nde" class="chapitre-card">
+                    <span class="chapitre-icon">&rarr;</span>
+                    Vecteurs
+                </a>
+                <a href="geometrie-analytique.html?niveau=2nde" class="chapitre-card">
+                    <span class="chapitre-icon">&#x1F4D0;</span>
+                    G&eacute;om&eacute;trie analytique
+                </a>
+                <a href="statistiques.html?niveau=2nde" class="chapitre-card">
+                    <span class="chapitre-icon">&#x1F4CA;</span>
+                    Statistiques
+                </a>
+                <a href="probabilites.html?niveau=2nde" class="chapitre-card">
+                    <span class="chapitre-icon">&#x1F3B2;</span>
+                    Probabilit&eacute;s
+                </a>
+            </div>
+        </div>
+
+        <div class="chapitres-section" id="chapitres-1re">
+            <h2 style="--niveau-color: #E91E63">1&egrave;re Sp&eacute;cialit&eacute;</h2>
+            <div class="chapitres-grid">
+                <a href="equations2.html?niveau=1ere" class="chapitre-card">
+                    <span class="chapitre-icon">&#x0394;</span>
+                    Second degr&eacute;
+                </a>
+                <a href="fonctions-second-degre.html?niveau=1ere" class="chapitre-card">
+                    <span class="chapitre-icon">&#x2229;</span>
+                    Fonction du 2nd degr&eacute;
+                </a>
+                <a href="inequations2.html?niveau=1ere" class="chapitre-card">
+                    <span class="chapitre-icon">+/&minus;</span>
+                    In&eacute;quations 2nd degr&eacute;
+                </a>
+                <a href="derivees.html?niveau=1ere" class="chapitre-card">
+                    <span class="chapitre-icon">f'</span>
+                    D&eacute;rivation
+                </a>
+                <a href="suites.html?niveau=1ere" class="chapitre-card">
+                    <span class="chapitre-icon">u&#x2099;</span>
+                    Suites num&eacute;riques
+                </a>
+                <a href="exponentielles.html?niveau=1ere" class="chapitre-card">
+                    <span class="chapitre-icon">e&#x02e3;</span>
+                    Fonction exponentielle
+                </a>
+                <a href="trigonometrie.html?niveau=1ere" class="chapitre-card">
+                    <span class="chapitre-icon">&#x03C0;</span>
+                    Trigonom&eacute;trie
+                </a>
+                <a href="vecteurs.html?niveau=1ere" class="chapitre-card">
+                    <span class="chapitre-icon">&middot;</span>
+                    Produit scalaire
+                </a>
+                <a href="geometrie-analytique.html?niveau=1ere" class="chapitre-card">
+                    <span class="chapitre-icon">&#x25EF;</span>
+                    G&eacute;om&eacute;trie rep&eacute;r&eacute;e
+                </a>
+                <a href="probabilites.html?niveau=1ere" class="chapitre-card">
+                    <span class="chapitre-icon">P(A|B)</span>
+                    Probabilit&eacute;s conditionnelles
+                </a>
+                <a href="statistiques.html?niveau=1ere" class="chapitre-card">
+                    <span class="chapitre-icon">&#x1F4CA;</span>
+                    Statistiques
+                </a>
+            </div>
+        </div>
+
+        <div class="chapitres-section" id="chapitres-Tle">
+            <h2 style="--niveau-color: #673AB7">Terminale Sp&eacute;cialit&eacute;</h2>
+            <div class="chapitres-grid">
+                <a href="limites.html?niveau=terminale" class="chapitre-card">
+                    <span class="chapitre-icon">lim</span>
+                    Limites et continuit&eacute;
+                </a>
+                <a href="derivees.html?niveau=terminale" class="chapitre-card">
+                    <span class="chapitre-icon">f'</span>
+                    D&eacute;rivation (compl&eacute;ments)
+                </a>
+                <a href="exponentielles.html?niveau=terminale" class="chapitre-card">
+                    <span class="chapitre-icon">ln</span>
+                    Logarithme n&eacute;p&eacute;rien
+                </a>
+                <a href="primitives.html?niveau=terminale" class="chapitre-card">
+                    <span class="chapitre-icon">&#x222B;</span>
+                    Primitives et int&eacute;grales
+                </a>
+                <a href="suites.html?niveau=terminale" class="chapitre-card">
+                    <span class="chapitre-icon">u&#x2099;</span>
+                    Suites (limites)
+                </a>
+                <a href="nombres-complexes.html?niveau=terminale" class="chapitre-card">
+                    <span class="chapitre-icon">z</span>
+                    Nombres complexes
+                </a>
+                <a href="arithmetique.html?niveau=terminale" class="chapitre-card">
+                    <span class="chapitre-icon">&#x2261;</span>
+                    Arithm&eacute;tique
+                </a>
+                <a href="logique-denombrement.html?niveau=terminale" class="chapitre-card">
+                    <span class="chapitre-icon">n!</span>
+                    D&eacute;nombrement
+                </a>
+                <a href="geometrie-espace.html?niveau=terminale" class="chapitre-card">
+                    <span class="chapitre-icon">&#x25A1;</span>
+                    G&eacute;om&eacute;trie dans l'espace
+                </a>
+                <a href="probabilites.html?niveau=terminale" class="chapitre-card">
+                    <span class="chapitre-icon">B(n,p)</span>
+                    Loi binomiale
+                </a>
+            </div>
+        </div>
+
+        <!-- Lien vers mode theme -->
+        <div class="accueil-footer">
+            <p>Tu pr&eacute;f&egrave;res chercher par th&egrave;me (alg&egrave;bre, fonctions...) ?</p>
+            <button class="btn-theme-mode" id="switchToTheme">Voir tous les exercices par th&egrave;me</button>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="js/utils.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/navigation.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Gestion clic sur les cards de niveau
+            const cards = document.querySelectorAll('.niveau-card');
+            const sections = document.querySelectorAll('.chapitres-section');
+
+            cards.forEach(card => {
+                card.addEventListener('click', () => {
+                    const niveau = card.dataset.niveau;
+                    const section = document.getElementById('chapitres-' + niveau);
+                    if (!section) return;
+
+                    // Toggle : si deja ouvert, fermer
+                    const isOpen = section.classList.contains('open');
+
+                    // Fermer toutes les sections
+                    sections.forEach(s => s.classList.remove('open'));
+                    cards.forEach(c => c.classList.remove('selected'));
+
+                    // Ouvrir la section cliquee (sauf si on la ferme)
+                    if (!isOpen) {
+                        section.classList.add('open');
+                        card.classList.add('selected');
+                        // Scroll vers la section
+                        setTimeout(() => {
+                            section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }, 100);
+                    }
+                });
+            });
+
+            // Bouton "Voir par theme"
+            const themeBtn = document.getElementById('switchToTheme');
+            if (themeBtn) {
+                themeBtn.addEventListener('click', () => {
+                    try {
+                        localStorage.setItem('mathsfacile-nav-mode', 'theme');
+                    } catch(e) {}
+                    window.location.href = 'index.html';
+                });
+            }
+        });
+    </script>
+</body>
+</html>

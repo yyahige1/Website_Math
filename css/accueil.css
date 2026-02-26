@@ -1,0 +1,237 @@
+/* Fichier: css/accueil.css */
+/* Styles specifiques a la page d'accueil */
+
+/* ===== CONTAINER ELARGI ===== */
+.accueil-container {
+    max-width: 800px;
+}
+
+/* ===== HEADER ===== */
+.accueil-header {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.accueil-header h1 {
+    font-size: 2.5em;
+    margin-bottom: 8px;
+}
+
+.accueil-subtitle {
+    font-size: 0.95em;
+    opacity: 0.85;
+    margin-top: 4px;
+}
+
+/* ===== GRILLE DES NIVEAUX ===== */
+.niveaux-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.niveau-card {
+    background: white;
+    border-radius: var(--radius-lg, 12px);
+    padding: 20px 12px;
+    text-align: center;
+    cursor: pointer;
+    border-left: 5px solid var(--niveau-color, #667eea);
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.niveau-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.niveau-card.selected {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    border-left-width: 7px;
+}
+
+.niveau-emoji {
+    font-size: 1.8em;
+    margin-bottom: 6px;
+}
+
+.niveau-name {
+    font-size: 1.15em;
+    font-weight: 700;
+    color: var(--gray-800, #333);
+    margin-bottom: 4px;
+}
+
+.niveau-count {
+    font-size: 0.8em;
+    color: var(--gray-500, #888);
+}
+
+/* ===== SECTIONS DE CHAPITRES ===== */
+.chapitres-section {
+    display: none;
+    margin-bottom: 24px;
+}
+
+.chapitres-section.open {
+    display: block;
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.chapitres-section h2 {
+    font-size: 1.3em;
+    color: white;
+    margin-bottom: 16px;
+    padding: 10px 16px;
+    border-radius: var(--radius-md, 8px);
+    background: var(--niveau-color, #667eea);
+    text-shadow: none;
+}
+
+.chapitres-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.chapitre-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 16px;
+    background: white;
+    border-radius: var(--radius-md, 8px);
+    text-decoration: none;
+    color: var(--gray-800, #333);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s, box-shadow 0.2s, color 0.2s;
+    font-weight: 500;
+    font-size: 0.95em;
+}
+
+.chapitre-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    color: var(--primary, #667eea);
+}
+
+.chapitre-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: var(--gray-100, #f5f5f5);
+    border-radius: var(--radius-sm, 6px);
+    font-size: 0.9em;
+    font-weight: 700;
+    color: var(--gray-600, #666);
+    flex-shrink: 0;
+}
+
+.chapitres-note {
+    margin-top: 12px;
+    font-size: 0.85em;
+    color: var(--gray-500, #888);
+    font-style: italic;
+    text-align: center;
+}
+
+/* ===== FOOTER ===== */
+.accueil-footer {
+    text-align: center;
+    margin-top: 32px;
+    padding: 20px;
+    background: white;
+    border-radius: var(--radius-lg, 12px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.accueil-footer p {
+    color: var(--gray-600, #666);
+    margin-bottom: 12px;
+    font-size: 0.9em;
+}
+
+.btn-theme-mode {
+    background: var(--gray-200, #f0f0f0);
+    color: var(--gray-700, #555);
+    border: none;
+    padding: 10px 24px;
+    border-radius: var(--radius-md, 8px);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.9em;
+}
+
+.btn-theme-mode:hover {
+    background: var(--primary, #667eea);
+    color: white;
+    transform: translateY(-1px);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .niveaux-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .niveau-card {
+        padding: 16px 10px;
+    }
+
+    .niveau-emoji {
+        font-size: 1.5em;
+    }
+
+    .niveau-name {
+        font-size: 1em;
+    }
+
+    .chapitres-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .accueil-header h1 {
+        font-size: 2em;
+    }
+}
+
+@media (max-width: 400px) {
+    .niveaux-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+
+    .niveau-card {
+        padding: 12px 8px;
+    }
+
+    .niveau-emoji {
+        font-size: 1.3em;
+    }
+
+    .niveau-name {
+        font-size: 0.9em;
+    }
+
+    .niveau-count {
+        font-size: 0.75em;
+    }
+}

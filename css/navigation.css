@@ -269,3 +269,93 @@
     font-weight: 600;
     background-color: rgba(102, 126, 234, 0.1);
 }
+
+/* ===== TOGGLE MODE CLASSE/THEME ===== */
+.nav-mode-toggle {
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background-color 0.2s;
+    flex-shrink: 0;
+    box-shadow: none;
+}
+
+.nav-mode-toggle:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: none;
+    box-shadow: none;
+}
+
+/* ===== BADGE NIVEAU (sur les pages filtrees) ===== */
+.niveau-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--primary, #667eea);
+    color: white;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.niveau-badge-link {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: underline;
+    font-weight: 400;
+    font-size: 0.8rem;
+}
+
+.niveau-badge-link:hover {
+    color: white;
+}
+
+/* ===== MODE CLASSE : MOBILE REPLIABLE ===== */
+@media (max-width: 768px) {
+    /* En mode classe, les dropdowns sont replies par defaut */
+    .nav-mode-classe .nav-dropdown {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+        padding: 0;
+    }
+
+    /* Dropdown expandu */
+    .nav-mode-classe .nav-item.expanded .nav-dropdown {
+        max-height: 600px;
+        padding: 0.5rem 0;
+    }
+
+    /* Les headers de niveau sont cliquables en mode classe */
+    .nav-mode-classe .nav-item.has-dropdown > .nav-link {
+        pointer-events: auto;
+        cursor: pointer;
+    }
+
+    /* Afficher les fleches en mode classe (toggle) */
+    .nav-mode-classe .nav-link .arrow {
+        display: inline;
+        transition: transform 0.3s;
+    }
+
+    .nav-mode-classe .nav-item.expanded .arrow {
+        transform: rotate(180deg);
+    }
+
+    /* Toggle mode visible sur mobile */
+    .nav-mode-toggle {
+        position: absolute;
+        top: 15px;
+        right: 60px;
+        z-index: 1003;
+        font-size: 0.7rem;
+        padding: 4px 10px;
+    }
+}
