@@ -3,7 +3,8 @@
 > Reorganiser MathsFacile pour que les eleves naviguent par niveau scolaire (6eme, 5eme, ..., Terminale) puis par chapitre, au lieu de la navigation actuelle par domaine mathematique (Algebre, Calculs, Fonctions...).
 
 **Date** : 24 Fevrier 2026
-**Statut** : Planification
+**Mise a jour** : 26 Fevrier 2026
+**Statut** : Phase 0 terminee ✅
 **Priorite** : Haute (UX critique)
 
 ---
@@ -52,10 +53,7 @@ Creer une page d'accueil (`accueil.html` ou refondre `index.html`) avec :
 
 ### 2.3 Principe de fonctionnement
 
-**Deux modes de navigation coexistants :**
-
-1. **Navigation par classe** (defaut, pour les eleves) : dropdown par niveau → chapitres
-2. **Navigation par theme** (optionnel, pour les profs) : l'ancien systeme, accessible via un toggle
+**Navigation unique par classe** (pas de mode theme — un eleve n'a pas le recul pour naviguer par domaine mathematique).
 
 **Chaque lien pointe vers le module existant avec un parametre de niveau :**
 ```
@@ -64,7 +62,7 @@ fractions.html?niveau=5eme    → Affiche : +/- avec denominateurs differents
 fractions.html?niveau=4eme    → Affiche : multiplication, division, simplification
 ```
 
-Le JS du module lit `?niveau=` et filtre les types d'exercices affiches.
+Le JS de `navigation.js` lit `?niveau=` et filtre les types d'exercices affiches (via `applyNiveauFilter()` appele apres l'init du module avec `setTimeout(..., 0)`).
 
 ---
 
@@ -266,23 +264,13 @@ Le JS du module lit `?niveau=` et filtre les types d'exercices affiches.
 
 ## 5. Systeme de Filtrage par Niveau
 
-### 5.1 Principe technique
+### 5.1 Principe technique (✅ implemente)
 
-Chaque module existant doit supporter un parametre URL `?niveau=XXX` qui filtre les types d'exercices disponibles.
+Le filtrage est centralise dans `js/navigation.js` (pas de fichier separe). La fonction `applyNiveauFilter()` est appelee via `setTimeout(..., 0)` apres le DOMContentLoaded, ce qui garantit qu'elle s'execute APRES l'init de chaque module. Aucune modification des 28 fichiers JS de modules.
 
-```javascript
-// Dans chaque module JS, ajouter au debut de init[Module]Page() :
-const urlParams = new URLSearchParams(window.location.search);
-const niveau = urlParams.get('niveau'); // "6eme", "5eme", ..., "terminale", ou null
+### 5.2 Configuration du filtrage (✅ implemente)
 
-if (niveau) {
-    filterTypesByNiveau(niveau);
-}
-```
-
-### 5.2 Configuration du filtrage
-
-Creer un fichier `js/niveaux-config.js` qui centralise le mapping :
+Le mapping est dans `NIVEAUX_CONFIG` au debut de `js/navigation.js` :
 
 ```javascript
 const NIVEAUX_CONFIG = {
@@ -411,52 +399,22 @@ const NIVEAUX_CONFIG = {
 };
 ```
 
-### 5.3 Fonction de filtrage generique
+### 5.3 Fonction de filtrage (✅ implemente)
 
-```javascript
-function filterTypesByNiveau(niveau) {
-    // Detecter le module courant depuis l'URL
-    const page = window.location.pathname.split('/').pop().replace('.html', '') || 'index';
-    const moduleName = page === 'index' ? 'equations' : page;
-
-    const config = NIVEAUX_CONFIG[moduleName];
-    if (!config || !config[niveau]) return; // pas de filtrage
-
-    const allowedTypes = config[niveau].types;
-    if (!allowedTypes) return; // null = tous les types
-
-    // Cacher les boutons de type non autorises
-    document.querySelectorAll('.type-btn').forEach(btn => {
-        if (!allowedTypes.includes(btn.dataset.type)) {
-            btn.style.display = 'none';
-        }
-    });
-
-    // Activer le premier type autorise
-    const firstAllowed = document.querySelector(`.type-btn[data-type="${allowedTypes[0]}"]`);
-    if (firstAllowed) {
-        document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
-        firstAllowed.classList.add('active');
-        firstAllowed.click();
-    }
-
-    // Afficher le niveau dans le header
-    const header = document.querySelector('.page-header p');
-    if (header) {
-        const niveauLabel = niveau.replace('1ere', '1ere Spe').replace('terminale', 'Terminale Spe');
-        header.textContent += ` — Niveau ${niveauLabel}`;
-    }
-}
-```
+La fonction `applyNiveauFilter()` dans `js/navigation.js` :
+- Lit `?niveau=` depuis l'URL
+- Cache les `.type-btn` non autorises (`display: none`)
+- Active le premier bouton autorise via `.click()` (declenche le handler du module)
+- Affiche un badge niveau dans le header avec lien "Changer" vers `accueil.html`
 
 ---
 
-## 6. Nouvelle Navigation
+## 6. Nouvelle Navigation (✅ implemente)
 
 ### 6.1 Structure du dropdown par niveau
 
 ```javascript
-// Structure dans navigation.js (a remplacer)
+// Dans navigation.js
 const NAVIGATION_PAR_CLASSE = {
     '6eme': {
         color: '#4CAF50',
@@ -567,74 +525,34 @@ const NAVIGATION_PAR_CLASSE = {
 };
 ```
 
-### 6.2 Toggle Theme/Classe
-
-Ajouter un petit bouton dans la barre de nav :
-```html
-<button class="nav-toggle-mode" title="Changer le mode de navigation">
-    <!-- Par defaut: mode classe -->
-    <span class="mode-classe active">Par classe</span>
-    <span class="mode-theme">Par theme</span>
-</button>
-```
-
-L'etat est sauvegarde dans `localStorage` :
-```javascript
-const navMode = localStorage.getItem('navMode') || 'classe';
-```
-
 ---
 
-## 7. Page d'Accueil
+## 7. Page d'Accueil (✅ implemente)
 
-### 7.1 Nouveau design (`accueil.html` ou refonte de `index.html`)
+### 7.1 Design (`accueil.html`)
 
-```
-┌──────────────────────────────────────────────────────┐
-│                    MathsFacile                        │
-│     Entraine-toi en maths de la 6eme a la Terminale  │
-│                                                      │
-│  ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐   │
-│  │  6eme   │ │  5eme   │ │  4eme   │ │  3eme   │   │
-│  │ 7 chap. │ │ 9 chap. │ │10 chap. │ │13 chap. │   │
-│  └─────────┘ └─────────┘ └─────────┘ └─────────┘   │
-│                                                      │
-│  ┌─────────┐ ┌─────────┐ ┌─────────┐               │
-│  │  2nde   │ │1ere Spe │ │Term Spe │               │
-│  │11 chap. │ │10 chap. │ │11 chap. │               │
-│  └─────────┘ └─────────┘ └─────────┘               │
-│                                                      │
-│  [ Voir tous les exercices par theme → ]             │
-└──────────────────────────────────────────────────────┘
-```
+Page d'accueil avec 7 cards cliquables (une par niveau, de la 6eme a la Terminale). Cliquer sur une card ouvre en accordeon la liste des chapitres disponibles. Chaque chapitre est un lien vers le module filtre (ex: `fractions.html?niveau=4eme`).
 
-Cliquer sur une carte de niveau affiche la liste des chapitres disponibles en dessous (accordeon ou page dediee).
-
-### 7.2 Pages intermediaires par niveau (optionnel)
-
-Si on veut pousser plus loin, creer une page par niveau : `6eme.html`, `5eme.html`, etc.
-Chaque page liste les chapitres sous forme de cards avec :
-- Titre du chapitre
-- Icone
-- Nombre de types d'exercices disponibles
-- Lien vers le module filtre
+Le logo "MathsFacile" dans la nav renvoie vers `accueil.html`.
 
 ---
 
 ## 8. Phases d'Implementation
 
-### Phase 0 : Infrastructure (1-2 sessions)
+### Phase 0 : Infrastructure ✅ TERMINEE (26 fev 2026)
 > Navigation + filtrage, sans creer de nouveaux modules
 
-- [ ] Creer `js/niveaux-config.js` avec le mapping complet
-- [ ] Ajouter la logique `filterTypesByNiveau()` dans un fichier partage (utils.js ou nouveau)
-- [ ] Modifier `js/navigation.js` : double mode (classe / theme)
-- [ ] Creer la page d'accueil avec selection du niveau
-- [ ] Tester le filtrage sur 3-4 modules pilotes (fractions, equations, statistiques, trigonometrie)
-- [ ] `localStorage` pour memoriser le niveau et le mode de navigation
-- [ ] CSS pour les nouvelles cards de la page d'accueil
+- [x] Mapping `NIVEAUX_CONFIG` complet (28 modules, tous niveaux) dans `js/navigation.js`
+- [x] Mapping `NAVIGATION_PAR_CLASSE` (7 niveaux, chapitres avec liens) dans `js/navigation.js`
+- [x] Fonction `applyNiveauFilter()` dans `js/navigation.js` (filtrage via `setTimeout(0)` apres init module)
+- [x] Refonte `js/navigation.js` : navigation uniquement par classe (mode theme supprime)
+- [x] Page d'accueil `accueil.html` avec 7 cards de niveaux + accordeon chapitres
+- [x] `css/accueil.css` : styles page d'accueil (cards, grid, responsive)
+- [x] `css/navigation.css` : badge niveau, dropdowns repliables mobile, styles accordion
+- [x] Logo nav renvoie vers `accueil.html`
+- [x] Aucune modification des 28 fichiers HTML ni des 28 fichiers JS de modules
 
-**Resultat** : Un eleve peut deja naviguer par classe pour le lycee (2nde-1ere-Terminale) et les niveaux 3eme-4eme du college, avec les modules existants filtres.
+**Resultat** : Un eleve peut naviguer par classe (6eme a Terminale) avec les 28 modules existants filtres par niveau.
 
 ### Phase 1 : Modules college haute priorite (3-4 sessions)
 > Les 2 gros manques critiques pour le college
@@ -714,12 +632,12 @@ Chaque page liste les chapitres sous forme de cards avec :
 - Les fichiers CSS ne changent pas (sauf navigation.css)
 - KaTeX, GraphCanvas, utils.js, ui.js restent identiques
 
-### 10.2 Ce qui change
-- `js/navigation.js` : refonte majeure (double mode classe/theme)
-- Ajout `js/niveaux-config.js` : mapping centralise
-- `index.html` : n'est plus la page d'accueil (devient `equations.html` ou l'accueil change)
-- Page d'accueil : nouveau fichier
-- Chaque module JS : ajout de 3-4 lignes pour lire le parametre `?niveau=` et appeler le filtrage
+### 10.2 Ce qui a change (Phase 0)
+- `js/navigation.js` : refonte majeure (navigation par classe uniquement, plus de mode theme)
+- `NIVEAUX_CONFIG` + `NAVIGATION_PAR_CLASSE` + `applyNiveauFilter()` dans `navigation.js`
+- `accueil.html` : nouvelle page d'accueil (index.html reste la page des equations)
+- `css/accueil.css` + ajouts dans `css/navigation.css`
+- Aucune modification des 28 modules JS ni des 28 fichiers HTML
 
 ### 10.3 Risques
 - **URLs cassees** : `index.html` est actuellement la page des equations. Si on en fait la page d'accueil, il faut un redirect ou renommer.
@@ -735,17 +653,16 @@ Si le site croit, envisager un vrai routeur JS qui gere les vues sans rechargeme
 ## 11. Resume Visuel
 
 ```
-AVANT (actuel) :
+AVANT :
   Nav: [Algebre ▾] [Calculs ▾] [Fonctions ▾] ...
   → L'eleve ne s'y retrouve pas
 
-APRES (cible) :
-  Nav: [6eme ▾] [5eme ▾] [4eme ▾] [3eme ▾] [2nde ▾] [1ere ▾] [Term ▾]
+APRES (✅ implemente) :
+  Nav: [6e ▾] [5e ▾] [4e ▾] [3e ▾] [2de ▾] [1re ▾] [Tle ▾]
   → L'eleve clique sur sa classe, voit SES chapitres
-
-  Toggle [Par classe | Par theme] pour les profs qui preferent l'ancien mode
+  → Les types d'exercices sont filtres automatiquement par niveau
 ```
 
 ---
 
-**Fin de la roadmap. Commencer par la Phase 0 (infrastructure) qui apporte de la valeur immediatement sans creer de nouveau module.**
+**Phase 0 terminee. Prochaine etape : Phase 1 (Pythagore + Thales) pour completer les niveaux college.**
