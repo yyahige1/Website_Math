@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MathsFacile - P&eacute;rim&egrave;tres et Aires</title>
+
+    <!-- KaTeX pour pi et fractions -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"
+          integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV"
+          crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"
+            integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8"
+            crossorigin="anonymous"></script>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/exercices.css">
+    <link rel="stylesheet" href="css/navigation.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>P&eacute;rim&egrave;tres et Aires</h1>
+            <p class="subtitle">Exercices interactifs</p>
+            <p class="intro">Entra&icirc;ne-toi &agrave; calculer des p&eacute;rim&egrave;tres et des aires de figures g&eacute;om&eacute;triques.<br>Choisis un type, puis clique sur <strong>Correction</strong>.</p>
+        </header>
+
+        <div class="card">
+            <div class="type-selector grid-3">
+                <button class="type-btn active" data-type="perimetre">
+                    <div class="example">P = ?</div>
+                    <div class="label">P&eacute;rim&egrave;tre</div>
+                </button>
+                <button class="type-btn" data-type="aire">
+                    <div class="example">A = ?</div>
+                    <div class="label">Aire</div>
+                </button>
+                <button class="type-btn" data-type="conversions">
+                    <div class="example">m &rarr; cm</div>
+                    <div class="label">Conversions</div>
+                </button>
+            </div>
+
+            <div class="expression-display">
+                <div class="expression" id="exerciseDisplay"></div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn-generate" id="generateBtn">Nouvel exercice</button>
+                <button class="btn-solve" id="solveBtn">Correction</button>
+            </div>
+        </div>
+
+        <div id="solutionDiv" class="solution card"></div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="js/utils.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/navigation.js"></script>
+    <script src="js/perimetres-aires.js"></script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MathsFacile - Nombres Relatifs</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/exercices.css">
+    <link rel="stylesheet" href="css/navigation.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Nombres Relatifs</h1>
+            <p class="subtitle">Exercices interactifs</p>
+            <p class="intro">Entra&icirc;ne-toi aux op&eacute;rations sur les nombres relatifs.<br>Choisis un type, puis clique sur <strong>Correction</strong>.</p>
+        </header>
+
+        <div class="card">
+            <div class="type-selector grid-2">
+                <button class="type-btn active" data-type="addition">
+                    <div class="example">(+5) + (-3)</div>
+                    <div class="label">Addition</div>
+                </button>
+                <button class="type-btn" data-type="soustraction">
+                    <div class="example">(+2) - (-7)</div>
+                    <div class="label">Soustraction</div>
+                </button>
+                <button class="type-btn" data-type="multiplication">
+                    <div class="example">(-4) &times; (+6)</div>
+                    <div class="label">Multiplication</div>
+                </button>
+                <button class="type-btn" data-type="melange">
+                    <div class="example">(-3) + (+5) - (-2)</div>
+                    <div class="label">M&eacute;lang&eacute;</div>
+                </button>
+            </div>
+
+            <div class="expression-display">
+                <div class="expression" id="exerciseDisplay"></div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn-generate" id="generateBtn">Nouvel exercice</button>
+                <button class="btn-solve" id="solveBtn">Correction</button>
+            </div>
+        </div>
+
+        <div id="solutionDiv" class="solution card"></div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="js/utils.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/navigation.js"></script>
+    <script src="js/nombres-relatifs.js"></script>
+</body>
+</html>

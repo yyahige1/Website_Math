@@ -18,8 +18,9 @@ const NIVEAUX_CONFIG = {
         '2nde': ['simple', 'double', 'carre-somme', 'carre-diff', 'diff-carres'],
     },
     'reduction': {
-        '3eme': ['avec-x', 'avec-x2', 'avec-parentheses'],
-        '2nde': ['avec-x', 'avec-x2', 'avec-parentheses'],
+        '5eme': ['nombres'],
+        '3eme': ['nombres', 'avec-x', 'avec-x2', 'avec-parentheses'],
+        '2nde': ['nombres', 'avec-x', 'avec-x2', 'avec-parentheses'],
     },
     'factorisation': {
         '3eme': ['facteur-commun', 'diff-carres', 'carre-parfait'],
@@ -47,6 +48,7 @@ const NIVEAUX_CONFIG = {
         '2nde': ['addition', 'soustraction', 'multiplication', 'division', 'simplification'],
     },
     'pourcentages': {
+        '6eme': ['calculer', 'trouver'],
         '5eme': ['calculer', 'trouver'],
         '4eme': ['calculer', 'trouver', 'augmentation', 'reduction'],
         '3eme': ['calculer', 'trouver', 'augmentation', 'reduction', 'retrouver'],
@@ -128,6 +130,18 @@ const NIVEAUX_CONFIG = {
     'logique-denombrement': {
         'terminale': null,
     },
+    'nombres-relatifs': {
+        '5eme': ['addition', 'soustraction', 'multiplication', 'melange'],
+        '4eme': ['addition', 'soustraction', 'multiplication', 'melange'],
+    },
+    'proportionnalite': {
+        '6eme': ['tableau', 'coefficient'],
+        '5eme': ['tableau', 'coefficient', 'produit-croix'],
+    },
+    'perimetres-aires': {
+        '6eme': ['perimetre', 'aire'],
+        '5eme': ['perimetre', 'aire', 'conversions'],
+    },
 };
 
 /* ========================================
@@ -141,6 +155,9 @@ const NAVIGATION_PAR_CLASSE = {
         color: '#4CAF50',
         chapitres: [
             { titre: 'Fractions simples', href: 'fractions.html?niveau=6eme' },
+            { titre: 'Pourcentages', href: 'pourcentages.html?niveau=6eme' },
+            { titre: 'Proportionnalit\u00e9', href: 'proportionnalite.html?niveau=6eme' },
+            { titre: 'P\u00e9rim\u00e8tres et aires', href: 'perimetres-aires.html?niveau=6eme' },
             { titre: 'Tableaux et graphiques', href: 'statistiques.html?niveau=6eme' },
         ]
     },
@@ -149,7 +166,11 @@ const NAVIGATION_PAR_CLASSE = {
         color: '#2196F3',
         chapitres: [
             { titre: 'Fractions (+/\u2212)', href: 'fractions.html?niveau=5eme' },
+            { titre: 'Nombres relatifs', href: 'nombres-relatifs.html?niveau=5eme' },
             { titre: 'Pourcentages', href: 'pourcentages.html?niveau=5eme' },
+            { titre: 'Proportionnalit\u00e9', href: 'proportionnalite.html?niveau=5eme' },
+            { titre: 'R\u00e9duction', href: 'reduction.html?niveau=5eme' },
+            { titre: 'P\u00e9rim\u00e8tres et aires', href: 'perimetres-aires.html?niveau=5eme' },
             { titre: 'Moyennes', href: 'statistiques.html?niveau=5eme' },
         ]
     },

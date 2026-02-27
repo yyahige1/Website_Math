@@ -78,8 +78,11 @@
 26. `geometrie-analytique.html` - Géométrie analytique plane
 27. `geometrie-espace.html` - Géométrie dans l'espace
 28. `logique-denombrement.html` - Logique et Dénombrement
+29. `nombres-relatifs.html` - Nombres Relatifs
+30. `proportionnalite.html` - Proportionnalité
+31. `perimetres-aires.html` - Périmètres et Aires
 
-### Modules JavaScript (31 fichiers)
+### Modules JavaScript (37 fichiers)
 - `js/utils.js` - Fonctions utilitaires (PGCD, formatage, etc.)
 - `js/ui.js` - Manipulation DOM (show, hide, $)
 - `js/main.js` - Initialisation globale
@@ -114,6 +117,9 @@
 - `js/geometrie-analytique.js` - Logique géométrie analytique plane
 - `js/geometrie-espace.js` - Logique géométrie dans l'espace
 - `js/logique-denombrement.js` - Logique dénombrement, récurrence, binôme
+- `js/nombres-relatifs.js` - Logique nombres relatifs
+- `js/proportionnalite.js` - Logique proportionnalité
+- `js/perimetres-aires.js` - Logique périmètres et aires
 
 ### Feuilles de Style CSS (12 fichiers)
 - `css/theme.css` - Variables CSS (couleurs, espacements)
@@ -193,6 +199,17 @@
 | 28 | **Logique et Dénombrement** | 3 types | Basse | ✅ |
 
 **Objectif atteint**: 28 modules couvrant l'intégralité du programme Seconde → Terminale Spé Maths ✅
+
+### Phase 9 : Navigation par classe - Chapitres collège (6e/5e)
+| # | Module | Types | Niveaux | Statut |
+|---|--------|-------|---------|--------|
+| 29 | **Nombres Relatifs** | 4 types (addition, soustraction, multiplication, mélangé) | 5e, 4e | ✅ |
+| 30 | **Proportionnalité** | 3 types (tableau, coefficient, produit en croix) | 6e, 5e | ✅ |
+| 31 | **Périmètres et Aires** | 3 types (périmètre, aire, conversions) | 6e, 5e | ✅ |
+| - | **Pourcentages** (extension) | types existants | 6e (ajouté) | ✅ |
+| - | **Réduction** (extension) | +1 type 'nombres' | 5e (ajouté) | ✅ |
+
+**Résultat** : 6e passe de 2 à 5 chapitres, 5e passe de 3 à 7 chapitres.
 
 ---
 
@@ -341,14 +358,13 @@
 
 ## 📊 Statistiques
 
-**Dernière mise à jour**: 18 Février 2026
-**Modules d'exercices**: 28 ✅
-**Fichiers HTML**: 28
-**Fichiers JavaScript**: 34
-  - 28 modules d'exercices
+**Dernière mise à jour**: 27 Février 2026
+**Modules d'exercices**: 31 ✅
+**Fichiers HTML**: 31
+**Fichiers JavaScript**: 37
+  - 31 modules d'exercices
   - 6 utilitaires (utils, ui, main, navigation, graphing, tableau-variations)
 **Fichiers CSS**: 12
-**Lignes de code**: ~31 000
 **Dépendances externes**: 1 (KaTeX CDN)
 
-**Objectif atteint**: 28 modules — programme complet Seconde → Terminale Spé Maths ✅
+**Programme complet** : 31 modules — de la 6e à la Terminale Spé Maths ✅

@@ -28,6 +28,16 @@ function generateReductionExpression() {
     const terms = [];
     
     switch (ReductionState.currentType) {
+        case 'nombres':
+            // Somme de nombres entiers (sans variables)
+            for (let i = 0; i < n; i++) {
+                terms.push({
+                    coef: randCoef(-15, 15, false, true),
+                    type: 'const'
+                });
+            }
+            break;
+
         case 'avec-x':
             // Termes en x et constantes
             for (let i = 0; i < n; i++) {
