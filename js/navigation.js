@@ -148,6 +148,12 @@ const NIVEAUX_CONFIG = {
     'thales': {
         '3eme': ['direct', 'reciproque', 'agrandissement'],
     },
+    'notion-fonction': {
+        '2nde': ['image', 'antecedent', 'variations', 'definition', 'tableau'],
+    },
+    'fonctions-reference': {
+        '2nde': ['carree', 'inverse', 'racine', 'cube', 'valeur-absolue'],
+    },
 };
 
 /* ========================================
@@ -226,6 +232,8 @@ const NAVIGATION_PAR_CLASSE = {
             { titre: 'Syst\u00e8mes d\'\u00e9quations', href: 'systemes.html?niveau=2nde' },
             { titre: 'Vecteurs', href: 'vecteurs.html?niveau=2nde' },
             { titre: 'G\u00e9om\u00e9trie analytique', href: 'geometrie-analytique.html?niveau=2nde' },
+            { titre: 'Notion de fonction', href: 'notion-fonction.html?niveau=2nde' },
+            { titre: 'Fonctions de r\u00e9f\u00e9rence', href: 'fonctions-reference.html?niveau=2nde' },
             { titre: 'Statistiques', href: 'statistiques.html?niveau=2nde' },
             { titre: 'Probabilit\u00e9s', href: 'probabilites.html?niveau=2nde' },
         ]

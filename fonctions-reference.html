@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MathsFacile - Fonctions de r&eacute;f&eacute;rence</title>
+
+    <!-- KaTeX -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"
+          integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV"
+          crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"
+            integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8"
+            crossorigin="anonymous"></script>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/exercices.css">
+    <link rel="stylesheet" href="css/navigation.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Fonctions de r&eacute;f&eacute;rence</h1>
+            <p class="subtitle">Exercices interactifs</p>
+            <p class="intro">Entra&icirc;ne-toi sur les fonctions de r&eacute;f&eacute;rence du programme de 2nde.<br>Choisis une fonction, puis clique sur <strong>Correction</strong>.</p>
+        </header>
+
+        <div class="card">
+            <div class="type-selector grid-3">
+                <button class="type-btn active" data-type="carree">
+                    <div class="example">x&sup2;</div>
+                    <div class="label">Fonction carr&eacute;e</div>
+                </button>
+                <button class="type-btn" data-type="inverse">
+                    <div class="example">1/x</div>
+                    <div class="label">Fonction inverse</div>
+                </button>
+                <button class="type-btn" data-type="racine">
+                    <div class="example">&radic;x</div>
+                    <div class="label">Fonction racine</div>
+                </button>
+                <button class="type-btn" data-type="cube">
+                    <div class="example">x&sup3;</div>
+                    <div class="label">Fonction cube</div>
+                </button>
+                <button class="type-btn" data-type="valeur-absolue">
+                    <div class="example">|x|</div>
+                    <div class="label">Valeur absolue</div>
+                </button>
+            </div>
+
+            <div class="expression-display">
+                <div class="expression" id="exerciseDisplay"></div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn-generate" id="generateBtn">Nouvel exercice</button>
+                <button class="btn-solve" id="solveBtn">Correction</button>
+            </div>
+        </div>
+
+        <div id="solutionDiv" class="solution card"></div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="js/utils.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/graphing.js"></script>
+    <script src="js/navigation.js"></script>
+    <script src="js/fonctions-reference.js"></script>
+</body>
+</html>

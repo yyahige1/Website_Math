@@ -4,7 +4,7 @@
 
 **Date** : 24 Fevrier 2026
 **Mise a jour** : 27 Fevrier 2026
-**Statut** : Phase 0 terminee ✅ | Phase 0.5 terminee ✅ (3 modules crees) | Phase 1 a faire (Pythagore + Thales)
+**Statut** : Phases 0 a 3 terminees ✅ | Phase 4 a faire
 **Priorite** : Haute (UX critique)
 
 ---
@@ -163,8 +163,8 @@ Le JS de `navigation.js` lit `?niveau=` et filtre les types d'exercices affiches
 | 1 | **Ensembles de nombres et calculs** | 🔧 `fractions.html` + `racines.html` + `puissances.html` | FILTRER : tous types pertinents, renforcement |
 | 2 | **Calcul litteral et identites remarquables** | ✅ `developpement.html` + `factorisation.html` + `reduction.html` | Tous types |
 | 3 | **Equations et inequations** | ✅ `index.html` + `inequations.html` | Tous types |
-| 4 | **Notion de fonction** (generalites) | ❌ Aucun | A CREER : image, antecedent, lecture graphique, tableau de variations, ensemble de definition |
-| 5 | **Fonctions de reference** (carre, inverse, racine, cube) | ❌ Aucun | A CREER : etude de chaque fonction, variations, parite |
+| 4 | **Notion de fonction** (generalites) | ✅ `notion-fonction.html` | 5 types : image, antecedent, variations, definition, tableau de valeurs |
+| 5 | **Fonctions de reference** (carre, inverse, racine, cube) | ✅ `fonctions-reference.html` | 5 types : carree, inverse, racine, cube, valeur absolue |
 | 6 | **Equations de droites** | ✅ `fonctions-affines.html` | Types : graphique, equation, intersection |
 | 7 | **Systemes d'equations** | ✅ `systemes.html` | Tous types |
 | 8 | **Vecteurs du plan** (introduction) | 🔧 `vecteurs.html` | FILTRER : coordonnees, operations (pas produit scalaire, pas colinearite avancee) |
@@ -173,7 +173,7 @@ Le JS de `navigation.js` lit `?niveau=` et filtre les types d'exercices affiches
 | 11 | **Echantillonnage et fluctuation** | 🔧 `probabilites.html` | FILTRER : type fluctuation |
 | 12 | **Geometrie dans le plan** | 🔧 `geometrie-analytique.html` | FILTRER : droites, distances (pas cercles avances, pas transformations) |
 
-**Bilan 2nde : 5 modules directs, 5 adaptables, 2 modules a creer**
+**Bilan 2nde : 7 modules directs, 5 adaptables, 0 module a creer** ✅
 
 ---
 
@@ -234,10 +234,10 @@ Le JS de `navigation.js` lit `?niveau=` et filtre les types d'exercices affiches
 | 9 | **Theoreme de Pythagore** | 4eme | Direct, reciproque, problemes | **Haute** | ❌ A creer |
 | 10 | **Translations et rotations** | 4eme | Images de figures, proprietes | Basse | ❌ A creer |
 | 11 | **Theoreme de Thales** | 3eme | Direct, reciproque, agrandissement/reduction | **Haute** | ❌ A creer |
-| 12 | **Notion de fonction** (generalites) | 2nde | Lecture graphique, image/antecedent, ensemble de definition, variations | Moyenne | ❌ A creer |
-| 13 | **Fonctions de reference** | 2nde | Carre, inverse, racine, cube, valeur absolue | Moyenne | ❌ A creer |
+| 12 | **Notion de fonction** (generalites) | 2nde | Lecture graphique, image/antecedent, ensemble de definition, variations | Moyenne | ✅ Cree (Phase 3) |
+| 13 | **Fonctions de reference** | 2nde | Carre, inverse, racine, cube, valeur absolue | Moyenne | ✅ Cree (Phase 3) |
 
-**Total : 10 modules a creer, 3 modules V1 a enrichir**
+**Total : 8 modules a creer, 3 modules V1 a enrichir (2 modules crees en Phase 3)**
 
 ### 4.2 Priorites de creation
 
@@ -608,17 +608,26 @@ Le logo "MathsFacile" dans la nav renvoie vers `accueil.html`.
 
 **Resultat** : Modules enrichis avec differentiation par niveau. Fractions et trigonometrie s'adaptent automatiquement au niveau.
 
-### Phase 3 : Modules 2nde manquants (2-3 sessions) ← PROCHAINE ETAPE
+### Phase 3 : Modules 2nde manquants ✅ TERMINEE (27 fev 2026)
 > Completude du programme de Seconde
 
-- [ ] **Notion de fonction** (`notion-fonction.html` + `js/notion-fonction.js`)
-  - Types : lecture graphique (image, antecedent, variations), ensemble de definition, tableau de valeurs
-  - Canvas pour les graphiques
-- [ ] **Fonctions de reference** (`fonctions-reference.html` + `js/fonctions-reference.js`)
-  - Types : fonction carree, fonction inverse, fonction racine, fonction cube, fonction valeur absolue
-  - Canvas pour chaque courbe representative
+- [x] **Notion de fonction** (`notion-fonction.html` + `js/notion-fonction.js`)
+  - 5 types : lire une image, lire un antecedent, variations, ensemble de definition, tableau de valeurs
+  - Canvas (GraphCanvas) pour les types graphiques (parabole a(x-h)^2 + k)
+  - KaTeX pour les expressions mathematiques (racines, fractions, domaines)
+  - Niveaux : 2nde
+- [x] **Fonctions de reference** (`fonctions-reference.html` + `js/fonctions-reference.js`)
+  - 5 types : fonction carree, fonction inverse, fonction racine, fonction cube, valeur absolue
+  - Sous-exercices aleatoires : calcul image, resolution antecedent, comparaison par monotonie
+  - Canvas (GraphCanvas) pour courbe representative dans la correction
+  - Proprietes (domaine, parite, variations) rappelees dans chaque correction
+  - Niveaux : 2nde
+- [x] Ajout dans `NIVEAUX_CONFIG` et `NAVIGATION_PAR_CLASSE` (2nde: 12 chapitres)
+- [x] Mise a jour `accueil.html` (2nde: 12 chapitres)
 
-### Phase 4 : Modules college basse priorite (4-5 sessions)
+**Resultat** : 35 modules total. Programme de 2nde complete avec notion de fonction et fonctions de reference.
+
+### Phase 4 : Modules college basse priorite (4-5 sessions) ← PROCHAINE ETAPE
 > Completude 6eme-5eme
 
 - [ ] **Nombres entiers et decimaux** (`nombres-decimaux.html`)
@@ -650,8 +659,8 @@ Le logo "MathsFacile" dans la nav renvoie vers `accueil.html`.
 | Phase 0.5 (premiers modules) | 1 | 3 nouveaux V1 + 2 extensions | Faible | ✅ Terminee |
 | Phase 1 (Pythagore/Thales) | 1 | 2 nouveaux (Canvas) | Moyenne | ✅ Terminee |
 | Phase 2 (college mid) | 1 | 2 enrichis + 2 adaptes | Moyenne | ✅ Terminee |
-| Phase 3 (2nde) | 2-3 | 2 nouveaux (Canvas) | Moyenne | ← Prochaine |
-| Phase 4 (college low) | 4-5 | 6 nouveaux + 1 enrichi | Haute (geometrie canvas) | A faire |
+| Phase 3 (2nde) | 1 | 2 nouveaux (Canvas + KaTeX) | Moyenne | ✅ Terminee |
+| Phase 4 (college low) | 4-5 | 6 nouveaux + 1 enrichi | Haute (geometrie canvas) | ← Prochaine |
 | Phase 5 (polish) | 1-2 | 0 nouveau | Faible | A faire |
 | **Total** | **~15-20 sessions** | **10 nouveaux + 3 enrichis + infra** | |
 
@@ -708,4 +717,4 @@ APRES (✅ implemente) :
 
 ---
 
-**Phases 0 a 2 terminees. Prochaine etape : Phase 3 (modules 2nde : notion de fonction + fonctions de reference).**
+**Phases 0 a 3 terminees. 35 modules total. Prochaine etape : Phase 4 (modules college basse priorite).**
