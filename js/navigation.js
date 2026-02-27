@@ -142,6 +142,12 @@ const NIVEAUX_CONFIG = {
         '6eme': ['perimetre', 'aire'],
         '5eme': ['perimetre', 'aire', 'conversions'],
     },
+    'pythagore': {
+        '4eme': ['hypotenuse', 'cote', 'reciproque', 'probleme'],
+    },
+    'thales': {
+        '3eme': ['direct', 'reciproque', 'agrandissement'],
+    },
 };
 
 /* ========================================
@@ -184,6 +190,7 @@ const NAVIGATION_PAR_CLASSE = {
             { titre: '\u00c9quations', href: 'index.html?niveau=4eme' },
             { titre: 'Pourcentages', href: 'pourcentages.html?niveau=4eme' },
             { titre: 'Cosinus', href: 'trigonometrie.html?niveau=4eme' },
+            { titre: 'Th. de Pythagore', href: 'pythagore.html?niveau=4eme' },
             { titre: 'Statistiques', href: 'statistiques.html?niveau=4eme' },
             { titre: 'Probabilit\u00e9s', href: 'probabilites.html?niveau=4eme' },
         ]
@@ -200,6 +207,7 @@ const NAVIGATION_PAR_CLASSE = {
             { titre: 'Racines carr\u00e9es', href: 'racines.html?niveau=3eme' },
             { titre: 'Fonctions affines', href: 'fonctions-affines.html?niveau=3eme' },
             { titre: 'Syst\u00e8mes d\'\u00e9quations', href: 'systemes.html?niveau=3eme' },
+            { titre: 'Th. de Thales', href: 'thales.html?niveau=3eme' },
             { titre: 'Trigonom\u00e9trie', href: 'trigonometrie.html?niveau=3eme' },
             { titre: 'Arithm\u00e9tique (PGCD)', href: 'arithmetique.html?niveau=3eme' },
             { titre: 'Statistiques', href: 'statistiques.html?niveau=3eme' },

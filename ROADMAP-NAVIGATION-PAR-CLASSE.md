@@ -573,22 +573,25 @@ Le logo "MathsFacile" dans la nav renvoie vers `accueil.html`.
 
 **Resultat** : 31 modules total. 6eme et 5eme ont du contenu navigable. Versions basiques a enrichir dans les phases suivantes.
 
-### Phase 1 : Pythagore + Thales (2-3 sessions) ← PROCHAINE ETAPE
+### Phase 1 : Pythagore + Thales ✅ TERMINEE (27 fev 2026)
 > Les 2 gros manques critiques pour le college (4eme brevet blanc, 3eme brevet)
 
-- [ ] **Theoreme de Pythagore** (`pythagore.html` + `js/pythagore.js`)
-  - Types : calcul hypotenuse, calcul cote, reciproque (est-ce un triangle rectangle ?), probleme contextualise
+- [x] **Theoreme de Pythagore** (`pythagore.html` + `js/pythagore.js`)
+  - 4 types : calcul hypotenuse, calcul cote, reciproque, probleme contextualise
   - Canvas pour visualisation du triangle rectangle
+  - Triplets pythagoriciens, 5 contextes de problemes
   - Niveaux : 4eme
-- [ ] **Theoreme de Thales** (`thales.html` + `js/thales.js`)
-  - Types : calcul direct (longueur manquante), reciproque (parallelisme), agrandissement/reduction
-  - Canvas pour visualisation de la configuration (triangle, papillon)
+- [x] **Theoreme de Thales** (`thales.html` + `js/thales.js`)
+  - 3 types : calcul direct (longueur manquante), reciproque (parallelisme), agrandissement/reduction
+  - Canvas pour visualisation (configuration triangle + papillon)
+  - Rapports fractionnaires, produit en croix
   - Niveaux : 3eme
-- [ ] Ajouter dans `NIVEAUX_CONFIG` et `NAVIGATION_PAR_CLASSE`
-- [ ] Tester l'integration dans la navigation par classe
-- [ ] Mettre a jour `accueil.html`
+- [x] Ajout dans `NIVEAUX_CONFIG` et `NAVIGATION_PAR_CLASSE`
+- [x] Mise a jour `accueil.html` (4eme: 9 chapitres, 3eme: 13 chapitres)
 
-### Phase 2 : Ameliorations modules college (3-4 sessions)
+**Resultat** : 33 modules total. Pythagore (4eme) et Thales (3eme) operationnels avec visualisations Canvas.
+
+### Phase 2 : Ameliorations modules college (3-4 sessions) ← PROCHAINE ETAPE
 > Enrichir les modules V1 + adaptations de generation specifiques
 
 - [ ] **Nombres relatifs** — enrichir la V1 existante
@@ -642,8 +645,8 @@ Le logo "MathsFacile" dans la nav renvoie vers `accueil.html`.
 |-------|-------------------|-------------------|------------|--------|
 | Phase 0 (infra) | 1-2 | 0 nouveau, tous modifies | Moyenne | ✅ Terminee |
 | Phase 0.5 (premiers modules) | 1 | 3 nouveaux V1 + 2 extensions | Faible | ✅ Terminee |
-| Phase 1 (Pythagore/Thales) | 2-3 | 2 nouveaux (Canvas) | Moyenne | ← Prochaine |
-| Phase 2 (college mid) | 3-4 | 2 enrichis + 2 adaptes | Moyenne | A faire |
+| Phase 1 (Pythagore/Thales) | 1 | 2 nouveaux (Canvas) | Moyenne | ✅ Terminee |
+| Phase 2 (college mid) | 3-4 | 2 enrichis + 2 adaptes | Moyenne | ← Prochaine |
 | Phase 3 (2nde) | 2-3 | 2 nouveaux (Canvas) | Moyenne | A faire |
 | Phase 4 (college low) | 4-5 | 6 nouveaux + 1 enrichi | Haute (geometrie canvas) | A faire |
 | Phase 5 (polish) | 1-2 | 0 nouveau | Faible | A faire |
@@ -702,4 +705,4 @@ APRES (✅ implemente) :
 
 ---
 
-**Phases 0 et 0.5 terminees. Prochaine etape : Phase 1 (Pythagore + Thales) pour completer les niveaux 4eme et 3eme.**
+**Phases 0, 0.5 et 1 terminees. Prochaine etape : Phase 2 (enrichir nombres relatifs, proportionnalite + adaptations generation).**
