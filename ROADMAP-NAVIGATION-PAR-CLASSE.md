@@ -3,8 +3,8 @@
 > Reorganiser MathsFacile pour que les eleves naviguent par niveau scolaire (6eme, 5eme, ..., Terminale) puis par chapitre, au lieu de la navigation actuelle par domaine mathematique (Algebre, Calculs, Fonctions...).
 
 **Date** : 24 Fevrier 2026
-**Mise a jour** : 26 Fevrier 2026
-**Statut** : Phase 0 terminee ✅
+**Mise a jour** : 27 Fevrier 2026
+**Statut** : Phase 0 terminee ✅ | Phase 0.5 terminee ✅ (3 modules crees) | Phase 1 a faire (Pythagore + Thales)
 **Priorite** : Haute (UX critique)
 
 ---
@@ -221,23 +221,23 @@ Le JS de `navigation.js` lit `?niveau=` et filtre les types d'exercices affiches
 
 ### 4.1 Modules entierement nouveaux necessaires
 
-| # | Module | Niveaux | Types d'exercices | Priorite |
-|---|--------|---------|-------------------|----------|
-| 1 | **Nombres entiers et decimaux** | 6eme | Operations, comparaison, arrondis, ordre de grandeur | Basse |
-| 2 | **Proportionnalite** | 6eme, 5eme, 4eme | Tableau, coefficient, 4eme proportionnelle, echelle | Moyenne |
-| 3 | **Perimetres, aires, volumes** | 6eme, 5eme | Rectangle, triangle, cercle, prisme, cylindre, conversions | Basse |
-| 4 | **Symetries** (axiale + centrale) | 6eme, 5eme | Constructions, proprietes, axes/centres | Basse |
-| 5 | **Angles** | 6eme, 5eme | Mesure, types, alternes-internes, correspondants | Basse |
-| 6 | **Nombres relatifs** | 5eme, 4eme | Reperage, comparaison, 4 operations | Moyenne |
-| 7 | **Priorites operatoires** | 5eme | Calculs avec parentheses, enchainements | Basse |
-| 8 | **Triangles et parallelogrammes** | 5eme | Proprietes, construction, reconnaissance | Basse |
-| 9 | **Theoreme de Pythagore** | 4eme | Direct, reciproque, problemes | Haute |
-| 10 | **Translations et rotations** | 4eme | Images de figures, proprietes | Basse |
-| 11 | **Theoreme de Thales** | 3eme | Direct, reciproque, agrandissement/reduction | Haute |
-| 12 | **Notion de fonction** (generalites) | 2nde | Lecture graphique, image/antecedent, ensemble de definition, variations | Moyenne |
-| 13 | **Fonctions de reference** | 2nde | Carre, inverse, racine, cube, valeur absolue | Moyenne |
+| # | Module | Niveaux | Types d'exercices | Priorite | Statut |
+|---|--------|---------|-------------------|----------|--------|
+| 1 | **Nombres entiers et decimaux** | 6eme | Operations, comparaison, arrondis, ordre de grandeur | Basse | ❌ A creer |
+| 2 | **Proportionnalite** | 6eme, 5eme, 4eme | Tableau, coefficient, 4eme proportionnelle, echelle | Moyenne | 🔧 V1 basique creee (3 types), a enrichir (echelle, vitesse, debit) |
+| 3 | **Perimetres et aires** | 6eme, 5eme | Rectangle, triangle, cercle, conversions | Basse | 🔧 V1 basique creee (3 types), a enrichir (volumes prisme/cylindre) |
+| 4 | **Symetries** (axiale + centrale) | 6eme, 5eme | Constructions, proprietes, axes/centres | Basse | ❌ A creer |
+| 5 | **Angles** | 6eme, 5eme | Mesure, types, alternes-internes, correspondants | Basse | ❌ A creer |
+| 6 | **Nombres relatifs** | 5eme, 4eme | Reperage, comparaison, 4 operations | Moyenne | 🔧 V1 basique creee (4 types), a enrichir (types differencies 5e/4e) |
+| 7 | **Priorites operatoires** | 5eme | Calculs avec parentheses, enchainements | Basse | ❌ A creer |
+| 8 | **Triangles et parallelogrammes** | 5eme | Proprietes, construction, reconnaissance | Basse | ❌ A creer |
+| 9 | **Theoreme de Pythagore** | 4eme | Direct, reciproque, problemes | **Haute** | ❌ A creer |
+| 10 | **Translations et rotations** | 4eme | Images de figures, proprietes | Basse | ❌ A creer |
+| 11 | **Theoreme de Thales** | 3eme | Direct, reciproque, agrandissement/reduction | **Haute** | ❌ A creer |
+| 12 | **Notion de fonction** (generalites) | 2nde | Lecture graphique, image/antecedent, ensemble de definition, variations | Moyenne | ❌ A creer |
+| 13 | **Fonctions de reference** | 2nde | Carre, inverse, racine, cube, valeur absolue | Moyenne | ❌ A creer |
 
-**Total : 13 nouveaux modules a creer**
+**Total : 10 modules a creer, 3 modules V1 a enrichir**
 
 ### 4.2 Priorites de creation
 
@@ -422,7 +422,7 @@ const NAVIGATION_PAR_CLASSE = {
             { titre: 'Nombres et calculs',          href: 'nombres-decimaux.html?niveau=6eme' },
             { titre: 'Fractions simples',            href: 'fractions.html?niveau=6eme' },
             { titre: 'Proportionnalite',             href: 'proportionnalite.html?niveau=6eme' },
-            { titre: 'Perimetres et aires',          href: 'aires-volumes.html?niveau=6eme' },
+            { titre: 'Perimetres et aires',          href: 'perimetres-aires.html?niveau=6eme' },
             { titre: 'Symetrie axiale',              href: 'symetries.html?niveau=6eme' },
             { titre: 'Angles',                       href: 'angles.html?niveau=6eme' },
             { titre: 'Tableaux et graphiques',       href: 'statistiques.html?niveau=6eme' },
@@ -438,7 +438,7 @@ const NAVIGATION_PAR_CLASSE = {
             { titre: 'Angles et parallelisme',       href: 'angles.html?niveau=5eme' },
             { titre: 'Triangles',                    href: 'triangles.html?niveau=5eme' },
             { titre: 'Symetrie centrale',            href: 'symetries.html?niveau=5eme' },
-            { titre: 'Aires et volumes',             href: 'aires-volumes.html?niveau=5eme' },
+            { titre: 'Perimetres et aires',          href: 'perimetres-aires.html?niveau=5eme' },
             { titre: 'Moyennes',                     href: 'statistiques.html?niveau=5eme' },
         ]
     },
@@ -554,26 +554,51 @@ Le logo "MathsFacile" dans la nav renvoie vers `accueil.html`.
 
 **Resultat** : Un eleve peut naviguer par classe (6eme a Terminale) avec les 28 modules existants filtres par niveau.
 
-### Phase 1 : Modules college haute priorite (3-4 sessions)
-> Les 2 gros manques critiques pour le college
+### Phase 0.5 : Premiers modules college ✅ TERMINEE (27 fev 2026)
+> Ajout de 3 nouveaux modules basiques + 2 extensions pour enrichir 6eme et 5eme
+
+- [x] **Nombres relatifs** (`nombres-relatifs.html` + `js/nombres-relatifs.js`) — V1 basique
+  - 4 types : addition, soustraction, multiplication, melange
+  - A ameliorer en Phase 2 : types differencies 5e (add/sub) vs 4e (mul/div)
+- [x] **Proportionnalite** (`proportionnalite.html` + `js/proportionnalite.js`) — V1 basique
+  - 3 types : tableau, coefficient, produit-croix
+  - A ameliorer en Phase 2 : ajouter echelle, vitesse, debit
+- [x] **Perimetres et aires** (`perimetres-aires.html` + `js/perimetres-aires.js`) — V1 basique
+  - 3 types : perimetre, aire, conversions
+  - A ameliorer en Phase 4 : ajouter volumes (prisme, cylindre)
+- [x] Extension `reduction.js` : ajout type 'nombres' (somme de nombres) pour 5eme
+- [x] Extension `pourcentages` : ajout filtrage 6eme (types calculer, trouver)
+- [x] Mise a jour `NIVEAUX_CONFIG` et `NAVIGATION_PAR_CLASSE` dans `navigation.js`
+- [x] Mise a jour `accueil.html` (6eme: 5 chapitres, 5eme: 7 chapitres)
+
+**Resultat** : 31 modules total. 6eme et 5eme ont du contenu navigable. Versions basiques a enrichir dans les phases suivantes.
+
+### Phase 1 : Pythagore + Thales (2-3 sessions) ← PROCHAINE ETAPE
+> Les 2 gros manques critiques pour le college (4eme brevet blanc, 3eme brevet)
 
 - [ ] **Theoreme de Pythagore** (`pythagore.html` + `js/pythagore.js`)
   - Types : calcul hypotenuse, calcul cote, reciproque (est-ce un triangle rectangle ?), probleme contextualise
-  - Canvas pour visualisation du triangle
+  - Canvas pour visualisation du triangle rectangle
+  - Niveaux : 4eme
 - [ ] **Theoreme de Thales** (`thales.html` + `js/thales.js`)
   - Types : calcul direct (longueur manquante), reciproque (parallelisme), agrandissement/reduction
-  - Canvas pour visualisation de la configuration
+  - Canvas pour visualisation de la configuration (triangle, papillon)
+  - Niveaux : 3eme
+- [ ] Ajouter dans `NIVEAUX_CONFIG` et `NAVIGATION_PAR_CLASSE`
 - [ ] Tester l'integration dans la navigation par classe
+- [ ] Mettre a jour `accueil.html`
 
-### Phase 2 : Modules college moyenne priorite (3-4 sessions)
-> Completer les niveaux 5eme et 4eme
+### Phase 2 : Ameliorations modules college (3-4 sessions)
+> Enrichir les modules V1 + adaptations de generation specifiques
 
-- [ ] **Nombres relatifs** (`nombres-relatifs.html` + `js/nombres-relatifs.js`)
+- [ ] **Nombres relatifs** — enrichir la V1 existante
   - Types 5eme : reperage sur droite graduee, comparaison, addition/soustraction
   - Types 4eme : multiplication, division, enchainements
-- [ ] **Proportionnalite** (`proportionnalite.html` + `js/proportionnalite.js`)
-  - Types : completer un tableau, coefficient de proportionnalite, 4eme proportionnelle, echelle, vitesse/debit
-- [ ] Adaptations de generation specifiques
+  - Differencier les types selon `?niveau=5eme` vs `?niveau=4eme`
+- [ ] **Proportionnalite** — enrichir la V1 existante
+  - Ajouter types : echelle, vitesse/debit, pourcentage-proportionnalite
+  - Ajouter contextes varies (cartes, plans, recettes)
+- [ ] Adaptations de generation specifiques (genConfig)
   - `fractions.html` avec `?niveau=6eme` → generer uniquement des fractions a meme denominateur
   - `trigonometrie.html` avec `?niveau=4eme` → generer uniquement des exercices avec cosinus
 
@@ -592,7 +617,8 @@ Le logo "MathsFacile" dans la nav renvoie vers `accueil.html`.
 
 - [ ] **Nombres entiers et decimaux** (`nombres-decimaux.html`)
 - [ ] **Priorites operatoires** (`priorites.html`)
-- [ ] **Perimetres, aires et volumes** (`aires-volumes.html`)
+- [ ] **Perimetres et aires** — enrichir la V1 existante (`perimetres-aires.html`)
+  - Ajouter volumes : pave droit, prisme, cylindre, conversions de volumes
 - [ ] **Symetries** axiale et centrale (`symetries.html`)
   - Canvas pour les constructions geometriques
 - [ ] **Angles** (`angles.html`)
@@ -612,15 +638,16 @@ Le logo "MathsFacile" dans la nav renvoie vers `accueil.html`.
 
 ## 9. Estimation de Charge
 
-| Phase | Sessions estimees | Modules concernes | Difficulte |
-|-------|-------------------|-------------------|------------|
-| Phase 0 (infra) | 1-2 | 0 nouveau, tous modifies | Moyenne |
-| Phase 1 (Pythagore/Thales) | 3-4 | 2 nouveaux | Moyenne |
-| Phase 2 (college mid) | 3-4 | 2 nouveaux + 2 adaptes | Moyenne |
-| Phase 3 (2nde) | 2-3 | 2 nouveaux | Moyenne |
-| Phase 4 (college low) | 4-5 | 7 nouveaux | Haute (geometrie canvas) |
-| Phase 5 (polish) | 1-2 | 0 nouveau | Faible |
-| **Total** | **~15-20 sessions** | **13 nouveaux + infra** | |
+| Phase | Sessions estimees | Modules concernes | Difficulte | Statut |
+|-------|-------------------|-------------------|------------|--------|
+| Phase 0 (infra) | 1-2 | 0 nouveau, tous modifies | Moyenne | ✅ Terminee |
+| Phase 0.5 (premiers modules) | 1 | 3 nouveaux V1 + 2 extensions | Faible | ✅ Terminee |
+| Phase 1 (Pythagore/Thales) | 2-3 | 2 nouveaux (Canvas) | Moyenne | ← Prochaine |
+| Phase 2 (college mid) | 3-4 | 2 enrichis + 2 adaptes | Moyenne | A faire |
+| Phase 3 (2nde) | 2-3 | 2 nouveaux (Canvas) | Moyenne | A faire |
+| Phase 4 (college low) | 4-5 | 6 nouveaux + 1 enrichi | Haute (geometrie canvas) | A faire |
+| Phase 5 (polish) | 1-2 | 0 nouveau | Faible | A faire |
+| **Total** | **~15-20 sessions** | **10 nouveaux + 3 enrichis + infra** | |
 
 ---
 
@@ -632,12 +659,22 @@ Le logo "MathsFacile" dans la nav renvoie vers `accueil.html`.
 - Les fichiers CSS ne changent pas (sauf navigation.css)
 - KaTeX, GraphCanvas, utils.js, ui.js restent identiques
 
-### 10.2 Ce qui a change (Phase 0)
+### 10.2 Ce qui a change (Phase 0 + Phase 0.5)
+
+**Phase 0 :**
 - `js/navigation.js` : refonte majeure (navigation par classe uniquement, plus de mode theme)
 - `NIVEAUX_CONFIG` + `NAVIGATION_PAR_CLASSE` + `applyNiveauFilter()` dans `navigation.js`
 - `accueil.html` : nouvelle page d'accueil (index.html reste la page des equations)
 - `css/accueil.css` + ajouts dans `css/navigation.css`
 - Aucune modification des 28 modules JS ni des 28 fichiers HTML
+
+**Phase 0.5 :**
+- 3 nouveaux modules V1 : `nombres-relatifs.html/.js`, `proportionnalite.html/.js`, `perimetres-aires.html/.js`
+- Extension `js/reduction.js` : ajout type 'nombres' pour 5eme
+- Extension `NIVEAUX_CONFIG` : ajout pourcentages 6eme, reduction 5eme, 3 nouveaux modules
+- Mise a jour `NAVIGATION_PAR_CLASSE` : 6eme passe a 5 chapitres, 5eme a 7 chapitres
+- Mise a jour `accueil.html` : cards 6eme et 5eme enrichies
+- **Total modules : 31** (28 originaux + 3 nouveaux)
 
 ### 10.3 Risques
 - **URLs cassees** : `index.html` est actuellement la page des equations. Si on en fait la page d'accueil, il faut un redirect ou renommer.
@@ -665,4 +702,4 @@ APRES (✅ implemente) :
 
 ---
 
-**Phase 0 terminee. Prochaine etape : Phase 1 (Pythagore + Thales) pour completer les niveaux college.**
+**Phases 0 et 0.5 terminees. Prochaine etape : Phase 1 (Pythagore + Thales) pour completer les niveaux 4eme et 3eme.**
