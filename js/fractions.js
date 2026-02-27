@@ -93,12 +93,20 @@ function generateFraction() {
         $('num1').value = num;
         $('den1').value = den;
     } else if (type === 'addition' || type === 'soustraction') {
-        // Dénominateurs pas trop grands pour PPCM raisonnable
-        const den1 = randInt(2, 10);
-        const den2 = randInt(2, 10);
+        // Pour le niveau 6eme, forcer le meme denominateur
+        const niveau = new URLSearchParams(window.location.search).get('niveau');
+        let den1, den2;
+        if (niveau === '6eme') {
+            const commonDen = randInt(2, 10);
+            den1 = commonDen;
+            den2 = commonDen;
+        } else {
+            den1 = randInt(2, 10);
+            den2 = randInt(2, 10);
+        }
         const num1 = randInt(1, 9);
         let num2 = randInt(1, 9);
-        
+
         // Pour soustraction, éviter résultat négatif (optionnel)
         if (type === 'soustraction') {
             const ppcm = lcm(den1, den2);
@@ -109,7 +117,7 @@ function generateFraction() {
                 if (num2 < 1) num2 = 1;
             }
         }
-        
+
         $('num1').value = num1;
         $('den1').value = den1;
         $('num2').value = num2;

@@ -18,7 +18,19 @@ const ProportionnaliteState = {
     crossA: 0,
     crossB: 0,
     crossC: 0,
-    crossMissing: 0, // la 4e valeur
+    crossMissing: 0,
+    // Echelle
+    echelle: 0,
+    distanceCarte: 0,
+    distanceReelle: 0,
+    echelleInconnu: 'reelle',
+    echelleContexte: null,
+    // Vitesse
+    vitesse: 0,
+    distance: 0,
+    temps: 0,
+    vitesseInconnu: 'distance',
+    vitesseContexte: null,
 };
 
 /**
@@ -103,6 +115,12 @@ function generateProportionnalite() {
             break;
         case 'produit-croix':
             generateProduitCroix();
+            break;
+        case 'echelle':
+            generateEchelle();
+            break;
+        case 'vitesse':
+            generateVitesse();
             break;
     }
 }
@@ -209,6 +227,43 @@ function updateExerciseDisplay() {
             display += 'a combien de ' + st.contexte.unite2 + ' correspondent ' + propFormatNum(st.crossC) + ' ' + st.contexte.unite1 + ' ?';
             display += '</div>';
             break;
+
+        case 'echelle': {
+            const ctx = st.echelleContexte;
+            display = '<div style="margin-bottom: 8px;"><strong>' + ctx.intro + '</strong></div>';
+            display += '<div style="font-size: 1.1em; margin-top: 10px;">';
+            display += 'Echelle : 1 : ' + st.echelle.toLocaleString('fr-FR') + '<br>';
+            if (st.echelleInconnu === 'reelle') {
+                display += 'Distance sur la carte : ' + propFormatNum(st.distanceCarte) + ' cm<br>';
+                display += '<strong>Calculer la distance reelle.</strong>';
+            } else {
+                display += 'Distance reelle : ' + propFormatNum(st.distanceReelle) + ' m<br>';
+                display += '<strong>Calculer la distance sur la carte.</strong>';
+            }
+            display += '</div>';
+            break;
+        }
+
+        case 'vitesse': {
+            const vctx = st.vitesseContexte;
+            display = '<div style="margin-bottom: 8px;"><strong>' + vctx.intro + '</strong></div>';
+            display += '<div style="font-size: 1.1em; margin-top: 10px;">';
+            if (st.vitesseInconnu === 'distance') {
+                display += 'Vitesse : ' + propFormatNum(st.vitesse) + ' ' + vctx.uniteV + '<br>';
+                display += 'Temps : ' + propFormatNum(st.temps) + ' ' + vctx.uniteT + '<br>';
+                display += '<strong>Calculer la distance parcourue.</strong>';
+            } else if (st.vitesseInconnu === 'vitesse') {
+                display += 'Distance : ' + propFormatNum(st.distance) + ' ' + vctx.uniteD + '<br>';
+                display += 'Temps : ' + propFormatNum(st.temps) + ' ' + vctx.uniteT + '<br>';
+                display += '<strong>Calculer la vitesse.</strong>';
+            } else {
+                display += 'Distance : ' + propFormatNum(st.distance) + ' ' + vctx.uniteD + '<br>';
+                display += 'Vitesse : ' + propFormatNum(st.vitesse) + ' ' + vctx.uniteV + '<br>';
+                display += '<strong>Calculer le temps de parcours.</strong>';
+            }
+            display += '</div>';
+            break;
+        }
     }
 
     $('exerciseDisplay').innerHTML = display;
@@ -229,6 +284,12 @@ function solveProportionnalite() {
             break;
         case 'produit-croix':
             html += solveProduitCroix();
+            break;
+        case 'echelle':
+            html += solveEchelle();
+            break;
+        case 'vitesse':
+            html += solveVitesse();
             break;
     }
 
@@ -326,6 +387,161 @@ function solveProduitCroix() {
     html += '<div class="result-highlight">';
     html += '<div class="final">' + propFormatNum(st.crossC) + ' ' + st.contexte.unite1 + ' correspondent a <strong>' + propFormatNum(st.crossMissing) + ' ' + st.contexte.unite2 + '</strong></div>';
     html += '</div>';
+
+    return html;
+}
+
+/**
+ * Contextes pour echelle
+ */
+const ECHELLE_CONTEXTES = [
+    { intro: 'Sur une carte routiere, deux villes sont separees par une certaine distance.' },
+    { intro: 'Sur le plan d\'un appartement, on mesure une piece.' },
+    { intro: 'Sur une carte de randonnee, on mesure un sentier.' },
+    { intro: 'Sur le plan d\'une ville, on mesure la distance entre deux batiments.' },
+];
+
+function generateEchelle() {
+    const st = ProportionnaliteState;
+    st.echelleContexte = propPick(ECHELLE_CONTEXTES);
+
+    // Echelles courantes
+    const echelles = [500, 1000, 2000, 5000, 10000, 25000, 50000, 100000];
+    st.echelle = propPick(echelles);
+
+    st.echelleInconnu = Math.random() < 0.5 ? 'reelle' : 'carte';
+
+    // Distance carte en cm (entier simple)
+    st.distanceCarte = propRandInt(2, 15);
+    // Distance reelle en metres : carte_cm * echelle / 100
+    st.distanceReelle = st.distanceCarte * st.echelle / 100;
+}
+
+function solveEchelle() {
+    const st = ProportionnaliteState;
+    let html = '';
+
+    html += '<div class="step">';
+    html += '<div class="step-number">Etape 1 : Comprendre l\'echelle</div>';
+    html += '<div class="step-expression">Echelle 1 : ' + st.echelle.toLocaleString('fr-FR') + '</div>';
+    html += '<div class="step-explanation">Cela signifie que 1 cm sur la carte correspond a ' + st.echelle.toLocaleString('fr-FR') + ' cm en realite, soit ' + propFormatNum(st.echelle / 100) + ' m.</div>';
+    html += '</div>';
+
+    if (st.echelleInconnu === 'reelle') {
+        html += '<div class="step">';
+        html += '<div class="step-number">Etape 2 : Calculer la distance reelle</div>';
+        html += '<div class="step-expression">Distance reelle = ' + st.distanceCarte + ' cm &times; ' + st.echelle.toLocaleString('fr-FR') + '</div>';
+        const reelleCm = st.distanceCarte * st.echelle;
+        html += '<div class="step-explanation">' + st.distanceCarte + ' &times; ' + st.echelle.toLocaleString('fr-FR') + ' = ' + reelleCm.toLocaleString('fr-FR') + ' cm</div>';
+        html += '</div>';
+
+        html += '<div class="step">';
+        html += '<div class="step-number">Etape 3 : Convertir</div>';
+        const reelleM = reelleCm / 100;
+        html += '<div class="step-expression">' + reelleCm.toLocaleString('fr-FR') + ' cm = ' + propFormatNum(reelleM) + ' m</div>';
+        if (reelleM >= 1000) {
+            html += '<div class="step-explanation">Soit ' + propFormatNum(reelleM / 1000) + ' km.</div>';
+        }
+        html += '</div>';
+
+        html += '<div class="result-highlight">';
+        html += '<div class="final">Distance reelle : <strong>' + propFormatNum(reelleM) + ' m';
+        if (reelleM >= 1000) html += ' (' + propFormatNum(reelleM / 1000) + ' km)';
+        html += '</strong></div>';
+        html += '</div>';
+    } else {
+        html += '<div class="step">';
+        html += '<div class="step-number">Etape 2 : Convertir en cm</div>';
+        const reelleCm = st.distanceReelle * 100;
+        html += '<div class="step-expression">' + propFormatNum(st.distanceReelle) + ' m = ' + reelleCm.toLocaleString('fr-FR') + ' cm</div>';
+        html += '</div>';
+
+        html += '<div class="step">';
+        html += '<div class="step-number">Etape 3 : Calculer la distance sur la carte</div>';
+        html += '<div class="step-expression">Distance carte = ' + reelleCm.toLocaleString('fr-FR') + ' &divide; ' + st.echelle.toLocaleString('fr-FR') + '</div>';
+        html += '<div class="step-explanation">' + reelleCm.toLocaleString('fr-FR') + ' &divide; ' + st.echelle.toLocaleString('fr-FR') + ' = ' + propFormatNum(st.distanceCarte) + ' cm</div>';
+        html += '</div>';
+
+        html += '<div class="result-highlight">';
+        html += '<div class="final">Distance sur la carte : <strong>' + propFormatNum(st.distanceCarte) + ' cm</strong></div>';
+        html += '</div>';
+    }
+
+    return html;
+}
+
+/**
+ * Contextes pour vitesse
+ */
+const VITESSE_CONTEXTES = [
+    { intro: 'Un cycliste roule a vitesse constante.', uniteV: 'km/h', uniteD: 'km', uniteT: 'h', vitesses: [12, 15, 18, 20, 25] },
+    { intro: 'Une voiture circule sur l\'autoroute.', uniteV: 'km/h', uniteD: 'km', uniteT: 'h', vitesses: [80, 90, 100, 110, 120, 130] },
+    { intro: 'Un pieton marche a vitesse reguliere.', uniteV: 'km/h', uniteD: 'km', uniteT: 'h', vitesses: [4, 5, 6] },
+    { intro: 'Un train circule entre deux gares.', uniteV: 'km/h', uniteD: 'km', uniteT: 'h', vitesses: [80, 100, 120, 160, 200, 300] },
+    { intro: 'Un nageur s\'entraine dans un bassin.', uniteV: 'm/min', uniteD: 'm', uniteT: 'min', vitesses: [40, 50, 60, 80, 100] },
+];
+
+function generateVitesse() {
+    const st = ProportionnaliteState;
+    const ctx = propPick(VITESSE_CONTEXTES);
+    st.vitesseContexte = ctx;
+    st.vitesse = propPick(ctx.vitesses);
+
+    // Temps : entier simple (1 a 6 heures ou minutes selon contexte)
+    st.temps = propRandInt(1, 6);
+    // Parfois des demi-heures
+    if (Math.random() < 0.3) st.temps = propPick([0.5, 1.5, 2.5]);
+
+    st.distance = st.vitesse * st.temps;
+
+    const inconnus = ['distance', 'vitesse', 'temps'];
+    st.vitesseInconnu = propPick(inconnus);
+}
+
+function solveVitesse() {
+    const st = ProportionnaliteState;
+    const vctx = st.vitesseContexte;
+    let html = '';
+
+    html += '<div class="step">';
+    html += '<div class="step-number">Etape 1 : Rappeler la formule</div>';
+    html += '<div class="step-expression">distance = vitesse &times; temps</div>';
+    html += '<div class="step-explanation">d = v &times; t &nbsp;&nbsp;|&nbsp;&nbsp; v = d / t &nbsp;&nbsp;|&nbsp;&nbsp; t = d / v</div>';
+    html += '</div>';
+
+    if (st.vitesseInconnu === 'distance') {
+        html += '<div class="step">';
+        html += '<div class="step-number">Etape 2 : Calculer la distance</div>';
+        html += '<div class="step-expression">d = ' + propFormatNum(st.vitesse) + ' &times; ' + propFormatNum(st.temps) + '</div>';
+        html += '<div class="step-explanation">d = ' + propFormatNum(st.distance) + ' ' + vctx.uniteD + '</div>';
+        html += '</div>';
+
+        html += '<div class="result-highlight">';
+        html += '<div class="final">Distance : <strong>' + propFormatNum(st.distance) + ' ' + vctx.uniteD + '</strong></div>';
+        html += '</div>';
+
+    } else if (st.vitesseInconnu === 'vitesse') {
+        html += '<div class="step">';
+        html += '<div class="step-number">Etape 2 : Calculer la vitesse</div>';
+        html += '<div class="step-expression">v = ' + propFormatNum(st.distance) + ' &divide; ' + propFormatNum(st.temps) + '</div>';
+        html += '<div class="step-explanation">v = ' + propFormatNum(st.vitesse) + ' ' + vctx.uniteV + '</div>';
+        html += '</div>';
+
+        html += '<div class="result-highlight">';
+        html += '<div class="final">Vitesse : <strong>' + propFormatNum(st.vitesse) + ' ' + vctx.uniteV + '</strong></div>';
+        html += '</div>';
+
+    } else {
+        html += '<div class="step">';
+        html += '<div class="step-number">Etape 2 : Calculer le temps</div>';
+        html += '<div class="step-expression">t = ' + propFormatNum(st.distance) + ' &divide; ' + propFormatNum(st.vitesse) + '</div>';
+        html += '<div class="step-explanation">t = ' + propFormatNum(st.temps) + ' ' + vctx.uniteT + '</div>';
+        html += '</div>';
+
+        html += '<div class="result-highlight">';
+        html += '<div class="final">Temps : <strong>' + propFormatNum(st.temps) + ' ' + vctx.uniteT + '</strong></div>';
+        html += '</div>';
+    }
 
     return html;
 }

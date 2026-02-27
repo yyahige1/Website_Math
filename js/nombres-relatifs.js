@@ -9,15 +9,19 @@ const NombresRelatifsState = {
     currentType: 'addition',
     a: 0,
     b: 0,
-    c: 0, // pour melange
-    opB: '+', // pour melange
-    opC: '+', // pour melange
+    c: 0,
+    opB: '+',
+    opC: '+',
+    // Pour reperage
+    nombres: [],
+    // Pour comparaison
+    paires: [],
 };
 
 /**
  * Genere un entier aleatoire entre min et max (inclus), non nul si nonZero=true
  */
-function randInt(min, max, nonZero) {
+function nrRandInt(min, max, nonZero) {
     let n;
     do {
         n = Math.floor(Math.random() * (max - min + 1)) + min;
@@ -82,25 +86,56 @@ function generateNombresRelatifs() {
     const st = NombresRelatifsState;
 
     switch (st.currentType) {
+        case 'reperage': {
+            // Generer 4-5 nombres distincts a placer sur une droite graduee
+            const count = nrRandInt(4, 5);
+            const set = new Set();
+            while (set.size < count) {
+                set.add(nrRandInt(-10, 10));
+            }
+            st.nombres = Array.from(set);
+            break;
+        }
+
+        case 'comparaison': {
+            // Generer 4 paires de nombres a comparer
+            st.paires = [];
+            for (let i = 0; i < 4; i++) {
+                const a = nrRandInt(-20, 20);
+                let b;
+                do { b = nrRandInt(-20, 20); } while (b === a);
+                st.paires.push([a, b]);
+            }
+            break;
+        }
+
         case 'addition':
-            st.a = randInt(-20, 20, true);
-            st.b = randInt(-20, 20, true);
+            st.a = nrRandInt(-20, 20, true);
+            st.b = nrRandInt(-20, 20, true);
             break;
 
         case 'soustraction':
-            st.a = randInt(-20, 20, true);
-            st.b = randInt(-20, 20, true);
+            st.a = nrRandInt(-20, 20, true);
+            st.b = nrRandInt(-20, 20, true);
             break;
 
         case 'multiplication':
-            st.a = randInt(-12, 12, true);
-            st.b = randInt(-12, 12, true);
+            st.a = nrRandInt(-12, 12, true);
+            st.b = nrRandInt(-12, 12, true);
             break;
 
+        case 'division': {
+            // Generer une division exacte
+            st.b = nrRandInt(-12, 12, true);
+            const quotient = nrRandInt(-10, 10, true);
+            st.a = st.b * quotient;
+            break;
+        }
+
         case 'melange':
-            st.a = randInt(-15, 15, true);
-            st.b = randInt(-15, 15, true);
-            st.c = randInt(-15, 15, true);
+            st.a = nrRandInt(-15, 15, true);
+            st.b = nrRandInt(-15, 15, true);
+            st.c = nrRandInt(-15, 15, true);
             st.opB = Math.random() < 0.5 ? '+' : '-';
             st.opC = Math.random() < 0.5 ? '+' : '-';
             break;
@@ -115,6 +150,24 @@ function updateExerciseDisplay() {
     let display = '';
 
     switch (st.currentType) {
+        case 'reperage':
+            display = '<strong>Ranger les nombres suivants dans l\'ordre croissant :</strong><br><br>';
+            display += '<span style="font-size: 1.3em;">';
+            display += st.nombres.map(n => (n >= 0 ? '+' + n : '' + n)).join(' &nbsp;;&nbsp; ');
+            display += '</span>';
+            break;
+
+        case 'comparaison':
+            display = '<strong>Comparer les nombres suivants (placer &lt; ou &gt;) :</strong><br><br>';
+            for (let i = 0; i < st.paires.length; i++) {
+                const a = st.paires[i][0];
+                const b = st.paires[i][1];
+                const aStr = a >= 0 ? '+' + a : '' + a;
+                const bStr = b >= 0 ? '+' + b : '' + b;
+                display += '<span style="font-size: 1.1em;">' + (i + 1) + ') &nbsp; ' + aStr + ' &nbsp; ... &nbsp; ' + bStr + '</span><br>';
+            }
+            break;
+
         case 'addition':
             display = formatRelatif(st.a) + ' + ' + formatRelatif(st.b) + ' = ?';
             break;
@@ -125,6 +178,10 @@ function updateExerciseDisplay() {
 
         case 'multiplication':
             display = formatRelatif(st.a) + ' &times; ' + formatRelatif(st.b) + ' = ?';
+            break;
+
+        case 'division':
+            display = formatRelatif(st.a) + ' &divide; ' + formatRelatif(st.b) + ' = ?';
             break;
 
         case 'melange':
@@ -145,17 +202,26 @@ function solveNombresRelatifs() {
     let html = '<h3>Solution</h3>';
 
     switch (NombresRelatifsState.currentType) {
+        case 'reperage':
+            html += solveReperage();
+            break;
+        case 'comparaison':
+            html += solveComparaison();
+            break;
         case 'addition':
-            html += solveAddition();
+            html += solveNRAddition();
             break;
         case 'soustraction':
-            html += solveSoustraction();
+            html += solveNRSoustraction();
             break;
         case 'multiplication':
-            html += solveMultiplication();
+            html += solveNRMultiplication();
+            break;
+        case 'division':
+            html += solveNRDivision();
             break;
         case 'melange':
-            html += solveMelange();
+            html += solveNRMelange();
             break;
     }
 
@@ -164,9 +230,89 @@ function solveNombresRelatifs() {
 }
 
 /**
+ * Resout : reperage (ranger dans l'ordre croissant)
+ */
+function solveReperage() {
+    const st = NombresRelatifsState;
+    const sorted = [...st.nombres].sort((a, b) => a - b);
+    let html = '';
+
+    html += '<div class="step">';
+    html += '<div class="step-number">Etape 1 : Reperer les nombres negatifs et positifs</div>';
+    const negatifs = sorted.filter(n => n < 0);
+    const positifs = sorted.filter(n => n >= 0);
+    html += '<div class="step-expression">';
+    html += 'Negatifs : ' + (negatifs.length > 0 ? negatifs.join(', ') : 'aucun');
+    html += ' &nbsp;|&nbsp; Positifs : ' + (positifs.length > 0 ? positifs.join(', ') : 'aucun');
+    html += '</div>';
+    html += '<div class="step-explanation">';
+    html += 'Les nombres negatifs sont toujours inferieurs aux nombres positifs.<br>';
+    html += 'Plus un nombre negatif est "grand" en valeur absolue, plus il est petit.';
+    html += '</div>';
+    html += '</div>';
+
+    html += '<div class="step">';
+    html += '<div class="step-number">Etape 2 : Droite graduee</div>';
+    html += '<div class="step-expression">';
+    // Dessiner une droite simplifiee en texte
+    html += '<div style="position:relative; height:50px; margin: 10px 0;">';
+    html += '<div style="position:absolute; top:20px; left:5%; right:5%; height:2px; background:#333;"></div>';
+    const min = Math.min(...sorted) - 1;
+    const max = Math.max(...sorted) + 1;
+    const range = max - min;
+    sorted.forEach(n => {
+        const pct = 5 + ((n - min) / range) * 90;
+        html += '<div style="position:absolute; top:8px; left:' + pct + '%; transform:translateX(-50%); text-align:center; font-weight:bold; color: var(--primary, #667eea);">' + n + '<div style="width:2px; height:12px; background:#333; margin:2px auto;"></div></div>';
+    });
+    html += '</div>';
+    html += '</div>';
+    html += '</div>';
+
+    html += '<div class="result-highlight">';
+    html += '<div class="final">Ordre croissant : <strong>' + sorted.map(n => (n >= 0 ? '+' + n : '' + n)).join(' &lt; ') + '</strong></div>';
+    html += '</div>';
+
+    return html;
+}
+
+/**
+ * Resout : comparaison
+ */
+function solveComparaison() {
+    const st = NombresRelatifsState;
+    let html = '';
+
+    for (let i = 0; i < st.paires.length; i++) {
+        const a = st.paires[i][0];
+        const b = st.paires[i][1];
+        const aStr = a >= 0 ? '+' + a : '' + a;
+        const bStr = b >= 0 ? '+' + b : '' + b;
+        const symbol = a < b ? '&lt;' : '&gt;';
+
+        html += '<div class="step">';
+        html += '<div class="step-number">' + (i + 1) + ') ' + aStr + ' ... ' + bStr + '</div>';
+        html += '<div class="step-expression">' + aStr + ' <strong>' + symbol + '</strong> ' + bStr + '</div>';
+        html += '<div class="step-explanation">';
+        if (a < 0 && b >= 0) {
+            html += 'Un nombre negatif est toujours inferieur a un nombre positif.';
+        } else if (a >= 0 && b < 0) {
+            html += 'Un nombre positif est toujours superieur a un nombre negatif.';
+        } else if (a < 0 && b < 0) {
+            html += 'Pour deux negatifs, le plus proche de zero est le plus grand : |' + Math.abs(a) + '| et |' + Math.abs(b) + '|.';
+        } else {
+            html += 'Pour deux positifs, on compare directement.';
+        }
+        html += '</div>';
+        html += '</div>';
+    }
+
+    return html;
+}
+
+/**
  * Resout une addition de relatifs
  */
-function solveAddition() {
+function solveNRAddition() {
     const a = NombresRelatifsState.a;
     const b = NombresRelatifsState.b;
     const result = a + b;
@@ -177,7 +323,6 @@ function solveAddition() {
     html += '<div class="step-expression">' + formatRelatif(a) + ' + ' + formatRelatif(b) + '</div>';
 
     if ((a >= 0 && b >= 0) || (a < 0 && b < 0)) {
-        // Meme signe
         const signe = a >= 0 ? 'positifs' : 'negatifs';
         html += '<div class="step-explanation">Les deux nombres sont ' + signe + ' : on additionne les valeurs absolues et on garde le signe.</div>';
         html += '</div>';
@@ -188,7 +333,6 @@ function solveAddition() {
         html += '<div class="step-explanation">On garde le signe ' + (a >= 0 ? 'positif (+)' : 'negatif (-)') + '.</div>';
         html += '</div>';
     } else {
-        // Signes differents
         html += '<div class="step-explanation">Les nombres sont de signes contraires : on soustrait la plus petite valeur absolue de la plus grande, et on prend le signe de celui qui a la plus grande valeur absolue.</div>';
         html += '</div>';
 
@@ -213,7 +357,7 @@ function solveAddition() {
 /**
  * Resout une soustraction de relatifs
  */
-function solveSoustraction() {
+function solveNRSoustraction() {
     const a = NombresRelatifsState.a;
     const b = NombresRelatifsState.b;
     const result = a - b;
@@ -252,7 +396,7 @@ function solveSoustraction() {
 /**
  * Resout une multiplication de relatifs
  */
-function solveMultiplication() {
+function solveNRMultiplication() {
     const a = NombresRelatifsState.a;
     const b = NombresRelatifsState.b;
     const result = a * b;
@@ -287,9 +431,46 @@ function solveMultiplication() {
 }
 
 /**
+ * Resout une division de relatifs
+ */
+function solveNRDivision() {
+    const a = NombresRelatifsState.a;
+    const b = NombresRelatifsState.b;
+    const result = a / b;
+    let html = '';
+
+    html += '<div class="step">';
+    html += '<div class="step-number">Etape 1 : Regle des signes</div>';
+    html += '<div class="step-expression">' + formatRelatif(a) + ' &divide; ' + formatRelatif(b) + '</div>';
+
+    const signeA = a >= 0 ? '+' : '&minus;';
+    const signeB = b >= 0 ? '+' : '&minus;';
+    const signeResult = result >= 0 ? '+' : '&minus;';
+
+    html += '<div class="step-explanation">';
+    html += 'La regle des signes est la meme que pour la multiplication :<br>';
+    html += '(+) &divide; (+) = (+) &nbsp;|&nbsp; (&minus;) &divide; (&minus;) = (+)<br>';
+    html += '(+) &divide; (&minus;) = (&minus;) &nbsp;|&nbsp; (&minus;) &divide; (+) = (&minus;)<br>';
+    html += 'Ici : (' + signeA + ') &divide; (' + signeB + ') = <strong>(' + signeResult + ')</strong>';
+    html += '</div>';
+    html += '</div>';
+
+    html += '<div class="step">';
+    html += '<div class="step-number">Etape 2 : Diviser les valeurs absolues</div>';
+    html += '<div class="step-expression">' + Math.abs(a) + ' &divide; ' + Math.abs(b) + ' = ' + Math.abs(result) + '</div>';
+    html += '</div>';
+
+    html += '<div class="result-highlight">';
+    html += '<div class="final">' + formatRelatif(a) + ' &divide; ' + formatRelatif(b) + ' = <strong>' + result + '</strong></div>';
+    html += '</div>';
+
+    return html;
+}
+
+/**
  * Resout une expression melangee
  */
-function solveMelange() {
+function solveNRMelange() {
     const st = NombresRelatifsState;
     const a = st.a;
     const b = st.b;
@@ -297,9 +478,7 @@ function solveMelange() {
     const opB = st.opB;
     const opC = st.opC;
 
-    // Calculer le resultat intermediaire (a opB b)
     const inter = opB === '+' ? a + b : a - b;
-    // Calculer le resultat final (inter opC c)
     const result = opC === '+' ? inter + c : inter - c;
 
     let html = '';

@@ -591,21 +591,24 @@ Le logo "MathsFacile" dans la nav renvoie vers `accueil.html`.
 
 **Resultat** : 33 modules total. Pythagore (4eme) et Thales (3eme) operationnels avec visualisations Canvas.
 
-### Phase 2 : Ameliorations modules college (3-4 sessions) ← PROCHAINE ETAPE
+### Phase 2 : Ameliorations modules college ✅ TERMINEE (27 fev 2026)
 > Enrichir les modules V1 + adaptations de generation specifiques
 
-- [ ] **Nombres relatifs** — enrichir la V1 existante
-  - Types 5eme : reperage sur droite graduee, comparaison, addition/soustraction
-  - Types 4eme : multiplication, division, enchainements
-  - Differencier les types selon `?niveau=5eme` vs `?niveau=4eme`
-- [ ] **Proportionnalite** — enrichir la V1 existante
-  - Ajouter types : echelle, vitesse/debit, pourcentage-proportionnalite
-  - Ajouter contextes varies (cartes, plans, recettes)
-- [ ] Adaptations de generation specifiques (genConfig)
-  - `fractions.html` avec `?niveau=6eme` → generer uniquement des fractions a meme denominateur
-  - `trigonometrie.html` avec `?niveau=4eme` → generer uniquement des exercices avec cosinus
+- [x] **Nombres relatifs** — enrichi (7 types au total)
+  - Ajout types 5eme : reperage (droite graduee), comparaison
+  - Ajout type 4eme : division (avec division exacte)
+  - NIVEAUX_CONFIG : 5eme [reperage, comparaison, addition, soustraction], 4eme [add, sub, mul, div, melange]
+- [x] **Proportionnalite** — enrichi (5 types au total)
+  - Ajout types : echelle (4 contextes, calcul carte/reelle), vitesse (5 contextes d/v/t)
+  - NIVEAUX_CONFIG : 5eme inclut echelle et vitesse
+- [x] Adaptations de generation specifiques
+  - `fractions.js` : niveau=6eme force meme denominateur pour addition/soustraction
+  - `trigonometrie.js` : niveau=4eme force cosinus uniquement (givenSide et findSide parmi adjacent/hypotenuse)
+- [x] Mise a jour NIVEAUX_CONFIG dans navigation.js
 
-### Phase 3 : Modules 2nde manquants (2-3 sessions)
+**Resultat** : Modules enrichis avec differentiation par niveau. Fractions et trigonometrie s'adaptent automatiquement au niveau.
+
+### Phase 3 : Modules 2nde manquants (2-3 sessions) ← PROCHAINE ETAPE
 > Completude du programme de Seconde
 
 - [ ] **Notion de fonction** (`notion-fonction.html` + `js/notion-fonction.js`)
@@ -646,8 +649,8 @@ Le logo "MathsFacile" dans la nav renvoie vers `accueil.html`.
 | Phase 0 (infra) | 1-2 | 0 nouveau, tous modifies | Moyenne | ✅ Terminee |
 | Phase 0.5 (premiers modules) | 1 | 3 nouveaux V1 + 2 extensions | Faible | ✅ Terminee |
 | Phase 1 (Pythagore/Thales) | 1 | 2 nouveaux (Canvas) | Moyenne | ✅ Terminee |
-| Phase 2 (college mid) | 3-4 | 2 enrichis + 2 adaptes | Moyenne | ← Prochaine |
-| Phase 3 (2nde) | 2-3 | 2 nouveaux (Canvas) | Moyenne | A faire |
+| Phase 2 (college mid) | 1 | 2 enrichis + 2 adaptes | Moyenne | ✅ Terminee |
+| Phase 3 (2nde) | 2-3 | 2 nouveaux (Canvas) | Moyenne | ← Prochaine |
 | Phase 4 (college low) | 4-5 | 6 nouveaux + 1 enrichi | Haute (geometrie canvas) | A faire |
 | Phase 5 (polish) | 1-2 | 0 nouveau | Faible | A faire |
 | **Total** | **~15-20 sessions** | **10 nouveaux + 3 enrichis + infra** | |
@@ -705,4 +708,4 @@ APRES (✅ implemente) :
 
 ---
 
-**Phases 0, 0.5 et 1 terminees. Prochaine etape : Phase 2 (enrichir nombres relatifs, proportionnalite + adaptations generation).**
+**Phases 0 a 2 terminees. Prochaine etape : Phase 3 (modules 2nde : notion de fonction + fonctions de reference).**

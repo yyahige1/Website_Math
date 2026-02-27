@@ -527,8 +527,16 @@ function generateTriangle() {
         ex.angle = angle;
         ex.angleAngle = ANGLES_REMARQUABLES.find(a => a.deg === angle);
 
-        // Quel cote est donne ?
-        const given = pick(['hypotenuse', 'adjacent', 'oppose']);
+        // Pour le niveau 4eme, forcer cosinus uniquement (adjacent et hypotenuse)
+        const niveau = new URLSearchParams(window.location.search).get('niveau');
+        let givenChoices, findChoices;
+        if (niveau === '4eme') {
+            givenChoices = ['hypotenuse', 'adjacent'];
+        } else {
+            givenChoices = ['hypotenuse', 'adjacent', 'oppose'];
+        }
+
+        const given = pick(givenChoices);
         ex.givenSide = given;
         ex.givenValue = rint(3, 15);
 
@@ -549,7 +557,13 @@ function generateTriangle() {
         }
 
         // Quel cote chercher ?
-        const possible = ['hypotenuse', 'adjacent', 'oppose'].filter(s => s !== given);
+        let possible;
+        if (niveau === '4eme') {
+            // Forcer a trouver l'autre cote de la relation cosinus
+            possible = ['hypotenuse', 'adjacent'].filter(s => s !== given);
+        } else {
+            possible = ['hypotenuse', 'adjacent', 'oppose'].filter(s => s !== given);
+        }
         ex.findSide = pick(possible);
 
     } else {

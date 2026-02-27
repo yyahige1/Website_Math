@@ -131,12 +131,12 @@ const NIVEAUX_CONFIG = {
         'terminale': null,
     },
     'nombres-relatifs': {
-        '5eme': ['addition', 'soustraction', 'multiplication', 'melange'],
-        '4eme': ['addition', 'soustraction', 'multiplication', 'melange'],
+        '5eme': ['reperage', 'comparaison', 'addition', 'soustraction'],
+        '4eme': ['addition', 'soustraction', 'multiplication', 'division', 'melange'],
     },
     'proportionnalite': {
         '6eme': ['tableau', 'coefficient'],
-        '5eme': ['tableau', 'coefficient', 'produit-croix'],
+        '5eme': ['tableau', 'coefficient', 'produit-croix', 'echelle', 'vitesse'],
     },
     'perimetres-aires': {
         '6eme': ['perimetre', 'aire'],
