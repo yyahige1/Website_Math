@@ -3,8 +3,8 @@
 > Reorganiser MathsFacile pour que les eleves naviguent par niveau scolaire (6eme, 5eme, ..., Terminale) puis par chapitre, au lieu de la navigation actuelle par domaine mathematique (Algebre, Calculs, Fonctions...).
 
 **Date** : 24 Fevrier 2026
-**Mise a jour** : 27 Fevrier 2026
-**Statut** : Phases 0 a 3 terminees ✅ | Phase 4 a faire
+**Mise a jour** : 1 Mars 2026
+**Statut** : Phases 0 a 4 terminees ✅ | Phase 5 a faire
 **Priorite** : Haute (UX critique)
 
 ---
@@ -223,21 +223,21 @@ Le JS de `navigation.js` lit `?niveau=` et filtre les types d'exercices affiches
 
 | # | Module | Niveaux | Types d'exercices | Priorite | Statut |
 |---|--------|---------|-------------------|----------|--------|
-| 1 | **Nombres entiers et decimaux** | 6eme | Operations, comparaison, arrondis, ordre de grandeur | Basse | ❌ A creer |
-| 2 | **Proportionnalite** | 6eme, 5eme, 4eme | Tableau, coefficient, 4eme proportionnelle, echelle | Moyenne | 🔧 V1 basique creee (3 types), a enrichir (echelle, vitesse, debit) |
-| 3 | **Perimetres et aires** | 6eme, 5eme | Rectangle, triangle, cercle, conversions | Basse | 🔧 V1 basique creee (3 types), a enrichir (volumes prisme/cylindre) |
-| 4 | **Symetries** (axiale + centrale) | 6eme, 5eme | Constructions, proprietes, axes/centres | Basse | ❌ A creer |
-| 5 | **Angles** | 6eme, 5eme | Mesure, types, alternes-internes, correspondants | Basse | ❌ A creer |
-| 6 | **Nombres relatifs** | 5eme, 4eme | Reperage, comparaison, 4 operations | Moyenne | 🔧 V1 basique creee (4 types), a enrichir (types differencies 5e/4e) |
-| 7 | **Priorites operatoires** | 5eme | Calculs avec parentheses, enchainements | Basse | ❌ A creer |
-| 8 | **Triangles et parallelogrammes** | 5eme | Proprietes, construction, reconnaissance | Basse | ❌ A creer |
-| 9 | **Theoreme de Pythagore** | 4eme | Direct, reciproque, problemes | **Haute** | ❌ A creer |
-| 10 | **Translations et rotations** | 4eme | Images de figures, proprietes | Basse | ❌ A creer |
-| 11 | **Theoreme de Thales** | 3eme | Direct, reciproque, agrandissement/reduction | **Haute** | ❌ A creer |
+| 1 | **Nombres entiers et decimaux** | 6eme | Operations, comparaison, arrondis, ordre de grandeur | Basse | ✅ Cree (Phase 4) |
+| 2 | **Proportionnalite** | 6eme, 5eme, 4eme | Tableau, coefficient, 4eme proportionnelle, echelle | Moyenne | ✅ V2 enrichie (Phase 2 : echelle, vitesse) |
+| 3 | **Perimetres et aires** | 6eme, 5eme | Rectangle, triangle, cercle, volumes, conversions | Basse | ✅ V2 enrichie (Phase 4 : volumes ajoutes) |
+| 4 | **Symetries** (axiale + centrale) | 6eme, 5eme | Constructions, proprietes, axes/centres | Basse | ✅ Cree (Phase 4) |
+| 5 | **Angles** | 6eme, 5eme | Mesure, types, alternes-internes, correspondants | Basse | ✅ Cree (Phase 4) |
+| 6 | **Nombres relatifs** | 5eme, 4eme | Reperage, comparaison, 4 operations | Moyenne | ✅ V2 enrichie (Phase 2 : 7 types, differentiation 5e/4e) |
+| 7 | **Priorites operatoires** | 5eme | Calculs avec parentheses, enchainements | Basse | ✅ Cree (Phase 4) |
+| 8 | **Triangles et parallelogrammes** | 5eme | Proprietes, inegalite triangulaire, parallelogramme | Basse | ✅ Cree (Phase 4) |
+| 9 | **Theoreme de Pythagore** | 4eme | Direct, reciproque, problemes | **Haute** | ✅ Cree (Phase 1) |
+| 10 | **Translations et rotations** | 4eme | Images de figures, proprietes | Basse | ✅ Cree (Phase 4) |
+| 11 | **Theoreme de Thales** | 3eme | Direct, reciproque, agrandissement/reduction | **Haute** | ✅ Cree (Phase 1) |
 | 12 | **Notion de fonction** (generalites) | 2nde | Lecture graphique, image/antecedent, ensemble de definition, variations | Moyenne | ✅ Cree (Phase 3) |
 | 13 | **Fonctions de reference** | 2nde | Carre, inverse, racine, cube, valeur absolue | Moyenne | ✅ Cree (Phase 3) |
 
-**Total : 8 modules a creer, 3 modules V1 a enrichir (2 modules crees en Phase 3)**
+**Total : 13/13 modules crees ou enrichis ✅ — Programme college + 2nde couvert**
 
 ### 4.2 Priorites de creation
 
@@ -627,21 +627,25 @@ Le logo "MathsFacile" dans la nav renvoie vers `accueil.html`.
 
 **Resultat** : 35 modules total. Programme de 2nde complete avec notion de fonction et fonctions de reference.
 
-### Phase 4 : Modules college basse priorite (4-5 sessions) ← PROCHAINE ETAPE
+### Phase 4 : Modules college basse priorite ✅ TERMINEE (1 mars 2026)
 > Completude 6eme-5eme
 
-- [ ] **Nombres entiers et decimaux** (`nombres-decimaux.html`)
-- [ ] **Priorites operatoires** (`priorites.html`)
-- [ ] **Perimetres et aires** — enrichir la V1 existante (`perimetres-aires.html`)
-  - Ajouter volumes : pave droit, prisme, cylindre, conversions de volumes
-- [ ] **Symetries** axiale et centrale (`symetries.html`)
+- [x] **Nombres entiers et decimaux** (`nombres-decimaux.html` + `js/nombres-decimaux.js`)
+- [x] **Priorites operatoires** (`priorites.html` + `js/priorites.js`)
+- [x] **Perimetres et aires** — enrichi (`perimetres-aires.html`)
+  - Ajout type Volume (pave droit)
+- [x] **Symetries** axiale et centrale (`symetries.html` + `js/symetries.js`)
   - Canvas pour les constructions geometriques
-- [ ] **Angles** (`angles.html`)
-  - Canvas pour les figures
-- [ ] **Triangles et parallelogrammes** (`triangles.html`)
-- [ ] **Translations et rotations** (`translations-rotations.html`)
+- [x] **Angles** (`angles.html` + `js/angles.js`)
+  - Complementaires, supplementaires, alternes-internes
+- [x] **Triangles et parallelogrammes** (`triangles.html` + `js/triangles.js`)
+  - Somme des angles, inegalite triangulaire, proprietes parallelogramme
+- [x] **Translations et rotations** (`translations-rotations.html` + `js/translations-rotations.js`)
+  - Translation par vecteur, rotation (90°/-90°/180°) avec Canvas
 
-### Phase 5 : Polish et ameliorations (1-2 sessions)
+**Resultat** : 41 modules total. Programme college entierement couvert (6eme a 3eme).
+
+### Phase 5 : Polish et ameliorations (1-2 sessions) ← PROCHAINE ETAPE
 
 - [ ] Bandeau "Niveau" affiche sur chaque page quand filtre actif (breadcrumb : Accueil > 4eme > Equations)
 - [ ] Bouton "Voir tous les exercices" pour desactiver le filtre de niveau
@@ -660,8 +664,8 @@ Le logo "MathsFacile" dans la nav renvoie vers `accueil.html`.
 | Phase 1 (Pythagore/Thales) | 1 | 2 nouveaux (Canvas) | Moyenne | ✅ Terminee |
 | Phase 2 (college mid) | 1 | 2 enrichis + 2 adaptes | Moyenne | ✅ Terminee |
 | Phase 3 (2nde) | 1 | 2 nouveaux (Canvas + KaTeX) | Moyenne | ✅ Terminee |
-| Phase 4 (college low) | 4-5 | 6 nouveaux + 1 enrichi | Haute (geometrie canvas) | ← Prochaine |
-| Phase 5 (polish) | 1-2 | 0 nouveau | Faible | A faire |
+| Phase 4 (college low) | 1 | 6 nouveaux + 1 enrichi | Haute (geometrie canvas) | ✅ Terminee |
+| Phase 5 (polish) | 1-2 | 0 nouveau | Faible | ← Prochaine |
 | **Total** | **~15-20 sessions** | **10 nouveaux + 3 enrichis + infra** | |
 
 ---
@@ -717,4 +721,4 @@ APRES (✅ implemente) :
 
 ---
 
-**Phases 0 a 3 terminees. 35 modules total. Prochaine etape : Phase 4 (modules college basse priorite).**
+**Phases 0 a 4 terminees. 41 modules total. Programme college + lycee couvert. Prochaine etape : Phase 5 (polish et ameliorations).**

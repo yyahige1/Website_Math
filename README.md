@@ -10,7 +10,7 @@ Une plateforme d'entraînement en mathématiques interactive pour l'enseignement
 
 ## ✨ Fonctionnalités
 
-### Modules Disponibles (v3.1 - 28 modules)
+### Modules Disponibles (v4.0 - 41 modules)
 
 #### Algèbre (8 modules)
 
@@ -75,6 +75,24 @@ Une plateforme d'entraînement en mathématiques interactive pour l'enseignement
 | **Nombres Complexes** | Formes, géométrie | Algébrique, trigonométrique, module & argument, équations, géométrie |
 | **Logique & Dénombrement** | Combinatoire et raisonnement | Dénombrement (n!, A_n^k, C_n^k), récurrence, binôme de Newton |
 
+#### Modules Collège — Navigation par Classe (13 modules)
+
+| Module | Niveau | Description | Types d'exercices |
+|--------|--------|-------------|-------------------|
+| **Nombres et décimaux** | 6ème | Opérations, comparaison, arrondis | Addition, soustraction, multiplication, ordre |
+| **Proportionnalité** | 6e–5e–4e | Tableaux, coefficients, échelles | Tableau, coefficient, produit en croix, échelle, vitesse |
+| **Périmètres, aires et volumes** | 6e–5e | Figures usuelles et solides | Périmètre, aire, volume, conversions |
+| **Symétries** | 6e–5e | Axiale et centrale avec Canvas | Construction, propriétés, coordonnées |
+| **Angles** | 6e–5e | Mesure et types d'angles | Complémentaires, supplémentaires, alternes-internes |
+| **Nombres relatifs** | 5e–4e | Les 4 opérations avec relatifs | Repérage, comparaison, addition, soustraction, multiplication, division |
+| **Priorités opératoires** | 5ème | Enchainements de calculs | Sans parenthèses, avec parenthèses |
+| **Triangles et parallélogrammes** | 5ème | Propriétés et constructions | Somme des angles, inégalité triangulaire, parallélogramme |
+| **Théorème de Pythagore** | 4ème | Direct et réciproque avec Canvas | Hypoténuse, côté, réciproque, problème contextualisé |
+| **Translations et rotations** | 4ème | Transformations du plan avec Canvas | Translation par vecteur, rotation 90°/180° |
+| **Théorème de Thalès** | 3ème | Direct et réciproque avec Canvas | Longueur manquante, réciproque, agrandissement |
+| **Notion de fonction** | 2nde | Généralités sur les fonctions | Image, antécédent, variations, domaine, tableau de valeurs |
+| **Fonctions de référence** | 2nde | Fonctions usuelles avec Canvas | Carrée, inverse, racine, cube, valeur absolue |
+
 ### Points Forts
 
 - ♾️ **Exercices illimités** - Génération aléatoire infinie
@@ -118,12 +136,13 @@ npx serve .
 
 ```
 Website_Math/
-├── *.html (28 fichiers)       # Pages des modules
+├── *.html (41 fichiers)       # Pages des modules + accueil.html
 ├── css/
 │   ├── theme.css              # Variables CSS (couleurs, espacements)
 │   ├── base.css               # Reset, typographie
 │   ├── layout.css             # Navigation, cards, grilles
-│   ├── navigation.css         # Navigation responsive + hamburger
+│   ├── navigation.css         # Navigation responsive + hamburger + badge niveau
+│   ├── accueil.css            # Page d'accueil navigation par classe
 │   ├── exercices.css          # Styles communs exercices
 │   ├── equations2.css         # Tableaux de signes, fractions, graphiques
 │   ├── developpement.css      # Flèches SVG distributivité
@@ -133,13 +152,14 @@ Website_Math/
 │   ├── utils.js               # Fonctions utilitaires (PGCD, formatage...)
 │   ├── ui.js                  # Manipulation DOM
 │   ├── main.js                # Initialisation globale
-│   ├── navigation.js          # Génération navigation responsive
+│   ├── navigation.js          # Navigation par classe + filtrage par niveau
 │   ├── graphing.js            # Module graphiques Canvas (GraphCanvas + 3D)
 │   ├── tableau-variations.js  # Tableaux de variations dynamiques
-│   └── [module].js (28)       # Logique de chaque module
+│   └── [module].js (41)       # Logique de chaque module
 │
-├── CLAUDE.md                  # Guide pour assistants IA (dernière mise à jour: 23 février)
-├── ROADMAP.md                 # Plan de développement (v3.1)
+├── CLAUDE.md                  # Guide pour assistants IA
+├── ROADMAP.md                 # Plan de développement général
+├── ROADMAP-NAVIGATION-PAR-CLASSE.md  # Roadmap migration navigation par classe
 └── README.md                  # Ce fichier
 ```
 
@@ -165,20 +185,35 @@ npm run test:coverage
 
 ## 🗺️ Roadmap
 
-### ✅ Complété (25 modules)
+### ✅ Complété (41 modules — programme complet 6ème → Terminale)
+
+**Lycée (28 modules originaux)**
 - [x] Algèbre : Équations, Développement, Réduction, Factorisation, Inéquations, Équations 2nd degré, Inéquations 2nd degré, Systèmes
 - [x] Calculs : Fractions, Pourcentages, Puissances, Racines carrées
-- [x] Fonctions : Fonctions affines, Fonctions 2nd degré, Dérivées
+- [x] Fonctions : Fonctions affines, Fonctions 2nd degré, Dérivées, Notion de fonction, Fonctions de référence
 - [x] Suites & Analyse : Suites numériques, Limites, Primitives & Intégrales, Exponentielles & Logarithmes
 - [x] Probabilités & Statistiques : Probabilités, Statistiques
-- [x] Géométrie & Trigonométrie : Trigonométrie, Vecteurs
-- [x] Terminale Spécialité : Arithmétique, Nombres Complexes
+- [x] Géométrie & Trigonométrie : Trigonométrie, Vecteurs, Géométrie analytique, Géométrie espace
+- [x] Terminale Spécialité : Arithmétique, Nombres Complexes, Logique & Dénombrement
 
-### 📋 Prochaines étapes
-- **Phase 7** : Géométrie analytique plane, Géométrie dans l'espace
-- **Phase 8** : Logique et Dénombrement
+**Collège (13 modules, navigation par classe)**
+- [x] 6ème : Nombres et décimaux, Proportionnalité, Périmètres/Aires/Volumes, Symétries, Angles
+- [x] 5ème : Nombres relatifs, Priorités opératoires, Triangles et parallélogrammes
+- [x] 4ème : Théorème de Pythagore, Translations et rotations
+- [x] 3ème : Théorème de Thalès
+- [x] 2nde : Notion de fonction, Fonctions de référence
 
-📖 Voir [ROADMAP.md](ROADMAP.md) pour le détail complet.
+### 🔧 Navigation par classe (✅ implémentée)
+- Navigation 6ème → Terminale avec chapitres du programme officiel
+- Filtrage automatique des types d'exercices par niveau (`?niveau=`)
+- Page d'accueil `accueil.html` avec cards par niveau
+
+### 📋 Phase 5 — Améliorations (prochaine étape)
+- Breadcrumb niveau sur chaque page filtrée
+- Bouton "Voir tous les exercices" pour désactiver le filtre
+- Tests responsive complets sur mobile
+
+📖 Voir [ROADMAP-NAVIGATION-PAR-CLASSE.md](ROADMAP-NAVIGATION-PAR-CLASSE.md) pour le détail complet.
 
 ---
 
