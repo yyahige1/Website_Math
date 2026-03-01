@@ -489,6 +489,17 @@ function applyNiveauFilter() {
         }
     }
 
+    // Filtrer les sous-types (dropdowns) pour les niveaux college
+    if (moduleKey === 'statistiques' && (niveau === '6eme' || niveau === '5eme')) {
+        const dropdown = document.getElementById('subtype_moyenne');
+        if (dropdown) {
+            Array.from(dropdown.options).forEach(opt => {
+                if (opt.value !== 'simple') opt.style.display = 'none';
+            });
+            dropdown.value = 'simple';
+        }
+    }
+
     // Afficher un badge niveau dans le header
     const header = document.querySelector('header');
     if (header) {

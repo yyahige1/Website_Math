@@ -492,12 +492,19 @@ function updateExerciseDisplay() {
 
 function displayMoyenne(ex) {
     const sub = StatsState.subtype_moyenne;
+    const niveau = new URLSearchParams(window.location.search).get('niveau');
     let html = '';
 
     if (sub === 'simple') {
-        html = `<p>On considere la serie statistique suivante :</p>`;
-        html += `<p style="text-align:center; font-size:1.1em; font-weight:bold;">${ex.valeurs.join(' ; ')}</p>`;
-        html += `<p>Calculer la moyenne de cette serie.</p>`;
+        if (niveau === '6eme' || niveau === '5eme') {
+            html = `<p>Voici une liste de valeurs :</p>`;
+            html += `<p style="text-align:center; font-size:1.1em; font-weight:bold;">${ex.valeurs.join(' ; ')}</p>`;
+            html += `<p>Calcule la <strong>moyenne</strong> de ces valeurs.</p>`;
+        } else {
+            html = `<p>On considere la serie statistique suivante :</p>`;
+            html += `<p style="text-align:center; font-size:1.1em; font-weight:bold;">${ex.valeurs.join(' ; ')}</p>`;
+            html += `<p>Calculer la moyenne de cette serie.</p>`;
+        }
 
     } else if (sub === 'ponderee') {
         html = `<p>On considere la serie statistique suivante :</p>`;
@@ -757,7 +764,31 @@ function solveStatistiques() {
 function solveMoyenne() {
     const ex = StatsState.exercise;
     const sub = StatsState.subtype_moyenne;
+    const niveau = new URLSearchParams(window.location.search).get('niveau');
     let html = '';
+
+    // Correction simplifiee pour le college (6eme/5eme)
+    if ((niveau === '6eme' || niveau === '5eme') && sub === 'simple') {
+        html += '<div class="step">';
+        html += '<div class="step-number">1. La regle</div>';
+        html += '<div class="step-explanation">Pour calculer la <strong>moyenne</strong>, on additionne toutes les valeurs, puis on divise par le nombre de valeurs.</div>';
+        html += '</div>';
+
+        html += '<div class="step">';
+        html += '<div class="step-number">2. On additionne toutes les valeurs</div>';
+        html += `<div class="step-expression">${ex.valeurs.join(' + ')} = <strong>${ex.somme}</strong></div>`;
+        html += '</div>';
+
+        html += '<div class="step">';
+        html += `<div class="step-number">3. On divise par le nombre de valeurs (il y en a ${ex.n})</div>`;
+        html += `<div class="step-expression">${ex.somme} &div; ${ex.n} = <strong>${roundDec(ex.moyenne, 2)}</strong></div>`;
+        html += '</div>';
+
+        html += '<div class="result-highlight">';
+        html += `<div class="final">La moyenne est <strong>${roundDec(ex.moyenne, 2)}</strong></div>`;
+        html += '</div>';
+        return html;
+    }
 
     html += '<div class="step">';
     html += '<div class="step-number">1. Rappeler la formule</div>';
