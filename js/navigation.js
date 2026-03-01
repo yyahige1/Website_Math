@@ -96,6 +96,7 @@ const NIVEAUX_CONFIG = {
         'terminale': ['simple', 'conditionnelle', 'arbre', 'binomiale', 'variable', 'fluctuation'],
     },
     'statistiques': {
+        '6eme': ['moyenne'],
         '5eme': ['moyenne'],
         '4eme': ['moyenne', 'mediane'],
         '3eme': ['moyenne', 'mediane', 'dispersion'],

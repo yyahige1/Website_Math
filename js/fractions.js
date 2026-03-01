@@ -202,25 +202,33 @@ function solveAddition(num1, den1, num2, den2) {
         return html;
     }
     
-    // Trouver le PPCM
+    // Trouver le denominateur commun
     const ppcm = lcm(den1, den2);
     const mult1 = ppcm / den1;
     const mult2 = ppcm / den2;
-    
-    html += createStepHTML({
-        expression: `PPCM(${den1}, ${den2}) = ${ppcm}`,
-        explanation: 'Trouver le dénominateur commun (PPCM)'
-    });
-    
-    // Mettre au même dénominateur
+
+    const niveau = new URLSearchParams(window.location.search).get('niveau');
+    if (niveau === '6eme') {
+        html += createStepHTML({
+            expression: `Dénominateur commun : ${ppcm}`,
+            explanation: `On cherche un nombre divisible par ${den1} et par ${den2}`
+        });
+    } else {
+        html += createStepHTML({
+            expression: `PPCM(${den1}, ${den2}) = ${ppcm}`,
+            explanation: 'Trouver le dénominateur commun (PPCM)'
+        });
+    }
+
+    // Mettre au meme denominateur
     const newNum1 = num1 * mult1;
     const newNum2 = num2 * mult2;
-    
+
     html += createStepHTML({
         expression: `${fracHTML(num1 + '×' + mult1, den1 + '×' + mult1)} + ${fracHTML(num2 + '×' + mult2, den2 + '×' + mult2)} = ${fracHTML(newNum1, ppcm)} + ${fracHTML(newNum2, ppcm)}`,
         explanation: 'Mettre au même dénominateur'
     });
-    
+
     // Additionner
     const resultNum = newNum1 + newNum2;
     html += createStepHTML({
@@ -257,15 +265,23 @@ function solveSoustraction(num1, den1, num2, den2) {
         return html;
     }
     
-    // PPCM
+    // Denominateur commun
     const ppcm = lcm(den1, den2);
     const mult1 = ppcm / den1;
     const mult2 = ppcm / den2;
-    
-    html += createStepHTML({
-        expression: `PPCM(${den1}, ${den2}) = ${ppcm}`,
-        explanation: 'Trouver le dénominateur commun (PPCM)'
-    });
+
+    const niveau = new URLSearchParams(window.location.search).get('niveau');
+    if (niveau === '6eme') {
+        html += createStepHTML({
+            expression: `Dénominateur commun : ${ppcm}`,
+            explanation: `On cherche un nombre divisible par ${den1} et par ${den2}`
+        });
+    } else {
+        html += createStepHTML({
+            expression: `PPCM(${den1}, ${den2}) = ${ppcm}`,
+            explanation: 'Trouver le dénominateur commun (PPCM)'
+        });
+    }
     
     const newNum1 = num1 * mult1;
     const newNum2 = num2 * mult2;
@@ -404,10 +420,15 @@ function simplifyStep(num, den) {
     if (divisor > 1) {
         const simpNum = finalNum / divisor;
         const simpDen = finalDen / divisor;
-        
+
+        const niveau = new URLSearchParams(window.location.search).get('niveau');
+        const expl = niveau === '6eme'
+            ? `On peut diviser le haut et le bas par ${divisor}`
+            : `Simplifier par ${divisor} (PGCD)`;
+
         html += createStepHTML({
             expression: `${fracHTML(finalNum, finalDen)} = ${fracHTML(finalNum + ' ÷ ' + divisor, finalDen + ' ÷ ' + divisor)} = ${fracHTML(simpNum, simpDen)}`,
-            explanation: `Simplifier par ${divisor} (PGCD)`
+            explanation: expl
         });
         
         finalNum = simpNum;
@@ -453,15 +474,16 @@ function changeFractionType(type) {
  */
 function initFractionsPage() {
     initTypeSelector('.type-btn', changeFractionType);
-    
+
     $('generateBtn').addEventListener('click', generateFraction);
     $('solveBtn').addEventListener('click', solveFraction);
-    
+
     document.querySelectorAll('input').forEach(el => {
         el.addEventListener('input', updateFractionDisplay);
     });
-    
-    updateFractionDisplay();
+
+    // Generer un exercice adapte au niveau des le chargement
+    generateFraction();
 }
 
 // Export pour les tests
