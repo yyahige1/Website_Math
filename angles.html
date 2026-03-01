@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MathsFacile - Angles</title>
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/exercices.css">
+    <link rel="stylesheet" href="css/navigation.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Angles</h1>
+            <p class="subtitle">Exercices interactifs</p>
+            <p class="intro">Entra&icirc;ne-toi sur les types d'angles, les compl&eacute;mentaires et les suppl&eacute;mentaires.</p>
+        </header>
+        <div class="card">
+            <div class="type-selector grid-2">
+                <button class="type-btn active" data-type="complementaires">
+                    <div class="example">? + 30 = 90</div>
+                    <div class="label">Compl&eacute;mentaires</div>
+                </button>
+                <button class="type-btn" data-type="supplementaires">
+                    <div class="example">? + 60 = 180</div>
+                    <div class="label">Suppl&eacute;mentaires</div>
+                </button>
+                <button class="type-btn" data-type="types">
+                    <div class="example">aigu / obtus</div>
+                    <div class="label">Types d'angles</div>
+                </button>
+                <button class="type-btn" data-type="alternes">
+                    <div class="example">// et &ang;</div>
+                    <div class="label">Alternes-internes</div>
+                </button>
+            </div>
+            <div class="expression-display">
+                <div class="expression" id="exerciseDisplay"></div>
+            </div>
+            <div id="graphSection" style="text-align:center;">
+                <canvas id="angleCanvas" width="400" height="300" style="max-width:100%;"></canvas>
+            </div>
+            <div class="action-buttons">
+                <button class="btn-generate" id="generateBtn">Nouvel exercice</button>
+                <button class="btn-solve" id="solveBtn">Correction</button>
+            </div>
+        </div>
+        <div id="solutionDiv" class="solution card"></div>
+    </div>
+    <script src="js/utils.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/navigation.js"></script>
+    <script src="js/angles.js"></script>
+</body>
+</html>

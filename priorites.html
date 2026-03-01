@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MathsFacile - Priorit&eacute;s op&eacute;ratoires</title>
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/exercices.css">
+    <link rel="stylesheet" href="css/navigation.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Priorit&eacute;s op&eacute;ratoires</h1>
+            <p class="subtitle">Exercices interactifs</p>
+            <p class="intro">Entra&icirc;ne-toi &agrave; calculer des expressions en respectant les priorit&eacute;s.</p>
+        </header>
+        <div class="card">
+            <div class="type-selector grid-3">
+                <button class="type-btn active" data-type="sans-parentheses">
+                    <div class="example">3 + 5 &times; 2</div>
+                    <div class="label">Sans parenth&egrave;ses</div>
+                </button>
+                <button class="type-btn" data-type="avec-parentheses">
+                    <div class="example">(3 + 5) &times; 2</div>
+                    <div class="label">Avec parenth&egrave;ses</div>
+                </button>
+                <button class="type-btn" data-type="imbriquees">
+                    <div class="example">2 &times; (3 + (7 &minus; 4))</div>
+                    <div class="label">Imbriqu&eacute;es</div>
+                </button>
+            </div>
+            <div class="expression-display">
+                <div class="expression" id="exerciseDisplay"></div>
+            </div>
+            <div class="action-buttons">
+                <button class="btn-generate" id="generateBtn">Nouvel exercice</button>
+                <button class="btn-solve" id="solveBtn">Correction</button>
+            </div>
+        </div>
+        <div id="solutionDiv" class="solution card"></div>
+    </div>
+    <script src="js/utils.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/navigation.js"></script>
+    <script src="js/priorites.js"></script>
+</body>
+</html>
