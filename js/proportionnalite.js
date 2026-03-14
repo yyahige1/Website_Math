@@ -178,6 +178,20 @@ function propFormatNum(n) {
 }
 
 /**
+ * Rendu KaTeX inline
+ */
+function K(tex) {
+    return katex.renderToString(tex, { throwOnError: false });
+}
+
+/**
+ * Fraction KaTeX
+ */
+function propFrac(num, den) {
+    return K('\\dfrac{' + num + '}{' + den + '}');
+}
+
+/**
  * Construit un tableau HTML
  */
 function buildTableHTML(row1, row2, ctx, missingRow, missingCol) {
@@ -311,26 +325,28 @@ function solveTableau() {
 
     html += '<div class="step">';
     html += '<div class="step-number">Etape 1 : Trouver le coefficient de proportionnalite</div>';
-    html += '<div class="step-expression">k = ' + st.contexte.ligne2 + ' / ' + st.contexte.ligne1 + '</div>';
-    html += '<div class="step-explanation">On utilise une colonne complete : k = ' + propFormatNum(refV2) + ' / ' + propFormatNum(refV1) + ' = ' + propFormatNum(st.coefficient) + '</div>';
+    html += '<div class="step-expression">' + K('k = ') + propFrac(st.contexte.ligne2, st.contexte.ligne1) + '</div>';
+    html += '<div class="step-explanation">On utilise une colonne complete : ' + K('k = ') + propFrac(propFormatNum(refV2), propFormatNum(refV1)) + K(' = ' + propFormatNum(st.coefficient)) + '</div>';
     html += '</div>';
 
     html += '<div class="step">';
     html += '<div class="step-number">Etape 2 : Calculer la valeur manquante</div>';
 
     if (st.missingRow === 1) {
-        // Manque sur la ligne 2 : multiplier par k
-        html += '<div class="step-expression">' + st.contexte.ligne2 + ' = ' + propFormatNum(st.valeurs1[st.missingCol]) + ' &times; ' + propFormatNum(st.coefficient) + '</div>';
-        html += '<div class="step-explanation">' + propFormatNum(st.valeurs1[st.missingCol]) + ' &times; ' + propFormatNum(st.coefficient) + ' = ' + propFormatNum(missing) + '</div>';
+        const v1 = propFormatNum(st.valeurs1[st.missingCol]);
+        const k = propFormatNum(st.coefficient);
+        html += '<div class="step-expression">' + K('? = ' + v1 + ' \\times ' + k) + '</div>';
+        html += '<div class="step-explanation">' + K(v1 + ' \\times ' + k + ' = ' + propFormatNum(missing)) + '</div>';
     } else {
-        // Manque sur la ligne 1 : diviser par k
-        html += '<div class="step-expression">' + st.contexte.ligne1 + ' = ' + propFormatNum(st.valeurs2[st.missingCol]) + ' / ' + propFormatNum(st.coefficient) + '</div>';
-        html += '<div class="step-explanation">' + propFormatNum(st.valeurs2[st.missingCol]) + ' / ' + propFormatNum(st.coefficient) + ' = ' + propFormatNum(missing) + '</div>';
+        const v2 = propFormatNum(st.valeurs2[st.missingCol]);
+        const k = propFormatNum(st.coefficient);
+        html += '<div class="step-expression">' + K('? = ') + propFrac(v2, k) + '</div>';
+        html += '<div class="step-explanation">' + propFrac(v2, k) + K(' = ' + propFormatNum(missing)) + '</div>';
     }
     html += '</div>';
 
     html += '<div class="result-highlight">';
-    html += '<div class="final">La valeur manquante est <strong>' + propFormatNum(missing) + '</strong></div>';
+    html += '<div class="final">La valeur manquante est ' + K('\\boxed{' + propFormatNum(missing) + '}') + '</div>';
     html += '</div>';
 
     return html;
@@ -342,23 +358,22 @@ function solveCoefficient() {
 
     html += '<div class="step">';
     html += '<div class="step-number">Etape 1 : Calculer le rapport pour chaque colonne</div>';
-    let rapports = '';
+    html += '<div class="step-expression" style="display: flex; align-items: center; justify-content: center; gap: 20px; flex-wrap: wrap;">';
     for (let i = 0; i < st.valeurs1.length; i++) {
-        rapports += propFormatNum(st.valeurs2[i]) + ' / ' + propFormatNum(st.valeurs1[i]) + ' = ' + propFormatNum(st.coefficient);
-        if (i < st.valeurs1.length - 1) rapports += '&nbsp;&nbsp;;&nbsp;&nbsp;';
+        html += '<span>' + propFrac(propFormatNum(st.valeurs2[i]), propFormatNum(st.valeurs1[i])) + K(' = ' + propFormatNum(st.coefficient)) + '</span>';
     }
-    html += '<div class="step-expression">' + rapports + '</div>';
+    html += '</div>';
     html += '<div class="step-explanation">Tous les rapports sont egaux : c\'est bien un tableau de proportionnalite.</div>';
     html += '</div>';
 
     html += '<div class="step">';
     html += '<div class="step-number">Etape 2 : Conclure</div>';
-    html += '<div class="step-expression">k = ' + propFormatNum(st.coefficient) + '</div>';
-    html += '<div class="step-explanation">Le coefficient de proportionnalite est ' + propFormatNum(st.coefficient) + '. Pour passer de la 1re ligne a la 2e, on multiplie par ' + propFormatNum(st.coefficient) + '.</div>';
+    html += '<div class="step-expression">' + K('k = ' + propFormatNum(st.coefficient)) + '</div>';
+    html += '<div class="step-explanation">Pour passer de la 1re ligne a la 2e, on multiplie par ' + K(propFormatNum(st.coefficient)) + '.</div>';
     html += '</div>';
 
     html += '<div class="result-highlight">';
-    html += '<div class="final">Coefficient de proportionnalite : <strong>k = ' + propFormatNum(st.coefficient) + '</strong></div>';
+    html += '<div class="final">Coefficient de proportionnalite : ' + K('\\boxed{k = ' + propFormatNum(st.coefficient) + '}') + '</div>';
     html += '</div>';
 
     return html;
@@ -366,26 +381,49 @@ function solveCoefficient() {
 
 function solveProduitCroix() {
     const st = ProportionnaliteState;
+    const A = propFormatNum(st.crossA);
+    const B = propFormatNum(st.crossB);
+    const C = propFormatNum(st.crossC);
+    const D = propFormatNum(st.crossMissing);
+    const numerateur = st.crossC * st.crossB;
     let html = '';
 
+    // Etape 1 : Schema visuel du produit en croix
     html += '<div class="step">';
     html += '<div class="step-number">Etape 1 : Poser le produit en croix</div>';
     html += '<div class="step-expression">';
-    html += propFormatNum(st.crossA) + ' &rarr; ' + propFormatNum(st.crossB) + '<br>';
-    html += propFormatNum(st.crossC) + ' &rarr; ?';
+    // Tableau visuel avec fleches croisees
+    html += '<table style="border-collapse: collapse; margin: 10px auto; font-size: 1.2em;">';
+    html += '<tr>';
+    html += '<td style="border: 2px solid var(--primary, #667eea); padding: 12px 24px; text-align: center; font-weight: bold;">' + A + '</td>';
+    html += '<td style="border: 2px solid var(--primary, #667eea); padding: 12px 24px; text-align: center; font-weight: bold;">' + B + '</td>';
+    html += '</tr>';
+    html += '<tr>';
+    html += '<td style="border: 2px solid var(--primary, #667eea); padding: 12px 24px; text-align: center; font-weight: bold;">' + C + '</td>';
+    html += '<td style="border: 2px solid var(--primary, #667eea); padding: 12px 24px; text-align: center; color: var(--primary, #667eea); font-weight: bold;">?</td>';
+    html += '</tr>';
+    html += '</table>';
+    // Fleches : diagonale
+    html += '<div style="text-align: center; margin: 8px 0; color: #888; font-size: 0.95em;">';
+    html += 'On multiplie en diagonale (' + K(C + ' \\times ' + B) + ') et on divise par ' + K(A);
     html += '</div>';
-    html += '<div class="step-explanation">On cherche la quatrieme proportionnelle.</div>';
+    html += '</div>';
     html += '</div>';
 
+    // Etape 2 : Formule avec fraction KaTeX
     html += '<div class="step">';
     html += '<div class="step-number">Etape 2 : Appliquer la formule</div>';
-    const numerateur = st.crossC * st.crossB;
-    html += '<div class="step-expression">? = (' + propFormatNum(st.crossC) + ' &times; ' + propFormatNum(st.crossB) + ') / ' + propFormatNum(st.crossA) + '</div>';
-    html += '<div class="step-explanation">? = ' + propFormatNum(numerateur) + ' / ' + propFormatNum(st.crossA) + ' = ' + propFormatNum(st.crossMissing) + '</div>';
+    html += '<div class="step-expression">' + K('? = ') + propFrac(C + ' \\times ' + B, A) + '</div>';
+    html += '</div>';
+
+    // Etape 3 : Calcul
+    html += '<div class="step">';
+    html += '<div class="step-number">Etape 3 : Calculer</div>';
+    html += '<div class="step-expression">' + K('? = ') + propFrac(propFormatNum(numerateur), A) + K(' = ' + D) + '</div>';
     html += '</div>';
 
     html += '<div class="result-highlight">';
-    html += '<div class="final">' + propFormatNum(st.crossC) + ' ' + st.contexte.unite1 + ' correspondent a <strong>' + propFormatNum(st.crossMissing) + ' ' + st.contexte.unite2 + '</strong></div>';
+    html += '<div class="final">' + C + ' ' + st.contexte.unite1 + ' correspondent a ' + K('\\boxed{' + D + ' \\text{ ' + st.contexte.unite2 + '}}') + '</div>';
     html += '</div>';
 
     return html;
@@ -419,51 +457,54 @@ function generateEchelle() {
 
 function solveEchelle() {
     const st = ProportionnaliteState;
+    const echelleStr = st.echelle.toLocaleString('fr-FR');
     let html = '';
 
     html += '<div class="step">';
     html += '<div class="step-number">Etape 1 : Comprendre l\'echelle</div>';
-    html += '<div class="step-expression">Echelle 1 : ' + st.echelle.toLocaleString('fr-FR') + '</div>';
-    html += '<div class="step-explanation">Cela signifie que 1 cm sur la carte correspond a ' + st.echelle.toLocaleString('fr-FR') + ' cm en realite, soit ' + propFormatNum(st.echelle / 100) + ' m.</div>';
+    html += '<div class="step-expression">' + K('\\text{Echelle } 1 : ' + st.echelle) + '</div>';
+    html += '<div class="step-explanation">1 cm sur la carte = ' + K(echelleStr + ' \\text{ cm}') + ' en realite = ' + K(propFormatNum(st.echelle / 100) + ' \\text{ m}') + '</div>';
     html += '</div>';
 
     if (st.echelleInconnu === 'reelle') {
+        const reelleCm = st.distanceCarte * st.echelle;
+        const reelleM = reelleCm / 100;
+
         html += '<div class="step">';
         html += '<div class="step-number">Etape 2 : Calculer la distance reelle</div>';
-        html += '<div class="step-expression">Distance reelle = ' + st.distanceCarte + ' cm &times; ' + st.echelle.toLocaleString('fr-FR') + '</div>';
-        const reelleCm = st.distanceCarte * st.echelle;
-        html += '<div class="step-explanation">' + st.distanceCarte + ' &times; ' + st.echelle.toLocaleString('fr-FR') + ' = ' + reelleCm.toLocaleString('fr-FR') + ' cm</div>';
+        html += '<div class="step-expression">' + K('d = ' + st.distanceCarte + ' \\times ' + st.echelle + ' = ' + reelleCm + ' \\text{ cm}') + '</div>';
         html += '</div>';
 
         html += '<div class="step">';
         html += '<div class="step-number">Etape 3 : Convertir</div>';
-        const reelleM = reelleCm / 100;
-        html += '<div class="step-expression">' + reelleCm.toLocaleString('fr-FR') + ' cm = ' + propFormatNum(reelleM) + ' m</div>';
+        html += '<div class="step-expression">' + K(reelleCm.toLocaleString('fr-FR') + ' \\text{ cm} = ' + propFormatNum(reelleM) + ' \\text{ m}');
         if (reelleM >= 1000) {
-            html += '<div class="step-explanation">Soit ' + propFormatNum(reelleM / 1000) + ' km.</div>';
+            html += K(' = ' + propFormatNum(reelleM / 1000) + ' \\text{ km}');
         }
+        html += '</div>';
         html += '</div>';
 
         html += '<div class="result-highlight">';
-        html += '<div class="final">Distance reelle : <strong>' + propFormatNum(reelleM) + ' m';
-        if (reelleM >= 1000) html += ' (' + propFormatNum(reelleM / 1000) + ' km)';
-        html += '</strong></div>';
+        let resultTex = '\\boxed{' + propFormatNum(reelleM) + ' \\text{ m}';
+        if (reelleM >= 1000) resultTex += ' = ' + propFormatNum(reelleM / 1000) + ' \\text{ km}';
+        resultTex += '}';
+        html += '<div class="final">Distance reelle : ' + K(resultTex) + '</div>';
         html += '</div>';
     } else {
+        const reelleCm = st.distanceReelle * 100;
+
         html += '<div class="step">';
         html += '<div class="step-number">Etape 2 : Convertir en cm</div>';
-        const reelleCm = st.distanceReelle * 100;
-        html += '<div class="step-expression">' + propFormatNum(st.distanceReelle) + ' m = ' + reelleCm.toLocaleString('fr-FR') + ' cm</div>';
+        html += '<div class="step-expression">' + K(propFormatNum(st.distanceReelle) + ' \\text{ m} = ' + reelleCm.toLocaleString('fr-FR') + ' \\text{ cm}') + '</div>';
         html += '</div>';
 
         html += '<div class="step">';
         html += '<div class="step-number">Etape 3 : Calculer la distance sur la carte</div>';
-        html += '<div class="step-expression">Distance carte = ' + reelleCm.toLocaleString('fr-FR') + ' &divide; ' + st.echelle.toLocaleString('fr-FR') + '</div>';
-        html += '<div class="step-explanation">' + reelleCm.toLocaleString('fr-FR') + ' &divide; ' + st.echelle.toLocaleString('fr-FR') + ' = ' + propFormatNum(st.distanceCarte) + ' cm</div>';
+        html += '<div class="step-expression">' + K('d_{carte} = ') + propFrac(reelleCm.toLocaleString('fr-FR'), echelleStr) + K(' = ' + propFormatNum(st.distanceCarte) + ' \\text{ cm}') + '</div>';
         html += '</div>';
 
         html += '<div class="result-highlight">';
-        html += '<div class="final">Distance sur la carte : <strong>' + propFormatNum(st.distanceCarte) + ' cm</strong></div>';
+        html += '<div class="final">Distance sur la carte : ' + K('\\boxed{' + propFormatNum(st.distanceCarte) + ' \\text{ cm}}') + '</div>';
         html += '</div>';
     }
 
@@ -503,43 +544,48 @@ function solveVitesse() {
     const vctx = st.vitesseContexte;
     let html = '';
 
+    // Etape 1 : Les 3 formules en KaTeX
     html += '<div class="step">';
-    html += '<div class="step-number">Etape 1 : Rappeler la formule</div>';
-    html += '<div class="step-expression">distance = vitesse &times; temps</div>';
-    html += '<div class="step-explanation">d = v &times; t &nbsp;&nbsp;|&nbsp;&nbsp; v = d / t &nbsp;&nbsp;|&nbsp;&nbsp; t = d / v</div>';
+    html += '<div class="step-number">Etape 1 : Rappeler les formules</div>';
+    html += '<div class="step-expression" style="display: flex; justify-content: center; gap: 30px; flex-wrap: wrap;">';
+    html += '<span>' + K('d = v \\times t') + '</span>';
+    html += '<span>' + K('v = ') + propFrac('d', 't') + '</span>';
+    html += '<span>' + K('t = ') + propFrac('d', 'v') + '</span>';
     html += '</div>';
+    html += '</div>';
+
+    const d = propFormatNum(st.distance);
+    const v = propFormatNum(st.vitesse);
+    const t = propFormatNum(st.temps);
 
     if (st.vitesseInconnu === 'distance') {
         html += '<div class="step">';
         html += '<div class="step-number">Etape 2 : Calculer la distance</div>';
-        html += '<div class="step-expression">d = ' + propFormatNum(st.vitesse) + ' &times; ' + propFormatNum(st.temps) + '</div>';
-        html += '<div class="step-explanation">d = ' + propFormatNum(st.distance) + ' ' + vctx.uniteD + '</div>';
+        html += '<div class="step-expression">' + K('d = ' + v + ' \\times ' + t + ' = ' + d) + '</div>';
         html += '</div>';
 
         html += '<div class="result-highlight">';
-        html += '<div class="final">Distance : <strong>' + propFormatNum(st.distance) + ' ' + vctx.uniteD + '</strong></div>';
+        html += '<div class="final">Distance : ' + K('\\boxed{' + d + ' \\text{ ' + vctx.uniteD + '}}') + '</div>';
         html += '</div>';
 
     } else if (st.vitesseInconnu === 'vitesse') {
         html += '<div class="step">';
         html += '<div class="step-number">Etape 2 : Calculer la vitesse</div>';
-        html += '<div class="step-expression">v = ' + propFormatNum(st.distance) + ' &divide; ' + propFormatNum(st.temps) + '</div>';
-        html += '<div class="step-explanation">v = ' + propFormatNum(st.vitesse) + ' ' + vctx.uniteV + '</div>';
+        html += '<div class="step-expression">' + K('v = ') + propFrac(d, t) + K(' = ' + v) + '</div>';
         html += '</div>';
 
         html += '<div class="result-highlight">';
-        html += '<div class="final">Vitesse : <strong>' + propFormatNum(st.vitesse) + ' ' + vctx.uniteV + '</strong></div>';
+        html += '<div class="final">Vitesse : ' + K('\\boxed{' + v + ' \\text{ ' + vctx.uniteV + '}}') + '</div>';
         html += '</div>';
 
     } else {
         html += '<div class="step">';
         html += '<div class="step-number">Etape 2 : Calculer le temps</div>';
-        html += '<div class="step-expression">t = ' + propFormatNum(st.distance) + ' &divide; ' + propFormatNum(st.vitesse) + '</div>';
-        html += '<div class="step-explanation">t = ' + propFormatNum(st.temps) + ' ' + vctx.uniteT + '</div>';
+        html += '<div class="step-expression">' + K('t = ') + propFrac(d, v) + K(' = ' + t) + '</div>';
         html += '</div>';
 
         html += '<div class="result-highlight">';
-        html += '<div class="final">Temps : <strong>' + propFormatNum(st.temps) + ' ' + vctx.uniteT + '</strong></div>';
+        html += '<div class="final">Temps : ' + K('\\boxed{' + t + ' \\text{ ' + vctx.uniteT + '}}') + '</div>';
         html += '</div>';
     }
 
