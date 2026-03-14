@@ -547,10 +547,10 @@ function solveVitesse() {
     // Etape 1 : Les 3 formules en KaTeX
     html += '<div class="step">';
     html += '<div class="step-number">Etape 1 : Rappeler les formules</div>';
-    html += '<div class="step-expression" style="display: flex; justify-content: center; gap: 30px; flex-wrap: wrap;">';
+    html += '<div class="step-expression" style="display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; align-items: center;">';
     html += '<span>' + K('d = v \\times t') + '</span>';
-    html += '<span>' + K('v = ') + propFrac('d', 't') + '</span>';
-    html += '<span>' + K('t = ') + propFrac('d', 'v') + '</span>';
+    html += '<span>' + K('v = \\dfrac{d}{t}') + '</span>';
+    html += '<span>' + K('t = \\dfrac{d}{v}') + '</span>';
     html += '</div>';
     html += '</div>';
 
