@@ -368,44 +368,67 @@ function solveNRAddition() {
     const a = NombresRelatifsState.a;
     const b = NombresRelatifsState.b;
     const result = a + b;
+    const absA = Math.abs(a);
+    const absB = Math.abs(b);
     let html = '';
 
-    // Etape 1 : Ecriture
+    // Afficher l'expression de depart
     html += '<div class="step">';
-    html += '<div class="step-number">Etape 1 : Identifier les signes</div>';
+    html += '<div class="step-number">Etape 1</div>';
     html += '<div class="step-expression">' + formatNR(a) + ' + ' + formatNRAfterOp(b) + '</div>';
 
-    if ((a >= 0 && b >= 0) || (a < 0 && b < 0)) {
-        const signe = a >= 0 ? 'positifs' : 'negatifs';
-        html += '<div class="step-explanation">Les deux nombres sont ' + signe + ' : on additionne les parties numeriques et on garde le signe commun.</div>';
+    if (a >= 0 && b >= 0) {
+        // (+) + (+) : cas simple
+        html += '<div class="step-explanation">Les deux nombres sont positifs, on les additionne normalement.</div>';
         html += '</div>';
 
         html += '<div class="step">';
-        html += '<div class="step-number">Etape 2 : Calculer</div>';
-        html += '<div class="step-expression">' + Math.abs(a) + ' + ' + Math.abs(b) + ' = ' + Math.abs(result) + '</div>';
-        html += '<div class="step-explanation">On garde le signe ' + (a >= 0 ? 'positif' : 'negatif') + '.</div>';
+        html += '<div class="step-number">Etape 2</div>';
+        html += '<div class="step-expression">' + a + ' + ' + b + ' = ' + result + '</div>';
         html += '</div>';
+
+    } else if (a < 0 && b < 0) {
+        // (-) + (-) : on additionne et on garde le signe -
+        html += '<div class="step-explanation">Les deux nombres sont negatifs. On additionne ' + absA + ' et ' + absB + ', puis on met le signe moins devant.</div>';
+        html += '</div>';
+
+        html += '<div class="step">';
+        html += '<div class="step-number">Etape 2</div>';
+        html += '<div class="step-expression">' + absA + ' + ' + absB + ' = ' + (absA + absB) + '</div>';
+        html += '<div class="step-explanation">On met le signe moins : &minus;' + (absA + absB) + '</div>';
+        html += '</div>';
+
     } else {
-        html += '<div class="step-explanation">Les nombres sont de signes contraires : on soustrait le plus petit du plus grand, et on garde le signe du nombre le plus eloigne de zero.</div>';
+        // Signes differents : on simplifie d'abord
+        html += '<div class="step-explanation">Les signes sont differents. Ajouter un nombre negatif revient a soustraire.</div>';
         html += '</div>';
 
+        // Etape 2 : ecriture simplifiee
         html += '<div class="step">';
-        html += '<div class="step-number">Etape 2 : Calculer</div>';
-        const absA = Math.abs(a);
-        const absB = Math.abs(b);
-        const diff = Math.abs(absA - absB);
-        const plusGrand = absA >= absB ? a : b;
-        html += '<div class="step-expression">' + Math.max(absA, absB) + ' &minus; ' + Math.min(absA, absB) + ' = ' + diff + '</div>';
-        html += '<div class="step-explanation">Le nombre le plus eloigne de zero est ' + plusGrand + ', donc le resultat est ' + (plusGrand >= 0 ? 'positif' : 'negatif') + '.</div>';
-        html += '</div>';
-    }
+        html += '<div class="step-number">Etape 2 : On simplifie</div>';
+        html += '<div class="step-expression">' + nrSimplifiedOp(a, '+', b) + '</div>';
 
-    // Simplification si b negatif
-    if (b < 0) {
+        if (b < 0) {
+            html += '<div class="step-explanation">' + formatNR(a) + ' + (' + b + ') revient a calculer ' + formatNR(a) + ' &minus; ' + absB + '.</div>';
+        } else {
+            html += '<div class="step-explanation">' + formatNR(a) + ' + ' + b + ' : on part de ' + formatNR(a) + ' et on avance de ' + b + '.</div>';
+        }
+        html += '</div>';
+
+        // Etape 3 : calcul
         html += '<div class="step">';
-        html += '<div class="step-number">Astuce</div>';
-        html += '<div class="step-expression">' + formatNR(a) + ' + (' + b + ') = ' + nrSimplifiedOp(a, '+', b) + '</div>';
-        html += '<div class="step-explanation">Ajouter un nombre negatif revient a soustraire sa partie numerique.</div>';
+        html += '<div class="step-number">Etape 3 : On calcule</div>';
+
+        if (absA === absB) {
+            html += '<div class="step-expression">' + absA + ' &minus; ' + absB + ' = 0</div>';
+            html += '<div class="step-explanation">Les deux nombres s\'annulent !</div>';
+        } else if (absA > absB) {
+            html += '<div class="step-expression">' + absA + ' &minus; ' + absB + ' = ' + (absA - absB) + '</div>';
+            html += '<div class="step-explanation">' + absA + ' est plus grand que ' + absB + ', donc le resultat garde le signe de ' + formatNR(a) + ' : c\'est <strong>' + result + '</strong>.</div>';
+        } else {
+            html += '<div class="step-expression">' + absB + ' &minus; ' + absA + ' = ' + (absB - absA) + '</div>';
+            html += '<div class="step-explanation">' + absB + ' est plus grand que ' + absA + ', donc le resultat garde le signe de ' + formatNR(b) + ' : c\'est <strong>' + result + '</strong>.</div>';
+        }
         html += '</div>';
     }
 
@@ -423,29 +446,59 @@ function solveNRSoustraction() {
     const a = NombresRelatifsState.a;
     const b = NombresRelatifsState.b;
     const result = a - b;
+    const absA = Math.abs(a);
+    const absB = Math.abs(b);
     let html = '';
 
+    // Etape 1 : Expression de depart
     html += '<div class="step">';
-    html += '<div class="step-number">Etape 1 : Transformer en addition</div>';
+    html += '<div class="step-number">Etape 1</div>';
     html += '<div class="step-expression">' + formatNR(a) + ' &minus; ' + formatNRAfterOp(b) + '</div>';
-    html += '<div class="step-explanation">Soustraire un nombre, c\'est ajouter son oppose. L\'oppose de ' + b + ' est ' + (-b) + '.</div>';
+    html += '<div class="step-explanation">Soustraire un nombre, c\'est ajouter son oppose.<br>L\'oppose de ' + formatNR(b) + ', c\'est ' + formatNR(-b) + '.</div>';
     html += '</div>';
 
+    // Etape 2 : Transformation
     html += '<div class="step">';
-    html += '<div class="step-number">Etape 2 : Ecriture simplifiee</div>';
-    html += '<div class="step-expression">' + nrSimplifiedOp(a, '-', b) + '</div>';
+    html += '<div class="step-number">Etape 2 : On transforme</div>';
+    html += '<div class="step-expression">' + formatNR(a) + ' + ' + formatNRAfterOp(-b) + '</div>';
 
-    if ((a >= 0 && -b >= 0) || (a < 0 && -b < 0)) {
-        const signe = a >= 0 ? 'positifs' : 'negatifs';
-        html += '<div class="step-explanation">Meme signe (' + signe + ') : on additionne les parties numeriques.</div>';
-    } else {
-        html += '<div class="step-explanation">Signes contraires : on soustrait le plus petit du plus grand et on garde le signe du nombre le plus eloigne de zero.</div>';
+    if (b < 0) {
+        html += '<div class="step-explanation">' + formatNR(a) + ' &minus; (' + b + ') devient ' + formatNR(a) + ' + ' + Math.abs(b) + '.</div>';
+    } else if (b > 0) {
+        html += '<div class="step-explanation">' + formatNR(a) + ' &minus; ' + b + ' devient ' + formatNR(a) + ' + (' + (-b) + ').</div>';
     }
     html += '</div>';
 
+    // Etape 3 : Calcul (reutilise la logique addition)
+    const newA = a;
+    const newB = -b;
+    const absNewA = Math.abs(newA);
+    const absNewB = Math.abs(newB);
+
     html += '<div class="step">';
-    html += '<div class="step-number">Etape 3 : Resultat</div>';
-    html += '<div class="step-expression">' + nrSimplifiedOp(a, '-', b) + ' = ' + result + '</div>';
+    html += '<div class="step-number">Etape 3 : On calcule</div>';
+
+    if ((newA >= 0 && newB >= 0) || (newA < 0 && newB < 0)) {
+        // Meme signe
+        html += '<div class="step-expression">' + absNewA + ' + ' + absNewB + ' = ' + (absNewA + absNewB) + '</div>';
+        if (newA >= 0) {
+            html += '<div class="step-explanation">Les deux sont positifs, on additionne directement.</div>';
+        } else {
+            html += '<div class="step-explanation">Les deux sont negatifs, on additionne ' + absNewA + ' et ' + absNewB + ' puis on met le signe moins.</div>';
+        }
+    } else {
+        // Signes differents
+        if (absNewA === absNewB) {
+            html += '<div class="step-expression">' + absNewA + ' &minus; ' + absNewB + ' = 0</div>';
+            html += '<div class="step-explanation">Les deux nombres s\'annulent !</div>';
+        } else if (absNewA > absNewB) {
+            html += '<div class="step-expression">' + absNewA + ' &minus; ' + absNewB + ' = ' + (absNewA - absNewB) + '</div>';
+            html += '<div class="step-explanation">' + absNewA + ' est plus grand que ' + absNewB + '. Le resultat garde le signe de ' + formatNR(newA) + '.</div>';
+        } else {
+            html += '<div class="step-expression">' + absNewB + ' &minus; ' + absNewA + ' = ' + (absNewB - absNewA) + '</div>';
+            html += '<div class="step-explanation">' + absNewB + ' est plus grand que ' + absNewA + '. Le resultat garde le signe de ' + formatNR(newB) + '.</div>';
+        }
+    }
     html += '</div>';
 
     html += '<div class="result-highlight">';
@@ -530,7 +583,7 @@ function solveNRDivision() {
 }
 
 /**
- * Resout une expression melangee
+ * Resout une expression melangee (3 termes)
  */
 function solveNRMelange() {
     const st = NombresRelatifsState;
@@ -543,36 +596,65 @@ function solveNRMelange() {
     const inter = opB === '+' ? a + b : a - b;
     const result = opC === '+' ? inter + c : inter - c;
 
+    const opBsym = opB === '-' ? '&minus;' : '+';
+    const opCsym = opC === '-' ? '&minus;' : '+';
+    const exprFull = formatNR(a) + ' ' + opBsym + ' ' + formatNRAfterOp(b) + ' ' + opCsym + ' ' + formatNRAfterOp(c);
+
     let html = '';
 
-    // Etape 1 : Premier calcul
+    // Etape 1 : Simplifier les signes
     html += '<div class="step">';
-    html += '<div class="step-number">Etape 1 : Calculer de gauche a droite</div>';
+    html += '<div class="step-number">Etape 1 : Simplifier les signes</div>';
+    html += '<div class="step-expression">' + exprFull + '</div>';
 
-    const opBsym = opB === '-' ? '&minus;' : '+';
-    html += '<div class="step-expression">' + formatNR(a) + ' ' + opBsym + ' ' + formatNRAfterOp(b) + '</div>';
-
-    // Montrer la simplification
-    html += '<div class="step-explanation">';
-    html += 'On simplifie : ' + nrSimplifiedOp(a, opB, b) + ' = ' + inter;
+    // Construire la version simplifiee
+    let simplified = formatNR(a);
+    // Deuxieme terme
+    const effB = opB === '-' ? -b : b;
+    if (effB >= 0) {
+        simplified += ' + ' + effB;
+    } else {
+        simplified += ' &minus; ' + Math.abs(effB);
+    }
+    // Troisieme terme
+    const effC = opC === '-' ? -c : c;
+    if (effC >= 0) {
+        simplified += ' + ' + effC;
+    } else {
+        simplified += ' &minus; ' + Math.abs(effC);
+    }
+    html += '<div class="step-explanation">On simplifie : ' + simplified + '</div>';
     html += '</div>';
-    html += '</div>';
 
-    // Etape 2 : Second calcul
+    // Etape 2 : Premier calcul
     html += '<div class="step">';
-    html += '<div class="step-number">Etape 2 : Suite du calcul</div>';
+    html += '<div class="step-number">Etape 2 : On calcule de gauche a droite</div>';
+    const absA = Math.abs(a);
+    const absEffB = Math.abs(effB);
 
-    const opCsym = opC === '-' ? '&minus;' : '+';
-    html += '<div class="step-expression">' + formatNR(inter) + ' ' + opCsym + ' ' + formatNRAfterOp(c) + '</div>';
+    let step2expr = formatNR(a);
+    if (effB >= 0) step2expr += ' + ' + effB;
+    else step2expr += ' &minus; ' + absEffB;
+    step2expr += ' = ' + inter;
 
-    html += '<div class="step-explanation">';
-    html += 'On simplifie : ' + nrSimplifiedOp(inter, opC, c) + ' = ' + result;
+    html += '<div class="step-expression">' + step2expr + '</div>';
+    html += '<div class="step-explanation">Le resultat intermediaire est ' + inter + '.</div>';
     html += '</div>';
+
+    // Etape 3 : Deuxieme calcul
+    html += '<div class="step">';
+    html += '<div class="step-number">Etape 3 : On continue</div>';
+
+    let step3expr = formatNR(inter);
+    if (effC >= 0) step3expr += ' + ' + effC;
+    else step3expr += ' &minus; ' + Math.abs(effC);
+    step3expr += ' = ' + result;
+
+    html += '<div class="step-expression">' + step3expr + '</div>';
     html += '</div>';
 
     // Resultat
     html += '<div class="result-highlight">';
-    let exprFull = formatNR(a) + ' ' + opBsym + ' ' + formatNRAfterOp(b) + ' ' + opCsym + ' ' + formatNRAfterOp(c);
     html += '<div class="final">' + exprFull + ' = <strong>' + result + '</strong></div>';
     html += '</div>';
 
