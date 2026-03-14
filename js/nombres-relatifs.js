@@ -30,11 +30,36 @@ function nrRandInt(min, max, nonZero) {
 }
 
 /**
- * Formate un nombre relatif avec parentheses : (+5) ou (-3)
+ * Formate un nombre relatif (sans parentheses inutiles)
  */
-function formatRelatif(n) {
-    if (n >= 0) return '(+' + n + ')';
-    return '(' + n + ')';
+function formatNR(n) {
+    return String(n);
+}
+
+/**
+ * Formate un nombre apparaissant apres un operateur
+ * Parentheses uniquement si negatif : 5 + (-3)
+ */
+function formatNRAfterOp(n) {
+    if (n < 0) return '(' + n + ')';
+    return String(n);
+}
+
+/**
+ * Simplifie l'affichage d'une operation : a OP b
+ * Ex: 5, '+', -3 => "5 - 3"
+ *     5, '-', -3 => "5 + 3"
+ */
+function nrSimplifiedOp(a, op, b) {
+    let str = formatNR(a);
+    if (op === '+') {
+        if (b >= 0) str += ' + ' + b;
+        else str += ' &minus; ' + Math.abs(b);
+    } else {
+        if (b >= 0) str += ' &minus; ' + b;
+        else str += ' + ' + Math.abs(b);
+    }
+    return str;
 }
 
 /**
@@ -87,7 +112,6 @@ function generateNombresRelatifs() {
 
     switch (st.currentType) {
         case 'reperage': {
-            // Generer 4-5 nombres distincts a placer sur une droite graduee
             const count = nrRandInt(4, 5);
             const set = new Set();
             while (set.size < count) {
@@ -98,7 +122,6 @@ function generateNombresRelatifs() {
         }
 
         case 'comparaison': {
-            // Generer 4 paires de nombres a comparer
             st.paires = [];
             for (let i = 0; i < 4; i++) {
                 const a = nrRandInt(-20, 20);
@@ -125,7 +148,6 @@ function generateNombresRelatifs() {
             break;
 
         case 'division': {
-            // Generer une division exacte
             st.b = nrRandInt(-12, 12, true);
             const quotient = nrRandInt(-10, 10, true);
             st.a = st.b * quotient;
@@ -153,43 +175,42 @@ function updateExerciseDisplay() {
         case 'reperage':
             display = '<strong>Ranger les nombres suivants dans l\'ordre croissant :</strong><br><br>';
             display += '<span style="font-size: 1.3em;">';
-            display += st.nombres.map(n => (n >= 0 ? '+' + n : '' + n)).join(' &nbsp;;&nbsp; ');
+            display += st.nombres.join(' &nbsp;;&nbsp; ');
             display += '</span>';
             break;
 
         case 'comparaison':
             display = '<strong>Comparer les nombres suivants (placer &lt; ou &gt;) :</strong><br><br>';
             for (let i = 0; i < st.paires.length; i++) {
-                const a = st.paires[i][0];
-                const b = st.paires[i][1];
-                const aStr = a >= 0 ? '+' + a : '' + a;
-                const bStr = b >= 0 ? '+' + b : '' + b;
-                display += '<span style="font-size: 1.1em;">' + (i + 1) + ') &nbsp; ' + aStr + ' &nbsp; ... &nbsp; ' + bStr + '</span><br>';
+                display += '<span style="font-size: 1.1em;">' + (i + 1) + ') &nbsp; ' + st.paires[i][0] + ' &nbsp; ... &nbsp; ' + st.paires[i][1] + '</span><br>';
             }
             break;
 
         case 'addition':
-            display = formatRelatif(st.a) + ' + ' + formatRelatif(st.b) + ' = ?';
+            display = formatNR(st.a) + ' + ' + formatNRAfterOp(st.b) + ' = ?';
             break;
 
         case 'soustraction':
-            display = formatRelatif(st.a) + ' &minus; ' + formatRelatif(st.b) + ' = ?';
+            display = formatNR(st.a) + ' &minus; ' + formatNRAfterOp(st.b) + ' = ?';
             break;
 
         case 'multiplication':
-            display = formatRelatif(st.a) + ' &times; ' + formatRelatif(st.b) + ' = ?';
+            display = formatNR(st.a) + ' &times; ' + formatNRAfterOp(st.b) + ' = ?';
             break;
 
         case 'division':
-            display = formatRelatif(st.a) + ' &divide; ' + formatRelatif(st.b) + ' = ?';
+            display = formatNR(st.a) + ' &divide; ' + formatNRAfterOp(st.b) + ' = ?';
             break;
 
-        case 'melange':
-            display = formatRelatif(st.a)
-                + ' ' + st.opB + ' ' + formatRelatif(st.b)
-                + ' ' + st.opC + ' ' + formatRelatif(st.c)
-                + ' = ?';
+        case 'melange': {
+            let expr = formatNR(st.a);
+            const opBsym = st.opB === '-' ? '&minus;' : '+';
+            const opCsym = st.opC === '-' ? '&minus;' : '+';
+            expr += ' ' + opBsym + ' ' + formatNRAfterOp(st.b);
+            expr += ' ' + opCsym + ' ' + formatNRAfterOp(st.c);
+            display = expr + ' = ?';
             break;
+        }
     }
 
     $('exerciseDisplay').innerHTML = display;
@@ -237,6 +258,7 @@ function solveReperage() {
     const sorted = [...st.nombres].sort((a, b) => a - b);
     let html = '';
 
+    // Etape 1 : Identifier negatifs et positifs
     html += '<div class="step">';
     html += '<div class="step-number">Etape 1 : Reperer les nombres negatifs et positifs</div>';
     const negatifs = sorted.filter(n => n < 0);
@@ -247,29 +269,58 @@ function solveReperage() {
     html += '</div>';
     html += '<div class="step-explanation">';
     html += 'Les nombres negatifs sont toujours inferieurs aux nombres positifs.<br>';
-    html += 'Plus un nombre negatif est "grand" en valeur absolue, plus il est petit.';
+    html += 'Plus un nombre negatif est eloigne de zero, plus il est petit.';
     html += '</div>';
     html += '</div>';
 
+    // Etape 2 : Droite graduee
     html += '<div class="step">';
     html += '<div class="step-number">Etape 2 : Droite graduee</div>';
     html += '<div class="step-expression">';
-    // Dessiner une droite simplifiee en texte
-    html += '<div style="position:relative; height:50px; margin: 10px 0;">';
-    html += '<div style="position:absolute; top:20px; left:5%; right:5%; height:2px; background:#333;"></div>';
-    const min = Math.min(...sorted) - 1;
-    const max = Math.max(...sorted) + 1;
-    const range = max - min;
-    sorted.forEach(n => {
-        const pct = 5 + ((n - min) / range) * 90;
-        html += '<div style="position:absolute; top:8px; left:' + pct + '%; transform:translateX(-50%); text-align:center; font-weight:bold; color: var(--primary, #667eea);">' + n + '<div style="width:2px; height:12px; background:#333; margin:2px auto;"></div></div>';
-    });
+
+    const allNums = [...sorted];
+    const lineMin = Math.min(...allNums) - 2;
+    const lineMax = Math.max(...allNums) + 2;
+
+    html += '<div style="position:relative; height:70px; margin:15px 10px; overflow:visible;">';
+    // Ligne principale
+    html += '<div style="position:absolute; top:30px; left:2%; right:2%; height:2px; background:#555;"></div>';
+    // Fleche droite
+    html += '<div style="position:absolute; top:26px; right:1%; width:0; height:0; border-left:8px solid #555; border-top:5px solid transparent; border-bottom:5px solid transparent;"></div>';
+
+    // Graduations pour tous les entiers dans la plage
+    for (let i = Math.ceil(lineMin); i <= Math.floor(lineMax); i++) {
+        const pct = 2 + ((i - lineMin) / (lineMax - lineMin)) * 96;
+        const isTarget = st.nombres.includes(i);
+        const isZero = i === 0;
+
+        // Trait de graduation
+        const tickH = (isTarget || isZero) ? 14 : 8;
+        const tickTop = 30 - tickH / 2;
+        const tickColor = isTarget ? 'var(--primary, #667eea)' : (isZero ? '#333' : '#bbb');
+        html += '<div style="position:absolute; top:' + tickTop + 'px; left:' + pct + '%; width:2px; height:' + tickH + 'px; background:' + tickColor + '; transform:translateX(-50%);"></div>';
+
+        // Numero en dessous
+        if (isTarget || isZero || (i % 2 === 0)) {
+            const color = isTarget ? 'var(--primary, #667eea)' : '#888';
+            const fw = isTarget ? 'bold' : 'normal';
+            const fs = isTarget ? '0.95em' : '0.8em';
+            html += '<div style="position:absolute; top:42px; left:' + pct + '%; transform:translateX(-50%); font-size:' + fs + '; color:' + color + '; font-weight:' + fw + ';">' + i + '</div>';
+        }
+
+        // Point colore pour les nombres a placer
+        if (isTarget) {
+            html += '<div style="position:absolute; top:27px; left:' + pct + '%; width:8px; height:8px; background:var(--primary, #667eea); border-radius:50%; transform:translateX(-50%);"></div>';
+        }
+    }
+
     html += '</div>';
     html += '</div>';
     html += '</div>';
 
+    // Resultat
     html += '<div class="result-highlight">';
-    html += '<div class="final">Ordre croissant : <strong>' + sorted.map(n => (n >= 0 ? '+' + n : '' + n)).join(' &lt; ') + '</strong></div>';
+    html += '<div class="final">Ordre croissant : <strong>' + sorted.join(' &lt; ') + '</strong></div>';
     html += '</div>';
 
     return html;
@@ -285,22 +336,23 @@ function solveComparaison() {
     for (let i = 0; i < st.paires.length; i++) {
         const a = st.paires[i][0];
         const b = st.paires[i][1];
-        const aStr = a >= 0 ? '+' + a : '' + a;
-        const bStr = b >= 0 ? '+' + b : '' + b;
         const symbol = a < b ? '&lt;' : '&gt;';
 
         html += '<div class="step">';
-        html += '<div class="step-number">' + (i + 1) + ') ' + aStr + ' ... ' + bStr + '</div>';
-        html += '<div class="step-expression">' + aStr + ' <strong>' + symbol + '</strong> ' + bStr + '</div>';
+        html += '<div class="step-number">' + (i + 1) + ') ' + a + ' ... ' + b + '</div>';
+        html += '<div class="step-expression">' + a + ' <strong>' + symbol + '</strong> ' + b + '</div>';
         html += '<div class="step-explanation">';
         if (a < 0 && b >= 0) {
             html += 'Un nombre negatif est toujours inferieur a un nombre positif.';
         } else if (a >= 0 && b < 0) {
             html += 'Un nombre positif est toujours superieur a un nombre negatif.';
         } else if (a < 0 && b < 0) {
-            html += 'Pour deux negatifs, le plus proche de zero est le plus grand : |' + Math.abs(a) + '| et |' + Math.abs(b) + '|.';
+            html += 'Pour deux nombres negatifs, le plus proche de zero est le plus grand. ';
+            html += Math.abs(a) < Math.abs(b)
+                ? a + ' est plus proche de zero que ' + b + '.'
+                : b + ' est plus proche de zero que ' + a + '.';
         } else {
-            html += 'Pour deux positifs, on compare directement.';
+            html += 'Pour deux nombres positifs, on compare directement.';
         }
         html += '</div>';
         html += '</div>';
@@ -318,22 +370,23 @@ function solveNRAddition() {
     const result = a + b;
     let html = '';
 
+    // Etape 1 : Ecriture
     html += '<div class="step">';
     html += '<div class="step-number">Etape 1 : Identifier les signes</div>';
-    html += '<div class="step-expression">' + formatRelatif(a) + ' + ' + formatRelatif(b) + '</div>';
+    html += '<div class="step-expression">' + formatNR(a) + ' + ' + formatNRAfterOp(b) + '</div>';
 
     if ((a >= 0 && b >= 0) || (a < 0 && b < 0)) {
         const signe = a >= 0 ? 'positifs' : 'negatifs';
-        html += '<div class="step-explanation">Les deux nombres sont ' + signe + ' : on additionne les valeurs absolues et on garde le signe.</div>';
+        html += '<div class="step-explanation">Les deux nombres sont ' + signe + ' : on additionne les parties numeriques et on garde le signe commun.</div>';
         html += '</div>';
 
         html += '<div class="step">';
         html += '<div class="step-number">Etape 2 : Calculer</div>';
         html += '<div class="step-expression">' + Math.abs(a) + ' + ' + Math.abs(b) + ' = ' + Math.abs(result) + '</div>';
-        html += '<div class="step-explanation">On garde le signe ' + (a >= 0 ? 'positif (+)' : 'negatif (-)') + '.</div>';
+        html += '<div class="step-explanation">On garde le signe ' + (a >= 0 ? 'positif' : 'negatif') + '.</div>';
         html += '</div>';
     } else {
-        html += '<div class="step-explanation">Les nombres sont de signes contraires : on soustrait la plus petite valeur absolue de la plus grande, et on prend le signe de celui qui a la plus grande valeur absolue.</div>';
+        html += '<div class="step-explanation">Les nombres sont de signes contraires : on soustrait le plus petit du plus grand, et on garde le signe du nombre le plus eloigne de zero.</div>';
         html += '</div>';
 
         html += '<div class="step">';
@@ -343,12 +396,21 @@ function solveNRAddition() {
         const diff = Math.abs(absA - absB);
         const plusGrand = absA >= absB ? a : b;
         html += '<div class="step-expression">' + Math.max(absA, absB) + ' &minus; ' + Math.min(absA, absB) + ' = ' + diff + '</div>';
-        html += '<div class="step-explanation">Le nombre avec la plus grande valeur absolue est ' + formatRelatif(plusGrand) + ', donc le resultat est ' + (plusGrand >= 0 ? 'positif' : 'negatif') + '.</div>';
+        html += '<div class="step-explanation">Le nombre le plus eloigne de zero est ' + plusGrand + ', donc le resultat est ' + (plusGrand >= 0 ? 'positif' : 'negatif') + '.</div>';
+        html += '</div>';
+    }
+
+    // Simplification si b negatif
+    if (b < 0) {
+        html += '<div class="step">';
+        html += '<div class="step-number">Astuce</div>';
+        html += '<div class="step-expression">' + formatNR(a) + ' + (' + b + ') = ' + nrSimplifiedOp(a, '+', b) + '</div>';
+        html += '<div class="step-explanation">Ajouter un nombre negatif revient a soustraire sa partie numerique.</div>';
         html += '</div>';
     }
 
     html += '<div class="result-highlight">';
-    html += '<div class="final">' + formatRelatif(a) + ' + ' + formatRelatif(b) + ' = <strong>' + result + '</strong></div>';
+    html += '<div class="final">' + formatNR(a) + ' + ' + formatNRAfterOp(b) + ' = <strong>' + result + '</strong></div>';
     html += '</div>';
 
     return html;
@@ -365,29 +427,29 @@ function solveNRSoustraction() {
 
     html += '<div class="step">';
     html += '<div class="step-number">Etape 1 : Transformer en addition</div>';
-    html += '<div class="step-expression">' + formatRelatif(a) + ' &minus; ' + formatRelatif(b) + '</div>';
-    html += '<div class="step-explanation">Soustraire un nombre, c\'est ajouter son oppose. L\'oppose de ' + formatRelatif(b) + ' est ' + formatRelatif(-b) + '.</div>';
+    html += '<div class="step-expression">' + formatNR(a) + ' &minus; ' + formatNRAfterOp(b) + '</div>';
+    html += '<div class="step-explanation">Soustraire un nombre, c\'est ajouter son oppose. L\'oppose de ' + b + ' est ' + (-b) + '.</div>';
     html += '</div>';
 
     html += '<div class="step">';
-    html += '<div class="step-number">Etape 2 : Calculer l\'addition</div>';
-    html += '<div class="step-expression">' + formatRelatif(a) + ' + ' + formatRelatif(-b) + '</div>';
+    html += '<div class="step-number">Etape 2 : Ecriture simplifiee</div>';
+    html += '<div class="step-expression">' + nrSimplifiedOp(a, '-', b) + '</div>';
 
     if ((a >= 0 && -b >= 0) || (a < 0 && -b < 0)) {
         const signe = a >= 0 ? 'positifs' : 'negatifs';
-        html += '<div class="step-explanation">Meme signe (' + signe + ') : on additionne les valeurs absolues.</div>';
+        html += '<div class="step-explanation">Meme signe (' + signe + ') : on additionne les parties numeriques.</div>';
     } else {
-        html += '<div class="step-explanation">Signes contraires : on soustrait et on garde le signe du plus grand en valeur absolue.</div>';
+        html += '<div class="step-explanation">Signes contraires : on soustrait le plus petit du plus grand et on garde le signe du nombre le plus eloigne de zero.</div>';
     }
     html += '</div>';
 
     html += '<div class="step">';
     html += '<div class="step-number">Etape 3 : Resultat</div>';
-    html += '<div class="step-expression">' + a + ' + ' + (-b) + ' = ' + result + '</div>';
+    html += '<div class="step-expression">' + nrSimplifiedOp(a, '-', b) + ' = ' + result + '</div>';
     html += '</div>';
 
     html += '<div class="result-highlight">';
-    html += '<div class="final">' + formatRelatif(a) + ' &minus; ' + formatRelatif(b) + ' = <strong>' + result + '</strong></div>';
+    html += '<div class="final">' + formatNR(a) + ' &minus; ' + formatNRAfterOp(b) + ' = <strong>' + result + '</strong></div>';
     html += '</div>';
 
     return html;
@@ -404,7 +466,7 @@ function solveNRMultiplication() {
 
     html += '<div class="step">';
     html += '<div class="step-number">Etape 1 : Regle des signes</div>';
-    html += '<div class="step-expression">' + formatRelatif(a) + ' &times; ' + formatRelatif(b) + '</div>';
+    html += '<div class="step-expression">' + formatNR(a) + ' &times; ' + formatNRAfterOp(b) + '</div>';
 
     const signeA = a >= 0 ? '+' : '&minus;';
     const signeB = b >= 0 ? '+' : '&minus;';
@@ -419,12 +481,12 @@ function solveNRMultiplication() {
     html += '</div>';
 
     html += '<div class="step">';
-    html += '<div class="step-number">Etape 2 : Multiplier les valeurs absolues</div>';
+    html += '<div class="step-number">Etape 2 : Multiplier les parties numeriques</div>';
     html += '<div class="step-expression">' + Math.abs(a) + ' &times; ' + Math.abs(b) + ' = ' + Math.abs(result) + '</div>';
     html += '</div>';
 
     html += '<div class="result-highlight">';
-    html += '<div class="final">' + formatRelatif(a) + ' &times; ' + formatRelatif(b) + ' = <strong>' + result + '</strong></div>';
+    html += '<div class="final">' + formatNR(a) + ' &times; ' + formatNRAfterOp(b) + ' = <strong>' + result + '</strong></div>';
     html += '</div>';
 
     return html;
@@ -441,7 +503,7 @@ function solveNRDivision() {
 
     html += '<div class="step">';
     html += '<div class="step-number">Etape 1 : Regle des signes</div>';
-    html += '<div class="step-expression">' + formatRelatif(a) + ' &divide; ' + formatRelatif(b) + '</div>';
+    html += '<div class="step-expression">' + formatNR(a) + ' &divide; ' + formatNRAfterOp(b) + '</div>';
 
     const signeA = a >= 0 ? '+' : '&minus;';
     const signeB = b >= 0 ? '+' : '&minus;';
@@ -456,12 +518,12 @@ function solveNRDivision() {
     html += '</div>';
 
     html += '<div class="step">';
-    html += '<div class="step-number">Etape 2 : Diviser les valeurs absolues</div>';
+    html += '<div class="step-number">Etape 2 : Diviser les parties numeriques</div>';
     html += '<div class="step-expression">' + Math.abs(a) + ' &divide; ' + Math.abs(b) + ' = ' + Math.abs(result) + '</div>';
     html += '</div>';
 
     html += '<div class="result-highlight">';
-    html += '<div class="final">' + formatRelatif(a) + ' &divide; ' + formatRelatif(b) + ' = <strong>' + result + '</strong></div>';
+    html += '<div class="final">' + formatNR(a) + ' &divide; ' + formatNRAfterOp(b) + ' = <strong>' + result + '</strong></div>';
     html += '</div>';
 
     return html;
@@ -483,39 +545,35 @@ function solveNRMelange() {
 
     let html = '';
 
+    // Etape 1 : Premier calcul
     html += '<div class="step">';
     html += '<div class="step-number">Etape 1 : Calculer de gauche a droite</div>';
-    html += '<div class="step-expression">' + formatRelatif(a) + ' ' + opB + ' ' + formatRelatif(b) + '</div>';
 
-    if (opB === '-') {
-        html += '<div class="step-explanation">Soustraire ' + formatRelatif(b) + ' revient a ajouter ' + formatRelatif(-b) + '.</div>';
-        html += '</div>';
-        html += '<div class="step">';
-        html += '<div class="step-number">Etape 1 (suite)</div>';
-        html += '<div class="step-expression">' + a + ' + ' + (-b) + ' = ' + inter + '</div>';
-    } else {
-        html += '<div class="step-explanation">' + a + ' + ' + b + ' = ' + inter + '</div>';
-    }
+    const opBsym = opB === '-' ? '&minus;' : '+';
+    html += '<div class="step-expression">' + formatNR(a) + ' ' + opBsym + ' ' + formatNRAfterOp(b) + '</div>';
+
+    // Montrer la simplification
+    html += '<div class="step-explanation">';
+    html += 'On simplifie : ' + nrSimplifiedOp(a, opB, b) + ' = ' + inter;
+    html += '</div>';
     html += '</div>';
 
+    // Etape 2 : Second calcul
     html += '<div class="step">';
     html += '<div class="step-number">Etape 2 : Suite du calcul</div>';
-    html += '<div class="step-expression">' + formatRelatif(inter) + ' ' + opC + ' ' + formatRelatif(c) + '</div>';
 
-    if (opC === '-') {
-        html += '<div class="step-explanation">Soustraire ' + formatRelatif(c) + ' revient a ajouter ' + formatRelatif(-c) + '.</div>';
-        html += '</div>';
-        html += '<div class="step">';
-        html += '<div class="step-number">Etape 2 (suite)</div>';
-        html += '<div class="step-expression">' + inter + ' + ' + (-c) + ' = ' + result + '</div>';
-    } else {
-        html += '<div class="step-explanation">' + inter + ' + ' + c + ' = ' + result + '</div>';
-    }
+    const opCsym = opC === '-' ? '&minus;' : '+';
+    html += '<div class="step-expression">' + formatNR(inter) + ' ' + opCsym + ' ' + formatNRAfterOp(c) + '</div>';
+
+    html += '<div class="step-explanation">';
+    html += 'On simplifie : ' + nrSimplifiedOp(inter, opC, c) + ' = ' + result;
+    html += '</div>';
     html += '</div>';
 
-    const displayOp = function(op) { return op === '-' ? '&minus;' : '+'; };
+    // Resultat
     html += '<div class="result-highlight">';
-    html += '<div class="final">' + formatRelatif(a) + ' ' + displayOp(opB) + ' ' + formatRelatif(b) + ' ' + displayOp(opC) + ' ' + formatRelatif(c) + ' = <strong>' + result + '</strong></div>';
+    let exprFull = formatNR(a) + ' ' + opBsym + ' ' + formatNRAfterOp(b) + ' ' + opCsym + ' ' + formatNRAfterOp(c);
+    html += '<div class="final">' + exprFull + ' = <strong>' + result + '</strong></div>';
     html += '</div>';
 
     return html;
