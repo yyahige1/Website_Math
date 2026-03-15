@@ -145,7 +145,8 @@ function solveSimple(expr) {
                     <span class="arrow-term" id="termK">${k}</span>
                     <span>(</span>
                     <span class="arrow-term" id="termA">${formatTerm(a, 'x', true)}</span>
-                    <span class="arrow-term" id="termB">${formatTerm(b, '', false)}</span>
+                    <span>${b >= 0 ? '+' : '−'}</span>
+                    <span class="arrow-term" id="termB">${Math.abs(b)}</span>
                     <span>)</span>
                 </div>
                 <svg class="arrows-svg" id="arrowsSvg"></svg>
@@ -189,10 +190,12 @@ function solveDouble(expr) {
                 <div class="arrow-expr">
                     <span>(</span>
                     <span class="arrow-term" id="termA">${formatTerm(a, 'x', true)}</span>
-                    <span class="arrow-term" id="termB">${formatTerm(b, '', false)}</span>
+                    <span>${b >= 0 ? '+' : '−'}</span>
+                    <span class="arrow-term" id="termB">${Math.abs(b)}</span>
                     <span>)(</span>
                     <span class="arrow-term" id="termC">${formatTerm(c, 'x', true)}</span>
-                    <span class="arrow-term" id="termD">${formatTerm(d, '', false)}</span>
+                    <span>${d >= 0 ? '+' : '−'}</span>
+                    <span class="arrow-term" id="termD">${Math.abs(d)}</span>
                     <span>)</span>
                 </div>
                 <svg class="arrows-svg" id="arrowsSvg"></svg>
@@ -395,7 +398,7 @@ function drawArrowAbove(svg, containerRect, from, to, color, level) {
     path.setAttribute('d', `M ${x1} ${y1} C ${x1} ${midY}, ${x2} ${midY}, ${x2} ${y2}`);
     path.setAttribute('fill', 'none');
     path.setAttribute('stroke', color);
-    path.setAttribute('stroke-width', '2');
+    path.setAttribute('stroke-width', '2.5');
     path.setAttribute('marker-end', `url(#arrow-${color.replace('#', '')})`);
 
     addArrowMarker(svg, color);
@@ -422,7 +425,7 @@ function drawArrowBelow(svg, containerRect, from, to, color, level) {
     path.setAttribute('d', `M ${x1} ${y1} C ${x1} ${midY}, ${x2} ${midY}, ${x2} ${y2}`);
     path.setAttribute('fill', 'none');
     path.setAttribute('stroke', color);
-    path.setAttribute('stroke-width', '2');
+    path.setAttribute('stroke-width', '2.5');
     path.setAttribute('marker-end', `url(#arrow-${color.replace('#', '')})`);
 
     addArrowMarker(svg, color);
@@ -437,8 +440,8 @@ function addArrowMarker(svg, color) {
     if (!svg.querySelector(`#${markerId}`)) {
         const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
         defs.innerHTML = `
-            <marker id="${markerId}" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto" markerUnits="userSpaceOnUse">
-                <polygon points="0 0, 8 3, 0 6" fill="${color}"/>
+            <marker id="${markerId}" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto" markerUnits="userSpaceOnUse">
+                <polygon points="0 0, 10 4, 0 8" fill="${color}"/>
             </marker>
         `;
         svg.appendChild(defs);
