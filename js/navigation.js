@@ -90,7 +90,7 @@ const NIVEAUX_CONFIG = {
     },
     'probabilites': {
         '4eme': ['simple'],
-        '3eme': ['simple', 'arbre'],
+        '3eme': ['simple'],
         '2nde': ['simple', 'arbre', 'variable'],
         '1ere': ['simple', 'conditionnelle', 'arbre', 'variable'],
         'terminale': ['simple', 'conditionnelle', 'arbre', 'binomiale', 'variable', 'fluctuation'],

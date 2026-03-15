@@ -125,6 +125,8 @@
     list-style: none;
     padding: 0.5rem 0;
     margin: 0;
+    max-height: calc(100vh - 80px);
+    overflow-y: auto;
 }
 
 /* Dropdown pour les derniers items (évite débordement à droite) */
