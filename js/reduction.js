@@ -153,6 +153,9 @@ function solveReduction() {
 function solveSimpleReduction(terms) {
     let html = '';
     
+    // Detecter si l'expression ne contient que des constantes
+    const allConst = terms.every(t => t.type === 'const');
+
     // Afficher l'expression de départ avec couleurs
     let coloredExpr = '';
     terms.forEach((term, i) => {
@@ -161,14 +164,14 @@ function solveSimpleReduction(terms) {
         const termStr = formatTerm(term.coef, variable, i === 0);
         coloredExpr += `<span style="background: ${color.bg}; padding: 2px 4px; border-radius: 3px;">${termStr}</span>`;
     });
-    
+
     html += `
         <div class="step">
-            <div class="step-expression">Identifier les termes semblables</div>
+            <div class="step-expression">${allConst ? 'Identifier les termes a calculer' : 'Identifier les termes semblables'}</div>
             <div class="step-explanation" style="font-family: var(--font-mono); font-size: 1.1em; margin-top: 8px;">
                 ${coloredExpr}
             </div>
-            ${createLegend(terms)}
+            ${allConst ? '' : createLegend(terms)}
         </div>
     `;
     
@@ -200,7 +203,7 @@ function solveSimpleReduction(terms) {
     
     html += `
         <div class="step">
-            <div class="step-expression">Regrouper et calculer</div>
+            <div class="step-expression">${allConst ? 'Effectuer le calcul' : 'Regrouper et calculer'}</div>
             ${regroupHTML}
         </div>
     `;

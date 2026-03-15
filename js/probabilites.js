@@ -25,6 +25,21 @@ const ProbaState = {
 // ========================================
 
 function initProbabilitesPage() {
+    // Masquer les types non adaptes au niveau
+    const niveau = new URLSearchParams(window.location.search).get('niveau');
+    const isCollege = ['6eme', '5eme', '4eme', '3eme'].includes(niveau);
+    if (isCollege) {
+        // Au college, seules les probabilites simples sont au programme
+        const typesLycee = ['conditionnelle', 'arbre', 'binomiale', 'variable', 'fluctuation'];
+        typesLycee.forEach(type => {
+            const btn = document.querySelector(`.type-btn[data-type="${type}"]`);
+            if (btn) btn.style.display = 'none';
+        });
+        // Adapter le sous-titre
+        const subtitle = document.querySelector('.subtitle');
+        if (subtitle) subtitle.textContent = 'Niveau : ' + niveau;
+    }
+
     setupTypeButtons();
     setupInputHandlers();
     setupActionButtons();
