@@ -831,7 +831,7 @@ function solveMoyenne() {
             termes.push(`${ex.valeurs[i]} \\times ${ex.effectifs[i]}`);
         }
         if (isCollege) {
-            html += `<div class="step-expression">${termes.join(' + ')}</div>`;
+            html += `<div class="step-expression">` + K(termes.join(' + ')) + `</div>`;
         } else {
             html += `<div class="step-expression">` + K(`\\sum n_i \\cdot x_i = ${termes.join(' + ')}`) + `</div>`;
         }

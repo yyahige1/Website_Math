@@ -527,9 +527,9 @@ function generateTriangle() {
         ex.angle = angle;
         ex.angleAngle = ANGLES_REMARQUABLES.find(a => a.deg === angle);
 
-        // Pour le niveau 4eme, forcer cosinus uniquement (adjacent et hypotenuse)
+        // Pour le niveau 4eme : cosinus + Pythagore (pas de sinus/tangente)
         const niveau = new URLSearchParams(window.location.search).get('niveau');
-        let givenChoices, findChoices;
+        let givenChoices;
         if (niveau === '4eme') {
             givenChoices = ['hypotenuse', 'adjacent'];
         } else {
@@ -559,8 +559,8 @@ function generateTriangle() {
         // Quel cote chercher ?
         let possible;
         if (niveau === '4eme') {
-            // Forcer a trouver l'autre cote de la relation cosinus
-            possible = ['hypotenuse', 'adjacent'].filter(s => s !== given);
+            // 4eme : cosinus (adj/hyp) + oppose via Pythagore
+            possible = ['hypotenuse', 'adjacent', 'oppose'].filter(s => s !== given);
         } else {
             possible = ['hypotenuse', 'adjacent', 'oppose'].filter(s => s !== given);
         }
@@ -1508,20 +1508,73 @@ function solveTriangle() {
     let html = '';
 
     if (sub === 'rectangle') {
-        // Triangle rectangle : SOH CAH TOA
+        const given = ex.givenSide;
+        const find = ex.findSide;
+        const niveau = new URLSearchParams(window.location.search).get('niveau');
+
+        // Cas 4eme + chercher le cote oppose : cosinus + Pythagore
+        if (niveau === '4eme' && find === 'oppose') {
+            html += '<div class="step">';
+            html += '<div class="step-number">1. Rappeler la formule du cosinus</div>';
+            html += `<div class="step-expression">` + K(`\\cos(\\alpha) = \\dfrac{\\text{cote adjacent}}{\\text{hypotenuse}}`) + `</div>`;
+            html += '</div>';
+
+            // Etape 2 : trouver le cote manquant (adj ou hyp) via cosinus
+            const angleData = ex.angleAngle;
+            let intermediaire, interVal;
+            if (given === 'hypotenuse') {
+                intermediaire = 'adjacent';
+                interVal = ex.adj;
+                html += '<div class="step">';
+                html += '<div class="step-number">2. Calculer le cote adjacent</div>';
+                html += `<div class="step-expression">` + K(`\\cos(${ex.angle}°) = \\dfrac{\\text{adj}}{${ex.givenValue}}`) + `</div>`;
+                html += `<div class="step-expression">` + K(`\\text{adj} = ${ex.givenValue} \\times \\cos(${ex.angle}°) = ${ex.givenValue} \\times ${angleData.cos}`) + `</div>`;
+                html += `<div class="step-expression">` + K(`\\text{adj} \\approx ${roundDec(interVal, 2)}`) + `</div>`;
+                html += '</div>';
+            } else {
+                intermediaire = 'hypotenuse';
+                interVal = ex.hyp;
+                html += '<div class="step">';
+                html += '<div class="step-number">2. Calculer l\'hypotenuse</div>';
+                html += `<div class="step-expression">` + K(`\\cos(${ex.angle}°) = \\dfrac{${ex.givenValue}}{\\text{hyp}}`) + `</div>`;
+                html += `<div class="step-expression">` + K(`\\text{hyp} = \\dfrac{${ex.givenValue}}{\\cos(${ex.angle}°)} = \\dfrac{${ex.givenValue}}{${angleData.cos}}`) + `</div>`;
+                html += `<div class="step-expression">` + K(`\\text{hyp} \\approx ${roundDec(interVal, 2)}`) + `</div>`;
+                html += '</div>';
+            }
+
+            // Etape 3 : Pythagore pour le cote oppose
+            html += '<div class="step">';
+            html += '<div class="step-number">3. Appliquer le theoreme de Pythagore</div>';
+            html += `<div class="step-expression">` + K(`\\text{hyp}^2 = \\text{adj}^2 + \\text{opp}^2`) + `</div>`;
+            html += `<div class="step-expression">` + K(`\\text{opp}^2 = \\text{hyp}^2 - \\text{adj}^2`) + `</div>`;
+            const hypVal = roundDec(ex.hyp, 2);
+            const adjVal = roundDec(ex.adj, 2);
+            const opp2 = roundDec(hypVal * hypVal - adjVal * adjVal, 2);
+            html += `<div class="step-expression">` + K(`\\text{opp}^2 = ${roundDec(hypVal * hypVal, 2)} - ${roundDec(adjVal * adjVal, 2)} = ${roundDec(Math.abs(opp2), 2)}`) + `</div>`;
+            html += `<div class="step-expression">` + K(`\\text{opp} = \\sqrt{${roundDec(Math.abs(opp2), 2)}} \\approx ${roundDec(ex.opp, 2)}`) + `</div>`;
+            html += '</div>';
+
+            html += '<div class="result-highlight">';
+            html += `<div class="final">Cote oppose ` + K(`\\approx ${roundDec(ex.opp, 2)}`) + `</div>`;
+            html += '</div>';
+
+        } else {
+        // Cas general : SOH CAH TOA
         html += '<div class="step">';
         html += '<div class="step-number">1. Rappeler les formules SOH-CAH-TOA</div>';
-        html += `<div class="step-expression">` + K(`\\sin(\\alpha) = \\frac{\\text{oppose}}{\\text{hypotenuse}}`) + `</div>`;
-        html += `<div class="step-expression">` + K(`\\cos(\\alpha) = \\frac{\\text{adjacent}}{\\text{hypotenuse}}`) + `</div>`;
-        html += `<div class="step-expression">` + K(`\\tan(\\alpha) = \\frac{\\text{oppose}}{\\text{adjacent}}`) + `</div>`;
+        if (niveau === '4eme') {
+            html += `<div class="step-expression">` + K(`\\cos(\\alpha) = \\dfrac{\\text{cote adjacent}}{\\text{hypotenuse}}`) + `</div>`;
+        } else {
+            html += `<div class="step-expression">` + K(`\\sin(\\alpha) = \\frac{\\text{oppose}}{\\text{hypotenuse}}`) + `</div>`;
+            html += `<div class="step-expression">` + K(`\\cos(\\alpha) = \\frac{\\text{adjacent}}{\\text{hypotenuse}}`) + `</div>`;
+            html += `<div class="step-expression">` + K(`\\tan(\\alpha) = \\frac{\\text{oppose}}{\\text{adjacent}}`) + `</div>`;
+        }
         html += '</div>';
 
         // Identifier la bonne formule
         html += '<div class="step">';
         html += '<div class="step-number">2. Choisir la bonne formule</div>';
 
-        const given = ex.givenSide;
-        const find = ex.findSide;
         let formula, ratio, calcul, result;
 
         if ((given === 'hypotenuse' && find === 'oppose') || (given === 'oppose' && find === 'hypotenuse')) {
@@ -1582,6 +1635,7 @@ function solveTriangle() {
         html += '<div class="result-highlight">';
         html += `<div class="final">${sideNames[find]} ` + K(`\\approx ${roundDec(result, 2)}`) + `</div>`;
         html += '</div>';
+        } // fin else (cas general)
 
     } else {
         // Triangle quelconque

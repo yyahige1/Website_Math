@@ -378,24 +378,26 @@ function drawArrows() {
 function drawArrowAbove(svg, containerRect, from, to, color, level) {
     const fromRect = from.getBoundingClientRect();
     const toRect = to.getBoundingClientRect();
-    
+
     const x1 = fromRect.left + fromRect.width / 2 - containerRect.left;
     const y1 = fromRect.top - containerRect.top;
     const x2 = toRect.left + toRect.width / 2 - containerRect.left;
     const y2 = toRect.top - containerRect.top;
-    
-    // Plus la flèche est longue, plus elle monte haut
+
+    // Plus la fleche est longue, plus elle monte haut
     const distance = Math.abs(x2 - x1);
-    const curveHeight = 8 + level * 5 + distance * 0.05;
+    const curveHeight = 12 + level * 8 + distance * 0.08;
     const midY = Math.min(y1, y2) - curveHeight;
-    
+
+    // Cubic bezier pour un arc lisse qui arrive a angle au lieu de vertical
     const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    path.setAttribute('d', `M ${x1} ${y1} Q ${x1} ${midY}, ${(x1 + x2) / 2} ${midY} Q ${x2} ${midY}, ${x2} ${y2}`);
+    const cpOffset = distance * 0.2;
+    path.setAttribute('d', `M ${x1} ${y1} C ${x1} ${midY}, ${x2} ${midY}, ${x2} ${y2}`);
     path.setAttribute('fill', 'none');
     path.setAttribute('stroke', color);
     path.setAttribute('stroke-width', '2');
     path.setAttribute('marker-end', `url(#arrow-${color.replace('#', '')})`);
-    
+
     addArrowMarker(svg, color);
     svg.appendChild(path);
 }
@@ -406,23 +408,23 @@ function drawArrowAbove(svg, containerRect, from, to, color, level) {
 function drawArrowBelow(svg, containerRect, from, to, color, level) {
     const fromRect = from.getBoundingClientRect();
     const toRect = to.getBoundingClientRect();
-    
+
     const x1 = fromRect.left + fromRect.width / 2 - containerRect.left;
     const y1 = fromRect.bottom - containerRect.top;
     const x2 = toRect.left + toRect.width / 2 - containerRect.left;
     const y2 = toRect.bottom - containerRect.top;
-    
+
     const distance = Math.abs(x2 - x1);
-    const curveHeight = 12 + level * 5 + distance * 0.08;
+    const curveHeight = 12 + level * 8 + distance * 0.08;
     const midY = Math.max(y1, y2) + curveHeight;
-    
+
     const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    path.setAttribute('d', `M ${x1} ${y1} Q ${x1} ${midY}, ${(x1 + x2) / 2} ${midY} Q ${x2} ${midY}, ${x2} ${y2}`);
+    path.setAttribute('d', `M ${x1} ${y1} C ${x1} ${midY}, ${x2} ${midY}, ${x2} ${y2}`);
     path.setAttribute('fill', 'none');
     path.setAttribute('stroke', color);
     path.setAttribute('stroke-width', '2');
     path.setAttribute('marker-end', `url(#arrow-${color.replace('#', '')})`);
-    
+
     addArrowMarker(svg, color);
     svg.appendChild(path);
 }
@@ -435,8 +437,8 @@ function addArrowMarker(svg, color) {
     if (!svg.querySelector(`#${markerId}`)) {
         const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
         defs.innerHTML = `
-            <marker id="${markerId}" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-                <polygon points="0 0, 10 3.5, 0 7" fill="${color}"/>
+            <marker id="${markerId}" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto" markerUnits="userSpaceOnUse">
+                <polygon points="0 0, 8 3, 0 6" fill="${color}"/>
             </marker>
         `;
         svg.appendChild(defs);
