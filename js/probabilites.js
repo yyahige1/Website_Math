@@ -821,22 +821,45 @@ function solveSimple() {
     let html = '';
 
     // Etape 1 : Univers
+    const niveau = new URLSearchParams(window.location.search).get('niveau');
+    const isCollege = ['6eme', '5eme', '4eme', '3eme'].includes(niveau);
+
     html += '<div class="step">';
-    html += '<div class="step-number">1. Identifier l\'univers</div>';
+    html += '<div class="step-number">1. ' + (isCollege ? 'Lister les resultats possibles' : 'Identifier l\'univers') + '</div>';
     if (sub === 'de') {
         if (ex.nbDes === 1) {
-            html += `<div class="step-expression">` + K('\\Omega = \\{1, 2, 3, 4, 5, 6\\}') + `</div>`;
-            html += `<div class="step-explanation">Un de a 6 faces : ` + K('\\text{card}(\\Omega) = 6') + `</div>`;
+            if (isCollege) {
+                html += `<div class="step-expression">Resultats possibles : {1, 2, 3, 4, 5, 6}</div>`;
+                html += `<div class="step-explanation">Un de a 6 faces, donc <strong>6 resultats possibles</strong>.</div>`;
+            } else {
+                html += `<div class="step-expression">` + K('\\Omega = \\{1, 2, 3, 4, 5, 6\\}') + `</div>`;
+                html += `<div class="step-explanation">Un de a 6 faces : ` + K('\\text{card}(\\Omega) = 6') + `</div>`;
+            }
         } else {
-            html += `<div class="step-expression">` + K('\\Omega = \\{(i,j) \\mid 1 \\leq i,j \\leq 6\\}') + `</div>`;
-            html += `<div class="step-explanation">Deux des : ` + K('\\text{card}(\\Omega) = 6 \\times 6 = 36') + `</div>`;
+            if (isCollege) {
+                html += `<div class="step-expression">On lance deux des : chaque de peut donner 1 a 6.</div>`;
+                html += `<div class="step-explanation">Nombre total de resultats : 6 &times; 6 = <strong>36</strong></div>`;
+            } else {
+                html += `<div class="step-expression">` + K('\\Omega = \\{(i,j) \\mid 1 \\leq i,j \\leq 6\\}') + `</div>`;
+                html += `<div class="step-explanation">Deux des : ` + K('\\text{card}(\\Omega) = 6 \\times 6 = 36') + `</div>`;
+            }
         }
     } else if (sub === 'cartes') {
-        html += `<div class="step-expression">` + K('\\text{card}(\\Omega) = 52') + `</div>`;
-        html += `<div class="step-explanation">Jeu de 52 cartes (4 couleurs x 13 valeurs)</div>`;
+        if (isCollege) {
+            html += `<div class="step-expression">Nombre total de cartes : <strong>52</strong></div>`;
+            html += `<div class="step-explanation">4 couleurs &times; 13 valeurs = 52 cartes</div>`;
+        } else {
+            html += `<div class="step-expression">` + K('\\text{card}(\\Omega) = 52') + `</div>`;
+            html += `<div class="step-explanation">Jeu de 52 cartes (4 couleurs x 13 valeurs)</div>`;
+        }
     } else {
-        html += `<div class="step-expression">` + K(`\\text{card}(\\Omega) = ${ex.rouges} + ${ex.bleues} + ${ex.vertes} = ${ex.total}`) + `</div>`;
-        html += `<div class="step-explanation">Total de boules dans l'urne</div>`;
+        if (isCollege) {
+            html += `<div class="step-expression">Nombre total de boules : ${ex.rouges} + ${ex.bleues} + ${ex.vertes} = <strong>${ex.total}</strong></div>`;
+            html += `<div class="step-explanation">On additionne toutes les boules de l'urne.</div>`;
+        } else {
+            html += `<div class="step-expression">` + K(`\\text{card}(\\Omega) = ${ex.rouges} + ${ex.bleues} + ${ex.vertes} = ${ex.total}`) + `</div>`;
+            html += `<div class="step-explanation">Total de boules dans l'urne</div>`;
+        }
     }
     html += '</div>';
 

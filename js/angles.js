@@ -362,8 +362,8 @@ function drawParallelLines(ctx, w, h) {
 
     // Label angle donne
     const midAngle1 = (startAngle1 + endAngle1) / 2;
-    const lx1 = interX1 + (arcR + 16) * Math.cos(midAngle1);
-    const ly1 = y1 + (arcR + 16) * Math.sin(midAngle1);
+    const lx1 = interX1 + (arcR + 20) * Math.cos(midAngle1);
+    const ly1 = y1 + (arcR + 20) * Math.sin(midAngle1);
     ctx.font = 'bold 13px sans-serif';
     ctx.fillStyle = '#e53e3e';
     ctx.textAlign = 'center';
@@ -387,8 +387,8 @@ function drawParallelLines(ctx, w, h) {
 
         // Label
         const midAngle2 = (startAngle2 + endAngle2) / 2;
-        const lx2 = interX2 + (arcR + 16) * Math.cos(midAngle2);
-        const ly2 = y2 + (arcR + 16) * Math.sin(midAngle2);
+        const lx2 = interX2 + (arcR + 20) * Math.cos(midAngle2);
+        const ly2 = y2 + (arcR + 20) * Math.sin(midAngle2);
         ctx.font = 'bold 13px sans-serif';
         ctx.fillStyle = '#3182ce';
         ctx.textAlign = 'center';
@@ -413,8 +413,8 @@ function drawParallelLines(ctx, w, h) {
 
         // Label
         const midAngleCo = (-coEndAngle + coStartAngle) / 2;
-        const lx2 = interX2 + (arcR + 16) * Math.cos(midAngleCo);
-        const ly2 = y2 + (arcR + 16) * Math.sin(midAngleCo);
+        const lx2 = interX2 + (arcR + 20) * Math.cos(midAngleCo);
+        const ly2 = y2 + (arcR + 20) * Math.sin(midAngleCo);
         ctx.font = 'bold 13px sans-serif';
         ctx.fillStyle = '#3182ce';
         ctx.textAlign = 'center';

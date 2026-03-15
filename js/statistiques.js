@@ -767,8 +767,9 @@ function solveMoyenne() {
     const niveau = new URLSearchParams(window.location.search).get('niveau');
     let html = '';
 
-    // Correction simplifiee pour le college (6eme/5eme)
-    if ((niveau === '6eme' || niveau === '5eme') && sub === 'simple') {
+    // Correction simplifiee pour le college
+    const isCollege = ['6eme', '5eme', '4eme', '3eme'].includes(niveau);
+    if (isCollege && sub === 'simple') {
         html += '<div class="step">';
         html += '<div class="step-number">1. La regle</div>';
         html += '<div class="step-explanation">Pour calculer la <strong>moyenne</strong>, on additionne toutes les valeurs, puis on divise par le nombre de valeurs.</div>';
@@ -793,21 +794,33 @@ function solveMoyenne() {
     html += '<div class="step">';
     html += '<div class="step-number">1. Rappeler la formule</div>';
     if (sub === 'simple') {
-        html += `<div class="step-expression">` + K(`\\bar{x} = \\frac{1}{n} \\sum_{i=1}^{n} x_i = \\frac{x_1 + x_2 + \\cdots + x_n}{n}`) + `</div>`;
+        if (isCollege) {
+            html += `<div class="step-expression">Moyenne = ` + K(`\\dfrac{\\text{somme des valeurs}}{\\text{nombre de valeurs}}`) + `</div>`;
+        } else {
+            html += `<div class="step-expression">` + K(`\\bar{x} = \\frac{1}{n} \\sum_{i=1}^{n} x_i = \\frac{x_1 + x_2 + \\cdots + x_n}{n}`) + `</div>`;
+        }
     } else {
-        html += `<div class="step-expression">` + K(`\\bar{x} = \\frac{\\sum n_i \\cdot x_i}{\\sum n_i}`) + `</div>`;
+        if (isCollege) {
+            html += `<div class="step-expression">Moyenne = ` + K(`\\dfrac{\\text{somme des (valeur} \\times \\text{effectif)}}{\\text{effectif total}}`) + `</div>`;
+        } else {
+            html += `<div class="step-expression">` + K(`\\bar{x} = \\frac{\\sum n_i \\cdot x_i}{\\sum n_i}`) + `</div>`;
+        }
     }
     html += '</div>';
 
     if (sub === 'simple') {
         html += '<div class="step">';
         html += '<div class="step-number">2. Calculer la somme</div>';
-        html += `<div class="step-expression">` + K(`\\sum x_i = ${ex.valeurs.join(' + ')} = ${ex.somme}`) + `</div>`;
+        if (isCollege) {
+            html += `<div class="step-expression">${ex.valeurs.join(' + ')} = <strong>${ex.somme}</strong></div>`;
+        } else {
+            html += `<div class="step-expression">` + K(`\\sum x_i = ${ex.valeurs.join(' + ')} = ${ex.somme}`) + `</div>`;
+        }
         html += '</div>';
 
         html += '<div class="step">';
         html += '<div class="step-number">3. Diviser par l\'effectif</div>';
-        html += `<div class="step-expression">` + K(`\\bar{x} = \\frac{${ex.somme}}{${ex.n}} = ${roundDec(ex.moyenne, 2)}`) + `</div>`;
+        html += `<div class="step-expression">` + K(`\\dfrac{${ex.somme}}{${ex.n}} = ${roundDec(ex.moyenne, 2)}`) + `</div>`;
         html += '</div>';
 
     } else if (sub === 'ponderee') {
@@ -817,7 +830,11 @@ function solveMoyenne() {
         for (let i = 0; i < ex.valeurs.length; i++) {
             termes.push(`${ex.valeurs[i]} \\times ${ex.effectifs[i]}`);
         }
-        html += `<div class="step-expression">` + K(`\\sum n_i \\cdot x_i = ${termes.join(' + ')}`) + `</div>`;
+        if (isCollege) {
+            html += `<div class="step-expression">${termes.join(' + ')}</div>`;
+        } else {
+            html += `<div class="step-expression">` + K(`\\sum n_i \\cdot x_i = ${termes.join(' + ')}`) + `</div>`;
+        }
 
         let details = [];
         for (let i = 0; i < ex.valeurs.length; i++) {

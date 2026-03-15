@@ -208,7 +208,7 @@ function solveAddition(num1, den1, num2, den2) {
     const mult2 = ppcm / den2;
 
     const niveau = new URLSearchParams(window.location.search).get('niveau');
-    if (niveau === '6eme') {
+    if (['6eme', '5eme', '4eme'].includes(niveau)) {
         html += createStepHTML({
             expression: `Dénominateur commun : ${ppcm}`,
             explanation: `On cherche un nombre divisible par ${den1} et par ${den2}`
@@ -271,7 +271,7 @@ function solveSoustraction(num1, den1, num2, den2) {
     const mult2 = ppcm / den2;
 
     const niveau = new URLSearchParams(window.location.search).get('niveau');
-    if (niveau === '6eme') {
+    if (['6eme', '5eme', '4eme'].includes(niveau)) {
         html += createStepHTML({
             expression: `Dénominateur commun : ${ppcm}`,
             explanation: `On cherche un nombre divisible par ${den1} et par ${den2}`
@@ -378,23 +378,38 @@ function solveSimplification(num, den) {
     
     const divisor = gcd(Math.abs(num), Math.abs(den));
     
+    const niveau = new URLSearchParams(window.location.search).get('niveau');
+    const isCollege = ['6eme', '5eme', '4eme'].includes(niveau);
+
     if (divisor === 1) {
-        html += createAlertHTML('info', 'Cette fraction est déjà irréductible (PGCD = 1)');
+        const msg = isCollege
+            ? 'Cette fraction ne peut plus être simplifiée !'
+            : 'Cette fraction est déjà irréductible (PGCD = 1)';
+        html += createAlertHTML('info', msg);
         html += createResultHTML(fracHTML(num, den, true));
         return html;
     }
-    
-    html += createStepHTML({
-        expression: `PGCD(${Math.abs(num)}, ${Math.abs(den)}) = ${divisor}`,
-        explanation: 'Trouver le PGCD des deux nombres'
-    });
-    
+
+    if (isCollege) {
+        html += createStepHTML({
+            expression: `${Math.abs(num)} et ${Math.abs(den)} sont tous les deux divisibles par ${divisor}`,
+            explanation: 'Chercher un nombre qui divise le numérateur et le dénominateur'
+        });
+    } else {
+        html += createStepHTML({
+            expression: `PGCD(${Math.abs(num)}, ${Math.abs(den)}) = ${divisor}`,
+            explanation: 'Trouver le PGCD des deux nombres'
+        });
+    }
+
     const newNum = num / divisor;
     const newDen = den / divisor;
-    
+
     html += createStepHTML({
         expression: `${fracHTML(num + ' ÷ ' + divisor, den + ' ÷ ' + divisor)} = ${fracHTML(newNum, newDen)}`,
-        explanation: 'Diviser numérateur et dénominateur par le PGCD'
+        explanation: isCollege
+            ? `On divise le numérateur et le dénominateur par ${divisor}`
+            : 'Diviser numérateur et dénominateur par le PGCD'
     });
     
     html += createResultHTML(fracHTML(newNum, newDen, true));
@@ -422,8 +437,9 @@ function simplifyStep(num, den) {
         const simpDen = finalDen / divisor;
 
         const niveau = new URLSearchParams(window.location.search).get('niveau');
-        const expl = niveau === '6eme'
-            ? `On peut diviser le haut et le bas par ${divisor}`
+        const isCollege = ['6eme', '5eme', '4eme'].includes(niveau);
+        const expl = isCollege
+            ? `On peut diviser le numérateur et le dénominateur par ${divisor}`
             : `Simplifier par ${divisor} (PGCD)`;
 
         html += createStepHTML({

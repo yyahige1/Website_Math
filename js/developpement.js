@@ -379,10 +379,10 @@ function drawArrowAbove(svg, containerRect, from, to, color, level) {
     const fromRect = from.getBoundingClientRect();
     const toRect = to.getBoundingClientRect();
     
-    const x1 = fromRect.left + fromRect.width / 2 - containerRect.left +4;
-    const y1 = fromRect.top - containerRect.top - 5;
-    const x2 = toRect.left + toRect.width / 2 - containerRect.left+4;
-    const y2 = toRect.top - containerRect.top - 5;
+    const x1 = fromRect.left + fromRect.width / 2 - containerRect.left;
+    const y1 = fromRect.top - containerRect.top;
+    const x2 = toRect.left + toRect.width / 2 - containerRect.left;
+    const y2 = toRect.top - containerRect.top;
     
     // Plus la flèche est longue, plus elle monte haut
     const distance = Math.abs(x2 - x1);
@@ -408,9 +408,9 @@ function drawArrowBelow(svg, containerRect, from, to, color, level) {
     const toRect = to.getBoundingClientRect();
     
     const x1 = fromRect.left + fromRect.width / 2 - containerRect.left;
-    const y1 = fromRect.bottom - containerRect.top + 5;
+    const y1 = fromRect.bottom - containerRect.top;
     const x2 = toRect.left + toRect.width / 2 - containerRect.left;
-    const y2 = toRect.bottom - containerRect.top + 5;
+    const y2 = toRect.bottom - containerRect.top;
     
     const distance = Math.abs(x2 - x1);
     const curveHeight = 12 + level * 5 + distance * 0.08;
