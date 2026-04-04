@@ -769,6 +769,7 @@ function solveMoyenne() {
 
     // Correction simplifiee pour le college
     const isCollege = ['6eme', '5eme', '4eme', '3eme'].includes(niveau);
+    const isSeconde = (niveau === '2nde');
     if (isCollege && sub === 'simple') {
         html += '<div class="step">';
         html += '<div class="step-number">1. La regle</div>';
@@ -794,13 +795,13 @@ function solveMoyenne() {
     html += '<div class="step">';
     html += '<div class="step-number">1. Rappeler la formule</div>';
     if (sub === 'simple') {
-        if (isCollege) {
+        if (isCollege || isSeconde) {
             html += `<div class="step-expression">Moyenne = ` + K(`\\dfrac{\\text{somme des valeurs}}{\\text{nombre de valeurs}}`) + `</div>`;
         } else {
             html += `<div class="step-expression">` + K(`\\bar{x} = \\frac{1}{n} \\sum_{i=1}^{n} x_i = \\frac{x_1 + x_2 + \\cdots + x_n}{n}`) + `</div>`;
         }
     } else {
-        if (isCollege) {
+        if (isCollege || isSeconde) {
             html += `<div class="step-expression">Moyenne = ` + K(`\\dfrac{\\text{somme des (valeur} \\times \\text{effectif)}}{\\text{effectif total}}`) + `</div>`;
         } else {
             html += `<div class="step-expression">` + K(`\\bar{x} = \\frac{\\sum n_i \\cdot x_i}{\\sum n_i}`) + `</div>`;
@@ -813,6 +814,8 @@ function solveMoyenne() {
         html += '<div class="step-number">2. Calculer la somme</div>';
         if (isCollege) {
             html += `<div class="step-expression">${ex.valeurs.join(' + ')} = <strong>${ex.somme}</strong></div>`;
+        } else if (isSeconde) {
+            html += `<div class="step-expression">` + K(`${ex.valeurs.join(' + ')} = ${ex.somme}`) + `</div>`;
         } else {
             html += `<div class="step-expression">` + K(`\\sum x_i = ${ex.valeurs.join(' + ')} = ${ex.somme}`) + `</div>`;
         }
@@ -830,7 +833,7 @@ function solveMoyenne() {
         for (let i = 0; i < ex.valeurs.length; i++) {
             termes.push(`${ex.valeurs[i]} \\times ${ex.effectifs[i]}`);
         }
-        if (isCollege) {
+        if (isCollege || isSeconde) {
             html += `<div class="step-expression">` + K(termes.join(' + ')) + `</div>`;
         } else {
             html += `<div class="step-expression">` + K(`\\sum n_i \\cdot x_i = ${termes.join(' + ')}`) + `</div>`;
@@ -846,7 +849,8 @@ function solveMoyenne() {
         html += '<div class="step">';
         html += '<div class="step-number">3. Effectif total et moyenne</div>';
         html += `<div class="step-expression">` + K(`N = ${ex.effectifs.join(' + ')} = ${ex.totalEffectifs}`) + `</div>`;
-        html += `<div class="step-expression">` + K(`\\bar{x} = \\frac{${ex.sommeProd}}{${ex.totalEffectifs}} = ${roundDec(ex.moyenne, 2)}`) + `</div>`;
+        const moyLabel1 = (isCollege || isSeconde) ? '\\text{Moyenne}' : '\\bar{x}';
+        html += `<div class="step-expression">` + K(`${moyLabel1} = \\frac{${ex.sommeProd}}{${ex.totalEffectifs}} = ${roundDec(ex.moyenne, 2)}`) + `</div>`;
         html += '</div>';
 
     } else {
@@ -870,19 +874,25 @@ function solveMoyenne() {
             termes.push(`${ex.centres[i]} \\times ${ex.effectifs[i]}`);
             details.push(ex.centres[i] * ex.effectifs[i]);
         }
-        html += `<div class="step-expression">` + K(`\\sum n_i \\cdot c_i = ${termes.join(' + ')}`) + `</div>`;
+        if (isSeconde) {
+            html += `<div class="step-expression">` + K(termes.join(' + ')) + `</div>`;
+        } else {
+            html += `<div class="step-expression">` + K(`\\sum n_i \\cdot c_i = ${termes.join(' + ')}`) + `</div>`;
+        }
         html += `<div class="step-expression">` + K(`= ${details.join(' + ')} = ${ex.sommeProd}`) + `</div>`;
         html += '</div>';
 
         html += '<div class="step">';
         html += '<div class="step-number">4. Calculer la moyenne</div>';
         html += `<div class="step-expression">` + K(`N = ${ex.totalEffectifs}`) + `</div>`;
-        html += `<div class="step-expression">` + K(`\\bar{x} = \\frac{${ex.sommeProd}}{${ex.totalEffectifs}} = ${roundDec(ex.moyenne, 2)}`) + `</div>`;
+        const moyLabel2 = isSeconde ? '\\text{Moyenne}' : '\\bar{x}';
+        html += `<div class="step-expression">` + K(`${moyLabel2} = \\frac{${ex.sommeProd}}{${ex.totalEffectifs}} = ${roundDec(ex.moyenne, 2)}`) + `</div>`;
         html += '</div>';
     }
 
     html += '<div class="result-highlight">';
-    html += `<div class="final">` + K(`\\bar{x} = ${roundDec(ex.moyenne, 2)}`) + `</div>`;
+    const moyFinal = (isCollege || isSeconde) ? '\\text{Moyenne}' : '\\bar{x}';
+    html += `<div class="final">` + K(`${moyFinal} = ${roundDec(ex.moyenne, 2)}`) + `</div>`;
     html += '</div>';
 
     return html;
@@ -943,12 +953,46 @@ function solveMediane() {
     }
     html += '</div>';
 
-    // Quartiles
+    // Quartiles - calcul detaille
+    const stepQ = sub === 'effectifs' ? '4' : '3';
     html += '<div class="step">';
-    html += '<div class="step-number">' + (sub === 'effectifs' ? '4' : '3') + '. Determiner les quartiles</div>';
+    html += `<div class="step-number">${stepQ}. Determiner les quartiles</div>`;
     html += `<div class="step-explanation">On partage la serie ordonnee en deux moities autour de la mediane.</div>`;
-    html += `<div class="step-expression">` + K(`Q_1 = ${ex.q1}`) + ` (mediane de la moitie inferieure)</div>`;
-    html += `<div class="step-expression">` + K(`Q_3 = ${ex.q3}`) + ` (mediane de la moitie superieure)</div>`;
+
+    // Calculer les sous-listes
+    let lower, upper;
+    if (n % 2 === 1) {
+        const mid = Math.floor(n / 2);
+        lower = ex.sorted.slice(0, mid);
+        upper = ex.sorted.slice(mid + 1);
+    } else {
+        lower = ex.sorted.slice(0, n / 2);
+        upper = ex.sorted.slice(n / 2);
+    }
+
+    // Q1 : mediane de la moitie inferieure
+    html += `<div class="step-explanation" style="margin-top:10px;"><strong>Q1</strong> (premier quartile) = mediane de la moitie inferieure :</div>`;
+    html += `<div class="step-expression">${lower.join(' ; ')}</div>`;
+    if (lower.length % 2 === 1) {
+        const posQ1 = Math.floor(lower.length / 2) + 1;
+        html += `<div class="step-expression">${lower.length} valeurs → valeur de rang ${posQ1} → ` + K(`Q_1 = ${ex.q1}`) + `</div>`;
+    } else {
+        const p1 = lower.length / 2;
+        const p2 = p1 + 1;
+        html += `<div class="step-expression">${lower.length} valeurs → moyenne des rangs ${p1} et ${p2} → ` + K(`Q_1 = \\dfrac{${lower[p1 - 1]} + ${lower[p2 - 1]}}{2} = ${ex.q1}`) + `</div>`;
+    }
+
+    // Q3 : mediane de la moitie superieure
+    html += `<div class="step-explanation" style="margin-top:10px;"><strong>Q3</strong> (troisieme quartile) = mediane de la moitie superieure :</div>`;
+    html += `<div class="step-expression">${upper.join(' ; ')}</div>`;
+    if (upper.length % 2 === 1) {
+        const posQ3 = Math.floor(upper.length / 2) + 1;
+        html += `<div class="step-expression">${upper.length} valeurs → valeur de rang ${posQ3} → ` + K(`Q_3 = ${ex.q3}`) + `</div>`;
+    } else {
+        const p1 = upper.length / 2;
+        const p2 = p1 + 1;
+        html += `<div class="step-expression">${upper.length} valeurs → moyenne des rangs ${p1} et ${p2} → ` + K(`Q_3 = \\dfrac{${upper[p1 - 1]} + ${upper[p2 - 1]}}{2} = ${ex.q3}`) + `</div>`;
+    }
     html += '</div>';
 
     // EIQ
@@ -969,13 +1013,17 @@ function solveMediane() {
 function solveDispersion() {
     const ex = StatsState.exercise;
     const sub = StatsState.subtype_dispersion;
+    const niveau = new URLSearchParams(window.location.search).get('niveau');
+    const isSeconde = (niveau === '2nde');
     let html = '';
+
+    const mLabel = isSeconde ? '\\text{Moyenne}' : '\\bar{x}';
 
     // Etape 1 : Moyenne
     html += '<div class="step">';
     html += '<div class="step-number">1. Calculer la moyenne</div>';
     if (sub === 'simple') {
-        html += `<div class="step-expression">` + K(`\\bar{x} = \\frac{${ex.valeurs.join(' + ')}}{${ex.n}} = \\frac{${ex.valeurs.reduce((s, v) => s + v, 0)}}{${ex.n}} = ${roundDec(ex.moyenne, 4)}`) + `</div>`;
+        html += `<div class="step-expression">` + K(`${mLabel} = \\frac{${ex.valeurs.join(' + ')}}{${ex.n}} = \\frac{${ex.valeurs.reduce((s, v) => s + v, 0)}}{${ex.n}} = ${roundDec(ex.moyenne, 4)}`) + `</div>`;
     } else {
         let sommeProd = 0;
         let termes = [];
@@ -983,7 +1031,7 @@ function solveDispersion() {
             termes.push(`${ex.valeurs[i]} \\times ${ex.effectifs[i]}`);
             sommeProd += ex.valeurs[i] * ex.effectifs[i];
         }
-        html += `<div class="step-expression">` + K(`\\bar{x} = \\frac{${termes.join(' + ')}}{${ex.totalEffectifs}} = \\frac{${sommeProd}}{${ex.totalEffectifs}} = ${roundDec(ex.moyenne, 4)}`) + `</div>`;
+        html += `<div class="step-expression">` + K(`${mLabel} = \\frac{${termes.join(' + ')}}{${ex.totalEffectifs}} = \\frac{${sommeProd}}{${ex.totalEffectifs}} = ${roundDec(ex.moyenne, 4)}`) + `</div>`;
     }
     html += '</div>';
 
@@ -991,9 +1039,19 @@ function solveDispersion() {
     html += '<div class="step">';
     html += '<div class="step-number">2. Rappeler la formule de la variance</div>';
     if (sub === 'simple') {
-        html += `<div class="step-expression">` + K(`V(X) = \\frac{1}{n} \\sum_{i=1}^{n} (x_i - \\bar{x})^2`) + `</div>`;
+        if (isSeconde) {
+            html += `<div class="step-expression">` + K(`V = \\frac{(v_1 - m)^2 + (v_2 - m)^2 + \\cdots + (v_n - m)^2}{n}`) + `</div>`;
+            html += `<div class="step-explanation">ou m est la moyenne et v les valeurs de la serie</div>`;
+        } else {
+            html += `<div class="step-expression">` + K(`V(X) = \\frac{1}{n} \\sum_{i=1}^{n} (x_i - \\bar{x})^2`) + `</div>`;
+        }
     } else {
-        html += `<div class="step-expression">` + K(`V(X) = \\frac{1}{N} \\sum n_i (x_i - \\bar{x})^2`) + `</div>`;
+        if (isSeconde) {
+            html += `<div class="step-expression">` + K(`V = \\frac{n_1(v_1 - m)^2 + n_2(v_2 - m)^2 + \\cdots}{N}`) + `</div>`;
+            html += `<div class="step-explanation">ou m est la moyenne, v les valeurs et n les effectifs</div>`;
+        } else {
+            html += `<div class="step-expression">` + K(`V(X) = \\frac{1}{N} \\sum n_i (x_i - \\bar{x})^2`) + `</div>`;
+        }
     }
     html += '</div>';
 
@@ -1010,7 +1068,11 @@ function solveDispersion() {
             termes.push(`(${ex.valeurs[i]} - ${roundDec(ex.moyenne, 2)})^2`);
             sommeCarres += carre;
         }
-        html += `<div class="step-expression">` + K(`\\sum (x_i - \\bar{x})^2 = ${termes.join(' + ')}`) + `</div>`;
+        if (isSeconde) {
+            html += `<div class="step-expression">` + K(termes.join(' + ')) + `</div>`;
+        } else {
+            html += `<div class="step-expression">` + K(`\\sum (x_i - \\bar{x})^2 = ${termes.join(' + ')}`) + `</div>`;
+        }
 
         // Afficher chaque valeur
         let valsCarres = [];
@@ -1023,11 +1085,19 @@ function solveDispersion() {
     } else {
         let tableHtml = `<table style="border-collapse: collapse; margin: 10px auto; text-align: center;">`;
         tableHtml += `<tr style="background: var(--gray-100);">`;
-        tableHtml += tableCell(K('x_i'), { header: true });
-        tableHtml += tableCell(K('n_i'), { header: true });
-        tableHtml += tableCell(K('x_i - \\bar{x}'), { header: true });
-        tableHtml += tableCell(K('(x_i - \\bar{x})^2'), { header: true });
-        tableHtml += tableCell(K('n_i(x_i - \\bar{x})^2'), { header: true });
+        if (isSeconde) {
+            tableHtml += tableCell('Valeur', { header: true });
+            tableHtml += tableCell('Effectif', { header: true });
+            tableHtml += tableCell('Ecart', { header: true });
+            tableHtml += tableCell(K('\\text{Ecart}^2'), { header: true });
+            tableHtml += tableCell(K('n \\times \\text{Ecart}^2'), { header: true });
+        } else {
+            tableHtml += tableCell(K('x_i'), { header: true });
+            tableHtml += tableCell(K('n_i'), { header: true });
+            tableHtml += tableCell(K('x_i - \\bar{x}'), { header: true });
+            tableHtml += tableCell(K('(x_i - \\bar{x})^2'), { header: true });
+            tableHtml += tableCell(K('n_i(x_i - \\bar{x})^2'), { header: true });
+        }
         tableHtml += `</tr>`;
 
         let somme = 0;
